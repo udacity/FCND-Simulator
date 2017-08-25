@@ -1,4 +1,6 @@
-﻿Shader "Custom/Distance2"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/Distance2"
 {
 	Properties
 	{
@@ -29,7 +31,7 @@
 			vertOutput vert(vertInput input)
 			{
 				vertOutput o;
-				o.pos = mul(UNITY_MATRIX_MVP, input.pos);
+				o.pos = UnityObjectToClipPos(input.pos);
 				return o;
 			}
 

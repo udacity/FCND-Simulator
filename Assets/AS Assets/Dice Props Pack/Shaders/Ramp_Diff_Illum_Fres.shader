@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 // Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
@@ -50,7 +52,7 @@ Shader "Ramp/Diff_Illum_Fres" {
             };
             VertexOutput vert (VertexInput v) {
                 VertexOutput o;
-                o.pos = mul(UNITY_MATRIX_MVP, float4(v.vertex.xyz + v.normal*_OutlineWidth,1));
+                o.pos = UnityObjectToClipPos(float4(v.vertex.xyz + v.normal*_OutlineWidth,1));
                 return o;
             }
             fixed4 frag(VertexOutput i) : COLOR {
@@ -99,7 +101,7 @@ Shader "Ramp/Diff_Illum_Fres" {
                 o.shLight = ShadeSH9(float4(v.normal * 1.0,1)) * 0.5;
                 o.normalDir = mul(float4(v.normal,0), unity_WorldToObject).xyz;
                 o.posWorld = mul(unity_ObjectToWorld, v.vertex);
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 return o;
             }
             fixed4 frag(VertexOutput i) : COLOR {
@@ -163,7 +165,7 @@ Shader "Ramp/Diff_Illum_Fres" {
                 o.uv0 = v.uv0;
                 o.normalDir = mul(float4(v.normal,0), unity_WorldToObject).xyz;
                 o.posWorld = mul(unity_ObjectToWorld, v.vertex);
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 TRANSFER_VERTEX_TO_FRAGMENT(o)
                 return o;
             }

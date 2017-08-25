@@ -54,7 +54,7 @@ public class PathPlanner : MonoBehaviour
 	{
 		instance = this;
 		pathRenderer = Instantiate ( pathPrefab, transform );
-		pathRenderer.numPositions = 0;
+		pathRenderer.positionCount = 0;
 //		pathRenderer.SetPositions ( new Vector3[0] );
 		path = new List<PathSample> ();
 		nodeObjects = new List<Transform> ();
@@ -80,8 +80,8 @@ public class PathPlanner : MonoBehaviour
 
 	void _AddNode (Vector3 position, Quaternion orientation)
 	{
-		pathRenderer.numPositions = pathRenderer.numPositions + 1;
-		pathRenderer.SetPosition ( pathRenderer.numPositions - 1, position );
+		pathRenderer.positionCount = pathRenderer.positionCount + 1;
+		pathRenderer.SetPosition ( pathRenderer.positionCount - 1, position );
 
 		PathSample sample = new PathSample ();
 		sample.position = position;
@@ -112,7 +112,7 @@ public class PathPlanner : MonoBehaviour
 
 	void _ClearViz ()
 	{
-		pathRenderer.numPositions = 0;
+		pathRenderer.positionCount = 0;
 		int count = nodeObjects.Count;
 		for ( int i = 0; i < count; i++ )
 			Destroy ( nodeObjects [ i ].gameObject );

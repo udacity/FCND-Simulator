@@ -1,4 +1,6 @@
-﻿Shader "Unlit/White"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Unlit/White"
 {
 	Properties
 	{
@@ -28,7 +30,7 @@
 			vertOutput vert(vertInput input)
 			{
 				vertOutput o;
-				o.pos = mul(UNITY_MATRIX_MVP, input.pos);
+				o.pos = UnityObjectToClipPos(input.pos);
 				return o;
 			}
 

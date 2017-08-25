@@ -1,4 +1,6 @@
-﻿Shader "Custom/DepthGrayscale"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/DepthGrayscale"
 {
 	SubShader
 	{
@@ -23,7 +25,7 @@
 			v2f vert (appdata_base v)
 			{
 			   v2f o;
-			   o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
+			   o.pos = UnityObjectToClipPos (v.vertex);
 			   o.scrPos=ComputeScreenPos(o.pos);
 			   //for some reason, the y position of the depth texture comes out inverted
 			   #if SHADER_API_D3D9
