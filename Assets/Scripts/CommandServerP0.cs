@@ -64,6 +64,26 @@ public class CommandServerP0 : MonoBehaviour
 		var msgstr = msg.ToString();
 		Debug.Log(string.Format("Message in string form {0}", msgstr));
 
+		// TODO: commands to implement
+		//
+		// MAV_CMD_NAV_TAKEOFF	Takeoff from ground / hand
+		// Mission Param #1	Minimum pitch (if airspeed sensor present), desired pitch without sensor
+		// Mission Param #2	Empty
+		// Mission Param #3	Empty
+		// Mission Param #4	Yaw angle (if magnetometer present), ignored without magnetometer. NaN for unchanged.
+		// Mission Param #5	Latitude
+		// Mission Param #6	Longitude
+		// Mission Param #7	Altitude
+		// 
+		// MAV_CMD_NAV_LAND	Land at location
+		// Mission Param #1	Abort Alt
+		// Mission Param #2	Empty
+		// Mission Param #3	Empty
+		// Mission Param #4	Desired yaw angle. NaN for unchanged.
+		// Mission Param #5	Latitude
+		// Mission Param #6	Longitude
+		// Mission Param #7	Altitude (ground level)
+
 		switch (msgstr) {
 			case "MavLink.Msg_heartbeat":
 				Debug.Log("Received hearbeat");
