@@ -26,16 +26,16 @@ public class SimpleQuadController : MonoBehaviour
 
 
 
-    public float Kp_hdot = 2.5f;
+    public float Kp_hdot = 20.0f;
     //public float Kp_h = 1.5f;
         
-    public float Kp_r = 1.75f;
-    public float Kp_roll = 6.0f;
-    public float Kp_p = 1.75f;
-    public float Kp_pitch = 6.0f;
-    public float Kp_q = 1.75f;
+    public float Kp_r = 10.0f;
+    public float Kp_roll = 4.0f;
+    public float Kp_p = 6.0f;
+    public float Kp_pitch = 4.0f;
+    public float Kp_q = 6.0f;
     public float Kp_pos = -0.5f;
-    public float Kp_vel = -0.05f;
+    public float Kp_vel = -0.1f;
 
     public float Ixx = 0.004856f;
     public float Iyy = 0.004856f;
@@ -49,7 +49,7 @@ public class SimpleQuadController : MonoBehaviour
     
     private float h_des = 0.0f;
     private bool pos_set = false;
-    private Vector3 pos_hold =new Vector3(0.0f,0.0f,0.0f);
+    public Vector3 pos_hold =new Vector3(0.0f,0.0f,0.0f);
 
 	public bool active;
 	
@@ -101,10 +101,11 @@ public class SimpleQuadController : MonoBehaviour
         if( Input.GetKeyDown(KeyCode.Alpha9))
         {
             go_to = true;
-            pos_hold.x = rb.position.x + 10.0f;
-            pos_hold.y = rb.position.y;
-            pos_hold.z = rb.position.z + 10.0f;
+            pos_hold.x = rb.position.x + 20.0f;
+            pos_hold.y = rb.position.y + 5.0f;
+            pos_hold.z = rb.position.z + 20.0f;
             pos_set = true;
+            Debug.Log(pos_hold);
         }
 
 
@@ -116,36 +117,45 @@ public class SimpleQuadController : MonoBehaviour
         Vector3 pitch_moment = new Vector3(0.0f, 0.0f, 0.0f);
         Vector3 roll_moment = new Vector3(0.0f,0.0f,0.0f);
         Vector4 angle_input = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+
+
         if (posctl)
         {
             Vector3 velCmd = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), Input.GetAxis("Thrust"));
             Vector3 vel = rb.transform.InverseTransformDirection(rb.velocity);
 
-            if(go_to||(Mathf.Sqrt(Mathf.Pow(vel.x, 2.0f) + Mathf.Pow(vel.z, 2.0f)) < poshold_vel 
-                && Mathf.Sqrt(Mathf.Pow(velCmd.x,2.0f) + Mathf.Pow(velCmd.y, 2.0f)) < posctl_band)){
+            if (go_to || (Mathf.Sqrt(Mathf.Pow(vel.x, 2.0f) + Mathf.Pow(vel.z, 2.0f)) < poshold_vel
+                && Mathf.Sqrt(Mathf.Pow(velCmd.x, 2.0f) + Mathf.Pow(velCmd.y, 2.0f) + Mathf.Pow(velCmd.z, 2.0f)) < posctl_band))
+            {
                 if (!pos_set)
                 {
                     pos_hold.x = rb.position.x;
                     pos_hold.y = rb.position.y;
                     pos_hold.z = rb.position.z;
                     pos_set = true;
+                    Debug.Log(pos_hold);
                 }
-                Vector3 posErrorRel = rb.transform.InverseTransformDirection(pos_hold-rb.position);
+                Vector3 posErrorRel = rb.transform.InverseTransformDirection(pos_hold - rb.position);
 
 
-                angle_input[0] = velCmd.z;
-                angle_input[1] = Input.GetAxis("Yaw");
-                angle_input[2] = Kp_pos * posErrorRel.x;
-                angle_input[3] = -Kp_pos * posErrorRel.z;
+                velCmd[2] = Kp_pos * posErrorRel[1];
+                //angle_input[1] = Input.GetAxis("Yaw");
+                velCmd[0] = Kp_pos * posErrorRel[0];
+                velCmd[1] = -Kp_pos * posErrorRel[2];
+
             }
             else
             {
-                pos_set = false;
+                 pos_set = false;
+            }
+            //else
+            //{
+                //pos_set = false;
                 angle_input[0] = velCmd.z;
                 angle_input[1] = Input.GetAxis("Yaw");
                 angle_input[2] = Kp_vel * (moveSpeed*velCmd.x-vel.x);
                 angle_input[3] = -Kp_vel * (-moveSpeed*velCmd.y-vel.z);
-            }
+            //}
         }
         else
         {
@@ -186,9 +196,9 @@ public class SimpleQuadController : MonoBehaviour
 
             yaw_moment[1] = Kp_r * (turnSpeed*angle_input[1] - prq[1]);
 
-            pitch_moment[2] = Kp_pitch * (maxTilt*angle_input[2] - pitch_deg) + Kp_q*(0.0f-prq[2]);
+            pitch_moment[2] = Kp_q*(Kp_pitch * (maxTilt*angle_input[2] - pitch_deg) -prq[2]);
 
-            roll_moment[0] = Kp_roll * (maxTilt*angle_input[3] - roll_deg) + Kp_p*(0.0f-prq[0]);
+            roll_moment[0] = Kp_p*(Kp_roll * (maxTilt*angle_input[3] - roll_deg)   - prq[0]);
 
 
         }
