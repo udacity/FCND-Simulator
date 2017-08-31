@@ -4,39 +4,39 @@ using UnityEngine;
 
 public class SimpleQuadController : MonoBehaviour
 {
-	public Transform chassis;
 	public Transform camTransform;
 	public QuadController controller;
 	public FollowCamera followCam;
 	public PathFollower pather;
-	public float moveSpeed = 10;
-	public float thrustForce = 25.0f;
-    public float thrustMoment = 2.0f;
-	public float maxTilt = 22.5f;
-    public float maxHdot = 5.0f;
-	public float tiltSpeed = 22.5f;
-	public float turnSpeed = 90;
+
+    //Vehicle status indicators
+    public bool motors_armed = false;
+    
+    //Flight modes
+    public bool guided = false;
     public bool stabilized = true;
     public bool posctl = true;
-    public float posctl_band = 0.25f;
 
-    public bool go_to = false;
-    public float poshold_vel = 1.0f;
-    
-
-
-
+    //Control Gains
     public float Kp_hdot = 20.0f;
-    //public float Kp_h = 1.5f;
-        
     public float Kp_r = 10.0f;
     public float Kp_roll = 4.0f;
     public float Kp_p = 6.0f;
     public float Kp_pitch = 4.0f;
     public float Kp_q = 6.0f;
-    public float Kp_pos = -0.5f;
-    public float Kp_vel = -0.1f;
+    public float Kp_pos = 0.05f;
+    public float Kp_vel = -0.05f;
 
+    //Vehicle control thresholds
+    public float posctl_band = 0.25f;
+    public float moveSpeed = 10;
+    public float turnSpeed = 90;
+    public float thrustForce = 25.0f;
+    public float thrustMoment = 2.0f;
+    public float maxTilt = 22.5f;
+    public float maxHdot = 5.0f;
+
+    //Default inertia data
     public float Ixx = 0.004856f;
     public float Iyy = 0.004856f;
     public float Izz = 0.008801f;
@@ -48,8 +48,10 @@ public class SimpleQuadController : MonoBehaviour
 	float tiltZ;
     
     private float h_des = 0.0f;
+
+    //
     private bool pos_set = false;
-    public Vector3 pos_hold =new Vector3(0.0f,0.0f,0.0f);
+    Vector3 pos_hold =new Vector3(0.0f,0.0f,0.0f);
 
 	public bool active;
 	
@@ -75,8 +77,7 @@ public class SimpleQuadController : MonoBehaviour
             
 			if ( active )
 			{
-				controller.UseGravity = false;
-				controller.rb.isKinematic = true;
+				controller.UseGravity = true;
 				controller.rb.isKinematic = false;
 				controller.rb.freezeRotation = false;
 				controller.rb.velocity = Vector3.zero;
@@ -86,6 +87,7 @@ public class SimpleQuadController : MonoBehaviour
 
 		if ( Input.GetKeyDown ( KeyCode.R ) )
 		{
+            pos_set = false;
 			controller.ResetOrientation ();
 			followCam.ChangePoseType ( CameraPoseType.Iso );
 		}
@@ -98,15 +100,22 @@ public class SimpleQuadController : MonoBehaviour
 		if ( !active )
 			return;
 
+        //Test Input for GoTo mode
         if( Input.GetKeyDown(KeyCode.Alpha9))
         {
-            go_to = true;
+            guided = true;
             pos_hold.x = rb.position.x + 20.0f;
             pos_hold.y = rb.position.y + 5.0f;
             pos_hold.z = rb.position.z + 20.0f;
             pos_set = true;
             Debug.Log(pos_hold);
         }
+
+
+        //Arm with the
+        if (Input.GetKeyDown(KeyCode.A))
+            motors_armed = !motors_armed;
+
 
 
 
@@ -118,100 +127,97 @@ public class SimpleQuadController : MonoBehaviour
         Vector3 roll_moment = new Vector3(0.0f,0.0f,0.0f);
         Vector4 angle_input = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
-
-        if (posctl)
+        if (motors_armed)
         {
-            Vector3 velCmd = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), Input.GetAxis("Thrust"));
-            Vector3 vel = rb.transform.InverseTransformDirection(rb.velocity);
-
-            if (go_to || (Mathf.Sqrt(Mathf.Pow(vel.x, 2.0f) + Mathf.Pow(vel.z, 2.0f)) < poshold_vel
-                && Mathf.Sqrt(Mathf.Pow(velCmd.x, 2.0f) + Mathf.Pow(velCmd.y, 2.0f) + Mathf.Pow(velCmd.z, 2.0f)) < posctl_band))
+            if (posctl || guided)
             {
-                if (!pos_set)
+                Vector3 velCmd = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), Input.GetAxis("Thrust"));
+                Vector3 vel = rb.transform.InverseTransformDirection(rb.velocity);
+
+                if (guided|| Mathf.Sqrt(Mathf.Pow(velCmd.x, 2.0f) + Mathf.Pow(velCmd.y, 2.0f) + Mathf.Pow(velCmd.z, 2.0f)) < posctl_band)
                 {
-                    pos_hold.x = rb.position.x;
-                    pos_hold.y = rb.position.y;
-                    pos_hold.z = rb.position.z;
-                    pos_set = true;
-                    Debug.Log(pos_hold);
+                    if (!pos_set)
+                    {
+                        pos_hold.x = rb.position.x;
+                        pos_hold.y = rb.position.y;
+                        pos_hold.z = rb.position.z;
+                        pos_set = true;
+                        Debug.Log(pos_hold);
+                    }
+                    Vector3 posErrorRel = rb.transform.InverseTransformDirection(pos_hold - rb.position);
+
+
+                    velCmd[2] = Kp_pos * posErrorRel[1];
+                    velCmd[0] = Kp_pos * posErrorRel[0];
+                    velCmd[1] = -Kp_pos * posErrorRel[2];
+
                 }
-                Vector3 posErrorRel = rb.transform.InverseTransformDirection(pos_hold - rb.position);
+                else
+                {
+                    pos_set = false;
+                }
+                angle_input[0] = velCmd.z;
+                angle_input[1] = Input.GetAxis("Yaw");
+                angle_input[2] = Kp_vel * (moveSpeed * velCmd.x - vel.x);
+                angle_input[3] = -Kp_vel * (-moveSpeed * velCmd.y - vel.z);
+            }
+            else
+            {
+                pos_set = false;
+
+                //Pilot Input: Hdot, Yawrate, pitch, roll
+                angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), -Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
+            }
 
 
-                velCmd[2] = Kp_pos * posErrorRel[1];
-                //angle_input[1] = Input.GetAxis("Yaw");
-                velCmd[0] = Kp_pos * posErrorRel[0];
-                velCmd[1] = -Kp_pos * posErrorRel[2];
+            //Constrain the angle inputs between -1 and 1 (tilt, turning speed, and vert speed taken into account later)
+            for (int i = 1; i < 4; i++)
+            {
+                if (angle_input[i] > 1.0f)
+                    angle_input[i] = 1.0f;
+                else if (angle_input[i] < -1.0f)
+                    angle_input[i] = -1.0f;
+            }
+
+            if (guided||posctl||stabilized)
+            {
+                
+                float thrust_nom = -1.0f * rb.mass * Physics.gravity[1];
+
+                Vector3 prq = rb.transform.InverseTransformDirection(rb.angularVelocity) * 180.0f / Mathf.PI;
+
+                float roll_deg = rb.transform.eulerAngles.x;
+                if (roll_deg > 180.0)
+                    roll_deg = roll_deg - 360.0f;
+
+                float pitch_deg = rb.transform.eulerAngles.z;
+                if (pitch_deg > 180.0)
+                    pitch_deg = pitch_deg - 360.0f;
+
+                thrust[1] = (Kp_hdot * (maxHdot * angle_input[0] - 1.0f * rb.velocity[1]) + thrust_nom) / (Mathf.Cos(roll_deg * Mathf.PI / 180.0f) * Mathf.Cos(pitch_deg * Mathf.PI / 180.0f));
+
+                yaw_moment[1] = Kp_r * (turnSpeed * angle_input[1] - prq[1]);
+
+                pitch_moment[2] = Kp_q * (Kp_pitch * (maxTilt * angle_input[2] - pitch_deg) - prq[2]);
+
+                roll_moment[0] = Kp_p * (Kp_roll * (maxTilt * angle_input[3] - roll_deg) - prq[0]);
+
 
             }
             else
             {
-                 pos_set = false;
+                thrust = thrustForce * (new Vector3(0.0f, angle_input[0], 0.0f));
+                yaw_moment = thrustMoment * (new Vector3(0.0f, angle_input[1], 0.0f));
+                pitch_moment = thrustMoment * (new Vector3(angle_input[2] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, angle_input[2] * Mathf.Sqrt(2.0f) / 2.0f));
+                roll_moment = thrustMoment * (new Vector3(angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, -1.0f * angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f));
             }
-            //else
-            //{
-                //pos_set = false;
-                angle_input[0] = velCmd.z;
-                angle_input[1] = Input.GetAxis("Yaw");
-                angle_input[2] = Kp_vel * (moveSpeed*velCmd.x-vel.x);
-                angle_input[3] = -Kp_vel * (-moveSpeed*velCmd.y-vel.z);
-            //}
+            rb.AddRelativeForce(thrust);
+            rb.AddRelativeTorque(Izz * yaw_moment + Iyy * pitch_moment + Ixx * roll_moment);
         }
         else
         {
-            //Pilot Input: Hdot, Yawrate, pitch, roll
-            angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+            pos_set = false;
         }
-
-
-        //Constrain the angle inputs between -1 and 1 (tilt, turning speed, and vert speed taken into account later)
-        for(int i = 1; i < 4; i++)
-        {
-            if (angle_input[i] > 1.0f)
-                angle_input[i] = 1.0f;
-            else if (angle_input[i] < -1.0f)
-                angle_input[i] = -1.0f;
-        }
-
-        
-        float roll_deg = 0.0f;
-
-        Vector3 prq = new Vector3(0.0f,0.0f,0.0f);
-        if (stabilized)
-        {
-
-            float thrust_nom = -1.0f * rb.mass * Physics.gravity[1];
-
-            prq = rb.transform.InverseTransformDirection(rb.angularVelocity)*180.0f/Mathf.PI;
-            
-            roll_deg = rb.transform.eulerAngles.x;
-            if (roll_deg > 180.0)
-                roll_deg = roll_deg - 360.0f;
-
-            float pitch_deg = rb.transform.eulerAngles.z;
-            if (pitch_deg > 180.0)
-                pitch_deg = pitch_deg - 360.0f;
-
-            thrust[1] = ( Kp_hdot * (maxHdot*angle_input[0] - 1.0f*rb.velocity[1]) + thrust_nom)/ (Mathf.Cos(roll_deg*Mathf.PI/180.0f)*Mathf.Cos(pitch_deg*Mathf.PI/180.0f));
-
-            yaw_moment[1] = Kp_r * (turnSpeed*angle_input[1] - prq[1]);
-
-            pitch_moment[2] = Kp_q*(Kp_pitch * (maxTilt*angle_input[2] - pitch_deg) -prq[2]);
-
-            roll_moment[0] = Kp_p*(Kp_roll * (maxTilt*angle_input[3] - roll_deg)   - prq[0]);
-
-
-        }
-        else
-        {
-            thrust = thrustForce * (new Vector3(0.0f, angle_input[0], 0.0f));
-            yaw_moment = thrustMoment * (new Vector3(0.0f, angle_input[1], 0.0f));
-            pitch_moment = thrustMoment * (new Vector3(angle_input[2] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, angle_input[2] * Mathf.Sqrt(2.0f) / 2.0f));
-            roll_moment = thrustMoment * (new Vector3(angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, -1.0f * angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f));
-        }
-        rb.AddRelativeForce(thrust);
-        rb.AddRelativeTorque(Izz*yaw_moment+Iyy*pitch_moment+Ixx*roll_moment);
-        
 
         //rb.AddRelativeTorque(pitch_moment);
         //rb.AddRelativeTorque(yaw_moment);
