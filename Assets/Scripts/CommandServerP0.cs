@@ -98,7 +98,8 @@ public class CommandServerP0 : MonoBehaviour
 	}
 
 	public void FixedUpdate() {
-		EmitTelemetry();
+		// EmitTelemetry();
+        EmitHeartbeat();
 	}
 
 	void EmitTelemetry()
@@ -115,4 +116,48 @@ public class CommandServerP0 : MonoBehaviour
 			_socket.Emit("telemetry", new JSONObject(data));
 		});
 	}
+
+    void EmitHeartbeat()
+    {
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+        print("sending heartbeat....");
+
+        // Collect Data from the Car
+        //Dictionary<string, JSONObject> data = new Dictionary<string, JSONObject>();
+        Dictionary<string, string> data = new Dictionary<string, string>();
+        // _quadController.
+        Msg_heartbeat hrtbt = new Msg_heartbeat
+        {
+            type = 1,
+            autopilot = 1,
+            system_status = 1,
+            base_mode = 1,
+            custom_mode = 1,
+            mavlink_version = 3
+        };
+
+        MavlinkPacket packet = new MavlinkPacket
+        {
+            ComponentId = 255,
+            SystemId = 0,
+            Message = hrtbt
+        };
+
+            //var serializedPacket = _mavlink.Send(packet);
+            var serializedPacket = _mavlink.SendV2(hrtbt);
+            print(BitConverter.ToString(serializedPacket));
+
+            //JSONObject obj = new JSONObject("testing");
+            //print(ByteArrayUtil.ToString(serializedPacket));
+            //obj.AddField("mavmsg", ByteArrayUtil.ToString(serializedPacket));
+            //obj.AddField("mavmsg", "testing");
+            //data["mavmsg"] = obj;
+            
+            data["mavmsg"] = Convert.ToBase64String(serializedPacket); //
+            //ByteArrayUtil.ToString(serializedPacket); // BitConverter.ToString(serializedPacket);
+
+            _socket.Emit("heartbeat", new JSONObject(data));
+        });
+    }
 }

@@ -45,7 +45,12 @@ namespace MavLink
         // The current packet sequence number for transmission
         // public so it can be manipulated for testing
        // Normal usage would only read this
-        public byte txPacketSequence; 
+        public byte txPacketSequence;
+
+        private byte systemId = 0;
+        private byte componentId = 255;
+
+        private byte sequenceNum = 0;
 
        /// <summary>
        /// Create a new MavlinkLink Object
@@ -230,6 +235,82 @@ namespace MavLink
            var bytes = this.Serialize(mavlinkPacket.Message, mavlinkPacket.SystemId, mavlinkPacket.ComponentId);
            return SendPacketLinkLayer(bytes);
        }
+
+        public byte[] SendV2(MavlinkMessage msg)
+        {
+            /* V2 Byte order
+               uint8_t magic;              ///< protocol magic marker
+               uint8_t len;                ///< Length of payload
+               uint8_t incompat_flags;     ///< flags that must be understood
+               uint8_t compat_flags;       ///< flags that can be ignored if not understood
+               uint8_t seq;                ///< Sequence of packet
+               uint8_t sysid;              ///< ID of message sender system/aircraft
+               uint8_t compid;             ///< ID of the message sender component
+               uint8_t msgid 0:7;          ///< first 8 bits of the ID of the message
+               uint8_t msgid 8:15;         ///< middle 8 bits of the ID of the message
+               uint8_t msgid 16:23;        ///< last 8 bits of the ID of the message
+               uint8_t target_sysid;       ///< Optional field for point-to-point messages, used for payload else
+               uint8_t target_compid;      ///< Optional field for point-to-point messages, used for payload else
+               uint8_t payload[max 253];   ///< A maximum of 253 payload bytes
+               uint16_t checksum;          ///< X.25 CRC
+               uint8_t signature[13];      ///< Signature which allows ensuring that the link is tamper-proof
+           */
+
+            // need to first serialize the message itself
+            var buff = new byte[256];
+            var endPos = 0;
+            int msgId = msg.Serialize(buff, ref endPos);
+            var serializedMsg = new byte[endPos];
+            Array.Copy(buff, serializedMsg, endPos);
+
+            // create the packet (msg + 10 header + 2 crc) not adding + 13 signature since setting the header to mark no signature
+            var outBytes = new byte[serializedMsg.Length + 12];
+
+            // add the header to the packet
+            outBytes[0] = MavlinkSettings.ProtocolMarker;
+            outBytes[1] = (byte) endPos;
+            outBytes[2] = 0;  // incompat_flags -> set to 0 to say that the message is not signed!!!
+            outBytes[3] = 0; // compat_flags
+            outBytes[4] = sequenceNum;
+            outBytes[5] = systemId;
+            outBytes[6] = componentId;
+            outBytes[7] = (byte) (msgId & 0xFF);
+            outBytes[8] = (byte)((msgId >> 8) & 0xFF);
+            outBytes[9] = (byte)((msgId >> 16) & 0xFF);
+
+            // add the message to the packet
+            int i;
+            for (i = 0; i < serializedMsg.Length; i++)
+            {
+                outBytes[i + 10] = serializedMsg[i];
+            }
+
+            // add the CRC checksum
+            // Check the CRC. Does not include the starting byte but includes up through the message
+            var crc1 = Mavlink_Crc.Calculate(outBytes, 1, (UInt16)(serializedMsg.Length + 9));
+
+            if (MavlinkSettings.CrcExtra)
+            {
+                var possibleMsgId = outBytes[7];
+                var extra = MavLinkSerializer.Lookup[possibleMsgId];
+                crc1 = Mavlink_Crc.CrcAccumulate(extra.CrcExtra, crc1);
+            }
+
+            byte crc_high = (byte)(crc1 & 0xFF);
+            byte crc_low = (byte)(crc1 >> 8);
+
+            outBytes[i + 10] = crc_high;
+            outBytes[i + 11] = crc_low;
+
+
+
+            // increment the sequence number
+            // this should naturally overflow and cycle back to 0 after 255 since it's a byte
+            sequenceNum++;
+
+            return outBytes;
+        }
+
 
         // Send a raw message over the link - 
         // this  will add start byte, lenghth, crc and other link layer stuff

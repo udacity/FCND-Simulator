@@ -15,7 +15,7 @@ namespace MavLink
     public static class MavlinkSettings
     {
 		public const string WireProtocolVersion = "2.0";
-		public const byte ProtocolMarker = 0xfd;
+        public const byte ProtocolMarker = 0xfd;
 		public const bool CrcExtra = true;
 		public const bool IsLittleEndian = true;
     }
