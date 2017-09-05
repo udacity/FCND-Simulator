@@ -30,8 +30,8 @@ public class CommandServerP0 : MonoBehaviour
 
 	void OnCommand(SocketIOEvent ev)
 	{
-		JSONObject jo = ev.data;
-		var jmsg = jo.GetField("mavmsg");
+		JSONObject obj = ev.data;
+		var jmsg = obj.GetField("mavmsg");
 
 		List<byte> bytes = new List<byte>();
 		for (var i = 0; i < jmsg.Count; i++) {
@@ -84,34 +84,46 @@ public class CommandServerP0 : MonoBehaviour
 		// Mission Param #6	Longitude
 		// Mission Param #7	Altitude (ground level)
 
-		switch (msgstr) {
-			case "MavLink.Msg_heartbeat":
-				Debug.Log("Received hearbeat");
+		// switch (msgstr) {
+		// 	case "MavLink.Msg_heartbeat":
+		// 		Debug.Log("Received hearbeat");
+		// 		break;
+		// 	case "MavLink.Msg_altitude":
+		// 		Debug.Log("Received altitude");
+		// 		break;
+		// 	default:
+		// 		Debug.Log("Received unindentified message");
+		// 		break;
+		// }
+
+		var cmd = obj.GetField("cmd").ToString();
+		switch (cmd) {
+			case "takeoff":
+				// Make drone move up
+				// send telemetry back
 				break;
-			case "MavLink.Msg_altitude":
-				Debug.Log("Received altitude");
+			case "land":
+				// Make drone land
+				// send telemetry back
+				break;
+			case "waypoints":
+				// Fly through waypoints
+				// waypoints
 				break;
 			default:
-				Debug.Log("Received unindentified message");
+				Debug.Log(string.Format("Cmd {0} is invalid", cmd));
 				break;
 		}
 	}
 
 	public void FixedUpdate() {
-		EmitTelemetry();
 	}
 
-	void EmitTelemetry()
+	void EmitTelemetry(Dictionary<string, JSONObject> data)
 	{
 		UnityMainThreadDispatcher.Instance().Enqueue(() =>
 		{
 			print("Attempting to Send...");
-
-			// Collect Data from the Car
-			Dictionary<string, JSONObject> data = new Dictionary<string, JSONObject>();
-			// _quadController.
-			// data["mavmsg"] = new JSONObject();
-
 			_socket.Emit("telemetry", new JSONObject(data));
 		});
 	}
