@@ -1,32 +1,52 @@
 fileFormatVersion: 2
 guid: 5fc3e0aa665af674eacab2a5256f63d2
 TextureImporter:
-  serializedVersion: 2
+  fileIDToRecycleName:
+    21300000: Graffiti_diffuse_0
+    21300002: Graffiti_diffuse_1
+    21300004: Graffiti_diffuse_2
+    21300006: Graffiti_diffuse_3
+    21300008: Graffiti_diffuse_4
+    21300010: Graffiti_diffuse_5
+    21300012: Graffiti_diffuse_6
+    21300014: Graffiti_diffuse_7
+    21300016: Graffiti_diffuse_8
+    21300018: Graffiti_diffuse_9
+    21300020: Graffiti_diffuse_10
+    21300022: Graffiti_diffuse_11
+    21300024: Graffiti_diffuse_12
+  serializedVersion: 4
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
+    sRGBTexture: 1
     linearTexture: 0
-    correctGamma: 0
     fadeOut: 0
     borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
     mipMapFadeDistanceStart: 1
     mipMapFadeDistanceEnd: 3
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: .25
+    heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
-  generateCubemap: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
   seamlessCubemap: 0
   textureFormat: -3
   maxTextureSize: 1024
   textureSettings:
+    serializedVersion: 2
     filterMode: -1
     aniso: 1
     mipBias: -1
-    wrapMode: 1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -34,14 +54,31 @@ TextureImporter:
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-  spritePivot: {x: .5, y: .5}
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
+  alphaUsage: 1
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
-  buildTargetSettings: []
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: Graffiti_diffuse_0
+    - serializedVersion: 2
+      name: Graffiti_diffuse_0
       rect:
         serializedVersion: 2
         x: 5
@@ -49,8 +86,13 @@ TextureImporter:
         width: 401
         height: 153
       alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: Graffiti_diffuse_1
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_1
       rect:
         serializedVersion: 2
         x: 419
@@ -58,8 +100,13 @@ TextureImporter:
         width: 416
         height: 125
       alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: Graffiti_diffuse_2
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_2
       rect:
         serializedVersion: 2
         x: 0
@@ -68,7 +115,12 @@ TextureImporter:
         height: 67
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_3
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_3
       rect:
         serializedVersion: 2
         x: 441
@@ -76,8 +128,13 @@ TextureImporter:
         width: 361
         height: 165
       alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: Graffiti_diffuse_4
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_4
       rect:
         serializedVersion: 2
         x: 20
@@ -86,7 +143,12 @@ TextureImporter:
         height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_5
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_5
       rect:
         serializedVersion: 2
         x: 430
@@ -95,7 +157,12 @@ TextureImporter:
         height: 167
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_6
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_6
       rect:
         serializedVersion: 2
         x: 12
@@ -104,7 +171,12 @@ TextureImporter:
         height: 142
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_7
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_7
       rect:
         serializedVersion: 2
         x: 429
@@ -113,7 +185,12 @@ TextureImporter:
         height: 152
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_8
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_8
       rect:
         serializedVersion: 2
         x: 7
@@ -122,7 +199,12 @@ TextureImporter:
         height: 120
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_9
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_9
       rect:
         serializedVersion: 2
         x: 428
@@ -131,7 +213,12 @@ TextureImporter:
         height: 166
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_10
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_10
       rect:
         serializedVersion: 2
         x: 15
@@ -140,7 +227,12 @@ TextureImporter:
         height: 148
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_11
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_11
       rect:
         serializedVersion: 2
         x: 417
@@ -149,7 +241,12 @@ TextureImporter:
         height: 156
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: Graffiti_diffuse_12
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Graffiti_diffuse_12
       rect:
         serializedVersion: 2
         x: 6
@@ -158,5 +255,13 @@ TextureImporter:
         height: 143
       alignment: 0
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    outline: []
+    physicsShape: []
   spritePackingTag: 
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

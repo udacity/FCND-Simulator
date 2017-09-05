@@ -119,7 +119,7 @@ public class QuadController : MonoBehaviour
 		Right = right.forward;
 		Up = transform.up;
 		CreateCameraTex ();
-		transform.position = Vector3.up * 10;
+		// transform.position = Vector3.up * 10;
 		UseGravity = rb.useGravity;
 		UpdateConstraints ();
 		rb.maxAngularVelocity = Mathf.Infinity;
