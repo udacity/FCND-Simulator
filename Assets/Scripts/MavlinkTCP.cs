@@ -30,6 +30,8 @@ public class MavlinkTCP : MonoBehaviour {
     // flag to say the read thread should be reading
     private Boolean _running = true;
 
+    private int _port = 15321;
+
     // Use this for initialization
     void Start ()
     {
@@ -40,10 +42,98 @@ public class MavlinkTCP : MonoBehaviour {
         _mavlink.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
 
         // start the thread for the tcp connection
-        _tcpListenerThread = new Thread(() => TcpThread());
+        _tcpListenerThread = new Thread(TcpThread);
         _tcpListenerThread.Start();
+    }
 
+    void TcpThread()
+    {
+        try
+        {
+            // Set the TcpListener on port 5760 on the localhost (127.0.0.1)
+            IPAddress localAddr = IPAddress.Parse("127.0.0.1");
+
+            // create the listener
+            _server = new TcpListener(localAddr, _port);
+
+            // Start listening for client requests.
+            _server.Start();
+
+            // wait for a connection to be made 
+            // NOTE: this is a blocking call!!!!
+            // Enter the listening loop.
+            print("Waiting for a connection... ");
+
+            // Perform a blocking call to accept requests.
+            // You could also user server.AcceptSocket() here.
+            _client = _server.AcceptTcpClient();
+            print("Connected!");
+
+            // at this point we have a client, so let's get the stream to make this easier
+            _stream = _client.GetStream();
+
+            while (true)
+            {
+                // read and write from this thread for the moment
+                //ReadFromClient();
+
+                // TODO: would need to rate limit if doing things here
+
+                // for now just send a heartbeat
+                Msg_heartbeat hrtbt = new Msg_heartbeat
+                {
+                    type = 1,
+                    autopilot = 1,
+                    system_status = 1,
+                    base_mode = 1,
+                    custom_mode = 1,
+                    mavlink_version = 3
+                };
+                var serializedPacket = _mavlink.SendV2(hrtbt);
+                _stream.Write(serializedPacket, 0, serializedPacket.Length);
+                print("wrote to tcp");
+            }
+
+        }
+        catch (SocketException e)
+        {
+            Console.WriteLine("SocketException: {0}", e);
+        } finally
+        {
+            // this is to ensure the sever stops once a disconnection happens, or when done with everything
+            _server.Stop();
+        }
+
+        // TODO: probably want to kill the thread at this point...?
+
+        // TODO: need to stop the server at some point
+        //_server.Stop();
+    }
+    
+
+    // this will simply continually read from the client in a thread?
+    // TODO: can also have this simply read on every frame update....
+    void ReadFromClient()
+    {
+        // make a fairly large buffer
+        byte[] bytes = new byte[1024];
         
+
+        // check for data, and while there is still data, parse it
+        while (_stream.Read(bytes, 0, bytes.Length) != 0)
+        {
+            // have mavlink parse the incoming bytes
+            // this will trigger the new packet events
+            _mavlink.ParseBytes(bytes);
+        }
+
+
+    }
+
+
+    void OnPacketReceived(object sender, MavlinkPacket packet)
+    {
+        print("received a packet!!!");
     }
 
     // Update is called once per frame
@@ -124,95 +214,5 @@ public class MavlinkTCP : MonoBehaviour {
 
     }
 
-    void TcpThread()
-    {
-        try
-        {
-            // Set the TcpListener on port 5760 on the localhost (127.0.0.1)
-            Int32 port = 5760;
-            IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-
-            // create the listener
-            _server = new TcpListener(localAddr, port);
-
-            // Start listening for client requests.
-            _server.Start();
-
-            // wait for a connection to be made 
-            // NOTE: this is a blocking call!!!!
-            // Enter the listening loop.
-            print("Waiting for a connection... ");
-
-            // Perform a blocking call to accept requests.
-            // You could also user server.AcceptSocket() here.
-            _client = _server.AcceptTcpClient();
-            print("Connected!");
-
-            // at this point we have a client, so let's get the stream to make this easier
-            _stream = _client.GetStream();
-
-            while (_running)
-            {
-                // read and write from this thread for the moment
-                //ReadFromClient();
-
-                // TODO: would need to rate limit if doing things here
-
-                // for now just send a heartbeat
-                Msg_heartbeat hrtbt = new Msg_heartbeat
-                {
-                    type = 1,
-                    autopilot = 1,
-                    system_status = 1,
-                    base_mode = 1,
-                    custom_mode = 1,
-                    mavlink_version = 3
-                };
-                var serializedPacket = _mavlink.SendV2(hrtbt);
-                _stream.Write(serializedPacket, 0, serializedPacket.Length);
-                print("wrote to tcp");
-            }
-
-        }
-        catch (SocketException e)
-        {
-            Console.WriteLine("SocketException: {0}", e);
-        } finally
-        {
-            // this is to ensure the sever stops once a disconnection happens, or when done with everything
-            _server.Stop();
-        }
-
-        // TODO: probably want to kill the thread at this point...?
-
-        // TODO: need to stop the server at some point
-        //_server.Stop();
-    }
-    
-
-    // this will simply continually read from the client in a thread?
-    // TODO: can also have this simply read on every frame update....
-    void ReadFromClient()
-    {
-        // make a fairly large buffer
-        byte[] bytes = new byte[1024];
-        
-
-        // check for data, and while there is still data, parse it
-        while (_stream.Read(bytes, 0, bytes.Length) != 0)
-        {
-            // have mavlink parse the incoming bytes
-            // this will trigger the new packet events
-            _mavlink.ParseBytes(bytes);
-        }
-
-
-    }
-
-
-    void OnPacketReceived(object sender, MavlinkPacket packet)
-    {
-        print("received a packet!!!");
-    }
 
 }
