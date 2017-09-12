@@ -1,5 +1,6 @@
 using System;
 using MavLink;
+using UnityEngine;
 
 namespace MavLink
 {
@@ -61,6 +62,92 @@ namespace MavLink
            leftovers = new byte[] {};
        }
 
+        public void ParseBytesV2(byte[] newlyReceived) {
+            /* 
+            V2 Byte order
+
+            uint8_t magic;              ///< protocol magic marker
+            uint8_t len;                ///< Length of payload
+            uint8_t incompat_flags;     ///< flags that must be understood
+            uint8_t compat_flags;       ///< flags that can be ignored if not understood
+            uint8_t seq;                ///< Sequence of packet
+            uint8_t sysid;              ///< ID of message sender system/aircraft
+            uint8_t compid;             ///< ID of the message sender component
+            uint8_t msgid 0:7;          ///< first 8 bits of the ID of the message
+            uint8_t msgid 8:15;         ///< middle 8 bits of the ID of the message
+            uint8_t msgid 16:23;        ///< last 8 bits of the ID of the message
+            uint8_t target_sysid;       ///< Optional field for point-to-point messages, used for payload else
+            uint8_t target_compid;      ///< Optional field for point-to-point messages, used for payload else
+            uint8_t payload[max 253];   ///< A maximum of 253 payload bytes
+            uint16_t checksum;          ///< X.25 CRC
+            uint8_t signature[13];      ///< Signature which allows ensuring that the link is tamper-proof
+            */
+
+            var s = "";
+            for (var i = 0; i < newlyReceived.Length; i++) {
+                s += newlyReceived[i].ToString() + " ";
+            }
+            Debug.Log(string.Format("packet len = {0}, byte contents - {1}", newlyReceived.Length, s));
+
+            // deocde the packet (msg + 10 header + 2 crc) not adding + 13 signature since setting the header to mark no signature
+            // ignoring signature
+
+            byte headerLen = 10;
+            var magic = newlyReceived[0];
+            var payloadLen = newlyReceived[1];
+            var incompatFlags = newlyReceived[2];
+            var compatFlags = newlyReceived[3];
+            var seq = newlyReceived[4];
+            var sysid = newlyReceived[5];
+            var compid = newlyReceived[6];
+            var msg = this.Deserialize(newlyReceived, 7);
+            var checksumLow = newlyReceived[headerLen + payloadLen + 1];
+            var checksumHigh = newlyReceived[headerLen + payloadLen];
+
+
+            // subtract 1 since we start from 1
+            var crc1 = Mavlink_Crc.Calculate(newlyReceived, (UInt16)(1), (UInt16)(headerLen + payloadLen - 1));
+
+            if (MavlinkSettings.CrcExtra)
+            {
+                var possibleMsgId = newlyReceived[7];
+                Debug.Log(string.Format("Possible message ID = {0}", possibleMsgId));
+
+                if (!MavLinkSerializer.Lookup.ContainsKey(possibleMsgId))
+                {
+                    // we have received an unknown message. In this case we don't know the special
+                    // CRC extra, so we have no choice but to fail.
+
+                    // The way we do this is to just let the procedure continue
+                    // There will be a natural failure of the main packet CRC
+                }
+                else
+                {
+                    var extra = MavLinkSerializer.Lookup[possibleMsgId];
+                    crc1 = Mavlink_Crc.CrcAccumulate(extra.CrcExtra, crc1);
+                }
+            }
+
+            byte crcHigh = (byte)(crc1 & 0xFF);
+            byte crcLow = (byte)(crc1 >> 8);
+
+            if (crcHigh == checksumHigh && crcLow == checksumLow) {
+                var packet = new MavlinkPacket
+                {
+                    SystemId = sysid,
+                    ComponentId = compid,
+                    SequenceNumber = seq,
+                    Message = msg
+                };
+                PacketReceived(this, packet);
+                PacketsReceived++;
+            } else {
+                // TODO: change the offset the actual spot of the problem
+                PacketFailedCRC(this, new PacketCRCFailEventArgs(newlyReceived, 0));
+                BadCrcPacketsReceived++;
+            }
+        }
+
 
         /// <summary>
        /// Process latest bytes from the stream. Received packets will be raised in the event
@@ -88,7 +175,7 @@ namespace MavLink
            while (true)
            {
                // Hunt for the start char
-               int huntStartPos = (int)i;
+               int huntStartPos = (int) i;
 
                while (i < bytesToProcess.Length && bytesToProcess[i] != MavlinkSettings.ProtocolMarker)
                    i++;
@@ -138,6 +225,7 @@ namespace MavLink
                 * (n+7) to (n+8)	 Checksum (high byte, low byte) for v0.9, lowbyte, highbyte for 1.0
                 *
                 */
+
                UInt16 payLoadLength = bytesToProcess[i + 1];
 
                // Now we know the packet length, 
@@ -390,10 +478,13 @@ namespace MavLink
 
         public MavlinkMessage Deserialize(byte[] bytes, int offset)
         {
-            // first byte is the mavlink 
+            // TODO: Use the 2nd and 3rd bytes to get the msg id. Currently 
+            // assumes the msg id the first byte, which is ok for now because 
+            // most messages don't use the other 2 bytes.
             var packetNum = (int)bytes[offset + 0];
             var packetGen = MavLinkSerializer.Lookup[packetNum].Deserializer;
-            return packetGen.Invoke(bytes, offset + 1);
+            // we add 3 to the offset because the message id takes up 3 bytes
+            return packetGen.Invoke(bytes, offset + 3);
         }
 
         public byte[] Serialize(MavlinkMessage message, int systemId, int componentId)

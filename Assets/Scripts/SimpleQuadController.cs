@@ -91,15 +91,15 @@ public class SimpleQuadController : MonoBehaviour
 		if ( Input.GetKeyDown ( KeyCode.F12 ) )
 		{
 			active = !active;
-            
 			if ( active )
 			{
 				controller.UseGravity = true;
 				controller.rb.isKinematic = false;
 				controller.rb.freezeRotation = false;
 				controller.rb.velocity = Vector3.zero;
-			} else
+			} else  {
 				controller.rb.freezeRotation = false;
+            }
 		}
 
 		if ( Input.GetKeyDown ( KeyCode.R ) )
@@ -372,4 +372,35 @@ public class SimpleQuadController : MonoBehaviour
 			active = !active;
 		}
 	}
+
+    // public void CommandGPS(double latitude, double longitude, double altitude)
+    // {
+    //     pos_set = true;
+    //     posHoldLocal.x = (float)(latitude-latitude0) / M2Latitude;
+    //     posHoldLocal.y = (float)(altitude);
+    //     posHoldLocal.z = (float)(longitude -longitude0) / M2Longitude;
+    // }
+
+    //Command the quad to a GPS location (latitude, relative_altitude, longitude)
+    public void CommandGPS(Vector3 GPS)
+    {
+        posHoldLocal.x = (GPS.x - initGPS.x) / M2Latitude;
+        posHoldLocal.y = (GPS.y - initGPS.y);
+        posHoldLocal.z = (GPS.z - initGPS.z) / M2Longitude;
+    }
+
+    public void ArmVehicle()
+    {
+        motors_armed = true;
+    }
+
+    public void DisarmVehicle()
+    {
+        motors_armed = false;
+    }
+
+    public void SetGuidedMode(bool input_guided)
+    {
+        guided = input_guided;
+    }
 }

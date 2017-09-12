@@ -8,211 +8,210 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 
 // needed for mavlink
 using MavLink;
 
+// TODO: possibly use a class like this to keep track of 
+// task/client pairs.
+public class ClientState {
+    public TcpClient client = null;
+
+    public Task task =  null;
+}
+
+
 public class MavlinkTCP : MonoBehaviour {
 
-    // the server
-    private TcpListener _server = null;
-
-    // the connected client - right now will only have 1 client connected
-    private TcpClient _client = null;
-    private NetworkStream _stream = null;
-
-    // mavlink instance
+	private SimpleQuadController _simpleController;
+	private QuadController _quadController;
     private Mavlink _mavlink;
 
     // thread for the tcp connection
     private Thread _tcpListenerThread;
 
-    // flag to say the read thread should be reading
-    private Boolean _running = true;
 
-    private int _port = 15321;
+    public int _heartbeatInterval = 1;
+
+    public int _telemetryInterval = 10;
+
+    public Int32 _port = 5760;
+
+    public string _ip = "127.0.0.1";
+
 
     // Use this for initialization
-    void Start ()
-    {
-        // create a new instance of mavlink
+    void Start () {
+		_simpleController = GameObject.Find("Quad Drone").GetComponent<SimpleQuadController>();
+		_quadController = GameObject.Find("Quad Drone").GetComponent<QuadController>();
         _mavlink = new Mavlink();
-
-        // set up vent listener for packets being decoded
+        // setup event listeners
         _mavlink.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
-
+        _mavlink.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
         // start the thread for the tcp connection
         _tcpListenerThread = new Thread(TcpThread);
         _tcpListenerThread.Start();
     }
 
-    void TcpThread()
-    {
-        try
-        {
-            // Set the TcpListener on port 5760 on the localhost (127.0.0.1)
-            IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-
-            // create the listener
-            _server = new TcpListener(localAddr, _port);
-
-            // Start listening for client requests.
-            _server.Start();
-
-            // wait for a connection to be made 
-            // NOTE: this is a blocking call!!!!
-            // Enter the listening loop.
-            print("Waiting for a connection... ");
-
-            // Perform a blocking call to accept requests.
-            // You could also user server.AcceptSocket() here.
-            _client = _server.AcceptTcpClient();
-            print("Connected!");
-
-            // at this point we have a client, so let's get the stream to make this easier
-            _stream = _client.GetStream();
-
-            while (true)
-            {
-                // read and write from this thread for the moment
-                //ReadFromClient();
-
-                // TODO: would need to rate limit if doing things here
-
-                // for now just send a heartbeat
-                Msg_heartbeat hrtbt = new Msg_heartbeat
-                {
-                    type = 1,
-                    autopilot = 1,
-                    system_status = 1,
-                    base_mode = 1,
-                    custom_mode = 1,
-                    mavlink_version = 3
-                };
-                var serializedPacket = _mavlink.SendV2(hrtbt);
-                _stream.Write(serializedPacket, 0, serializedPacket.Length);
-                print("wrote to tcp");
-            }
-
+    async void EmitTelemetry(NetworkStream stream) {
+        var waitFor = (int) (1000f / _telemetryInterval);
+        while (stream.CanRead && stream.CanWrite) {
+            // print("Emitting telemetry data ...");
+            var msg = new Msg_global_position_int {
+                lat = (int) (_quadController.GPS.x*1e7),
+                lon = (int) (-1.0*_quadController.GPS.z*1e7),
+                alt = (int) (_quadController.GPS.y*1000),
+                relative_alt = (int) (_quadController.GPS.y*1000),
+                vx = 0,
+                vy = 0,
+                vz = 0,
+                hdg = 0
+            };
+            var serializedPacket = _mavlink.SendV2(msg);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
+            await Task.Delay(waitFor);
         }
-        catch (SocketException e)
-        {
-            Console.WriteLine("SocketException: {0}", e);
-        } finally
-        {
-            // this is to ensure the sever stops once a disconnection happens, or when done with everything
-            _server.Stop();
-        }
-
-        // TODO: probably want to kill the thread at this point...?
-
-        // TODO: need to stop the server at some point
-        //_server.Stop();
     }
     
-
-    // this will simply continually read from the client in a thread?
-    // TODO: can also have this simply read on every frame update....
-    void ReadFromClient()
-    {
-        // make a fairly large buffer
-        byte[] bytes = new byte[1024];
-        
-
-        // check for data, and while there is still data, parse it
-        while (_stream.Read(bytes, 0, bytes.Length) != 0)
-        {
-            // have mavlink parse the incoming bytes
-            // this will trigger the new packet events
-            _mavlink.ParseBytes(bytes);
-        }
-
-
-    }
-
-
-    void OnPacketReceived(object sender, MavlinkPacket packet)
-    {
-        print("received a packet!!!");
-    }
-
-    // Update is called once per frame
-    void Update ()
-    {
-        /*
-        // if we have a client, want to send the desired mavlink data here
-        if (_client != null)
-        {
-            // first check to see if there are any new commands that have come in
-            ReadFromClient();
-
-            // TODO: send the correct packets at an appropriate rate
-
-            // for now just send a heartbeat
-            Msg_heartbeat hrtbt = new Msg_heartbeat
-            {
+    async void EmitHearbeat(NetworkStream stream) {
+        var waitFor = (int) (1000f / _heartbeatInterval);
+        while (stream.CanRead && stream.CanWrite) {
+            // print("Emitting hearbeat ...");
+            byte base_mode;
+            if (_simpleController.guided) {
+                base_mode = (byte) MAV_MODE.MAV_MODE_GUIDED_ARMED;
+            } else {
+                base_mode = (byte) MAV_MODE.MAV_MODE_GUIDED_DISARMED;
+            }
+            Msg_heartbeat msg = new Msg_heartbeat {
                 type = 1,
                 autopilot = 1,
                 system_status = 1,
-                base_mode = 1,
+                base_mode = base_mode,
                 custom_mode = 1,
                 mavlink_version = 3
             };
-            var serializedPacket = _mavlink.SendV2(hrtbt);
-            _stream.Write(serializedPacket, 0, serializedPacket.Length);
-        }
-        */
-    }
-
-    // this is called at a fixed rate
-    /*
-    void FixedUpdate()
-    {
-        // if we have a client, want to send the desired mavlink data here
-        if (_client != null)
-        {
-            // first check to see if there are any new commands that have come in
-            ReadFromClient();
-
-            // TODO: send the correct packets at an appropriate rate
-
-            // for now just send a heartbeat
-            Msg_heartbeat hrtbt = new Msg_heartbeat
-            {
-                type = 1,
-                autopilot = 1,
-                system_status = 1,
-                base_mode = 1,
-                custom_mode = 1,
-                mavlink_version = 3
-            };
-            var serializedPacket = _mavlink.SendV2(hrtbt);
-            _stream.Write(serializedPacket, 0, serializedPacket.Length);
+            var serializedPacket = _mavlink.SendV2(msg);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
+            await Task.Delay(waitFor);
         }
     }
-    */
+
+    async void HandleClientAsync(TcpClient client) {
+        var stream = client.GetStream();
+        EmitTelemetry(stream);
+        EmitHearbeat(stream);
+
+        while (client.Connected && stream.CanRead) {
+            var buf = new byte[1024];
+            // var bytesRead = stream.Read(buf, 0, buf.Length);
+            var bytesRead = await stream.ReadAsync(buf, 0, buf.Length);
+            if (bytesRead > 0) {
+                var dest = new byte[bytesRead];
+                Array.Copy(buf, dest, bytesRead);
+                _mavlink.ParseBytesV2(dest);
+            }
+        }
+    }
+
+    void Update () {
+    }
+
+    void FixedUpdate() {
+    }
+
+    async void TcpListenAsync() {
+    }
+
+    void TcpThread() {
+        try {
+            // Setup the TcpListener 
+            var addr = IPAddress.Parse(_ip);
+            var listener = new TcpListener(addr, _port);
+            // Start listening for client requests.
+            listener.Start();
+            print("Starting TCP MAVLink server ...");
+
+            while (true) {
+                var client = listener.AcceptTcpClient();
+                print("Accepted connection !!!");
+                // Task task = await HandleClientAsync(client);
+                HandleClientAsync(client);
+            }
+        } catch (SocketException e) {
+            print(string.Format("SocketException: {0}", e));
+        } finally {
+            // this is to ensure the sever stops once a disconnection happens, or when done with everything
+        }
+    }
 
     // called when this is destroyed
-    private void OnDestroy()
-    {
-        // tell everything to stop running
-        _running = false;
-
-        // make sure that our threads are all finished
-        _tcpListenerThread.Join();
-        
-        // want to make sure we close the client connection and stop the server
-        if (_client != null)
-        {
-            _client.Close();
-        }
-
-        if (_server != null)
-        {
-            _server.Stop();
-        }
-
+    private void OnDestroy() {
+        _tcpListenerThread = null;
     }
 
+    void OnPacketReceived(object sender, MavlinkPacket packet) {
+        print(string.Format("Received packet, message type = {0}", packet.Message));
+        var msgstr = packet.Message.ToString();
+        switch (msgstr) {
+            case "MavLink.Msg_heartbeat":
+                MsgHeartbeat(packet);
+                break;
+            case "MavLink.Msg_command_int":
+                MsgCommandInt(packet);
+                break;
+            default:
+                Debug.Log("Unknown message type !!!");
+                break;
+        }
+    }
 
+    void OnPacketFailure(object sender, PacketCRCFailEventArgs args) {
+        print("failed to receive a packet!!!");
+    }
+
+    // The methods below determine what to do with the drone.
+    // TODO: Make this a separate file (DroneControllerMeta.cs?)
+    void MsgCommandInt(MavlinkPacket pack) {
+        var msg = (MavLink.Msg_command_int) pack.Message;
+        var command = (MAV_CMD) msg.command;
+
+        print(string.Format("Command = {0}", command));
+
+        switch (command) {
+            case MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM:
+                var param1 = msg.param1;
+                if (param1 == 1) {
+                    _simpleController.ArmVehicle();
+                    print("ARMED VEHICLE !!!");
+                } else {
+                    _simpleController.DisarmVehicle();
+                    print("DISARMED VEHICLE !!!");
+                }
+                break;
+            case MAV_CMD.MAV_CMD_NAV_GUIDED_ENABLE:
+                _simpleController.guided = true;
+                print("VEHICLE IS BEING GUIDED !!!");
+                break;
+            case MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM:
+                break;
+            case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
+                var gpsLoc = new Vector3(msg.x, msg.y, msg.z);
+                _simpleController.CommandGPS(gpsLoc);
+                print("TAKING OFF !!!");
+                break;
+            case MAV_CMD.MAV_CMD_NAV_LAND:
+                print("LANDING !!!");
+                break;
+            default:
+                break;
+        }
+    }
+
+    // TODO: keep track of when last heartbeat was received and
+    // potentially do something.
+    void MsgHeartbeat(MavlinkPacket pack) {
+        // var msg = (MavLink.Msg_heartbeat) pack.Message;
+    }
 }
