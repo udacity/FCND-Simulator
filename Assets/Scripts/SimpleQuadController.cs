@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class SimpleQuadController : MonoBehaviour
 {
-	public Transform camTransform;
+
+    const float M2Latitude = 1.0f / 111111.0f;
+    Vector3 initGPS = new Vector3(37.412939f, 0.0f,121.995635f);
+    const float M2Longitude = 1.0f / (0.8f * 111111.0f);
+
+    public Transform camTransform;
 	public QuadController controller;
 	public FollowCamera followCam;
 	public PathFollower pather;
@@ -18,22 +23,26 @@ public class SimpleQuadController : MonoBehaviour
     public bool posctl = true;
 
     //Control Gains
-    public float Kp_hdot = 20.0f;
-    public float Kp_r = 10.0f;
-    public float Kp_roll = 4.0f;
-    public float Kp_p = 6.0f;
-    public float Kp_pitch = 4.0f;
-    public float Kp_q = 6.0f;
-    public float Kp_pos = 0.05f;
-    public float Kp_vel = -0.05f;
+    public float Kp_hdot = 10.0f;
+    public float Kp_r = 20.0f;
+    public float Kp_roll = 6.5f;
+    public float Kp_p = 10.0f;
+    public float Kp_pitch = 6.5f;
+    public float Kp_q = 10.0f;
+    public float Kp_pos = 0.1f;
+    public float Kp_vel = 0.3f;//-0.05f;
+    public float Kd_vel = 0.0f;
+    public float Kp_alt = 1.0f;
+    public float Ki_hdot = 0.1f;
 
     //Vehicle control thresholds
-    public float posctl_band = 0.25f;
+    public float posctl_band = 0.1f;
+    public float posHoldDeadband = 1.0f;
     public float moveSpeed = 10;
-    public float turnSpeed = 90;
+    public float turnSpeed = 2.0f; //In radians
     public float thrustForce = 25.0f;
     public float thrustMoment = 2.0f;
-    public float maxTilt = 22.5f;
+    public float maxTilt = 0.5f; //MaxTilt in Radians
     public float maxHdot = 5.0f;
 
     //Default inertia data
@@ -49,9 +58,13 @@ public class SimpleQuadController : MonoBehaviour
     
     private float h_des = 0.0f;
 
+
+
     //
     private bool pos_set = false;
-    Vector3 pos_hold =new Vector3(0.0f,0.0f,0.0f);
+    Vector3 posHoldLocal =new Vector3(0.0f,0.0f,0.0f);
+    Vector3 lastVelocityErrorBody = new Vector3(0.0f,0.0f,0.0f);
+    float hDotInt = 0.0f;
 
 	public bool active;
 	
@@ -67,10 +80,14 @@ public class SimpleQuadController : MonoBehaviour
 
         rb.mass = mass;
         rb.inertiaTensor.Set(Ixx,Izz,Iyy);
+
 	}
 
-	void LateUpdate ()
+	void FixedUpdate ()
 	{
+        moveSpeed = 15.0f;
+        turnSpeed = 2.0f;
+        maxTilt = 0.5f;
 		if ( Input.GetKeyDown ( KeyCode.F12 ) )
 		{
 			active = !active;
@@ -100,15 +117,15 @@ public class SimpleQuadController : MonoBehaviour
 		if ( !active )
 			return;
 
-        //Test Input for GoTo mode
+        //TODO: Remove this, it is for testing the Guided Mode
         if( Input.GetKeyDown(KeyCode.Alpha9))
         {
             guided = true;
-            pos_hold.x = rb.position.x + 20.0f;
-            pos_hold.y = rb.position.y + 5.0f;
-            pos_hold.z = rb.position.z + 20.0f;
+            posHoldLocal.x = rb.position.x + 20.0f;
+            posHoldLocal.y = rb.position.y + 5.0f;
+            posHoldLocal.z = rb.position.z + 20.0f;
             pos_set = true;
-            Debug.Log(pos_hold);
+            Debug.Log(posHoldLocal);
         }
 
 
@@ -117,7 +134,21 @@ public class SimpleQuadController : MonoBehaviour
             motors_armed = !motors_armed;
 
 
-
+        Vector3 rollYawPitch = controller.navTransform.eulerAngles*Mathf.PI/180.0f;
+        for (int i = 0;i < 3; i++)
+        {
+            if (rollYawPitch[i] > Mathf.PI)
+                rollYawPitch[i] = rollYawPitch[i] - 2.0f*Mathf.PI;
+            else if (rollYawPitch[i] < -Mathf.PI)
+                rollYawPitch[i] = rollYawPitch[i] + 2.0f*Mathf.PI;
+        }
+        Vector3 prq = controller.AngularVelocityBody;
+        Vector3 prqRate = controller.AngularAccelerationBody;
+        Vector3 localPosition = controller.GPS;
+        Vector3 bodyVelocity = controller.BodyVelocity;
+        localPosition.x = (localPosition.x - initGPS.x) / M2Latitude;
+        localPosition.y = (localPosition.y - initGPS.y);
+        localPosition.z = (localPosition.z - initGPS.z) / M2Longitude;
 
 
         //Direct Control of the moments
@@ -131,35 +162,83 @@ public class SimpleQuadController : MonoBehaviour
         {
             if (posctl || guided)
             {
+                /*
                 Vector3 velCmd = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), Input.GetAxis("Thrust"));
                 Vector3 vel = rb.transform.InverseTransformDirection(rb.velocity);
-
-                if (guided|| Mathf.Sqrt(Mathf.Pow(velCmd.x, 2.0f) + Mathf.Pow(velCmd.y, 2.0f) + Mathf.Pow(velCmd.z, 2.0f)) < posctl_band)
+                */
+                Vector3 velCmdBody = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Thrust"), -Input.GetAxis("Horizontal"));
+                float yawCmd = Input.GetAxis("Yaw");
+                if (guided|| Mathf.Sqrt(Mathf.Pow(velCmdBody.x, 2.0f) + Mathf.Pow(velCmdBody.y, 2.0f) + Mathf.Pow(velCmdBody.z, 2.0f)) < posctl_band)
                 {
                     if (!pos_set)
                     {
+                        /*
                         pos_hold.x = rb.position.x;
                         pos_hold.y = rb.position.y;
                         pos_hold.z = rb.position.z;
+                        */
+                        posHoldLocal = localPosition;
                         pos_set = true;
-                        Debug.Log(pos_hold);
+                        Debug.Log(posHoldLocal);
                     }
+                    /*
                     Vector3 posErrorRel = rb.transform.InverseTransformDirection(pos_hold - rb.position);
 
 
-                    velCmd[2] = Kp_pos * posErrorRel[1];
+                    velCmd[2] = Kp_alt* posErrorRel[1];
                     velCmd[0] = Kp_pos * posErrorRel[0];
                     velCmd[1] = -Kp_pos * posErrorRel[2];
+                    */
+                    Vector3 posErrorLocal = posHoldLocal - localPosition;
+                    Vector3 velCmdLocal;
+
+                    //Put a deadband around the position hold
+                    if (Mathf.Sqrt(Mathf.Pow(posErrorLocal.x, 2.0f) + Mathf.Pow(posErrorLocal.z, 2.0f)) < posHoldDeadband)
+                    {
+                        velCmdLocal.x = 0.0f;
+                        velCmdLocal.z = 0.0f;
+                    }
+                    else
+                    {
+                        velCmdLocal.x = Kp_pos * posErrorLocal.x;
+                        velCmdLocal.z = Kp_pos * posErrorLocal.z;
+                    }
+                    
+                    velCmdLocal.y = Kp_alt * posErrorLocal.y;
+                   
+
+                    float cosYaw = Mathf.Cos(rollYawPitch.y);
+                    float sinYaw = Mathf.Sin(rollYawPitch.y);
+                    velCmdBody.x =cosYaw * velCmdLocal.x - sinYaw*velCmdLocal.z;
+                    velCmdBody.z = sinYaw * velCmdLocal.x + cosYaw* velCmdLocal.z;
+
+                    velCmdBody.y = velCmdLocal.y;
 
                 }
                 else
                 {
                     pos_set = false;
+                    
                 }
+
+                Vector3 velocityErrorBody = new Vector3(0.0f, 0.0f, 0.0f);
+                Vector3 velocityErrorBodyD = new Vector3(0.0f, 0.0f, 0.0f);
+                velocityErrorBody.x = moveSpeed * velCmdBody.x - bodyVelocity.x;
+                velocityErrorBody.z = moveSpeed * velCmdBody.z - bodyVelocity.z;
+                velocityErrorBodyD = (velocityErrorBody - lastVelocityErrorBody) / Time.deltaTime;
+                lastVelocityErrorBody = velocityErrorBody;
+
+                angle_input[2] = -Kp_vel * velocityErrorBody.x - Kd_vel * velocityErrorBodyD.x;
+                angle_input[3] = Kp_vel * velocityErrorBody.z + Kd_vel * velocityErrorBodyD.z;
+
+                angle_input[0] = velCmdBody.y;
+                angle_input[1] = yawCmd;
+                /*
                 angle_input[0] = velCmd.z;
                 angle_input[1] = Input.GetAxis("Yaw");
                 angle_input[2] = Kp_vel * (moveSpeed * velCmd.x - vel.x);
                 angle_input[3] = -Kp_vel * (-moveSpeed * velCmd.y - vel.z);
+                */
             }
             else
             {
@@ -184,23 +263,30 @@ public class SimpleQuadController : MonoBehaviour
                 
                 float thrust_nom = -1.0f * rb.mass * Physics.gravity[1];
 
-                Vector3 prq = rb.transform.InverseTransformDirection(rb.angularVelocity) * 180.0f / Mathf.PI;
+                float hDotError = (maxHdot * angle_input[0] - 1.0f * controller.LinearVelocity.y);
+                hDotInt = hDotInt + hDotError * Time.deltaTime;
 
-                float roll_deg = rb.transform.eulerAngles.x;
-                if (roll_deg > 180.0)
-                    roll_deg = roll_deg - 360.0f;
-
-                float pitch_deg = rb.transform.eulerAngles.z;
-                if (pitch_deg > 180.0)
-                    pitch_deg = pitch_deg - 360.0f;
-
-                thrust[1] = (Kp_hdot * (maxHdot * angle_input[0] - 1.0f * rb.velocity[1]) + thrust_nom) / (Mathf.Cos(roll_deg * Mathf.PI / 180.0f) * Mathf.Cos(pitch_deg * Mathf.PI / 180.0f));
-
+                thrust[1] = (Kp_hdot * hDotError + Ki_hdot*hDotInt+ thrust_nom) / (Mathf.Cos(rollYawPitch.x) * Mathf.Cos(rollYawPitch.z));
+                
                 yaw_moment[1] = Kp_r * (turnSpeed * angle_input[1] - prq[1]);
 
-                pitch_moment[2] = Kp_q * (Kp_pitch * (maxTilt * angle_input[2] - pitch_deg) - prq[2]);
+                Debug.Log("Pitch: " + rollYawPitch.z);
+                float pitchError = maxTilt * angle_input[2] - rollYawPitch.z;
+                float rollError = maxTilt * angle_input[3] - rollYawPitch.x;
 
-                roll_moment[0] = Kp_p * (Kp_roll * (maxTilt * angle_input[3] - roll_deg) - prq[0]);
+                float pitchRateError = Kp_pitch * pitchError - prq.z;
+                Debug.Log("Q: "+ prq.z );
+
+                
+                float rollRateError = Kp_roll * rollError - prq.x;
+
+                pitch_moment[2] = Kp_q * pitchRateError;
+
+                Debug.Log("Pitch Moment: " +  pitch_moment[2]);
+
+                roll_moment[0] = Kp_p * rollRateError;
+
+
 
 
             }
@@ -212,7 +298,7 @@ public class SimpleQuadController : MonoBehaviour
                 roll_moment = thrustMoment * (new Vector3(angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, -1.0f * angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f));
             }
             rb.AddRelativeForce(thrust);
-            rb.AddRelativeTorque(Izz * yaw_moment + Iyy * pitch_moment + Ixx * roll_moment);
+            rb.AddRelativeTorque(yaw_moment +  pitch_moment + roll_moment);
         }
         else
         {

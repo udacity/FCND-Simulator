@@ -10,14 +10,22 @@ public class QuadController : MonoBehaviour
 	public static int ImageWidth = 640;
 	public static int ImageHeight = 480;
 
-	public bool MotorsEnabled { get; set; }
+    const float M2Latitude = 1.0f / 111111.0f;
+    Vector3 initGPS = new Vector3(37.412939f, 0.0f, 121.995635f);
+    const float M2Longitude = 1.0f / (0.8f * 111111.0f);
+
+    public bool MotorsEnabled { get; set; }
 	public Vector3 Force { get { return force; } }
 	public Vector3 Torque { get { return torque; } }
 	public Vector3 Position { get; protected set; }
 	public Quaternion Rotation { get; protected set; }
-	public Vector3 AngularVelocity { get; protected set; }
+    public Vector3 AngularVelocity { get; protected set; }
+	public Vector3 AngularVelocityBody { get; protected set; }
+    public Vector3 AngularAccelerationBody { get; protected set; }
 	public Vector3 LinearVelocity { get; protected set; }
+    public Vector3 BodyVelocity { get; protected set; }
 	public Vector3 LinearAcceleration { get; protected set; }
+    public Vector3 GPS; // defined as latitude, altitude, longitude
 	public Vector3 Forward { get; protected set; }
 	public Vector3 Right { get; protected set; }
 	public Vector3 Up { get; protected set; }
@@ -30,6 +38,8 @@ public class QuadController : MonoBehaviour
 	public bool ConstrainTorqueX { get; set; }
 	public bool ConstrainTorqueY { get; set; }
 	public bool ConstrainTorqueZ { get; set; }
+
+    public Transform navTransform;
 
 	public Transform frontLeftRotor;
 	public Transform frontRightRotor;
@@ -86,6 +96,7 @@ public class QuadController : MonoBehaviour
 	Vector3 force;
 	Vector3 torque;
 	Vector3 lastVelocity;
+    Vector3 lastAngularVelocity;
 	Ray ray;
 	RaycastHit rayHit;
 	BinarySerializer b = new BinarySerializer ( 1000 );
@@ -245,6 +256,7 @@ public class QuadController : MonoBehaviour
 
 		if ( MotorsEnabled )
 		{
+            /*
 			if ( useTwist )
 			{
 				// just set linear and angular velocities, ignoring forces
@@ -262,31 +274,36 @@ public class QuadController : MonoBehaviour
 				rb.angularVelocity = -AngularVelocity;
 
 			} else
-			{
+			{*/
 
-				// add force
-				if ( clampForce )
-					force = Vector3.ClampMagnitude ( force, maxForce );
-				rb.AddRelativeForce ( force, forceMode );
+			// add force
+			if ( clampForce )
+				force = Vector3.ClampMagnitude ( force, maxForce );
+			rb.AddRelativeForce ( force, forceMode );
 				
-				// add torque. but first clamp it
-				if ( maxTorqueDegrees != 0 )
-					maxTorqueRadians = maxTorqueDegrees * Mathf.Deg2Rad;
+			// add torque. but first clamp it
+			if ( maxTorqueDegrees != 0 )
+				maxTorqueRadians = maxTorqueDegrees * Mathf.Deg2Rad;
 
-				if ( clampTorque )
-					torque = Vector3.ClampMagnitude ( torque, maxTorqueRadians );
+			if ( clampTorque )
+				torque = Vector3.ClampMagnitude ( torque, maxTorqueRadians );
 //				rb.AddRelativeTorque ( newTorque, torqueMode );
-				rb.AddRelativeTorque ( -torque, torqueMode );
+			rb.AddRelativeTorque ( -torque, torqueMode );
 
-				// update acceleration
-				LinearAcceleration = ( rb.velocity - lastVelocity ) / Time.deltaTime;
-				lastVelocity = rb.velocity;
-				LinearVelocity = rb.velocity;
-				// new: flip angular velocity to match flipped torque
-//				rb.angularVelocity = angVel;
-//				AngularVelocity = -angVel;
-				AngularVelocity = -rb.angularVelocity;
-			}
+			// update acceleration
+			LinearAcceleration = ( rb.velocity - lastVelocity ) / Time.deltaTime;
+            AngularVelocityBody = rb.transform.InverseTransformDirection(rb.angularVelocity);
+            AngularAccelerationBody = (AngularVelocityBody - lastAngularVelocity) / Time.deltaTime;
+			lastVelocity = rb.velocity;
+			LinearVelocity = rb.velocity;
+            BodyVelocity = rb.transform.InverseTransformDirection(rb.velocity);
+            navTransform = rb.transform;
+            
+            
+            GPS.x = initGPS.x + rb.position.x * M2Latitude;
+            GPS.y = initGPS.y + rb.position.y;
+            GPS.z = initGPS.z + rb.position.z * M2Longitude;
+			//}
 		}
 		curSpeed = rb.velocity.magnitude;
 	}
@@ -298,7 +315,7 @@ public class QuadController : MonoBehaviour
 		              "\nPosition: " + Position.ToRos ().ToString () +
 		              "\nRPY: " + ( -Rotation.eulerAngles ).ToRos ().ToString () +
 		              "\nLinear Vel.: " + LinearVelocity.ToRos ().ToString () +
-		              "\nAngular Vel.: " + AngularVelocity.ToRos ().ToString () +
+		              "\nAngular Vel.: " + AngularVelocityBody.ToRos ().ToString () +
 		              "\nGravity " + ( UseGravity ? "on" : "off" ) +
 		              "\nLocal input " + ( inputCtrl.active ? "on" : "off" );
 		if ( ConstrainForceX )
@@ -510,7 +527,7 @@ Esc: Quit";
 	{
 		useTwist = true;
 		force = torque = Vector3.zero;
-		AngularVelocity = convertFromRos ? v.ToUnity () : v;
+		AngularVelocityBody = convertFromRos ? v.ToUnity () : v;
 	}
 
 	public void TriggerReset ()
@@ -527,7 +544,7 @@ Esc: Quit";
 		rb.angularVelocity = Vector3.zero;
 		LinearAcceleration = Vector3.zero;
 		LinearVelocity = Vector3.zero;
-		AngularVelocity = Vector3.zero;
+		AngularVelocityBody = Vector3.zero;
 		rb.isKinematic = true;
 		rb.isKinematic = false;
 	}
