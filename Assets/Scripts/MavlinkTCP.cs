@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 // usings needed for TCP/IP
@@ -15,7 +16,7 @@ using MavLink;
 
 // TODO: possibly use a class like this to keep track of 
 // task/client pairs.
-public class ClientState {
+public class MAVLinkClientConn {
     public TcpClient client = null;
 
     public Task task =  null;
@@ -31,6 +32,8 @@ public class MavlinkTCP : MonoBehaviour {
     // thread for the tcp connection
     private Thread _tcpListenerThread;
 
+    // track all clients
+    private ConcurrentBag<MAVLinkClientConn> clients = new ConcurrentBag<MAVLinkClientConn>();
 
     public int _heartbeatInterval = 1;
 
@@ -54,15 +57,18 @@ public class MavlinkTCP : MonoBehaviour {
         _tcpListenerThread.Start();
     }
 
-    async void EmitTelemetry(NetworkStream stream) {
+
+
+    async Task EmitTelemetry(NetworkStream stream) {
         var waitFor = (int) (1000f / _telemetryInterval);
-        while (stream.CanRead && stream.CanWrite) {
-            // print("Emitting telemetry data ...");
-            var msg = new Msg_global_position_int {
-                lat = (int) (_quadController.GPS.x*1e7),
-                lon = (int) (-1.0*_quadController.GPS.z*1e7),
-                alt = (int) (_quadController.GPS.y*1000),
-                relative_alt = (int) (_quadController.GPS.y*1000),
+        while (stream.CanRead && stream.CanWrite && _tcpListenerThread != null) {
+            print("Emitting telemetry data ...");
+            var msg = new Msg_global_position_int
+            {
+                lat = (int)(_quadController.getLatitude() * 1e7d),
+                lon = (int)(_quadController.getLongitude() * 1e7d),
+                alt = (int)(_quadController.getAltitude() * 1000),
+                relative_alt = (int)(_quadController.getAltitude() * 1000),
                 vx = 0,
                 vy = 0,
                 vz = 0,
@@ -74,15 +80,19 @@ public class MavlinkTCP : MonoBehaviour {
         }
     }
     
-    async void EmitHearbeat(NetworkStream stream) {
+    async Task EmitHearbeat(NetworkStream stream) {
         var waitFor = (int) (1000f / _heartbeatInterval);
-        while (stream.CanRead && stream.CanWrite) {
-            // print("Emitting hearbeat ...");
+        while (stream.CanRead && stream.CanWrite && _tcpListenerThread != null) {
+            print("Emitting hearbeat ...");
             byte base_mode;
-            if (_simpleController.guided) {
+            if (_simpleController.guided && _simpleController.motors_armed) {
                 base_mode = (byte) MAV_MODE.MAV_MODE_GUIDED_ARMED;
-            } else {
+            } else if (_simpleController.guided) {
                 base_mode = (byte) MAV_MODE.MAV_MODE_GUIDED_DISARMED;
+            } else if (_simpleController.motors_armed) {
+                base_mode = (byte) MAV_MODE.MAV_MODE_MANUAL_ARMED;
+            } else {
+                base_mode = (byte) MAV_MODE.MAV_MODE_MANUAL_DISARMED;
             }
             Msg_heartbeat msg = new Msg_heartbeat {
                 type = 1,
@@ -98,14 +108,14 @@ public class MavlinkTCP : MonoBehaviour {
         }
     }
 
-    async void HandleClientAsync(TcpClient client) {
+    async Task HandleClientAsync(TcpClient client) {
         var stream = client.GetStream();
-        EmitTelemetry(stream);
-        EmitHearbeat(stream);
+        var telemetryTask = EmitTelemetry(stream);
+        var heartbeatTask = EmitHearbeat(stream);
 
         while (client.Connected && stream.CanRead) {
+            print("Reading from stream ...");
             var buf = new byte[1024];
-            // var bytesRead = stream.Read(buf, 0, buf.Length);
             var bytesRead = await stream.ReadAsync(buf, 0, buf.Length);
             if (bytesRead > 0) {
                 var dest = new byte[bytesRead];
@@ -121,7 +131,7 @@ public class MavlinkTCP : MonoBehaviour {
     void FixedUpdate() {
     }
 
-    async void TcpListenAsync() {
+    async Task TcpListenAsync() {
     }
 
     void TcpThread() {
@@ -136,8 +146,7 @@ public class MavlinkTCP : MonoBehaviour {
             while (true) {
                 var client = listener.AcceptTcpClient();
                 print("Accepted connection !!!");
-                // Task task = await HandleClientAsync(client);
-                HandleClientAsync(client);
+                var clientTask = HandleClientAsync(client);
             }
         } catch (SocketException e) {
             print(string.Format("SocketException: {0}", e));
@@ -148,7 +157,9 @@ public class MavlinkTCP : MonoBehaviour {
 
     // called when this is destroyed
     private void OnDestroy() {
-        _tcpListenerThread = null;
+        if (_tcpListenerThread != null) { 
+            _tcpListenerThread.Abort(); 
+        }
     }
 
     void OnPacketReceived(object sender, MavlinkPacket packet) {
@@ -179,33 +190,38 @@ public class MavlinkTCP : MonoBehaviour {
 
         print(string.Format("Command = {0}", command));
 
-        switch (command) {
-            case MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM:
-                var param1 = msg.param1;
-                if (param1 == 1) {
-                    _simpleController.ArmVehicle();
-                    print("ARMED VEHICLE !!!");
-                } else {
-                    _simpleController.DisarmVehicle();
-                    print("DISARMED VEHICLE !!!");
-                }
-                break;
-            case MAV_CMD.MAV_CMD_NAV_GUIDED_ENABLE:
-                _simpleController.guided = true;
+        if (command == MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM) {
+            var param1 = msg.param1;
+            if (param1 == 1.0) {
+                _simpleController.ArmVehicle();
+                print("ARMED VEHICLE !!!");
+            } else {
+                _simpleController.DisarmVehicle();
+                print("DISARMED VEHICLE !!!");
+            }
+        } else if (command == MAV_CMD.MAV_CMD_NAV_GUIDED_ENABLE) {
+            var param1 = msg.param1;
+            if (param1 > 0.5) {
+                _simpleController.SetGuidedMode(true);
                 print("VEHICLE IS BEING GUIDED !!!");
-                break;
-            case MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM:
-                break;
-            case MAV_CMD.MAV_CMD_NAV_TAKEOFF:
-                var gpsLoc = new Vector3(msg.x, msg.y, msg.z);
-                _simpleController.CommandGPS(gpsLoc);
-                print("TAKING OFF !!!");
-                break;
-            case MAV_CMD.MAV_CMD_NAV_LAND:
-                print("LANDING !!!");
-                break;
-            default:
-                break;
+            } else {
+                _simpleController.SetGuidedMode(false);
+                print("VEHICLE IS NOT BEING GUIDED !!!");
+            }
+        } else if (command == MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM) {
+            double lat = msg.x / 1e7d;
+            double lon = msg.y / 1e7d;
+            double alt = msg.z;
+            print("Vehicle Command: " + msg.x + "," + msg.y + "," +msg.z);
+            print("Vehicle Command: (" + lat + "," + lon + "," + alt + ")");
+            _simpleController.CommandGPS(lat, lon, alt);
+        } else if (command == MAV_CMD.MAV_CMD_NAV_TAKEOFF) {
+            _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), _quadController.getAltitude() + (float)(msg.z));
+            print("TAKING OFF !!! Alt = " + msg.z);
+        } else if (command == MAV_CMD.MAV_CMD_NAV_LAND) {
+            print("LANDING !!!");
+        } else {
+            print("Mav Command: " + command);
         }
     }
 

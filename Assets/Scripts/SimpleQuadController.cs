@@ -6,8 +6,9 @@ public class SimpleQuadController : MonoBehaviour
 {
 
     const float M2Latitude = 1.0f / 111111.0f;
-    Vector3 initGPS = new Vector3(37.412939f, 0.0f,121.995635f);
     const float M2Longitude = 1.0f / (0.8f * 111111.0f);
+    double latitude0 = 37.412939d;
+    double longitude0 = 121.995635d;
 
     public Transform camTransform;
 	public QuadController controller;
@@ -45,13 +46,6 @@ public class SimpleQuadController : MonoBehaviour
     public float maxTilt = 0.5f; //MaxTilt in Radians
     public float maxHdot = 5.0f;
 
-    //Default inertia data
-    public float Ixx = 0.004856f;
-    public float Iyy = 0.004856f;
-    public float Izz = 0.008801f;
-    public float mass = 0.468f;
-    
-
 	Rigidbody rb;
 	float tiltX;
 	float tiltZ;
@@ -78,8 +72,6 @@ public class SimpleQuadController : MonoBehaviour
 			followCam = camTransform.GetComponent<FollowCamera> ();
 		active = false;
 
-        rb.mass = mass;
-        rb.inertiaTensor.Set(Ixx,Izz,Iyy);
 
 	}
 
@@ -91,15 +83,15 @@ public class SimpleQuadController : MonoBehaviour
 		if ( Input.GetKeyDown ( KeyCode.F12 ) )
 		{
 			active = !active;
+            
 			if ( active )
 			{
 				controller.UseGravity = true;
 				controller.rb.isKinematic = false;
 				controller.rb.freezeRotation = false;
 				controller.rb.velocity = Vector3.zero;
-			} else  {
+			} else
 				controller.rb.freezeRotation = false;
-            }
 		}
 
 		if ( Input.GetKeyDown ( KeyCode.R ) )
@@ -146,9 +138,9 @@ public class SimpleQuadController : MonoBehaviour
         Vector3 prqRate = controller.AngularAccelerationBody;
         Vector3 localPosition = controller.GPS;
         Vector3 bodyVelocity = controller.BodyVelocity;
-        localPosition.x = (localPosition.x - initGPS.x) / M2Latitude;
-        localPosition.y = (localPosition.y - initGPS.y);
-        localPosition.z = (localPosition.z - initGPS.z) / M2Longitude;
+        localPosition.x = (localPosition.x) / M2Latitude;
+        localPosition.y = (localPosition.y);
+        localPosition.z = (localPosition.z) / M2Longitude;
 
 
         //Direct Control of the moments
@@ -160,39 +152,28 @@ public class SimpleQuadController : MonoBehaviour
 
         if (motors_armed)
         {
+            //Outer control loop for from a position/velocity command to a hdot, yaw rate, pitch, roll command
             if (posctl || guided)
             {
-                /*
-                Vector3 velCmd = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), Input.GetAxis("Thrust"));
-                Vector3 vel = rb.transform.InverseTransformDirection(rb.velocity);
-                */
                 Vector3 velCmdBody = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Thrust"), -Input.GetAxis("Horizontal"));
                 float yawCmd = Input.GetAxis("Yaw");
+
+                //If no control input provided (or in guided mode), use position hold
                 if (guided|| Mathf.Sqrt(Mathf.Pow(velCmdBody.x, 2.0f) + Mathf.Pow(velCmdBody.y, 2.0f) + Mathf.Pow(velCmdBody.z, 2.0f)) < posctl_band)
                 {
+
+                    //Set position
                     if (!pos_set)
                     {
-                        /*
-                        pos_hold.x = rb.position.x;
-                        pos_hold.y = rb.position.y;
-                        pos_hold.z = rb.position.z;
-                        */
                         posHoldLocal = localPosition;
                         pos_set = true;
                         Debug.Log(posHoldLocal);
                     }
-                    /*
-                    Vector3 posErrorRel = rb.transform.InverseTransformDirection(pos_hold - rb.position);
 
-
-                    velCmd[2] = Kp_alt* posErrorRel[1];
-                    velCmd[0] = Kp_pos * posErrorRel[0];
-                    velCmd[1] = -Kp_pos * posErrorRel[2];
-                    */
                     Vector3 posErrorLocal = posHoldLocal - localPosition;
                     Vector3 velCmdLocal;
 
-                    //Put a deadband around the position hold
+                    //Deadband around the position hold
                     if (Mathf.Sqrt(Mathf.Pow(posErrorLocal.x, 2.0f) + Mathf.Pow(posErrorLocal.z, 2.0f)) < posHoldDeadband)
                     {
                         velCmdLocal.x = 0.0f;
@@ -207,6 +188,7 @@ public class SimpleQuadController : MonoBehaviour
                     velCmdLocal.y = Kp_alt * posErrorLocal.y;
                    
 
+                    //Rotate into the local heading frame
                     float cosYaw = Mathf.Cos(rollYawPitch.y);
                     float sinYaw = Mathf.Sin(rollYawPitch.y);
                     velCmdBody.x =cosYaw * velCmdLocal.x - sinYaw*velCmdLocal.z;
@@ -221,6 +203,8 @@ public class SimpleQuadController : MonoBehaviour
                     
                 }
 
+
+                //Control loop from a body velocity command to a Hdot, yaw rate, pitch, and roll command
                 Vector3 velocityErrorBody = new Vector3(0.0f, 0.0f, 0.0f);
                 Vector3 velocityErrorBodyD = new Vector3(0.0f, 0.0f, 0.0f);
                 velocityErrorBody.x = moveSpeed * velCmdBody.x - bodyVelocity.x;
@@ -233,12 +217,6 @@ public class SimpleQuadController : MonoBehaviour
 
                 angle_input[0] = velCmdBody.y;
                 angle_input[1] = yawCmd;
-                /*
-                angle_input[0] = velCmd.z;
-                angle_input[1] = Input.GetAxis("Yaw");
-                angle_input[2] = Kp_vel * (moveSpeed * velCmd.x - vel.x);
-                angle_input[3] = -Kp_vel * (-moveSpeed * velCmd.y - vel.z);
-                */
             }
             else
             {
@@ -258,39 +236,36 @@ public class SimpleQuadController : MonoBehaviour
                     angle_input[i] = -1.0f;
             }
 
+            //Inner control loop: angle commands to forces
             if (guided||posctl||stabilized)
             {
                 
                 float thrust_nom = -1.0f * rb.mass * Physics.gravity[1];
-
                 float hDotError = (maxHdot * angle_input[0] - 1.0f * controller.LinearVelocity.y);
+
                 hDotInt = hDotInt + hDotError * Time.deltaTime;
 
+                //hdot to thrust
                 thrust[1] = (Kp_hdot * hDotError + Ki_hdot*hDotInt+ thrust_nom) / (Mathf.Cos(rollYawPitch.x) * Mathf.Cos(rollYawPitch.z));
-                
+
+                //yaw rate to yaw moment
                 yaw_moment[1] = Kp_r * (turnSpeed * angle_input[1] - prq[1]);
 
-                Debug.Log("Pitch: " + rollYawPitch.z);
+                //angle to angular rate command (for pitch and roll)
                 float pitchError = maxTilt * angle_input[2] - rollYawPitch.z;
                 float rollError = maxTilt * angle_input[3] - rollYawPitch.x;
-
                 float pitchRateError = Kp_pitch * pitchError - prq.z;
-                Debug.Log("Q: "+ prq.z );
-
-                
                 float rollRateError = Kp_roll * rollError - prq.x;
 
+                //angular rate to moment (pitch and roll)
                 pitch_moment[2] = Kp_q * pitchRateError;
-
-                Debug.Log("Pitch Moment: " +  pitch_moment[2]);
-
                 roll_moment[0] = Kp_p * rollRateError;
 
 
 
 
             }
-            else
+            else //User controls forces directly (not updated, do not use)
             {
                 thrust = thrustForce * (new Vector3(0.0f, angle_input[0], 0.0f));
                 yaw_moment = thrustMoment * (new Vector3(0.0f, angle_input[1], 0.0f));
@@ -305,61 +280,6 @@ public class SimpleQuadController : MonoBehaviour
             pos_set = false;
         }
 
-        //rb.AddRelativeTorque(pitch_moment);
-        //rb.AddRelativeTorque(yaw_moment);
-
-
-        //rb.AddForceAtPosition(new Vector3(0.0f,0.0f,10.0f),)
-        //controller.ApplyMotorForce(input);
-
-
-        //transform.localEulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
-        /*
-
-        Vector3 input = new Vector3 ( Input.GetAxis ( "Horizontal" ), Input.GetAxis ( "Thrust" ), Input.GetAxis ( "Vertical" ) );
-
-		Vector3 forwardVelocity = Vector3.forward * input.z * moveSpeed;
-		Vector3 sidewaysVelocity = Vector3.right * input.x * moveSpeed;
-		Vector3 upVelocity = Vector3.up * input.y * thrustForce;
-		Vector3 inputVelo = forwardVelocity + sidewaysVelocity + upVelocity;
-
-		Vector3 forward = transform.forward - transform.right;
-		forward.y = 0;
-		Quaternion rot = Quaternion.LookRotation ( forward.normalized, Vector3.up );
-
-//		rb.AddRelativeForce ( chassis.rotation * inputVelo * Time.deltaTime, ForceMode.VelocityChange );
-		rb.velocity = rot * inputVelo;
-//		transform.Rotate ( Vector3.up * input.x * thrustForce * Time.deltaTime, Space.World );
-
-		float x = input.z / 2 + input.x / 2;
-		float z = input.z / 2 - input.x / 2;
-		Vector3 euler = transform.localEulerAngles;
-		euler.x = maxTilt * x;
-		euler.z = maxTilt * z;
-		transform.localEulerAngles = euler;
-
-		float yaw = Input.GetAxis ( "Yaw" );
-		if ( yaw != 0 )
-		{
-			transform.Rotate ( Vector3.up * yaw * turnSpeed * Time.deltaTime, Space.World );
-			camTransform.Rotate ( Vector3.up * yaw * turnSpeed * Time.deltaTime, Space.World );
-		}
-
-		if ( Input.GetKeyDown ( KeyCode.P ) )
-		{
-			PathPlanner.AddNode ( controller.Position, controller.Rotation );
-		}
-		if ( Input.GetKeyDown ( KeyCode.O ) )
-		{
-			controller.ResetOrientation ();
-			pather.SetPath ( new Pathing.Path ( PathPlanner.GetPath () ) );
-			PathPlanner.Clear ( false ); // clear the path but keep the visualization
-		}
-		if ( Input.GetKeyDown ( KeyCode.I ) )
-		{
-			PathPlanner.Clear ();
-		}
-        */
     }
 
 	void OnGUI ()
@@ -373,30 +293,25 @@ public class SimpleQuadController : MonoBehaviour
 		}
 	}
 
-    // public void CommandGPS(double latitude, double longitude, double altitude)
-    // {
-    //     pos_set = true;
-    //     posHoldLocal.x = (float)(latitude-latitude0) / M2Latitude;
-    //     posHoldLocal.y = (float)(altitude);
-    //     posHoldLocal.z = (float)(longitude -longitude0) / M2Longitude;
-    // }
-
     //Command the quad to a GPS location (latitude, relative_altitude, longitude)
-    public void CommandGPS(Vector3 GPS)
+    public void CommandGPS(double latitude, double longitude, double altitude)
     {
-        posHoldLocal.x = (GPS.x - initGPS.x) / M2Latitude;
-        posHoldLocal.y = (GPS.y - initGPS.y);
-        posHoldLocal.z = (GPS.z - initGPS.z) / M2Longitude;
+        pos_set = true;
+        posHoldLocal.x = (float)(latitude-latitude0) / M2Latitude;
+        posHoldLocal.y = (float)(altitude);
+        posHoldLocal.z = (float)(-longitude -longitude0) / M2Longitude;
     }
 
     public void ArmVehicle()
     {
         motors_armed = true;
+        active = true;
     }
 
     public void DisarmVehicle()
     {
         motors_armed = false;
+        active = false;
     }
 
     public void SetGuidedMode(bool input_guided)

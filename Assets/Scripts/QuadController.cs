@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
+using System.IO;
 
 public class QuadController : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class QuadController : MonoBehaviour
 
     const float M2Latitude = 1.0f / 111111.0f;
     Vector3 initGPS = new Vector3(37.412939f, 0.0f, 121.995635f);
+    public double latitude0 = 37.412939d;
+    public double longitude0 = 121.995635d;
     const float M2Longitude = 1.0f / (0.8f * 111111.0f);
 
     public bool MotorsEnabled { get; set; }
@@ -25,7 +28,10 @@ public class QuadController : MonoBehaviour
 	public Vector3 LinearVelocity { get; protected set; }
     public Vector3 BodyVelocity { get; protected set; }
 	public Vector3 LinearAcceleration { get; protected set; }
-    public Vector3 GPS; // defined as latitude, altitude, longitude
+    public Vector3 GPS;// defined as latitude, altitude, longitude
+
+
+
 	public Vector3 Forward { get; protected set; }
 	public Vector3 Right { get; protected set; }
 	public Vector3 Up { get; protected set; }
@@ -113,6 +119,11 @@ public class QuadController : MonoBehaviour
 	Quaternion poseOrientation;
 	Texture2D dot;
 
+    string logPath = "Assets/Logs/navLog.txt";
+
+    //Write some text to the test.txt file
+    StreamWriter logger; 
+
 	void Awake ()
 	{
 		if ( ActiveController == null )
@@ -135,15 +146,8 @@ public class QuadController : MonoBehaviour
 		UpdateConstraints ();
 		rb.maxAngularVelocity = Mathf.Infinity;
 		inputCtrl = GetComponent<SimpleQuadController> ();
-//		dot = new Texture2D ( 1, 1 );
-//		dot.SetPixel ( 0, 0, Color.white );
-//		dot.Apply ();
-//		Debug.Log ( "it: " + rb.inertiaTensor + " itr: " + rb.inertiaTensorRotation );
-//		rb.ResetInertiaTensor ();
-//		rb.inertiaTensorRotation = Quaternion.identity;
-//		Debug.Log ( "2 it: " + rb.inertiaTensor + " itr: " + rb.inertiaTensorRotation );
-//		gameObject.SetActive ( false );
-//		gameObject.SetActive ( true );
+
+        logger = new StreamWriter(logPath, false);
 	}
 
 	void Start ()
@@ -153,7 +157,12 @@ public class QuadController : MonoBehaviour
 		QuadActivator.Activate ( gameObject );
 	}
 
-	void Update ()
+    private void OnDestroy()
+    {
+        logger.Close();
+    }
+
+    void Update ()
 	{
 		if ( resetFlag )
 		{
@@ -244,7 +253,8 @@ public class QuadController : MonoBehaviour
 
 	void FixedUpdate ()
 	{
-		if ( resetFlag )
+        MotorsEnabled = inputCtrl.motors_armed;
+        if ( resetFlag )
 		{
 			ResetOrientation ();
 			resetFlag = false;
@@ -256,27 +266,7 @@ public class QuadController : MonoBehaviour
 
 		if ( MotorsEnabled )
 		{
-            /*
-			if ( useTwist )
-			{
-				// just set linear and angular velocities, ignoring forces
-				rb.velocity = LinearVelocity;
-//				rb.velocity = clampMaxSpeed ? Vector3.ClampMagnitude ( LinearVelocity, maxSpeedMS ) : LinearVelocity;
-				// new: flip angular velocity to generate CCW rotations
-//				Vector3 angVel = -AngularVelocity;
-//				if ( ConstrainTorqueX )
-//					angVel.z = 0;
-//				if ( ConstrainTorqueY )
-//					angVel.x = 0;
-//				if ( ConstrainTorqueZ )
-//					angVel.y = 0;
-//				rb.angularVelocity = angVel;
-				rb.angularVelocity = -AngularVelocity;
-
-			} else
-			{*/
-
-			// add force
+            // add force
 			if ( clampForce )
 				force = Vector3.ClampMagnitude ( force, maxForce );
 			rb.AddRelativeForce ( force, forceMode );
@@ -290,22 +280,31 @@ public class QuadController : MonoBehaviour
 //				rb.AddRelativeTorque ( newTorque, torqueMode );
 			rb.AddRelativeTorque ( -torque, torqueMode );
 
-			// update acceleration
-			LinearAcceleration = ( rb.velocity - lastVelocity ) / Time.deltaTime;
-            AngularVelocityBody = rb.transform.InverseTransformDirection(rb.angularVelocity);
-            AngularAccelerationBody = (AngularVelocityBody - lastAngularVelocity) / Time.deltaTime;
-			lastVelocity = rb.velocity;
-			LinearVelocity = rb.velocity;
-            BodyVelocity = rb.transform.InverseTransformDirection(rb.velocity);
-            navTransform = rb.transform;
-            
-            
-            GPS.x = initGPS.x + rb.position.x * M2Latitude;
-            GPS.y = initGPS.y + rb.position.y;
-            GPS.z = initGPS.z + rb.position.z * M2Longitude;
-			//}
+
+			
 		}
-		curSpeed = rb.velocity.magnitude;
+
+        // update acceleration
+        LinearAcceleration = (rb.velocity - lastVelocity) / Time.deltaTime;
+        AngularVelocityBody = rb.transform.InverseTransformDirection(rb.angularVelocity);
+        AngularAccelerationBody = (AngularVelocityBody - lastAngularVelocity) / Time.deltaTime;
+        lastVelocity = rb.velocity;
+        LinearVelocity = rb.velocity;
+        BodyVelocity = rb.transform.InverseTransformDirection(rb.velocity);
+        navTransform = rb.transform;
+
+        /*
+        GPS.x = initGPS.x + rb.position.x * M2Latitude;
+        GPS.y = initGPS.y + rb.position.y;
+        GPS.z = initGPS.z + rb.position.z * M2Longitude;
+        */
+        //GPS only reported in local frame because float doesn't have precision required for full GPS coordinate
+        GPS.x =  rb.position.x * M2Latitude;
+        GPS.y =  rb.position.y;
+        GPS.z =  rb.position.z * M2Longitude;
+
+        curSpeed = rb.velocity.magnitude;
+        LogGPS();
 	}
 
 	void OnGUI ()
@@ -633,4 +632,27 @@ Esc: Quit";
 		ConstrainTorqueY = ( rb.constraints & RigidbodyConstraints.FreezeRotationX ) != 0;
 		ConstrainTorqueZ = ( rb.constraints & RigidbodyConstraints.FreezeRotationY ) != 0;
 	}
+
+    void LogGPS()
+    {
+        logger.WriteLine((latitude0+(double)GPS.x).ToString("#.0000000") + "," + (-1.0d*(longitude0+(double)GPS.z)).ToString("#.0000000") + "," + GPS.y.ToString("#.00"));
+    }
+
+    public double getLatitude()
+    {
+        return GPS.x + latitude0;
+    }
+
+    public double getLongitude()
+    {
+        return -1.0d*(GPS.z + longitude0);
+    }
+
+    public double getAltitude()
+    {
+        return GPS.y;
+    }
+
+
+
 }
