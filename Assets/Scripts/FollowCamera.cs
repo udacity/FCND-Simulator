@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.ImageEffects;
-using Ros_CSharp;
-using Messages;
-using Empty = Messages.std_srvs.Empty;
-using SetInt = Messages.quad_controller.SetInt;
-using SetFloat = Messages.quad_controller.SetFloat;
+// using Ros_CSharp;
+// using Messages;
+// using Empty = Messages.std_srvs.Empty;
+// using SetInt = Messages.quad_controller.SetInt;
+// using SetFloat = Messages.quad_controller.SetFloat;
 
 public enum CameraPoseType
 {
@@ -33,9 +33,9 @@ public class FollowCamera : MonoBehaviour
 
 	public bool blurRotors = true;
 
-	NodeHandle nh;
-	ServiceServer distanceSrv;
-	ServiceServer poseTypeSrv;
+	// NodeHandle nh;
+	// ServiceServer distanceSrv;
+	// ServiceServer poseTypeSrv;
 
 	[HideInInspector]
 	public Camera cam;
@@ -57,8 +57,8 @@ public class FollowCamera : MonoBehaviour
 	void Start ()
 	{
 //		forward = target.Forward;
-		if ( ROSController.instance != null )
-			ROSController.StartROS ( OnRosInit );
+		// if ( ROSController.instance != null )
+		// 	ROSController.StartROS ( OnRosInit );
 	}
 
 	void LateUpdate ()
@@ -132,17 +132,17 @@ public class FollowCamera : MonoBehaviour
 				pose = 3;
 			if ( Input.GetKeyDown ( KeyCode.Alpha5 ) )
 				pose = 4;
-			new System.Threading.Thread ( () =>
-			{
-				SetInt.Request req = new SetInt.Request ();
-				SetInt.Response resp = new SetInt.Response ();
-				req.data = pose;
+			// new System.Threading.Thread ( () =>
+			// {
+			// 	SetInt.Request req = new SetInt.Request ();
+			// 	SetInt.Response resp = new SetInt.Response ();
+			// 	req.data = pose;
 
-				if ( nh.serviceClient<SetInt.Request, SetInt.Response> ( "/quad_rotor/camera_pose_type" ).call ( req, ref resp ) )
-					Debug.Log ( resp.success + " " + resp.newData );
-				else
-					Debug.Log ( "Failed" );
-			} ).Start ();
+			// 	if ( nh.serviceClient<SetInt.Request, SetInt.Response> ( "/quad_rotor/camera_pose_type" ).call ( req, ref resp ) )
+			// 		Debug.Log ( resp.success + " " + resp.newData );
+			// 	else
+			// 		Debug.Log ( "Failed" );
+			// } ).Start ();
 		}
 	}
 
@@ -173,30 +173,30 @@ public class FollowCamera : MonoBehaviour
 		setRotationFlag = true;
 	}
 
-	void OnRosInit ()
-	{
-		nh = ROS.GlobalNodeHandle;
-		poseTypeSrv = nh.advertiseService<SetInt.Request, SetInt.Response> ( "/quad_rotor/camera_pose_type", SetCameraPoseType );
-		distanceSrv = nh.advertiseService<SetFloat.Request, SetFloat.Response> ( "/quad_rotor/camera_distance", SetFollowDistance );
-	}
+	// void OnRosInit ()
+	// {
+	// 	nh = ROS.GlobalNodeHandle;
+	// 	poseTypeSrv = nh.advertiseService<SetInt.Request, SetInt.Response> ( "/quad_rotor/camera_pose_type", SetCameraPoseType );
+	// 	distanceSrv = nh.advertiseService<SetFloat.Request, SetFloat.Response> ( "/quad_rotor/camera_distance", SetFollowDistance );
+	// }
 
-	bool SetFollowDistance (SetFloat.Request req, ref SetFloat.Response resp)
-	{
-		followDistance = req.data;
+	// bool SetFollowDistance (SetFloat.Request req, ref SetFloat.Response resp)
+	// {
+	// 	followDistance = req.data;
 
-		resp.newData = followDistance;
-		resp.success = true;
+	// 	resp.newData = followDistance;
+	// 	resp.success = true;
 
-		return true;
-	}
+	// 	return true;
+	// }
 
-	bool SetCameraPoseType (SetInt.Request req, ref SetInt.Response resp)
-	{
-		ChangePoseType ( (CameraPoseType) req.data );
+	// bool SetCameraPoseType (SetInt.Request req, ref SetInt.Response resp)
+	// {
+	// 	ChangePoseType ( (CameraPoseType) req.data );
 
-		resp.newData = (int) poseType;
-		resp.success = true;
+	// 	resp.newData = (int) poseType;
+	// 	resp.success = true;
 
-		return true;
-	}
+	// 	return true;
+	// }
 }

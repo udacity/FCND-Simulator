@@ -57,7 +57,6 @@ public class QuadController : MonoBehaviour
 	public Transform right;
 
 	public Camera droneCam1;
-	public PathFollower pather;
 	public SimpleQuadController inputCtrl;
 
 	public bool clampForce = true;

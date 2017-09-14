@@ -13,7 +13,6 @@ public class SimpleQuadController : MonoBehaviour
     public Transform camTransform;
 	public QuadController controller;
 	public FollowCamera followCam;
-	public PathFollower pather;
 
     //Vehicle status indicators
     public bool motors_armed = false;
