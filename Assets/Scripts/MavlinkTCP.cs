@@ -62,7 +62,7 @@ public class MavlinkTCP : MonoBehaviour {
     async Task EmitTelemetry(NetworkStream stream) {
         var waitFor = (int) (1000f / _telemetryInterval);
         while (stream.CanRead && stream.CanWrite && _tcpListenerThread != null) {
-            print("Emitting telemetry data ...");
+            // print("Emitting telemetry data ...");
             var msg = new Msg_global_position_int
             {
                 lat = (int)(_quadController.getLatitude() * 1e7d),
@@ -83,7 +83,7 @@ public class MavlinkTCP : MonoBehaviour {
     async Task EmitHearbeat(NetworkStream stream) {
         var waitFor = (int) (1000f / _heartbeatInterval);
         while (stream.CanRead && stream.CanWrite && _tcpListenerThread != null) {
-            print("Emitting hearbeat ...");
+            // print("Emitting hearbeat ...");
             byte base_mode;
             if (_simpleController.guided && _simpleController.motors_armed) {
                 base_mode = (byte) MAV_MODE.MAV_MODE_GUIDED_ARMED;
@@ -219,6 +219,7 @@ public class MavlinkTCP : MonoBehaviour {
             _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), _quadController.getAltitude() + (float)(msg.z));
             print("TAKING OFF !!! Alt = " + msg.z);
         } else if (command == MAV_CMD.MAV_CMD_NAV_LAND) {
+            _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), -msg.z);
             print("LANDING !!!");
         } else {
             print("Mav Command: " + command);
