@@ -118,7 +118,7 @@ public class QuadController : MonoBehaviour
 	Quaternion poseOrientation;
 	Texture2D dot;
 
-    string logPath = "Assets/Logs/navLog.txt";
+    string logPath = "/tmp/navLog.txt";
 
     //Write some text to the test.txt file
     StreamWriter logger; 
