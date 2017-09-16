@@ -1,6 +1,4 @@
-# FlightND Simulator
+# Flying Car ND Simulator
 
 
-Simulator for FlightND.
-
-This will be used for all projects.
+Simulator for Flying Car ND.
