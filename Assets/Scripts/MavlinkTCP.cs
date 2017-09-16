@@ -114,15 +114,20 @@ public class MavlinkTCP : MonoBehaviour {
         var heartbeatTask = EmitHearbeat(stream);
 
         while (client.Connected && stream.CanRead) {
-            print("Reading from stream ...");
+            // print("Reading from stream ... ");
             var buf = new byte[1024];
             var bytesRead = await stream.ReadAsync(buf, 0, buf.Length);
             if (bytesRead > 0) {
                 var dest = new byte[bytesRead];
                 Array.Copy(buf, dest, bytesRead);
                 _mavlink.ParseBytesV2(dest);
+            } else {
+                break;
             }
         }
+        stream.Close();
+        client.Close();
+        print("CLIENT DISCONNECTED !!! PLEASE PRINT FFS. YAY IT PRINTED BUT IT STILL DOESN'T MEAN ANYTHING SO");
     }
 
     void Update () {
@@ -222,7 +227,7 @@ public class MavlinkTCP : MonoBehaviour {
             _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), -msg.z);
             print("LANDING !!!");
         } else {
-            print("Mav Command: " + command);
+            print(string.Format("Unknown MAVLink Command: {0}", command));
         }
     }
 

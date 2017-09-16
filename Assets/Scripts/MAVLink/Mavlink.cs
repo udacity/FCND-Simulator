@@ -62,57 +62,35 @@ namespace MavLink
            leftovers = new byte[] {};
        }
 
-        public void ParseBytesV2(byte[] newlyReceived) {
-            /* 
-            V2 Byte order
+       private int DecodePacketV2(byte[] newlyReceived, int idx) {
+            byte headerLen = 10;
+            var magic = newlyReceived[idx];
+            var payloadLen = newlyReceived[idx + 1];
+            var incompatFlags = newlyReceived[idx + 2];
+            var compatFlags = newlyReceived[idx + 3];
+            var seq = newlyReceived[idx + 4];
+            var sysid = newlyReceived[idx + 5];
+            var compid = newlyReceived[idx + 6];
+            var msg = this.Deserialize(newlyReceived, idx + 7);
+            var checksumLow = newlyReceived[idx + headerLen + payloadLen + 1];
+            var checksumHigh = newlyReceived[idx + headerLen + payloadLen];
 
-            uint8_t magic;              ///< protocol magic marker
-            uint8_t len;                ///< Length of payload
-            uint8_t incompat_flags;     ///< flags that must be understood
-            uint8_t compat_flags;       ///< flags that can be ignored if not understood
-            uint8_t seq;                ///< Sequence of packet
-            uint8_t sysid;              ///< ID of message sender system/aircraft
-            uint8_t compid;             ///< ID of the message sender component
-            uint8_t msgid 0:7;          ///< first 8 bits of the ID of the message
-            uint8_t msgid 8:15;         ///< middle 8 bits of the ID of the message
-            uint8_t msgid 16:23;        ///< last 8 bits of the ID of the message
-            uint8_t target_sysid;       ///< Optional field for point-to-point messages, used for payload else
-            uint8_t target_compid;      ///< Optional field for point-to-point messages, used for payload else
-            uint8_t payload[max 253];   ///< A maximum of 253 payload bytes
-            uint16_t checksum;          ///< X.25 CRC
-            uint8_t signature[13];      ///< Signature which allows ensuring that the link is tamper-proof
-            */
+            var checksumLen = 2;
+            var packetLen = checksumLen + payloadLen + headerLen;
 
             var s = "";
-            for (var i = 0; i < newlyReceived.Length; i++) {
+            for (var i = idx; i < idx + packetLen; i++) {
                 s += newlyReceived[i].ToString() + " ";
             }
-            Debug.Log(string.Format("packet len = {0}, byte contents - {1}", newlyReceived.Length, s));
-
-            // deocde the packet (msg + 10 header + 2 crc) not adding + 13 signature since setting the header to mark no signature
-            // ignoring signature
-
-            byte headerLen = 10;
-            var magic = newlyReceived[0];
-            var payloadLen = newlyReceived[1];
-            var incompatFlags = newlyReceived[2];
-            var compatFlags = newlyReceived[3];
-            var seq = newlyReceived[4];
-            var sysid = newlyReceived[5];
-            var compid = newlyReceived[6];
-            var msg = this.Deserialize(newlyReceived, 7);
-            var checksumLow = newlyReceived[headerLen + payloadLen + 1];
-            var checksumHigh = newlyReceived[headerLen + payloadLen];
+            Debug.Log(string.Format("start index = {0}, packet len = {1}, total len = {2}, byte contents - {3}", idx, packetLen, newlyReceived.Length, s));
 
 
             // subtract 1 since we start from 1
-            var crc1 = Mavlink_Crc.Calculate(newlyReceived, (UInt16)(1), (UInt16)(headerLen + payloadLen - 1));
+            var crc1 = Mavlink_Crc.Calculate(newlyReceived, (UInt16)(idx + 1), (UInt16)(idx + headerLen + payloadLen - 1));
 
             if (MavlinkSettings.CrcExtra)
             {
-                var possibleMsgId = newlyReceived[7];
-                Debug.Log(string.Format("Possible message ID = {0}", possibleMsgId));
-
+                var possibleMsgId = newlyReceived[idx + 7];
                 if (!MavLinkSerializer.Lookup.ContainsKey(possibleMsgId))
                 {
                     // we have received an unknown message. In this case we don't know the special
@@ -142,9 +120,40 @@ namespace MavLink
                 PacketReceived(this, packet);
                 PacketsReceived++;
             } else {
-                // TODO: change the offset the actual spot of the problem
-                PacketFailedCRC(this, new PacketCRCFailEventArgs(newlyReceived, 0));
+                PacketFailedCRC(this, new PacketCRCFailEventArgs(newlyReceived, idx));
                 BadCrcPacketsReceived++;
+            }
+            return idx + packetLen;
+       }
+
+        public void ParseBytesV2(byte[] newlyReceived) {
+            /* 
+            V2 Byte order
+
+            uint8_t magic;              ///< protocol magic marker
+            uint8_t len;                ///< Length of payload
+            uint8_t incompat_flags;     ///< flags that must be understood
+            uint8_t compat_flags;       ///< flags that can be ignored if not understood
+            uint8_t seq;                ///< Sequence of packet
+            uint8_t sysid;              ///< ID of message sender system/aircraft
+            uint8_t compid;             ///< ID of the message sender component
+            uint8_t msgid 0:7;          ///< first 8 bits of the ID of the message
+            uint8_t msgid 8:15;         ///< middle 8 bits of the ID of the message
+            uint8_t msgid 16:23;        ///< last 8 bits of the ID of the message
+            uint8_t target_sysid;       ///< Optional field for point-to-point messages, used for payload else
+            uint8_t target_compid;      ///< Optional field for point-to-point messages, used for payload else
+            uint8_t payload[max 253];   ///< A maximum of 253 payload bytes
+            uint16_t checksum;          ///< X.25 CRC
+            uint8_t signature[13];      ///< Signature which allows ensuring that the link is tamper-proof
+            */
+
+
+            // byte array may contain multiple packets/messages
+            var idx = 0;
+            var bytesLen = newlyReceived.Length;
+            while (idx < bytesLen) {
+                // decode the packet (msg + 10 header + 2 crc), ignoring signature
+                idx = DecodePacketV2(newlyReceived, idx);
             }
         }
 
