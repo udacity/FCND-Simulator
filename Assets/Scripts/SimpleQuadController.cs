@@ -11,12 +11,12 @@ public class SimpleQuadController : MonoBehaviour
     double longitude0 = 121.995635d;
 
     public Transform camTransform;
-	public QuadController controller;
-	public FollowCamera followCam;
+    public QuadController controller;
+    public FollowCamera followCam;
 
     //Vehicle status indicators
     public bool motors_armed = false;
-    
+
     //Flight modes
     public bool guided = false;
     public bool stabilized = true;
@@ -45,71 +45,73 @@ public class SimpleQuadController : MonoBehaviour
     public float maxTilt = 0.5f; //MaxTilt in Radians
     public float maxHdot = 5.0f;
 
-	Rigidbody rb;
-	float tiltX;
-	float tiltZ;
-    
+    Rigidbody rb;
+    float tiltX;
+    float tiltZ;
+
     private float h_des = 0.0f;
 
 
 
     //
     private bool pos_set = false;
-    Vector3 posHoldLocal =new Vector3(0.0f,0.0f,0.0f);
-    Vector3 lastVelocityErrorBody = new Vector3(0.0f,0.0f,0.0f);
+    Vector3 posHoldLocal = new Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 lastVelocityErrorBody = new Vector3(0.0f, 0.0f, 0.0f);
     float hDotInt = 0.0f;
 
-	public bool active;
-	
-	void Awake ()
-	{
-		rb = GetComponent<Rigidbody> ();
-		rb.constraints = RigidbodyConstraints.FreezeRotation;
-		if ( controller == null )
-			controller = GetComponent<QuadController> ();
-		if ( followCam == null )
-			followCam = camTransform.GetComponent<FollowCamera> ();
-		active = false;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        if (controller == null)
+            controller = GetComponent<QuadController>();
+        if (followCam == null)
+            followCam = camTransform.GetComponent<FollowCamera>();
+        motors_armed = false;
 
 
-	}
+    }
 
-	void FixedUpdate ()
-	{
+    void FixedUpdate()
+    {
         moveSpeed = 15.0f;
         turnSpeed = 2.0f;
         maxTilt = 0.5f;
-		if ( Input.GetKeyDown ( KeyCode.F12 ) )
-		{
-			active = !active;
+        if (Input.GetKeyDown(KeyCode.F12))
+        {
+            motors_armed = !motors_armed;
+
+            if (motors_armed)
+            {
+                controller.UseGravity = true;
+                controller.rb.isKinematic = false;
+                controller.rb.freezeRotation = false;
+                controller.rb.velocity = Vector3.zero;
+                controller.MotorsEnabled = true;
+            }
+            else
+            {
+                controller.rb.freezeRotation = false;
+                controller.MotorsEnabled = false;
+            }
             
-			if ( active )
-			{
-				controller.UseGravity = true;
-				controller.rb.isKinematic = false;
-				controller.rb.freezeRotation = false;
-				controller.rb.velocity = Vector3.zero;
-			} else
-				controller.rb.freezeRotation = false;
-		}
+        }
 
-		if ( Input.GetKeyDown ( KeyCode.R ) )
-		{
+        if (Input.GetKeyDown(KeyCode.R))
+        {
             pos_set = false;
-			controller.ResetOrientation ();
-			followCam.ChangePoseType ( CameraPoseType.Iso );
-		}
+            controller.ResetOrientation();
+            followCam.ChangePoseType(CameraPoseType.Iso);
+        }
 
-		if ( Input.GetKeyDown ( KeyCode.G ) )
-		{
-			controller.UseGravity = !controller.UseGravity;
-		}
-
-		if ( !active )
-			return;
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            controller.UseGravity = !controller.UseGravity;
+        }
 
         //TODO: Remove this, it is for testing the Guided Mode
-        if( Input.GetKeyDown(KeyCode.Alpha9))
+        if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             guided = true;
             posHoldLocal.x = rb.position.x + 20.0f;
@@ -120,11 +122,7 @@ public class SimpleQuadController : MonoBehaviour
         }
 
 
-        //Arm with the
-        if (Input.GetKeyDown(KeyCode.A))
-            motors_armed = !motors_armed;
-
-
+        /*
         Vector3 rollYawPitch = controller.navTransform.eulerAngles*Mathf.PI/180.0f;
         for (int i = 0;i < 3; i++)
         {
@@ -133,12 +131,14 @@ public class SimpleQuadController : MonoBehaviour
             else if (rollYawPitch[i] < -Mathf.PI)
                 rollYawPitch[i] = rollYawPitch[i] + 2.0f*Mathf.PI;
         }
+        */
+        Vector3 rollYawPitch = controller.eulerAngles * Mathf.PI / 180.0f;
         Vector3 prq = controller.AngularVelocityBody;
         Vector3 prqRate = controller.AngularAccelerationBody;
         Vector3 localPosition = controller.GPS;
         Vector3 bodyVelocity = controller.BodyVelocity;
+
         localPosition.x = (localPosition.x) / M2Latitude;
-        localPosition.y = (localPosition.y);
         localPosition.z = (localPosition.z) / M2Longitude;
 
 
@@ -146,7 +146,7 @@ public class SimpleQuadController : MonoBehaviour
         Vector3 thrust = new Vector3(0.0f, 0.0f, 0.0f);
         Vector3 yaw_moment = new Vector3(0.0f, 0.0f, 0.0f);
         Vector3 pitch_moment = new Vector3(0.0f, 0.0f, 0.0f);
-        Vector3 roll_moment = new Vector3(0.0f,0.0f,0.0f);
+        Vector3 roll_moment = new Vector3(0.0f, 0.0f, 0.0f);
         Vector4 angle_input = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
         if (motors_armed)
@@ -158,7 +158,7 @@ public class SimpleQuadController : MonoBehaviour
                 float yawCmd = Input.GetAxis("Yaw");
 
                 //If no control input provided (or in guided mode), use position hold
-                if (guided|| Mathf.Sqrt(Mathf.Pow(velCmdBody.x, 2.0f) + Mathf.Pow(velCmdBody.y, 2.0f) + Mathf.Pow(velCmdBody.z, 2.0f)) < posctl_band)
+                if (guided || Mathf.Sqrt(Mathf.Pow(velCmdBody.x, 2.0f) + Mathf.Pow(velCmdBody.y, 2.0f) + Mathf.Pow(velCmdBody.z, 2.0f)) < posctl_band)
                 {
 
                     //Set position
@@ -183,15 +183,15 @@ public class SimpleQuadController : MonoBehaviour
                         velCmdLocal.x = Kp_pos * posErrorLocal.x;
                         velCmdLocal.z = Kp_pos * posErrorLocal.z;
                     }
-                    
+
                     velCmdLocal.y = Kp_alt * posErrorLocal.y;
-                   
+
 
                     //Rotate into the local heading frame
                     float cosYaw = Mathf.Cos(rollYawPitch.y);
                     float sinYaw = Mathf.Sin(rollYawPitch.y);
-                    velCmdBody.x =cosYaw * velCmdLocal.x - sinYaw*velCmdLocal.z;
-                    velCmdBody.z = sinYaw * velCmdLocal.x + cosYaw* velCmdLocal.z;
+                    velCmdBody.x = cosYaw * velCmdLocal.x - sinYaw * velCmdLocal.z;
+                    velCmdBody.z = sinYaw * velCmdLocal.x + cosYaw * velCmdLocal.z;
 
                     velCmdBody.y = velCmdLocal.y;
 
@@ -199,7 +199,7 @@ public class SimpleQuadController : MonoBehaviour
                 else
                 {
                     pos_set = false;
-                    
+
                 }
 
 
@@ -236,16 +236,16 @@ public class SimpleQuadController : MonoBehaviour
             }
 
             //Inner control loop: angle commands to forces
-            if (guided||posctl||stabilized)
+            if (guided || posctl || stabilized)
             {
-                
+
                 float thrust_nom = -1.0f * rb.mass * Physics.gravity[1];
                 float hDotError = (maxHdot * angle_input[0] - 1.0f * controller.LinearVelocity.y);
 
                 hDotInt = hDotInt + hDotError * Time.deltaTime;
 
                 //hdot to thrust
-                thrust[1] = (Kp_hdot * hDotError + Ki_hdot*hDotInt+ thrust_nom) / (Mathf.Cos(rollYawPitch.x) * Mathf.Cos(rollYawPitch.z));
+                thrust[1] = (Kp_hdot * hDotError + Ki_hdot * hDotInt + thrust_nom) / (Mathf.Cos(rollYawPitch.x) * Mathf.Cos(rollYawPitch.z));
 
                 //yaw rate to yaw moment
                 yaw_moment[1] = Kp_r * (turnSpeed * angle_input[1] - prq[1]);
@@ -271,8 +271,11 @@ public class SimpleQuadController : MonoBehaviour
                 pitch_moment = thrustMoment * (new Vector3(angle_input[2] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, angle_input[2] * Mathf.Sqrt(2.0f) / 2.0f));
                 roll_moment = thrustMoment * (new Vector3(angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, -1.0f * angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f));
             }
-            rb.AddRelativeForce(thrust);
-            rb.AddRelativeTorque(yaw_moment +  pitch_moment + roll_moment);
+            //rb.AddRelativeForce(thrust);
+            //rb.AddRelativeTorque(yaw_moment + pitch_moment + roll_moment);
+
+            controller.ApplyMotorForce(thrust);
+            controller.ApplyMotorTorque(yaw_moment + pitch_moment + roll_moment);
         }
         else
         {
@@ -281,36 +284,34 @@ public class SimpleQuadController : MonoBehaviour
 
     }
 
-	void OnGUI ()
-	{
-		GUI.backgroundColor = active ? Color.green : Color.red;
-//		GUI.contentColor = Color.white;
-		Rect r = new Rect ( 10, Screen.height - 100, 60, 25 );
-		if ( GUI.Button ( r, "Input " + ( active ? "on" : "off" ) ) )
-		{
-			active = !active;
-		}
-	}
+    void OnGUI()
+    {
+        GUI.backgroundColor = motors_armed ? Color.green : Color.red;
+        //		GUI.contentColor = Color.white;
+        Rect r = new Rect(10, Screen.height - 100, 60, 25);
+        if (GUI.Button(r, "Input " + (motors_armed ? "on" : "off")))
+        {
+            motors_armed = !motors_armed;
+        }
+    }
 
     //Command the quad to a GPS location (latitude, relative_altitude, longitude)
     public void CommandGPS(double latitude, double longitude, double altitude)
     {
         pos_set = true;
-        posHoldLocal.x = (float)(latitude-latitude0) / M2Latitude;
+        posHoldLocal.x = (float)(latitude - latitude0) / M2Latitude;
         posHoldLocal.y = (float)(altitude);
-        posHoldLocal.z = (float)(-longitude -longitude0) / M2Longitude;
+        posHoldLocal.z = (float)(-longitude - longitude0) / M2Longitude;
     }
 
     public void ArmVehicle()
     {
         motors_armed = true;
-        active = true;
     }
 
     public void DisarmVehicle()
     {
         motors_armed = false;
-        active = false;
     }
 
     public void SetGuidedMode(bool input_guided)
