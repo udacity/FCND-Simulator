@@ -85,10 +85,8 @@ namespace MavLink
             Debug.Log(string.Format("start index = {0}, packet len = {1}, total len = {2}, byte contents - {3}", idx, packetLen, newlyReceived.Length, s));
 
 
-            Debug.Log("before crc");
             // subtract 1 since we start from 1
             var crc1 = Mavlink_Crc.Calculate(newlyReceived, (UInt16)(idx + 1), (UInt16)(headerLen + payloadLen - 1));
-            Debug.Log("after crc");
 
             if (MavlinkSettings.CrcExtra)
             {
@@ -157,7 +155,6 @@ namespace MavLink
             while (idx < bytesLen) {
                 // decode the packet (msg + 10 header + 2 crc), ignoring signature
                 idx = DecodePacketV2(newlyReceived, idx);
-                Debug.Log(string.Format("idx {0}", idx));
             }
         }
 
