@@ -88,6 +88,8 @@ namespace MavLink
             // subtract 1 since we start from 1
             var crc1 = Mavlink_Crc.Calculate(newlyReceived, (UInt16)(idx + 1), (UInt16)(idx + headerLen + payloadLen - 1));
 
+            Debug.Log("here");
+
             if (MavlinkSettings.CrcExtra)
             {
                 var possibleMsgId = newlyReceived[idx + 7];
@@ -108,6 +110,7 @@ namespace MavLink
 
             byte crcHigh = (byte)(crc1 & 0xFF);
             byte crcLow = (byte)(crc1 >> 8);
+
 
             if (crcHigh == checksumHigh && crcLow == checksumLow) {
                 var packet = new MavlinkPacket
@@ -154,6 +157,7 @@ namespace MavLink
             while (idx < bytesLen) {
                 // decode the packet (msg + 10 header + 2 crc), ignoring signature
                 idx = DecodePacketV2(newlyReceived, idx);
+                Debug.Log(string.Format("idx {0}", idx));
             }
         }
 
