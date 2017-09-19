@@ -63,7 +63,7 @@ namespace MavLink
        }
 
        private int DecodePacketV2(byte[] newlyReceived, int idx) {
-            byte headerLen = 10;
+            var headerLen = 10;
             var magic = newlyReceived[idx];
             var payloadLen = newlyReceived[idx + 1];
             var incompatFlags = newlyReceived[idx + 2];
@@ -85,10 +85,10 @@ namespace MavLink
             Debug.Log(string.Format("start index = {0}, packet len = {1}, total len = {2}, byte contents - {3}", idx, packetLen, newlyReceived.Length, s));
 
 
+            Debug.Log("before crc");
             // subtract 1 since we start from 1
-            var crc1 = Mavlink_Crc.Calculate(newlyReceived, (UInt16)(idx + 1), (UInt16)(idx + headerLen + payloadLen - 1));
-
-            Debug.Log("here");
+            var crc1 = Mavlink_Crc.Calculate(newlyReceived, (UInt16)(idx + 1), (UInt16)(headerLen + payloadLen - 1));
+            Debug.Log("after crc");
 
             if (MavlinkSettings.CrcExtra)
             {
