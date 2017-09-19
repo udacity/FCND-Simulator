@@ -127,7 +127,7 @@ public class MavlinkTCP : MonoBehaviour {
         }
         stream.Close();
         client.Close();
-        print("CLIENT DISCONNECTED !!! PLEASE PRINT FFS. YAY IT PRINTED BUT IT STILL DOESN'T MEAN ANYTHING SO");
+        print("CLIENT DISCONNECTED !!!");
     }
 
     void Update () {
