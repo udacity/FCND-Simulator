@@ -221,10 +221,10 @@ public class MavlinkTCP : MonoBehaviour {
             print("Vehicle Command: (" + lat + "," + lon + "," + alt + ")");
             _simpleController.CommandGPS(lat, lon, alt);
         } else if (command == MAV_CMD.MAV_CMD_NAV_TAKEOFF) {
-            _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), _quadController.getAltitude() + (float)(msg.z));
+            _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), (float)(msg.z));
             print("TAKING OFF !!! Alt = " + msg.z);
         } else if (command == MAV_CMD.MAV_CMD_NAV_LAND) {
-            _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), -msg.z);
+            _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), msg.z);
             print("LANDING !!!");
         } else {
             print(string.Format("Unknown MAVLink Command: {0}", command));

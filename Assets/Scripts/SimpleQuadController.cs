@@ -99,6 +99,13 @@ public class SimpleQuadController : MonoBehaviour
             
         }
 
+        if (Input.GetKeyDown(KeyCode.F11))
+        {
+            posctl = !posctl;
+
+            pos_set = false;
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             pos_set = false;
