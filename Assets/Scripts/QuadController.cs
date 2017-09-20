@@ -124,7 +124,7 @@ public class QuadController : MonoBehaviour
     Quaternion poseOrientation;
     Texture2D dot;
 
-    string logPath = "Assets/Logs/navLog.txt";
+    string logPath = "/tmp/navLog.txt";
     float lat_noise = 0.0f;
     float lon_noise = 0.0f;
     float alt_noise = 0.0f;
