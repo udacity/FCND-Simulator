@@ -43,7 +43,8 @@ public class SimpleQuadController : MonoBehaviour
     public float thrustForce = 25.0f;
     public float thrustMoment = 2.0f;
     public float maxTilt = 0.5f; //MaxTilt in Radians
-    public float maxHdot = 5.0f;
+    public float maxAscentRate = 5.0f;
+    public float maxDescentRate = 2.0f;
 
     Rigidbody rb;
     float tiltX;
@@ -214,6 +215,14 @@ public class SimpleQuadController : MonoBehaviour
                 angle_input[2] = -Kp_vel * velocityErrorBody.x - Kd_vel * velocityErrorBodyD.x;
                 angle_input[3] = Kp_vel * velocityErrorBody.z + Kd_vel * velocityErrorBodyD.z;
 
+                float angle_magnitude = Mathf.Sqrt(Mathf.Pow(angle_input[2], 2.0f) + Mathf.Pow(angle_input[3], 2.0f));
+                if ( angle_magnitude> maxTilt)
+                {
+                    angle_input[2] = maxTilt * angle_input[2] / angle_magnitude;
+                    angle_input[3] = maxTilt * angle_input[3] / angle_magnitude;
+                }
+                
+
                 angle_input[0] = velCmdBody.y;
                 angle_input[1] = yawCmd;
             }
@@ -222,12 +231,12 @@ public class SimpleQuadController : MonoBehaviour
                 pos_set = false;
 
                 //Pilot Input: Hdot, Yawrate, pitch, roll
-                angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), -Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
+                angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), -Input.GetAxis("Vertical")*maxTilt, -Input.GetAxis("Horizontal")*maxTilt);
             }
 
 
             //Constrain the angle inputs between -1 and 1 (tilt, turning speed, and vert speed taken into account later)
-            for (int i = 1; i < 4; i++)
+            for (int i = 1; i < 2; i++)
             {
                 if (angle_input[i] > 1.0f)
                     angle_input[i] = 1.0f;
@@ -235,13 +244,21 @@ public class SimpleQuadController : MonoBehaviour
                     angle_input[i] = -1.0f;
             }
 
+            
             //Inner control loop: angle commands to forces
             if (guided || posctl || stabilized)
             {
 
                 float thrust_nom = -1.0f * rb.mass * Physics.gravity[1];
-                float hDotError = (maxHdot * angle_input[0] - 1.0f * controller.LinearVelocity.y);
-
+                float hDotError = 0.0f;
+                if (angle_input[0] > 0.0f)
+                {
+                    hDotError = (maxAscentRate * angle_input[0] - 1.0f * controller.LinearVelocity.y);
+                }
+                else
+                {
+                    hDotError = (maxDescentRate * angle_input[0] - 1.0f * controller.LinearVelocity.y);
+                }
                 hDotInt = hDotInt + hDotError * Time.deltaTime;
 
                 //hdot to thrust
@@ -250,9 +267,10 @@ public class SimpleQuadController : MonoBehaviour
                 //yaw rate to yaw moment
                 yaw_moment[1] = Kp_r * (turnSpeed * angle_input[1] - prq[1]);
 
+
                 //angle to angular rate command (for pitch and roll)
-                float pitchError = maxTilt * angle_input[2] - rollYawPitch.z;
-                float rollError = maxTilt * angle_input[3] - rollYawPitch.x;
+                float pitchError = angle_input[2] - rollYawPitch.z;
+                float rollError = angle_input[3] - rollYawPitch.x;
                 float pitchRateError = Kp_pitch * pitchError - prq.z;
                 float rollRateError = Kp_roll * rollError - prq.x;
 
@@ -298,10 +316,10 @@ public class SimpleQuadController : MonoBehaviour
     //Command the quad to a GPS location (latitude, relative_altitude, longitude)
     public void CommandGPS(double latitude, double longitude, double altitude)
     {
-        pos_set = true;
         posHoldLocal.x = (float)(latitude - latitude0) / M2Latitude;
         posHoldLocal.y = (float)(altitude);
         posHoldLocal.z = (float)(-longitude - longitude0) / M2Longitude;
+        pos_set = true;
     }
 
     public void ArmVehicle()
