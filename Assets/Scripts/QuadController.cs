@@ -311,7 +311,8 @@ public class QuadController : MonoBehaviour
                       "\nLinear Vel.: " + LinearVelocity.ToRos().ToString() +
                       "\nAngular Vel.: " + AngularVelocityBody.ToRos().ToString() +
                       "\nGravity " + (UseGravity ? "on" : "off") +
-                      "\nLocal input " + (inputCtrl.motors_armed ? "on" : "off");
+                      "\nLocal input " + (inputCtrl.motors_armed ? "on" : "off" )+
+                      "\nControl mode " + (inputCtrl.posctl ? "Pos Ctrl" : "Stabilized");
         if (ConstrainForceX)
             info += "\nX Movement constrained";
         if (ConstrainForceY)
@@ -430,6 +431,7 @@ public class QuadController : MonoBehaviour
         {
             info = @"L: Legend on/off
                         F12: Arm quad
+                        F11: Stabilize/Position Control
                         WSAD/Arrows: Move around
                         Space/C: Thrust up/down
                         Q/E: Turn around
