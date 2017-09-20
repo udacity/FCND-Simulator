@@ -125,6 +125,9 @@ public class QuadController : MonoBehaviour
     Texture2D dot;
 
     string logPath = "Assets/Logs/navLog.txt";
+    float lat_noise = 0.0f;
+    float lon_noise = 0.0f;
+    float alt_noise = 0.0f;
 
     //Write some text to the test.txt file
     StreamWriter logger;
@@ -687,8 +690,8 @@ Esc: Quit";
         BodyVelocity = rb.transform.InverseTransformDirection(rb.velocity);
         navTransform = rb.transform;
 
+        eulerAngles = rb.rotation.eulerAngles;
 
-        eulerAngles = navTransform.eulerAngles;
         for (int i = 0; i < 3; i++)
         {
             if (eulerAngles[i] > 180.0f)
@@ -697,10 +700,15 @@ Esc: Quit";
                 eulerAngles[i] = eulerAngles[i] + 360.0f;
         }
 
+        //Temporary low pass filtered noise on the position (need to implement a Gaussian distribution in the future)
+        lat_noise = 0.9f * lat_noise + 0.1f * 2.0f * (HDOP * Random.value - 0.5f);
+        alt_noise = 0.9f * alt_noise + 0.1f * 2.0f * (VDOP * Random.value - 0.5f);
+        lon_noise = 0.9f * lon_noise + 0.1f * 2.0f * (HDOP * Random.value - 0.5f);
+
         //GPS only reported in local frame because float doesn't have precision required for full GPS coordinate
-        GPS.x = rb.position.x * M2Latitude + M2Latitude*2.0f*(HDOP*Random.value-0.5f);
-        GPS.y = rb.position.y + 2.0f*VDOP*(Random.value-0.5f);
-        GPS.z = rb.position.z * M2Longitude + M2Longitude*2.0f * HDOP * (Random.value-0.5f);
+        GPS.x = rb.position.x * M2Latitude + M2Latitude*lat_noise;
+        GPS.y = rb.position.y + alt_noise;
+        GPS.z = rb.position.z * M2Longitude + M2Longitude*lon_noise;
 
         curSpeed = rb.velocity.magnitude;
     }
