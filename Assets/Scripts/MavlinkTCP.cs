@@ -29,11 +29,11 @@ public class MavlinkTCP : MonoBehaviour {
 	private QuadController _quadController;
     private Mavlink _mavlink;
 
-    // thread for the tcp connection
-    private Thread _tcpListenerThread;
+    private bool _running = true;
 
     // track all clients
-    private ConcurrentBag<MAVLinkClientConn> clients = new ConcurrentBag<MAVLinkClientConn>();
+    // private ConcurrentBag<MAVLinkClientConn> clients = new ConcurrentBag<MAVLinkClientConn>();
+    private ConcurrentBag<TcpClient> _clients = new ConcurrentBag<TcpClient>();
 
     public int _heartbeatInterval = 1;
 
@@ -52,17 +52,15 @@ public class MavlinkTCP : MonoBehaviour {
         // setup event listeners
         _mavlink.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
         _mavlink.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
-        // start the thread for the tcp connection
-        _tcpListenerThread = new Thread(TcpThread);
-        _tcpListenerThread.Start();
+        var tcpTask = TcpListenAsync();
     }
 
 
 
     async Task EmitTelemetry(NetworkStream stream) {
         var waitFor = (int) (1000f / _telemetryInterval);
-        while (stream.CanRead && stream.CanWrite && _tcpListenerThread != null) {
-            // print("Emitting telemetry data ...");
+        while (_running && stream.CanRead && stream.CanWrite) {
+            print("Emitting telemetry data ...");
             var msg = new Msg_global_position_int
             {
                 lat = (int)(_quadController.getLatitude() * 1e7d),
@@ -82,8 +80,8 @@ public class MavlinkTCP : MonoBehaviour {
     
     async Task EmitHearbeat(NetworkStream stream) {
         var waitFor = (int) (1000f / _heartbeatInterval);
-        while (stream.CanRead && stream.CanWrite && _tcpListenerThread != null) {
-            // print("Emitting hearbeat ...");
+        while (_running && stream.CanRead && stream.CanWrite) {
+            print("Emitting hearbeat ...");
             byte base_mode;
             if (_simpleController.guided && _simpleController.motors_armed) {
                 base_mode = (byte) MAV_MODE.MAV_MODE_GUIDED_ARMED;
@@ -113,8 +111,8 @@ public class MavlinkTCP : MonoBehaviour {
         var telemetryTask = EmitTelemetry(stream);
         var heartbeatTask = EmitHearbeat(stream);
 
-        while (client.Connected && stream.CanRead) {
-            // print("Reading from stream ... ");
+        while (_running && client.Connected && stream.CanRead) {
+            print("Reading from stream ... ");
             var buf = new byte[1024];
             var bytesRead = await stream.ReadAsync(buf, 0, buf.Length);
             if (bytesRead > 0) {
@@ -137,9 +135,6 @@ public class MavlinkTCP : MonoBehaviour {
     }
 
     async Task TcpListenAsync() {
-    }
-
-    void TcpThread() {
         try {
             // Setup the TcpListener 
             var addr = IPAddress.Parse(_ip);
@@ -148,9 +143,10 @@ public class MavlinkTCP : MonoBehaviour {
             listener.Start();
             print("Starting TCP MAVLink server ...");
 
-            while (true) {
-                var client = listener.AcceptTcpClient();
+            while (_running) {
+                var client = await listener.AcceptTcpClientAsync();
                 print("Accepted connection !!!");
+                _clients.Add(client);
                 var clientTask = HandleClientAsync(client);
             }
         } catch (SocketException e) {
@@ -162,9 +158,7 @@ public class MavlinkTCP : MonoBehaviour {
 
     // called when this is destroyed
     private void OnDestroy() {
-        if (_tcpListenerThread != null) { 
-            _tcpListenerThread.Abort(); 
-        }
+        _running = false;
     }
 
     void OnPacketReceived(object sender, MavlinkPacket packet) {
