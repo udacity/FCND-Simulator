@@ -124,13 +124,10 @@ public class QuadController : MonoBehaviour
     Quaternion poseOrientation;
     Texture2D dot;
 
-    string logPath = "/tmp/navLog.txt";
     float lat_noise = 0.0f;
     float lon_noise = 0.0f;
     float alt_noise = 0.0f;
 
-    //Write some text to the test.txt file
-    StreamWriter logger;
 
     void Awake()
     {
@@ -155,7 +152,6 @@ public class QuadController : MonoBehaviour
         rb.maxAngularVelocity = Mathf.Infinity;
         inputCtrl = GetComponent<SimpleQuadController>();
 
-        logger = new StreamWriter(logPath, false);
     }
 
     void Start()
@@ -167,7 +163,7 @@ public class QuadController : MonoBehaviour
 
     private void OnDestroy()
     {
-        logger.Close();
+
     }
 
     void Update()
@@ -298,8 +294,6 @@ public class QuadController : MonoBehaviour
         }
 
         navigationUpdate();
-
-        LogGPS();
     }
 
     void OnGUI()
@@ -625,12 +619,7 @@ Esc: Quit";
         ConstrainTorqueZ = (rb.constraints & RigidbodyConstraints.FreezeRotationY) != 0;
     }
 
-    void LogGPS()
-    {
-        logger.WriteLine(getLatitude().ToString("#.0000000") + "," + getLongitude().ToString("#.0000000") + "," + getAltitude().ToString("#.00") + "," +
-                         getNorthVelocity().ToString("#.00") + "," + getEastVelocity().ToString("#.00") + "," + getVerticalVelocity().ToString("#.00") + "," +
-                         getYaw().ToString("#.0"));
-    }
+    
 
     //Convenience retrieval functions. These probably should be set as properties
     public double getLatitude()

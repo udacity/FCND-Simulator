@@ -69,10 +69,10 @@ public class MavlinkTCP : MonoBehaviour {
                 lon = (int)(_quadController.getLongitude() * 1e7d),
                 alt = (int)(_quadController.getAltitude() * 1000),
                 relative_alt = (int)(_quadController.getAltitude() * 1000),
-                vx = 0,
-                vy = 0,
-                vz = 0,
-                hdg = 0
+                vx = (short)(_quadController.getNorthVelocity() * 100),
+                vy = (short)(_quadController.getEastVelocity()*100),
+                vz = (short)(_quadController.getVerticalVelocity()*100),
+                hdg = (ushort)(_quadController.getYaw()*100)
             };
             var serializedPacket = _mavlink.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
@@ -222,6 +222,7 @@ public class MavlinkTCP : MonoBehaviour {
             _simpleController.CommandGPS(lat, lon, alt);
         } else if (command == MAV_CMD.MAV_CMD_NAV_TAKEOFF) {
             _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), (float)(msg.z));
+            _simpleController.on_ground = false;
             print("TAKING OFF !!! Alt = " + msg.z);
         } else if (command == MAV_CMD.MAV_CMD_NAV_LAND) {
             _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), msg.z);

@@ -21,6 +21,7 @@ public class SimpleQuadController : MonoBehaviour
     public bool guided = false;
     public bool stabilized = true;
     public bool posctl = true;
+    public bool on_ground = true;
 
     //Control Gains
     public float Kp_hdot = 10.0f;
@@ -95,6 +96,7 @@ public class SimpleQuadController : MonoBehaviour
             {
                 controller.rb.freezeRotation = false;
                 controller.MotorsEnabled = false;
+                on_ground = true;
             }
             
         }
@@ -163,6 +165,9 @@ public class SimpleQuadController : MonoBehaviour
             if (posctl || guided)
             {
                 Vector3 velCmdBody = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Thrust"), -Input.GetAxis("Horizontal"));
+                if (velCmdBody.y > 0.0)
+                    on_ground = false;
+
                 float yawCmd = Input.GetAxis("Yaw");
 
                 //If no control input provided (or in guided mode), use position hold
@@ -239,6 +244,8 @@ public class SimpleQuadController : MonoBehaviour
 
                 //Pilot Input: Hdot, Yawrate, pitch, roll
                 angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), -Input.GetAxis("Vertical")*maxTilt, -Input.GetAxis("Horizontal")*maxTilt);
+                if (angle_input.x > 0.0)
+                    on_ground = false;
             }
 
 
@@ -256,7 +263,7 @@ public class SimpleQuadController : MonoBehaviour
             if (guided || posctl || stabilized)
             {
 
-                float thrust_nom = -1.0f * rb.mass * Physics.gravity[1];
+                float thrust_nom = -1.0f * rb.mass * Physics.gravity[1]; 
                 float hDotError = 0.0f;
                 if (angle_input[0] > 0.0f)
                 {
@@ -298,9 +305,16 @@ public class SimpleQuadController : MonoBehaviour
             }
             //rb.AddRelativeForce(thrust);
             //rb.AddRelativeTorque(yaw_moment + pitch_moment + roll_moment);
+            Vector3 total_moment = yaw_moment + pitch_moment + roll_moment;
+            if (on_ground)
+            {
+                total_moment = Vector3.zero;
+                thrust.y = 0.1f;
+            }
+                
 
             controller.ApplyMotorForce(thrust);
-            controller.ApplyMotorTorque(yaw_moment + pitch_moment + roll_moment);
+            controller.ApplyMotorTorque(total_moment);
         }
         else
         {
@@ -337,6 +351,7 @@ public class SimpleQuadController : MonoBehaviour
     public void DisarmVehicle()
     {
         motors_armed = false;
+        on_ground = true;
     }
 
     public void SetGuidedMode(bool input_guided)
