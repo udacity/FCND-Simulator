@@ -26,3 +26,5 @@ sdc.app
 .vs*
 
 Assets/Logs/navLog.txt*
+Assets/Mapbox*
+Assets/Resources*

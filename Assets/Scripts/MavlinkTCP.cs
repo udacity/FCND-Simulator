@@ -14,34 +14,32 @@ using System.Threading.Tasks;
 // needed for mavlink
 using MavLink;
 
-// TODO: possibly use a class like this to keep track of 
-// task/client pairs.
-public class MAVLinkClientConn {
-    public TcpClient client = null;
-
-    public Task task =  null;
-}
-
-
 public class MavlinkTCP : MonoBehaviour {
 
 	private SimpleQuadController _simpleController;
+
 	private QuadController _quadController;
+
     private Mavlink _mavlink;
 
     private bool _running = true;
 
-    // track all clients
-    // private ConcurrentBag<MAVLinkClientConn> clients = new ConcurrentBag<MAVLinkClientConn>();
     private ConcurrentBag<TcpClient> _clients = new ConcurrentBag<TcpClient>();
 
     public int _heartbeatInterval = 1;
 
-    public int _telemetryInterval = 10;
+    public int _gpsInterval = 10;
+
+    public int _imuInterval = 10;
 
     public Int32 _port = 5760;
 
     public string _ip = "127.0.0.1";
+
+    // TODO: Capture images with the cameras
+    private Camera _forwardFacingCamera;
+
+    private Camera _downwardFacingCamera;
 
 
     // Use this for initialization
@@ -55,10 +53,23 @@ public class MavlinkTCP : MonoBehaviour {
         var tcpTask = TcpListenAsync();
     }
 
+    async Task EmitIMU(NetworkStream stream) {
+        var waitFor = (int) (1000f / _imuInterval);
+        while (_running && stream.CanRead && stream.CanWrite) {
+            print("Emitting telemetry data ...");
+            // TODO: figure out if this should be `Msg_scaled_imu` instead
+            var msg = new Msg_raw_imu
+            {
+            };
+            var serializedPacket = _mavlink.SendV2(msg);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
+            await Task.Delay(waitFor);
+        }
+    }
 
 
-    async Task EmitTelemetry(NetworkStream stream) {
-        var waitFor = (int) (1000f / _telemetryInterval);
+    async Task EmitGPS(NetworkStream stream) {
+        var waitFor = (int) (1000f / _gpsInterval);
         while (_running && stream.CanRead && stream.CanWrite) {
             print("Emitting telemetry data ...");
             var msg = new Msg_global_position_int
@@ -108,7 +119,7 @@ public class MavlinkTCP : MonoBehaviour {
 
     async Task HandleClientAsync(TcpClient client) {
         var stream = client.GetStream();
-        var telemetryTask = EmitTelemetry(stream);
+        var telemetryTask = EmitGPS(stream);
         var heartbeatTask = EmitHearbeat(stream);
 
         while (_running && client.Connected && stream.CanRead) {
@@ -156,13 +167,15 @@ public class MavlinkTCP : MonoBehaviour {
         }
     }
 
-    // called when this is destroyed
     private void OnDestroy() {
+        // This will cause all tasks to exit
         _running = false;
     }
 
     void OnPacketReceived(object sender, MavlinkPacket packet) {
         print(string.Format("Received packet, message type = {0}", packet.Message));
+        // NOTE: We switch on the message string representation instead of the class
+        // because C# 6.0 does not allow which on abstract classes.
         var msgstr = packet.Message.ToString();
         switch (msgstr) {
             case "MavLink.Msg_heartbeat":
@@ -178,7 +191,7 @@ public class MavlinkTCP : MonoBehaviour {
     }
 
     void OnPacketFailure(object sender, PacketCRCFailEventArgs args) {
-        print("failed to receive a packet!!!");
+        print("Failed to receive a packet!!!");
     }
 
     // The methods below determine what to do with the drone.
@@ -226,8 +239,9 @@ public class MavlinkTCP : MonoBehaviour {
         }
     }
 
-    // TODO: keep track of when last heartbeat was received and
-    // potentially do something.
+    // TODO: Keep track of when last heartbeat was received and
+    // potentially do something. For example: if a hearbeat has not been
+    // received in a certain timespan shutdown.
     void MsgHeartbeat(MavlinkPacket pack) {
         // var msg = (MavLink.Msg_heartbeat) pack.Message;
     }
