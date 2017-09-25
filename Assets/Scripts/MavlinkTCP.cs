@@ -36,6 +36,11 @@ public class MavlinkTCP : MonoBehaviour {
 
     public string _ip = "127.0.0.1";
 
+    // TODO: Capture images with the cameras
+    private Camera _forwardFacingCamera;
+
+    private Camera _downwardFacingCamera;
+
 
     // Use this for initialization
     void Start () {
@@ -52,16 +57,9 @@ public class MavlinkTCP : MonoBehaviour {
         var waitFor = (int) (1000f / _imuInterval);
         while (_running && stream.CanRead && stream.CanWrite) {
             print("Emitting telemetry data ...");
-            var msg = new Msg_global_position_int
+            // TODO: figure out if this should be `Msg_scaled_imu` instead
+            var msg = new Msg_raw_imu
             {
-                lat = (int)(_quadController.getLatitude() * 1e7d),
-                lon = (int)(_quadController.getLongitude() * 1e7d),
-                alt = (int)(_quadController.getAltitude() * 1000),
-                relative_alt = (int)(_quadController.getAltitude() * 1000),
-                vx = (short)(_quadController.getNorthVelocity() * 100),
-                vy = (short)(_quadController.getEastVelocity()*100),
-                vz = (short)(_quadController.getVerticalVelocity()*100),
-                hdg = (ushort)(_quadController.getYaw()*100)
             };
             var serializedPacket = _mavlink.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
