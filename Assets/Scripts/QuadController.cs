@@ -201,9 +201,6 @@ public class QuadController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-#if !UNITY_EDITOR
-			ROSController.StopROS ( new System.Action ( () => { Application.Quit (); } ) );
-#endif
         }
 
         if (Input.GetKeyDown(KeyCode.L))
