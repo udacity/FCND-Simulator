@@ -179,7 +179,7 @@ public class SimpleQuadController : MonoBehaviour
                     {
                         posHoldLocal = localPosition;
                         pos_set = true;
-                        Debug.Log(posHoldLocal);
+//                        Debug.Log(posHoldLocal);
                     }
 
                     Vector3 posErrorLocal = posHoldLocal - localPosition;
