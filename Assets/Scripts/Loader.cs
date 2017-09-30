@@ -14,21 +14,6 @@ public class Loader : MonoBehaviour
 	{
 		string[] args = System.Environment.GetCommandLineArgs ();
 		int sceneSelect = defaultScene;
-		foreach ( string arg in args )
-		{
-			string lower = arg.ToLower ();
-			if ( lower.Contains ( "indoor" ) )
-			{
-				sceneSelect = 0;
-				break;
-			}
-			if ( lower.Contains ( "outdoor" ) || lower.Contains ( "city" ) )
-			{
-				sceneSelect = 1;
-				break;
-			}
-		}
-
 		UnityEngine.SceneManagement.SceneManager.LoadScene ( sceneSelect + 1 ); // 0 is the loader
 	}
 }
