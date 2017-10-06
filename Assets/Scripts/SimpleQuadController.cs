@@ -323,17 +323,6 @@ public class SimpleQuadController : MonoBehaviour
 
     }
 
-    void OnGUI()
-    {
-        GUI.backgroundColor = motors_armed ? Color.green : Color.red;
-        //		GUI.contentColor = Color.white;
-        Rect r = new Rect(10, Screen.height - 100, 60, 25);
-        if (GUI.Button(r, "Input " + (motors_armed ? "on" : "off")))
-        {
-            motors_armed = !motors_armed;
-        }
-    }
-
     //Command the quad to a GPS location (latitude, relative_altitude, longitude)
     public void CommandGPS(double latitude, double longitude, double altitude)
     {

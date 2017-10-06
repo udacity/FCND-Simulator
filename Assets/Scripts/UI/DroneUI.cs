@@ -8,19 +8,47 @@ public class DroneUI : MonoBehaviour {
 	public Image _needleImage;
 	public Image _minimapImage;
     public Camera _minimapCamera;
+
+    public Button _armButton;
+    public Button _guideButton;
 	private QuadController _quadController;
     private GameObject _droneObj;
+
 
 
 	void Awake () {
         _droneObj = GameObject.Find("Quad Drone");
 		_quadController = _droneObj.GetComponent<QuadController>();
+        _armButton.onClick.AddListener(ArmButtonOnClick);
+        _guideButton.onClick.AddListener(GuideButtonOnClick);
         UpdateMinimapCamPosition();
 	}
 
     void UpdateMinimapCamPosition() {
         var quadPos = _droneObj.transform.position;
         _minimapCamera.transform.position = new Vector3(quadPos.x, quadPos.y + 30, quadPos.z);
+    }
+
+    void ArmButtonOnClick() {
+		var _quadController = _droneObj.GetComponent<QuadController>();
+        if (_quadController.inputCtrl.motors_armed) {
+            _quadController.inputCtrl.DisarmVehicle();
+            _armButton.GetComponentInChildren<Text>().text = "Disarmed";
+        } else {
+            _quadController.inputCtrl.ArmVehicle();
+            _armButton.GetComponentInChildren<Text>().text = "Armed";
+        }
+    }
+
+    void GuideButtonOnClick() {
+		var _quadController = _droneObj.GetComponent<QuadController>();
+        if (_quadController.inputCtrl.guided) {
+            _quadController.inputCtrl.SetGuidedMode(false);
+            _guideButton.GetComponentInChildren<Text>().text = "Unguided";
+        } else {
+            _quadController.inputCtrl.SetGuidedMode(true);
+            _guideButton.GetComponentInChildren<Text>().text = "Guided";
+        }
     }
 
 	void LateUpdate () {
