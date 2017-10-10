@@ -2,83 +2,112 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+// TODO(dom): Move these parts into separate files
 
 public class DroneUI : MonoBehaviour {
-	public Text _gpsText;
-	public Image _needleImage;
-	public Image _minimapImage;
-    public Camera _minimapCamera;
+	public Text gpsText;
+	public Image needleImage;
+	public Image minimapImage;
+    public Camera minimapCamera;
 
-    public Button _armButton;
-    public Button _guideButton;
-	private QuadController _quadController;
-    private GameObject _droneObj;
+    public Button armButton;
+    public Button guideButton;
+	private QuadController quadController;
+    private GameObject droneObj;
+    private float minimapCameraY;
 
 
 
 	void Awake () {
-        _droneObj = GameObject.Find("Quad Drone");
-		_quadController = _droneObj.GetComponent<QuadController>();
-        _armButton.onClick.AddListener(ArmButtonOnClick);
-        _guideButton.onClick.AddListener(GuideButtonOnClick);
-        UpdateMinimapCamPosition();
+        droneObj = GameObject.Find("Quad Drone");
+		quadController = droneObj.GetComponent<QuadController>();
+        armButton.onClick.AddListener(ArmButtonOnClick);
+        guideButton.onClick.AddListener(GuideButtonOnClick);
+        minimapImage.GetComponent<Button>().onClick.AddListener(RenderMinimap);
+        minimapCameraY = minimapCamera.transform.position.y;
+        Debug.Log(minimapCameraY);
+        UpdateMinimapCameraPosition();
 	}
 
-    void UpdateMinimapCamPosition() {
-        var quadPos = _droneObj.transform.position;
-        _minimapCamera.transform.position = new Vector3(quadPos.x, quadPos.y + 30, quadPos.z);
+    void RenderMinimap() {
+        Camera c = minimapCamera;
+        var rt = minimapImage.GetComponent<RectTransform>();
+        Debug.Log("Rect " + rt.rect);
+        Debug.Log(string.Format("global x = {0}, y = {1}", Input.mousePosition.x, Input.mousePosition.y));
+        var x = Input.mousePosition.x - (Screen.width - rt.rect.width);
+        var y = Input.mousePosition.y;
+        Debug.Log(string.Format("x = {0}, y = {1}", x, y));
+        var wp = c.ScreenToWorldPoint(new Vector3(x, y, minimapCameraY));
+        Debug.Log("world point " + wp);
+    }
+
+    void UpdateMinimapCameraPosition() {
+        var quadPos = droneObj.transform.position;
+        minimapCamera.transform.position = new Vector3(quadPos.x, quadPos.y + minimapCameraY, quadPos.z);
     }
 
     void ArmButtonOnClick() {
-		var _quadController = _droneObj.GetComponent<QuadController>();
+		var _quadController = droneObj.GetComponent<QuadController>();
         if (_quadController.inputCtrl.motors_armed) {
             _quadController.inputCtrl.DisarmVehicle();
-            _armButton.GetComponentInChildren<Text>().text = "Disarmed";
+            armButton.GetComponentInChildren<Text>().text = "Disarmed";
         } else {
             _quadController.inputCtrl.ArmVehicle();
-            _armButton.GetComponentInChildren<Text>().text = "Armed";
+            armButton.GetComponentInChildren<Text>().text = "Armed";
         }
     }
 
     void GuideButtonOnClick() {
-		var _quadController = _droneObj.GetComponent<QuadController>();
+		var _quadController = droneObj.GetComponent<QuadController>();
         if (_quadController.inputCtrl.guided) {
             _quadController.inputCtrl.SetGuidedMode(false);
-            _guideButton.GetComponentInChildren<Text>().text = "Unguided";
+            guideButton.GetComponentInChildren<Text>().text = "Unguided";
         } else {
             _quadController.inputCtrl.SetGuidedMode(true);
-            _guideButton.GetComponentInChildren<Text>().text = "Guided";
+            guideButton.GetComponentInChildren<Text>().text = "Guided";
         }
     }
 
 	void LateUpdate () {
-        var lat = _quadController.getLatitude();
-        var lon = _quadController.getLongitude();
-        var alt = _quadController.getAltitude();
-		_gpsText.text = string.Format("Latitude = {0:0.000}\nLongitude = {1:0.000}\nAltitude = {2:0.000} (meters)", lat, lon, alt);
+        var lat = quadController.getLatitude();
+        var lon = quadController.getLongitude();
+        var alt = quadController.getAltitude();
+		gpsText.text = string.Format("Latitude = {0:0.000}\nLongitude = {1:0.000}\nAltitude = {2:0.000} (meters)", lat, lon, alt);
         // _gpsText.color = new Color(255, 255, 255, 0);
 
         // North -> 0/360
         // East -> 90
         // South -> 180
         // West - 270
-        var hdg = _quadController.getYaw();
-        var oldHdg = _needleImage.rectTransform.rotation.eulerAngles.z;
+        var hdg = quadController.getYaw();
+        var oldHdg = needleImage.rectTransform.rotation.eulerAngles.z;
         // rotate the needle by the yaw difference
-        _needleImage.rectTransform.Rotate(0, 0, -(-hdg - -oldHdg));
+        needleImage.rectTransform.Rotate(0, 0, -(-hdg - -oldHdg));
 
         // update minimap cam
-        UpdateMinimapCamPosition();
+        UpdateMinimapCameraPosition();
 
-        // display above sky camera frame on minimap
-        var targetTexture = _minimapCamera.targetTexture;
+        // Get the current width and height of the RectTransform.
+        // The RenderTexture needs to have the same dimensions.
+        var rt = minimapImage.GetComponent<RectTransform>();
+        var width = (int) rt.rect.width;
+        var height = (int) rt.rect.height;
+
+        var targetTexture = new RenderTexture(width, height, 24);
+        minimapCamera.targetTexture = targetTexture;
+        minimapCamera.Render();
         RenderTexture.active = targetTexture;
-        Texture2D texture2D = new Texture2D(targetTexture.width, targetTexture.height, TextureFormat.RGBA32, false);
-        texture2D.ReadPixels(new Rect(0, 0, targetTexture.width, targetTexture.height), 0, 0);
+
+        Texture2D texture2D = new Texture2D(width, height, TextureFormat.RGB24, false);
+        texture2D.ReadPixels(new Rect(0, 0, width, height), 0, 0);
         texture2D.Apply();
-        var sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-        _minimapImage.sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-        // Object.Destroy(texture2D);
-        // Object.Destroy(sprite);
+        minimapImage.sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
+
+        // cleanup, doesn't quite work
+        // minimapCamera.targetTexture = null;
+        // RenderTexture.active = null;
+        // targetTexture.Release();
 	}
 }

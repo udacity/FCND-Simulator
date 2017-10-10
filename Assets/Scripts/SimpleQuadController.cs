@@ -212,7 +212,6 @@ public class SimpleQuadController : MonoBehaviour
                 else
                 {
                     pos_set = false;
-
                 }
 
 
