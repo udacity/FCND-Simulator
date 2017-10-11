@@ -128,9 +128,7 @@ public class QuadController : MonoBehaviour
     float lon_noise = 0.0f;
     float alt_noise = 0.0f;
 
-
-    void Awake()
-    {
+    void Awake() {
         if (ActiveController == null)
             ActiveController = this;
         rb = GetComponent<Rigidbody>();
@@ -154,15 +152,13 @@ public class QuadController : MonoBehaviour
 
     }
 
-    void Start()
-    {
+    void Start() {
         rb.inertiaTensorRotation = Quaternion.identity;
         // for whatever reason, setting inertiaTensorRotation stops the quad from accepting commands (mostly torque) until it's deactivated and activated
         QuadActivator.Activate(gameObject);
     }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() {
 
     }
 
@@ -291,179 +287,6 @@ public class QuadController : MonoBehaviour
         }
 
         navigationUpdate();
-    }
-
-    void OnGUI()
-    {
-        string info = @"Force: " + Force.ToRos().ToString() +
-                      "\nTorque: " + Torque.ToRos().ToString() +
-                      "\nPosition: " + Position.ToRos().ToString() +
-                      "\nRPY: " + (-Rotation.eulerAngles).ToRos().ToString() +
-                      "\nLinear Vel.: " + LinearVelocity.ToRos().ToString() +
-                      "\nAngular Vel.: " + AngularVelocityBody.ToRos().ToString() +
-                      "\nGravity " + (UseGravity ? "on" : "off") +
-                      "\nLocal input " + (inputCtrl.motors_armed ? "on" : "off" )+
-                      "\nControl mode " + (inputCtrl.posctl ? "Pos Ctrl" : "Stabilized");
-        if (ConstrainForceX)
-            info += "\nX Movement constrained";
-        if (ConstrainForceY)
-            info += "\nY Movement constrained";
-        if (ConstrainForceZ)
-            info += "\nZ Movement constrained";
-        if (ConstrainTorqueX)
-            info += "\nX Rotation constrained";
-        if (ConstrainTorqueY)
-            info += "\nY Rotation constrained";
-        if (ConstrainTorqueZ)
-            info += "\nZ Rotation constrained";
-
-        GUIStyle label = GUI.skin.label;
-        TextClipping clipping = label.clipping;
-        label.clipping = TextClipping.Overflow;
-        bool wrap = label.wordWrap;
-        label.wordWrap = false;
-        int fontSize = label.fontSize;
-        label.fontSize = (int)(22f * Screen.height / 1080);
-
-        Vector2 size = label.CalcSize(new GUIContent(info));
-        Rect r = new Rect(10, 10, size.x + 10, size.y);
-        GUI.Box(r, "");
-        GUI.Box(r, "");
-        r.x += 5;
-
-        GUILayout.BeginArea(r);
-        GUILayout.Label(info);
-        GUILayout.EndArea();
-
-
-
-        if (drawArrows)
-        {
-            bool showMovement = ConstrainForceX || ConstrainForceY || ConstrainForceZ || drawArrowsAlways;
-            bool showRotation = ConstrainTorqueX || ConstrainTorqueY || ConstrainTorqueZ || drawArrowsAlways;
-            // x arrow
-            Camera cam = Camera.main;
-            float screenRatio = 1f * Screen.height / 1080;
-            Vector2 texSize = new Vector2(48, 8) * screenRatio;
-            Vector2 texSize2 = new Vector2(16, 16) * screenRatio;
-            float arrowMag = texSize.magnitude + 14;
-            Vector3 pos = transform.position;
-            Vector2 screenPos = cam.WorldToScreenPoint(pos);
-            screenPos.y = Screen.height - screenPos.y;
-            Vector2 top = cam.WorldToScreenPoint(pos + Up * 0.5f);
-            top.y = Screen.height - top.y;
-            Vector2 tip = cam.WorldToScreenPoint(pos + XAxis * 0.75f);
-            tip.y = Screen.height - tip.y;
-            Vector2 toTip = (tip - screenPos).normalized;
-            Rect texRect = new Rect(screenPos - texSize, texSize * 2);
-            //			Rect texRect2 = new Rect ( screenPos + ( top - screenPos ).normalized * arrowMag - texSize2, texSize2 * 2 );
-            Rect texRect2 = new Rect(screenPos + toTip * arrowMag - texSize2, texSize2 * 2);
-            float angle = Vector2.Angle(Vector2.right, toTip);
-            if (tip.y > screenPos.y)
-                angle = -angle;
-            GUIUtility.RotateAroundPivot(-angle, screenPos);
-            GUI.color = axisColors[0];
-            if (showMovement && !ConstrainForceX)
-                GUI.DrawTexture(texRect, axisArrows[0]);
-            GUIUtility.RotateAroundPivot(angle, screenPos);
-            if (showRotation && !ConstrainTorqueX)
-                GUI.DrawTexture(texRect2, axisArrows[1]);
-            //			GUI.DrawTexture ( new Rect ( tip.x - 2, tip.y - 2, 4, 4 ), dot );
-
-            // y arrow
-            tip = cam.WorldToScreenPoint(pos + YAxis * 0.75f);
-            tip.y = Screen.height - tip.y;
-            toTip = (tip - screenPos).normalized;
-            angle = Vector2.Angle(Vector2.right, toTip);
-            if (tip.y > screenPos.y)
-                angle = -angle;
-            GUIUtility.RotateAroundPivot(-angle, screenPos);
-            GUI.color = axisColors[1];
-            if (showMovement && !ConstrainForceY)
-                GUI.DrawTexture(texRect, axisArrows[0]);
-            GUIUtility.RotateAroundPivot(angle, screenPos);
-            texRect2.position = screenPos + toTip * arrowMag - texSize2;
-            if (showRotation && !ConstrainTorqueY)
-                GUI.DrawTexture(texRect2, axisArrows[1]);
-            //			GUI.DrawTexture ( new Rect ( tip.x - 2, tip.y - 2, 4, 4 ), dot );
-
-            // z arrow
-            tip = cam.WorldToScreenPoint(pos + Up * 0.5f);
-            tip.y = Screen.height - tip.y;
-            toTip = (tip - screenPos).normalized;
-            angle = Vector2.Angle(Vector2.right, toTip);
-            if (tip.y > screenPos.y)
-                angle = -angle;
-            GUIUtility.RotateAroundPivot(-angle, screenPos);
-            GUI.color = axisColors[2];
-            if (showMovement && !ConstrainForceZ)
-                GUI.DrawTexture(texRect, axisArrows[0]);
-            GUIUtility.RotateAroundPivot(angle, screenPos);
-            texRect2.position = screenPos + toTip * arrowMag - texSize2;
-            if (showRotation && !ConstrainTorqueZ)
-                GUI.DrawTexture(texRect2, axisArrows[1]);
-            //			GUI.DrawTexture ( new Rect ( tip.x - 2, tip.y - 2, 4, 4 ), dot );
-            //			GUI.color = Color.black;
-            //			GUI.DrawTexture ( new Rect ( screenPos.x - 2, screenPos.y - 2, 4, 4 ), dot );
-        }
-
-        GUI.color = Color.white;
-        //		GUIStyle label = GUI.skin.label;
-        //		TextClipping clipping = label.clipping;
-        //		label.clipping = TextClipping.Overflow;
-        //		bool wrap = label.wordWrap;
-        //		label.wordWrap = false;
-        //		int fontSize = label.fontSize;
-        //		label.fontSize = (int) ( 22f * Screen.height / 1080 );
-
-        //		info = "";
-
-        if (showLegend)
-        {
-            info = @"L: Legend on/off
-                        F12: Arm quad
-                        F11: Stabilize/Position Control
-                        WSAD/Arrows: Move around
-                        Space/C: Thrust up/down
-                        Q/E: Turn around
-                        Scroll wheel: zoom in/out
-                        RMB (drag): Rotate camera
-                        RMB: Reset camera
-                        G: Gravity on/off
-                        R: Reset Quad orientation
-                        1-4: Cycle views
-
-Esc: Quit";
-
-            size = label.CalcSize(new GUIContent(info));
-            r = new Rect(Screen.width - size.x - 20, 150, size.x + 10, size.y);
-            GUI.Box(r, "");
-            GUI.Box(r, "");
-            r.x += 5;
-
-            GUILayout.BeginArea(r);
-            GUILayout.Label(info);
-            GUILayout.EndArea();
-        }
-        else
-        {
-            info = "L: Legend on/off";
-
-            size = label.CalcSize(new GUIContent(info));
-            r = new Rect(Screen.width - size.x - 10, 150, size.x + 10, size.y);
-            r.x -= 10;
-            GUI.Box(r, "");
-            GUI.Box(r, "");
-            r.x += 5;
-
-            GUILayout.BeginArea(r);
-            GUILayout.Label(info);
-            GUILayout.EndArea();
-        }
-
-        label.clipping = clipping;
-        label.wordWrap = wrap;
-        label.fontSize = fontSize;
     }
 
     Vector3 FixEuler(Vector3 euler)
@@ -700,8 +523,4 @@ Esc: Quit";
 
         curSpeed = rb.velocity.magnitude;
     }
-
-
-
-
 }
