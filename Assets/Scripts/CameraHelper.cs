@@ -2,14 +2,14 @@ using UnityEngine;
 
 public static class CameraHelper
 {
-  public static byte[] CaptureFrame(Camera camera)
+  public static byte[] CaptureFrame(Camera cam)
   {
-		if ( camera == null )
-		{
-			Debug.Log ( "null camera" );
-			return new byte[0];
-		}
-    RenderTexture targetTexture = camera.targetTexture;
+    if ( cam == null )
+    {
+        Debug.Log ( "null camera" );
+        return new byte[0];
+    }
+    RenderTexture targetTexture = cam.targetTexture;
     RenderTexture.active = targetTexture;
 	Texture2D texture2D = new Texture2D(targetTexture.width, targetTexture.height, TextureFormat.RGB24, false);
 	texture2D.ReadPixels(new Rect(0, 0, targetTexture.width, targetTexture.height), 0, 0);

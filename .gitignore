@@ -26,3 +26,4 @@ sdc.app
 .vs*
 
 Assets/Logs/navLog.txt*
+Assets/Logs.meta
