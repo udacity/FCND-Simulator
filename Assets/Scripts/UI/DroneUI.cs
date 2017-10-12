@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 // TODO(dom): Move these parts into separate files
 
 public class DroneUI : MonoBehaviour {
-	public Text gpsText;
+
+    public TMPro.TextMeshProUGUI gpsText;
 	public Image needleImage;
 	public Image minimapImage;
     public Camera minimapCamera;
@@ -32,13 +34,13 @@ public class DroneUI : MonoBehaviour {
 	}
 
     void RenderMinimap() {
-        Camera c = minimapCamera;
+        var c = minimapCamera;
         var rt = minimapImage.GetComponent<RectTransform>();
         Debug.Log("Rect " + rt.rect);
         Debug.Log(string.Format("global x = {0}, y = {1}", Input.mousePosition.x, Input.mousePosition.y));
-        var x = Input.mousePosition.x - (Screen.width - rt.rect.width);
-        var y = Input.mousePosition.y;
-        Debug.Log(string.Format("x = {0}, y = {1}", x, y));
+        var x = ((Input.mousePosition.x - (Screen.width - rt.rect.width)) / rt.rect.width) * c.targetTexture.width;
+        var y = Input.mousePosition.y / rt.rect.height * c.targetTexture.height;
+        Debug.Log(string.Format("x = {0}, y = {1}", (int) x, (int) y));
         var wp = c.ScreenToWorldPoint(new Vector3(x, y, minimapCameraY));
         Debug.Log("world point " + wp);
     }
@@ -52,10 +54,10 @@ public class DroneUI : MonoBehaviour {
 		var _quadController = droneObj.GetComponent<QuadController>();
         if (_quadController.inputCtrl.motors_armed) {
             _quadController.inputCtrl.DisarmVehicle();
-            armButton.GetComponentInChildren<Text>().text = "Disarmed";
+            armButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Disarmed";
         } else {
             _quadController.inputCtrl.ArmVehicle();
-            armButton.GetComponentInChildren<Text>().text = "Armed";
+            armButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armed";
         }
     }
 
@@ -63,10 +65,10 @@ public class DroneUI : MonoBehaviour {
 		var _quadController = droneObj.GetComponent<QuadController>();
         if (_quadController.inputCtrl.guided) {
             _quadController.inputCtrl.SetGuidedMode(false);
-            guideButton.GetComponentInChildren<Text>().text = "Unguided";
+            guideButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Manual";
         } else {
             _quadController.inputCtrl.SetGuidedMode(true);
-            guideButton.GetComponentInChildren<Text>().text = "Guided";
+            guideButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Autonomous";
         }
     }
 
@@ -89,25 +91,17 @@ public class DroneUI : MonoBehaviour {
         // update minimap cam
         UpdateMinimapCameraPosition();
 
-        // Get the current width and height of the RectTransform.
-        // The RenderTexture needs to have the same dimensions.
-        var rt = minimapImage.GetComponent<RectTransform>();
-        var width = (int) rt.rect.width;
-        var height = (int) rt.rect.height;
+        RenderTexture.active = minimapCamera.targetTexture;
+        var width = minimapCamera.targetTexture.width;
+        var height = minimapCamera.targetTexture.height;
 
-        var targetTexture = new RenderTexture(width, height, 24);
-        minimapCamera.targetTexture = targetTexture;
-        minimapCamera.Render();
-        RenderTexture.active = targetTexture;
-
-        Texture2D texture2D = new Texture2D(width, height, TextureFormat.RGB24, false);
+        Texture2D texture2D = new Texture2D(width, height, TextureFormat.RGBA32, false);
         texture2D.ReadPixels(new Rect(0, 0, width, height), 0, 0);
         texture2D.Apply();
         minimapImage.sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
 
         // cleanup, doesn't quite work
-        // minimapCamera.targetTexture = null;
         // RenderTexture.active = null;
-        // targetTexture.Release();
+        // Object.Destroy(texture2D);
 	}
 }
