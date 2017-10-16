@@ -1,3 +1,6 @@
-interface IDrone : IDroneCommands, IDroneState
+namespace DroneInterface
 {
+    interface IDrone : IDroneCommands, IDroneState
+    {
+    }
 }

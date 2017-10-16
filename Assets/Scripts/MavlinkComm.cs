@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 using MavLink;
 using FlightUtils;
+using Drones;
 
 // TODO: possibly use a class like this to keep track of 
 // task/client pairs.
