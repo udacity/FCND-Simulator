@@ -2,8 +2,8 @@ namespace FlightUtils
 {
     struct GPS
     {
-        float latitude { get; }
-        float longitude { get; }
+        public float latitude { get; }
+        public float longitude { get; }
 
         GPS(float lat, float lon)
         {

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using DroneControllers;
 
 // TODO(dom): Move these parts into separate files
 

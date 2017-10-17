@@ -11,20 +11,16 @@ namespace DroneControllers
         const float M2Longitude = 1.0f / (0.8f * 111111.0f);
         double latitude0 = 37.412939d;
         double longitude0 = 121.995635d;
-
         public Transform camTransform;
         public QuadController controller;
-        public FollowCamera followCam;
-
+        // public FollowCamera followCam;
         //Vehicle status indicators
         public bool motors_armed = false;
-
         //Flight modes
         public bool guided = false;
         public bool stabilized = true;
         public bool posctl = true;
         public bool on_ground = true;
-
         //Control Gains
         public float Kp_hdot = 10.0f;
         public float Kp_r = 20.0f;
@@ -37,18 +33,18 @@ namespace DroneControllers
         public float Kd_vel = 0.0f;
         public float Kp_alt = 1.0f;
         public float Ki_hdot = 0.1f;
-
         //Vehicle control thresholds
         public float posctl_band = 0.1f;
         public float posHoldDeadband = 1.0f;
         public float moveSpeed = 10;
-        public float turnSpeed = 2.0f; //In radians
+        // in radians
+        public float turnSpeed = 2.0f;
         public float thrustForce = 25.0f;
         public float thrustMoment = 2.0f;
-        public float maxTilt = 0.5f; //MaxTilt in Radians
+        // in radians
+        public float maxTilt = 0.5f;
         public float maxAscentRate = 5.0f;
         public float maxDescentRate = 2.0f;
-
         Rigidbody rb;
         float tiltX;
         float tiltZ;
@@ -57,7 +53,6 @@ namespace DroneControllers
 
 
 
-        //
         private bool pos_set = false;
         Vector3 posHoldLocal = new Vector3(0.0f, 0.0f, 0.0f);
         Vector3 lastVelocityErrorBody = new Vector3(0.0f, 0.0f, 0.0f);
@@ -70,8 +65,8 @@ namespace DroneControllers
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             if (controller == null)
                 controller = GetComponent<QuadController>();
-            if (followCam == null)
-                followCam = camTransform.GetComponent<FollowCamera>();
+            // if (followCam == null)
+            //     followCam = camTransform.GetComponent<FollowCamera>();
             motors_armed = false;
 
 
@@ -114,7 +109,7 @@ namespace DroneControllers
             {
                 pos_set = false;
                 controller.ResetOrientation();
-                followCam.ChangePoseType(CameraPoseType.Iso);
+                // followCam.ChangePoseType(CameraPoseType.Iso);
             }
 
             if (Input.GetKeyDown(KeyCode.G))
@@ -155,11 +150,11 @@ namespace DroneControllers
 
 
             //Direct Control of the moments
-            Vector3 thrust = new Vector3(0.0f, 0.0f, 0.0f);
-            Vector3 yaw_moment = new Vector3(0.0f, 0.0f, 0.0f);
-            Vector3 pitch_moment = new Vector3(0.0f, 0.0f, 0.0f);
-            Vector3 roll_moment = new Vector3(0.0f, 0.0f, 0.0f);
-            Vector4 angle_input = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+            var thrust = new Vector3(0.0f, 0.0f, 0.0f);
+            var yaw_moment = new Vector3(0.0f, 0.0f, 0.0f);
+            var pitch_moment = new Vector3(0.0f, 0.0f, 0.0f);
+            var roll_moment = new Vector3(0.0f, 0.0f, 0.0f);
+            var angle_input = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
             if (motors_armed)
             {

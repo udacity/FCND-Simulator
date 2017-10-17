@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityStandardAssets.ImageEffects;
+using DroneControllers;
 
 public enum CameraPoseType
 {

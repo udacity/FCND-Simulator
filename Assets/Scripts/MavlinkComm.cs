@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using MavLink;
 using FlightUtils;
 using Drones;
+using DroneInterface;
 
 // TODO: possibly use a class like this to keep track of 
 // task/client pairs.
@@ -27,78 +28,76 @@ public class MAVLinkClientConn
 
 public class MavlinkTCP : MonoBehaviour
 {
-    private SimpleQuadController _simpleController;
-    private QuadController _quadController;
-    private Mavlink _mavlink;
-
-    private bool _running = true;
-
+    private IDrone drone;
+    private Mavlink mav;
+    private bool running = true;
     // track all clients
     // private ConcurrentBag<MAVLinkClientConn> clients = new ConcurrentBag<MAVLinkClientConn>();
-    private ConcurrentBag<TcpClient> _clients = new ConcurrentBag<TcpClient>();
-
-    public int _heartbeatInterval = 1;
-
-    public int _telemetryInterval = 10;
-
-    public Int32 _port = 5760;
-
-    public string _ip = "127.0.0.1";
-
+    private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
+    public int heartbeatIntervalHz = 1;
+    public int telemetryIntervalHz = 10;
+    public Int32 port = 5760;
+    public string ip = "127.0.0.1";
 
     // Use this for initialization
     void Start()
     {
-        _simpleController = GameObject.Find("Quad Drone").GetComponent<SimpleQuadController>();
-        _quadController = GameObject.Find("Quad Drone").GetComponent<QuadController>();
-        _mavlink = new Mavlink();
+        mav = new Mavlink();
         // setup event listeners
-        _mavlink.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
-        _mavlink.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
+        mav.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
+        mav.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
+        telemetryIntervalHz = Utils.FPSToMilliSeconds(Utils.HertzToFPS(telemetryIntervalHz));
+        heartbeatIntervalHz = Utils.FPSToMilliSeconds(Utils.HertzToFPS(heartbeatIntervalHz));
         var tcpTask = TcpListenAsync();
     }
 
-
-
     async Task EmitTelemetry(NetworkStream stream)
     {
-        var waitFor = (int)(1000f / _telemetryInterval);
-        while (_running && stream.CanRead && stream.CanWrite)
+        while (running && stream.CanRead && stream.CanWrite)
         {
+            // TODO: make these magic numbers part of a util function?
+            var lat = drone.Latitude() * 1e7d;
+            var lon = drone.Longitude() * 1e7d;
+            var alt = drone.Altitude() * 1000;
+            var vx = drone.NorthVelocity() * 100;
+            var vy = drone.EastVelocity() * 100;
+            var vz = drone.VerticalVelocity() * 100;
+            var hdg = drone.Yaw() * 100;
             print("Emitting telemetry data ...");
             var msg = new Msg_global_position_int
             {
-                lat = (int)(_quadController.getLatitude() * 1e7d),
-                lon = (int)(_quadController.getLongitude() * 1e7d),
-                alt = (int)(_quadController.getAltitude() * 1000),
-                relative_alt = (int)(_quadController.getAltitude() * 1000),
-                vx = (short)(_quadController.getNorthVelocity() * 100),
-                vy = (short)(_quadController.getEastVelocity() * 100),
-                vz = (short)(_quadController.getVerticalVelocity() * 100),
-                hdg = (ushort)(_quadController.getYaw() * 100)
+                lat = (int)lat,
+                lon = (int)lon,
+                alt = (int)alt,
+                relative_alt = (int)alt,
+                vx = (short)vx,
+                vy = (short)vy,
+                vz = (short)vz,
+                hdg = (ushort)hdg
             };
-            var serializedPacket = _mavlink.SendV2(msg);
+            var serializedPacket = mav.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
-            await Task.Delay(waitFor);
+            await Task.Delay(telemetryIntervalHz);
         }
     }
 
     async Task EmitHearbeat(NetworkStream stream)
     {
-        var waitFor = (int)(1000f / _heartbeatInterval);
-        while (_running && stream.CanRead && stream.CanWrite)
+        while (running && stream.CanRead && stream.CanWrite)
         {
             print("Emitting hearbeat ...");
             byte base_mode;
-            if (_simpleController.guided && _simpleController.motors_armed)
+            var guided = drone.Guided();
+            var armed = drone.Armed();
+            if (guided && armed)
             {
                 base_mode = (byte)MAV_MODE.MAV_MODE_GUIDED_ARMED;
             }
-            else if (_simpleController.guided)
+            else if (guided)
             {
                 base_mode = (byte)MAV_MODE.MAV_MODE_GUIDED_DISARMED;
             }
-            else if (_simpleController.motors_armed)
+            else if (armed)
             {
                 base_mode = (byte)MAV_MODE.MAV_MODE_MANUAL_ARMED;
             }
@@ -115,9 +114,9 @@ public class MavlinkTCP : MonoBehaviour
                 custom_mode = 1,
                 mavlink_version = 3
             };
-            var serializedPacket = _mavlink.SendV2(msg);
+            var serializedPacket = mav.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
-            await Task.Delay(waitFor);
+            await Task.Delay(heartbeatIntervalHz);
         }
     }
 
@@ -127,7 +126,7 @@ public class MavlinkTCP : MonoBehaviour
         var telemetryTask = EmitTelemetry(stream);
         var heartbeatTask = EmitHearbeat(stream);
 
-        while (_running && client.Connected && stream.CanRead)
+        while (running && client.Connected && stream.CanRead)
         {
             print("Reading from stream ... ");
             var buf = new byte[1024];
@@ -136,7 +135,7 @@ public class MavlinkTCP : MonoBehaviour
             {
                 var dest = new byte[bytesRead];
                 Array.Copy(buf, dest, bytesRead);
-                _mavlink.ParseBytesV2(dest);
+                mav.ParseBytesV2(dest);
             }
             else
             {
@@ -161,17 +160,17 @@ public class MavlinkTCP : MonoBehaviour
         try
         {
             // Setup the TcpListener 
-            var addr = IPAddress.Parse(_ip);
-            var listener = new TcpListener(addr, _port);
+            var addr = IPAddress.Parse(ip);
+            var listener = new TcpListener(addr, port);
             // Start listening for client requests.
             listener.Start();
             print("Starting TCP MAVLink server ...");
 
-            while (_running)
+            while (running)
             {
                 var client = await listener.AcceptTcpClientAsync();
                 print("Accepted connection !!!");
-                _clients.Add(client);
+                clients.Add(client);
                 var clientTask = HandleClientAsync(client);
             }
         }
@@ -188,7 +187,7 @@ public class MavlinkTCP : MonoBehaviour
     // called when this is destroyed
     private void OnDestroy()
     {
-        _running = false;
+        running = false;
     }
 
     void OnPacketReceived(object sender, MavlinkPacket packet)
@@ -228,12 +227,12 @@ public class MavlinkTCP : MonoBehaviour
             var param1 = msg.param1;
             if (param1 == 1.0)
             {
-                _simpleController.ArmVehicle();
+                drone.Arm(true);
                 print("ARMED VEHICLE !!!");
             }
             else
             {
-                _simpleController.DisarmVehicle();
+                drone.Arm(false);
                 print("DISARMED VEHICLE !!!");
             }
         }
@@ -242,33 +241,32 @@ public class MavlinkTCP : MonoBehaviour
             var param1 = msg.param1;
             if (param1 > 0.5)
             {
-                _simpleController.SetGuidedMode(true);
+                drone.TakeControl(true);
                 print("VEHICLE IS BEING GUIDED !!!");
             }
             else
             {
-                _simpleController.SetGuidedMode(false);
+                drone.TakeControl(false);
                 print("VEHICLE IS NOT BEING GUIDED !!!");
             }
         }
         else if (command == MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM)
         {
-            double lat = msg.x / 1e7d;
-            double lon = msg.y / 1e7d;
-            double alt = msg.z;
+            var lat = msg.x / 1e7d;
+            var lon = msg.y / 1e7d;
+            var alt = msg.z;
             print("Vehicle Command: " + msg.x + "," + msg.y + "," + msg.z);
             print("Vehicle Command: (" + lat + "," + lon + "," + alt + ")");
-            _simpleController.CommandGPS(lat, lon, alt);
+            drone.Goto(lat, lon, alt);
         }
         else if (command == MAV_CMD.MAV_CMD_NAV_TAKEOFF)
         {
-            _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), (float)(msg.z));
-            _simpleController.on_ground = false;
+            drone.Goto(drone.Latitude(), drone.Longitude(), (double)(msg.z));
             print("TAKING OFF !!! Alt = " + msg.z);
         }
         else if (command == MAV_CMD.MAV_CMD_NAV_LAND)
         {
-            _simpleController.CommandGPS(_quadController.getLatitude(), _quadController.getLongitude(), msg.z);
+            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
             print("LANDING !!!");
         }
         else
