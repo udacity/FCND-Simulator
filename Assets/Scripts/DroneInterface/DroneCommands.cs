@@ -12,7 +12,7 @@ namespace DroneInterface
         void Arm(bool arm);
 
         // Set the drone to guided (autonomous control) or unguided (manual control) mode
-        void TakeControl(bool arm);
+        void TakeControl(bool guided);
 
         // The drone will fly at the commanded orientation (roll, pitch, yaw) and a vertical velocity
         void SetAttitude(double roll, double pitch, double yaw, double velocity);

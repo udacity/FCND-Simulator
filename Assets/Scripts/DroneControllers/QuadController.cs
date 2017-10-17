@@ -292,7 +292,7 @@ namespace DroneControllers
 
             }
 
-            navigationUpdate();
+            NavigationUpdate();
         }
 
         Vector3 FixEuler(Vector3 euler)
@@ -448,37 +448,37 @@ namespace DroneControllers
 
 
         //Convenience retrieval functions. These probably should be set as properties
-        public double getLatitude()
+        public double GetLatitude()
         {
             return GPS.x + latitude0;
         }
 
-        public double getLongitude()
+        public double GetLongitude()
         {
             return -1.0d * (GPS.z + longitude0);
         }
 
-        public double getAltitude()
+        public double GetAltitude()
         {
             return GPS.y;
         }
 
-        public float getNorthVelocity()
+        public float GetNorthVelocity()
         {
             return LinearVelocity.x;
         }
 
-        public float getEastVelocity()
+        public float GetEastVelocity()
         {
             return -LinearVelocity.z;
         }
 
-        public float getVerticalVelocity()
+        public float GetVerticalVelocity()
         {
             return LinearVelocity.y;
         }
 
-        public float getYaw()
+        public float GetYaw()
         {
             float yaw = eulerAngles.y;
             if (yaw < 0)
@@ -486,17 +486,17 @@ namespace DroneControllers
             return yaw;
         }
 
-        public float getPitch()
+        public float GetPitch()
         {
             return eulerAngles.z;
         }
 
-        public float getRoll()
+        public float GetRoll()
         {
             return eulerAngles.x;
         }
 
-        public void navigationUpdate()
+        public void NavigationUpdate()
         {
             // update acceleration
             LinearAcceleration = (rb.velocity - lastVelocity) / Time.deltaTime;

@@ -31,6 +31,7 @@ namespace DroneInterface
         // in degrees
         double Pitch();
 
+        // TODO: flesh this out more, determine if it's necessary.
         // Returns whether the drone is executing a command (we possibly return the info about the command being executed).
         // I'm not sure this is a required method but it seems it could be useful.
         bool ExecutingCommand();
