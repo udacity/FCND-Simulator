@@ -9,6 +9,12 @@ namespace Drones
         public QuadController quadCtrl;
         public SimpleQuadController simpleQuadCtrl;
 
+        void Awake() 
+        {
+            // quadCtrl = GetComponent<QuadController>();
+            // simpleQuadCtrl = GetComponent<SimpleQuadController>();
+        }
+
         public Vector3 LocalCoords()
         {
             return this.transform.position;
