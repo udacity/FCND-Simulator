@@ -264,7 +264,6 @@ public class MavlinkTCP : MonoBehaviour
         }
         else if (command == MAV_CMD.MAV_CMD_NAV_TAKEOFF)
         {
-            Debug.Log(string.Format("{0} {1} {2}", drone.Latitude(), drone.Longitude(), msg.z));
             drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
             print(string.Format("TAKING OFF to {0} altitude", msg.z));
         }

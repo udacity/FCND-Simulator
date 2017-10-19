@@ -20,7 +20,6 @@ namespace DroneControllers
         public bool guided = false;
         public bool stabilized = true;
         public bool posctl = true;
-        public bool on_ground = true;
         //Control Gains
         public float Kp_hdot = 10.0f;
         public float Kp_r = 20.0f;
@@ -91,7 +90,6 @@ namespace DroneControllers
                 {
                     controller.rb.freezeRotation = false;
                     controller.MotorsEnabled = false;
-                    on_ground = true;
                 }
 
             }
@@ -160,8 +158,6 @@ namespace DroneControllers
                 if (posctl || guided)
                 {
                     Vector3 velCmdBody = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Thrust"), -Input.GetAxis("Horizontal"));
-                    if (velCmdBody.y > 0.0)
-                        on_ground = false;
 
                     float yawCmd = Input.GetAxis("Yaw");
 
@@ -238,8 +234,6 @@ namespace DroneControllers
 
                     //Pilot Input: Hdot, Yawrate, pitch, roll
                     angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), -Input.GetAxis("Vertical") * maxTilt, -Input.GetAxis("Horizontal") * maxTilt);
-                    if (angle_input.x > 0.0)
-                        on_ground = false;
                 }
 
 
@@ -300,12 +294,6 @@ namespace DroneControllers
                 //rb.AddRelativeForce(thrust);
                 //rb.AddRelativeTorque(yaw_moment + pitch_moment + roll_moment);
                 Vector3 total_moment = yaw_moment + pitch_moment + roll_moment;
-                if (on_ground)
-                {
-                    total_moment = Vector3.zero;
-                    thrust.y = 0.1f;
-                }
-
 
                 controller.ApplyMotorForce(thrust);
                 controller.ApplyMotorTorque(total_moment);
@@ -334,7 +322,6 @@ namespace DroneControllers
         public void DisarmVehicle()
         {
             motors_armed = false;
-            on_ground = true;
         }
 
         public void SetGuidedMode(bool input_guided)
