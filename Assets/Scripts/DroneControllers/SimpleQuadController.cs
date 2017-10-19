@@ -68,8 +68,6 @@ namespace DroneControllers
             // if (followCam == null)
             //     followCam = camTransform.GetComponent<FollowCamera>();
             motors_armed = false;
-
-
         }
 
         void FixedUpdate()

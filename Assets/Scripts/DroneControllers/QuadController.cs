@@ -153,7 +153,6 @@ namespace DroneControllers
             UpdateConstraints();
             rb.maxAngularVelocity = Mathf.Infinity;
             inputCtrl = GetComponent<SimpleQuadController>();
-
         }
 
         void Start()

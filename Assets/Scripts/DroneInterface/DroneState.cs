@@ -1,9 +1,13 @@
 using System;
+using UnityEngine;
 
 namespace DroneInterface
 {
     interface IDroneState
     {
+        // local coordinates (x, y, z) in Unity.
+        Vector3 LocalCoords();
+
         double Latitude();
 
         double Longitude();

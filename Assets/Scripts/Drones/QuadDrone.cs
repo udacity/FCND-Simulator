@@ -1,21 +1,35 @@
 using DroneInterface;
 using DroneControllers;
+using UnityEngine;
 
 namespace Drones
 {
-    class QuadDrone : IDrone
+    class QuadDrone : MonoBehaviour, IDrone
     {
-        QuadController quadCtrl;
-        SimpleQuadController simpleQuadCtrl;
+        public QuadController quadCtrl;
+        public SimpleQuadController simpleQuadCtrl;
+
+        public Vector3 LocalCoords()
+        {
+            return this.transform.position;
+        }
 
         public double Altitude()
         {
-           return quadCtrl.GetAltitude(); 
+            return quadCtrl.GetAltitude();
         }
 
         public void Arm(bool arm)
         {
-            simpleQuadCtrl.motors_armed = arm;
+            // simpleQuadCtrl.motors_armed = arm;
+            if (arm)
+            {
+                simpleQuadCtrl.ArmVehicle();
+            }
+            else
+            {
+                simpleQuadCtrl.DisarmVehicle();
+            }
         }
 
         public bool Armed()
@@ -97,7 +111,8 @@ namespace Drones
 
         public void TakeControl(bool guided)
         {
-            simpleQuadCtrl.guided = guided;
+            // simpleQuadCtrl.guided = guided;
+            simpleQuadCtrl.SetGuidedMode(guided);
         }
 
         public double VerticalVelocity()
