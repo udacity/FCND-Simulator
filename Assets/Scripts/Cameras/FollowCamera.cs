@@ -88,7 +88,7 @@ public class FollowCamera : MonoBehaviour
         {
             float x = Input.GetAxis("Mouse X");
             transform.RotateAround(target.Position, Vector3.up, x * rotateSpeed);
-			// transform.Rotate ( Vector3.up * x * rotateSpeed, Space.World );
+            // transform.Rotate ( Vector3.up * x * rotateSpeed, Space.World );
             float y = Input.GetAxis("Mouse Y");
             transform.RotateAround(target.Position, transform.right, -y * rotateSpeed);
         }

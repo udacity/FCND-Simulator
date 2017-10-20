@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace DroneInterface
 {
+    // This interface describes the minimal information that must be retrievable
+    // pertaining to a drone's state.
     interface IDroneState
     {
         // local coordinates (x, y, z) in Unity.
@@ -20,19 +22,22 @@ namespace DroneInterface
         // Returns whether the drone is being driven guided (autonomous) or unguided (manual)
         bool Guided();
 
+        // Corresponds to velocity along the x axis.
         double NorthVelocity();
 
+        // Corresponds to velocity along the y axis.
         double EastVelocity();
 
+        // Corresponds to velocity along the z axis.
         double VerticalVelocity();
 
-        // in degrees
+        // In degrees
         double Roll();
 
-        // in degrees
+        // In degrees
         double Yaw();
 
-        // in degrees
+        // In degrees
         double Pitch();
 
         // TODO: flesh this out more, determine if it's necessary.
