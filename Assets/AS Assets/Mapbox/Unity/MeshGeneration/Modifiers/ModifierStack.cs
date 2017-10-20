@@ -98,7 +98,6 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 
             for (int i = 0; i < data.UV.Count; i++)
             {
-//				Debug.Log ( "uvs on object " + main.name );
                 mesh.SetUVs(i, data.UV[i]);
             }
 

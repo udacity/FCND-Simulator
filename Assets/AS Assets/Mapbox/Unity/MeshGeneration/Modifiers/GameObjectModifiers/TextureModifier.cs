@@ -25,6 +25,8 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 
 		public override void Run(FeatureBehaviour fb, UnityTile tile)
         {
+//			if ( fb.Data.Properties.ContainsValue ( "restaurant" ) )
+//				Debug.Log ( "Feature is " + fb.Data.Properties.DictionaryToString () );
 			var _meshRenderer = fb.gameObject.AddComponent<MeshRenderer>();
 			if (_textureSides && _sideMaterials.Length > 0)
 			{

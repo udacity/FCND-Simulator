@@ -1,0 +1,159 @@
+fileFormatVersion: 2
+guid: be383276df438b045badb8573a6b004f
+timeCreated: 1507841855
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: asphalt
+    100002: bigwallstripes
+    100004: black
+    100006: cleargrey
+    100008: greywithstripes
+    100010: lights
+    100012: metal
+    100014: //RootNode
+    100016: Red
+    100018: Roof
+    100020: stonelong
+    100022: stoneshort
+    100024: stripes
+    100026: tent
+    100028: white
+    100030: yellow
+    400000: asphalt
+    400002: bigwallstripes
+    400004: black
+    400006: cleargrey
+    400008: greywithstripes
+    400010: lights
+    400012: metal
+    400014: //RootNode
+    400016: Red
+    400018: Roof
+    400020: stonelong
+    400022: stoneshort
+    400024: stripes
+    400026: tent
+    400028: white
+    400030: yellow
+    2300000: asphalt
+    2300002: bigwallstripes
+    2300004: black
+    2300006: cleargrey
+    2300008: greywithstripes
+    2300010: lights
+    2300012: metal
+    2300014: Red
+    2300016: Roof
+    2300018: stonelong
+    2300020: stoneshort
+    2300022: stripes
+    2300024: tent
+    2300026: white
+    2300028: yellow
+    3300000: asphalt
+    3300002: bigwallstripes
+    3300004: black
+    3300006: cleargrey
+    3300008: greywithstripes
+    3300010: lights
+    3300012: metal
+    3300014: Red
+    3300016: Roof
+    3300018: stonelong
+    3300020: stoneshort
+    3300022: stripes
+    3300024: tent
+    3300026: white
+    3300028: yellow
+    4300000: asphalt
+    4300002: bigwallstripes
+    4300004: black
+    4300006: cleargrey
+    4300008: greywithstripes
+    4300010: lights
+    4300012: metal
+    4300014: Red
+    4300016: Roof
+    4300018: stonelong
+    4300020: stoneshort
+    4300022: stripes
+    4300024: tent
+    4300026: white
+    4300028: yellow
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
