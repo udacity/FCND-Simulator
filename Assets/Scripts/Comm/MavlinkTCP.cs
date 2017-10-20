@@ -12,6 +12,8 @@ using FlightUtils;
 using Drones;
 using DroneInterface;
 
+// TODO: namespace?
+
 // TODO: possibly use a class like this to keep track of 
 // task/client pairs.
 public class MAVLinkClientConn
