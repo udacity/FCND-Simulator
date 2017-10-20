@@ -11,8 +11,10 @@ namespace Drones
 
         void Awake() 
         {
-            // quadCtrl = GetComponent<QuadController>();
-            // simpleQuadCtrl = GetComponent<SimpleQuadController>();
+            // gameObject.AddComponent<QuadController>();
+            // gameObject.AddComponent<SimpleQuadController>();
+            quadCtrl = GetComponent<QuadController>();
+            simpleQuadCtrl = GetComponent<SimpleQuadController>();
         }
 
         public Vector3 LocalCoords()
