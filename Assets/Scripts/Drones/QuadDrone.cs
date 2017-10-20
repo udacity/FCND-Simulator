@@ -4,12 +4,15 @@ using UnityEngine;
 
 namespace Drones
 {
+    // Drone based off a quadrotor/quadcopter.
     class QuadDrone : MonoBehaviour, IDrone
     {
         public QuadController quadCtrl;
         public SimpleQuadController simpleQuadCtrl;
 
-        void Awake() 
+        // TODO: Add the components here at runtime instead of in
+        // the unity editor.
+        void Awake()
         {
             // gameObject.AddComponent<QuadController>();
             // gameObject.AddComponent<SimpleQuadController>();
@@ -29,15 +32,7 @@ namespace Drones
 
         public void Arm(bool arm)
         {
-            // simpleQuadCtrl.motors_armed = arm;
-            if (arm)
-            {
-                simpleQuadCtrl.ArmVehicle();
-            }
-            else
-            {
-                simpleQuadCtrl.DisarmVehicle();
-            }
+            simpleQuadCtrl.motors_armed = arm;
         }
 
         public bool Armed()
@@ -119,8 +114,7 @@ namespace Drones
 
         public void TakeControl(bool guided)
         {
-            // simpleQuadCtrl.guided = guided;
-            simpleQuadCtrl.SetGuidedMode(guided);
+            simpleQuadCtrl.guided = guided;
         }
 
         public double VerticalVelocity()

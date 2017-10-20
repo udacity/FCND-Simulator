@@ -1,20 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using UnityEngine;
 
 // usings needed for TCP/IP
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 
 using MavLink;
 using FlightUtils;
 using Drones;
 using DroneInterface;
+
+// TODO: namespace?
 
 // TODO: possibly use a class like this to keep track of 
 // task/client pairs.
@@ -37,8 +35,6 @@ public class MavlinkTCP : MonoBehaviour
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 10;
 
-    private int telemetryIntervalMS;
-    private int heartbeatIntervalMS;
     public Int32 port = 5760;
     public string ip = "127.0.0.1";
 
@@ -50,17 +46,24 @@ public class MavlinkTCP : MonoBehaviour
         // setup event listeners
         mav.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
         mav.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
-        telemetryIntervalMS = Utils.FPSToMilliSeconds(Utils.HertzToFPS(telemetryIntervalHz));
-        heartbeatIntervalMS = Utils.FPSToMilliSeconds(Utils.HertzToFPS(heartbeatIntervalHz));
-        Debug.Log(telemetryIntervalMS + " " + heartbeatIntervalMS);
         var tcpTask = TcpListenAsync();
     }
 
+    // TODO: Make the sure the velocities correspond to the correct axis.
+    // Emits telemetry data:
+    //      Latitude
+    //      Longitude
+    //      Altitude
+    //      Relative Altitude
+    //      North Velocity (vx)
+    //      East Velocity (vy)
+    //      Vertical Velocity (vz)
     async Task EmitTelemetry(NetworkStream stream)
     {
+        var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
         while (running && stream.CanRead && stream.CanWrite)
         {
-            // TODO: make these magic numbers part of a util function?
+            // TODO: Make these magic numbers part of a util function?
             var lat = drone.Latitude() * 1e7d;
             var lon = drone.Longitude() * 1e7d;
             var alt = drone.Altitude() * 1000;
@@ -81,12 +84,14 @@ public class MavlinkTCP : MonoBehaviour
             };
             var serializedPacket = mav.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
-            await Task.Delay(telemetryIntervalMS);
+            await Task.Delay(waitFor);
         }
     }
 
+    // Emits a heartbeat message.
     async Task EmitHearbeat(NetworkStream stream)
     {
+        var waitFor = Utils.HertzToMilliSeconds(heartbeatIntervalHz);
         while (running && stream.CanRead && stream.CanWrite)
         {
             byte base_mode;
@@ -119,7 +124,7 @@ public class MavlinkTCP : MonoBehaviour
             };
             var serializedPacket = mav.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
-            await Task.Delay(heartbeatIntervalMS);
+            await Task.Delay(waitFor);
         }
     }
 
@@ -158,6 +163,7 @@ public class MavlinkTCP : MonoBehaviour
     {
     }
 
+    // Starts an HTTP server and listens for new client connections.
     async Task TcpListenAsync()
     {
         try
