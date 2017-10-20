@@ -40,8 +40,8 @@ public class GimbalCamera : MonoBehaviour
 		if ( Input.GetMouseButtonDown ( 0 ) )
 		{
 			Vector3 point = Input.mousePosition;
-			point.z = FollowCamera.ActiveCamera.cam.nearClipPlane;
-			Ray ray = FollowCamera.ActiveCamera.cam.ScreenPointToRay ( point );
+			point.z = FollowCamera.activeCamera.cam.nearClipPlane;
+			Ray ray = FollowCamera.activeCamera.cam.ScreenPointToRay ( point );
 			RaycastHit hit;
 			LayerMask mask = 1 << LayerMask.NameToLayer ( "Environment" );
 			if ( Physics.Raycast ( ray, out hit, Mathf.Infinity, mask.value ) )
