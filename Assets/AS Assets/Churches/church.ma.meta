@@ -1,0 +1,948 @@
+fileFormatVersion: 2
+guid: 7704e5bd8e50e5340949fa9b5d88ba55
+timeCreated: 1507679022
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: churchFrontPillar1
+    100004: churchFrontPillar10
+    100006: churchFrontPillar11
+    100008: churchFrontPillar12
+    100010: churchFrontPillar13
+    100012: churchFrontPillar14
+    100014: churchFrontPillar15
+    100016: churchFrontPillar16
+    100018: churchFrontPillar17
+    100020: churchFrontPillar18
+    100022: churchFrontPillar19
+    100024: churchFrontPillar2
+    100026: churchFrontPillar20
+    100028: churchFrontPillar21
+    100030: churchFrontPillar22
+    100032: churchFrontPillar23
+    100034: churchFrontPillar24
+    100036: churchFrontPillar25
+    100038: churchFrontPillar26
+    100040: churchFrontPillar3
+    100042: churchFrontPillar4
+    100044: churchFrontPillar5
+    100046: churchFrontPillar6
+    100048: churchFrontPillar7
+    100050: churchFrontPillar8
+    100052: churchFrontPillar9
+    100054: churchFrontTop
+    100056: churchMainRoof
+    100058: churchPillarJoint
+    100060: churchPillarJoint 1
+    100062: churchPillarJoint 2
+    100064: churchPillarJoint 3
+    100066: churchPillarJoint1
+    100068: churchPillarJoint1 1
+    100070: churchPillarJoint1 10
+    100072: churchPillarJoint1 11
+    100074: churchPillarJoint1 12
+    100076: churchPillarJoint1 13
+    100078: churchPillarJoint1 14
+    100080: churchPillarJoint1 15
+    100082: churchPillarJoint1 16
+    100084: churchPillarJoint1 17
+    100086: churchPillarJoint1 18
+    100088: churchPillarJoint1 19
+    100090: churchPillarJoint1 2
+    100092: churchPillarJoint1 20
+    100094: churchPillarJoint1 21
+    100096: churchPillarJoint1 22
+    100098: churchPillarJoint1 23
+    100100: churchPillarJoint1 24
+    100102: churchPillarJoint1 25
+    100104: churchPillarJoint1 3
+    100106: churchPillarJoint1 4
+    100108: churchPillarJoint1 5
+    100110: churchPillarJoint1 6
+    100112: churchPillarJoint1 7
+    100114: churchPillarJoint1 8
+    100116: churchPillarJoint1 9
+    100118: churchPillarJoint2
+    100120: churchPillarJoint2 1
+    100122: churchPillarJoint2 10
+    100124: churchPillarJoint2 11
+    100126: churchPillarJoint2 12
+    100128: churchPillarJoint2 13
+    100130: churchPillarJoint2 14
+    100132: churchPillarJoint2 15
+    100134: churchPillarJoint2 16
+    100136: churchPillarJoint2 17
+    100138: churchPillarJoint2 18
+    100140: churchPillarJoint2 19
+    100142: churchPillarJoint2 2
+    100144: churchPillarJoint2 20
+    100146: churchPillarJoint2 21
+    100148: churchPillarJoint2 22
+    100150: churchPillarJoint2 23
+    100152: churchPillarJoint2 24
+    100154: churchPillarJoint2 25
+    100156: churchPillarJoint2 3
+    100158: churchPillarJoint2 4
+    100160: churchPillarJoint2 5
+    100162: churchPillarJoint2 6
+    100164: churchPillarJoint2 7
+    100166: churchPillarJoint2 8
+    100168: churchPillarJoint2 9
+    100170: churchPillarUp
+    100172: churchPillarUp 1
+    100174: churchPillarUp 2
+    100176: churchPillarUp 3
+    100178: churchPillarUp1
+    100180: churchPillarUp1 1
+    100182: churchPillarUp1 10
+    100184: churchPillarUp1 11
+    100186: churchPillarUp1 12
+    100188: churchPillarUp1 13
+    100190: churchPillarUp1 14
+    100192: churchPillarUp1 15
+    100194: churchPillarUp1 16
+    100196: churchPillarUp1 17
+    100198: churchPillarUp1 18
+    100200: churchPillarUp1 19
+    100202: churchPillarUp1 2
+    100204: churchPillarUp1 20
+    100206: churchPillarUp1 21
+    100208: churchPillarUp1 22
+    100210: churchPillarUp1 23
+    100212: churchPillarUp1 24
+    100214: churchPillarUp1 25
+    100216: churchPillarUp1 3
+    100218: churchPillarUp1 4
+    100220: churchPillarUp1 5
+    100222: churchPillarUp1 6
+    100224: churchPillarUp1 7
+    100226: churchPillarUp1 8
+    100228: churchPillarUp1 9
+    100230: churchPillarUp2
+    100232: churchPillarUp2 1
+    100234: churchPillarUp2 10
+    100236: churchPillarUp2 11
+    100238: churchPillarUp2 12
+    100240: churchPillarUp2 13
+    100242: churchPillarUp2 14
+    100244: churchPillarUp2 15
+    100246: churchPillarUp2 16
+    100248: churchPillarUp2 17
+    100250: churchPillarUp2 18
+    100252: churchPillarUp2 19
+    100254: churchPillarUp2 2
+    100256: churchPillarUp2 20
+    100258: churchPillarUp2 21
+    100260: churchPillarUp2 22
+    100262: churchPillarUp2 23
+    100264: churchPillarUp2 24
+    100266: churchPillarUp2 25
+    100268: churchPillarUp2 3
+    100270: churchPillarUp2 4
+    100272: churchPillarUp2 5
+    100274: churchPillarUp2 6
+    100276: churchPillarUp2 7
+    100278: churchPillarUp2 8
+    100280: churchPillarUp2 9
+    100282: churchRoof
+    100284: churchTowerWall
+    100286: churchTowerWall1
+    100288: churchTowerWall2
+    100290: churchWall
+    100292: churchWall10
+    100294: churchWall11
+    100296: churchWall12
+    100298: churchWall13
+    100300: churchWall14
+    100302: churchWall2
+    100304: churchWall2 1
+    100306: churchWall2 10
+    100308: churchWall2 11
+    100310: churchWall2 12
+    100312: churchWall2 2
+    100314: churchWall2 3
+    100316: churchWall2 4
+    100318: churchWall2 5
+    100320: churchWall2 6
+    100322: churchWall2 7
+    100324: churchWall2 8
+    100326: churchWall2 9
+    100328: churchWall3
+    100330: churchWall4
+    100332: churchWall5
+    100334: churchWall6
+    100336: churchWall7
+    100338: churchWall8
+    100340: churchWall9
+    100342: planarTrimmedSurface3
+    100344: planarTrimmedSurface4
+    400000: //RootNode
+    400002: churchFrontPillar1
+    400004: churchFrontPillar10
+    400006: churchFrontPillar11
+    400008: churchFrontPillar12
+    400010: churchFrontPillar13
+    400012: churchFrontPillar14
+    400014: churchFrontPillar15
+    400016: churchFrontPillar16
+    400018: churchFrontPillar17
+    400020: churchFrontPillar18
+    400022: churchFrontPillar19
+    400024: churchFrontPillar2
+    400026: churchFrontPillar20
+    400028: churchFrontPillar21
+    400030: churchFrontPillar22
+    400032: churchFrontPillar23
+    400034: churchFrontPillar24
+    400036: churchFrontPillar25
+    400038: churchFrontPillar26
+    400040: churchFrontPillar3
+    400042: churchFrontPillar4
+    400044: churchFrontPillar5
+    400046: churchFrontPillar6
+    400048: churchFrontPillar7
+    400050: churchFrontPillar8
+    400052: churchFrontPillar9
+    400054: churchFrontTop
+    400056: churchMainRoof
+    400058: churchPillarJoint
+    400060: churchPillarJoint 1
+    400062: churchPillarJoint 2
+    400064: churchPillarJoint 3
+    400066: churchPillarJoint1
+    400068: churchPillarJoint1 1
+    400070: churchPillarJoint1 10
+    400072: churchPillarJoint1 11
+    400074: churchPillarJoint1 12
+    400076: churchPillarJoint1 13
+    400078: churchPillarJoint1 14
+    400080: churchPillarJoint1 15
+    400082: churchPillarJoint1 16
+    400084: churchPillarJoint1 17
+    400086: churchPillarJoint1 18
+    400088: churchPillarJoint1 19
+    400090: churchPillarJoint1 2
+    400092: churchPillarJoint1 20
+    400094: churchPillarJoint1 21
+    400096: churchPillarJoint1 22
+    400098: churchPillarJoint1 23
+    400100: churchPillarJoint1 24
+    400102: churchPillarJoint1 25
+    400104: churchPillarJoint1 3
+    400106: churchPillarJoint1 4
+    400108: churchPillarJoint1 5
+    400110: churchPillarJoint1 6
+    400112: churchPillarJoint1 7
+    400114: churchPillarJoint1 8
+    400116: churchPillarJoint1 9
+    400118: churchPillarJoint2
+    400120: churchPillarJoint2 1
+    400122: churchPillarJoint2 10
+    400124: churchPillarJoint2 11
+    400126: churchPillarJoint2 12
+    400128: churchPillarJoint2 13
+    400130: churchPillarJoint2 14
+    400132: churchPillarJoint2 15
+    400134: churchPillarJoint2 16
+    400136: churchPillarJoint2 17
+    400138: churchPillarJoint2 18
+    400140: churchPillarJoint2 19
+    400142: churchPillarJoint2 2
+    400144: churchPillarJoint2 20
+    400146: churchPillarJoint2 21
+    400148: churchPillarJoint2 22
+    400150: churchPillarJoint2 23
+    400152: churchPillarJoint2 24
+    400154: churchPillarJoint2 25
+    400156: churchPillarJoint2 3
+    400158: churchPillarJoint2 4
+    400160: churchPillarJoint2 5
+    400162: churchPillarJoint2 6
+    400164: churchPillarJoint2 7
+    400166: churchPillarJoint2 8
+    400168: churchPillarJoint2 9
+    400170: churchPillarUp
+    400172: churchPillarUp 1
+    400174: churchPillarUp 2
+    400176: churchPillarUp 3
+    400178: churchPillarUp1
+    400180: churchPillarUp1 1
+    400182: churchPillarUp1 10
+    400184: churchPillarUp1 11
+    400186: churchPillarUp1 12
+    400188: churchPillarUp1 13
+    400190: churchPillarUp1 14
+    400192: churchPillarUp1 15
+    400194: churchPillarUp1 16
+    400196: churchPillarUp1 17
+    400198: churchPillarUp1 18
+    400200: churchPillarUp1 19
+    400202: churchPillarUp1 2
+    400204: churchPillarUp1 20
+    400206: churchPillarUp1 21
+    400208: churchPillarUp1 22
+    400210: churchPillarUp1 23
+    400212: churchPillarUp1 24
+    400214: churchPillarUp1 25
+    400216: churchPillarUp1 3
+    400218: churchPillarUp1 4
+    400220: churchPillarUp1 5
+    400222: churchPillarUp1 6
+    400224: churchPillarUp1 7
+    400226: churchPillarUp1 8
+    400228: churchPillarUp1 9
+    400230: churchPillarUp2
+    400232: churchPillarUp2 1
+    400234: churchPillarUp2 10
+    400236: churchPillarUp2 11
+    400238: churchPillarUp2 12
+    400240: churchPillarUp2 13
+    400242: churchPillarUp2 14
+    400244: churchPillarUp2 15
+    400246: churchPillarUp2 16
+    400248: churchPillarUp2 17
+    400250: churchPillarUp2 18
+    400252: churchPillarUp2 19
+    400254: churchPillarUp2 2
+    400256: churchPillarUp2 20
+    400258: churchPillarUp2 21
+    400260: churchPillarUp2 22
+    400262: churchPillarUp2 23
+    400264: churchPillarUp2 24
+    400266: churchPillarUp2 25
+    400268: churchPillarUp2 3
+    400270: churchPillarUp2 4
+    400272: churchPillarUp2 5
+    400274: churchPillarUp2 6
+    400276: churchPillarUp2 7
+    400278: churchPillarUp2 8
+    400280: churchPillarUp2 9
+    400282: churchRoof
+    400284: churchTowerWall
+    400286: churchTowerWall1
+    400288: churchTowerWall2
+    400290: churchWall
+    400292: churchWall10
+    400294: churchWall11
+    400296: churchWall12
+    400298: churchWall13
+    400300: churchWall14
+    400302: churchWall2
+    400304: churchWall2 1
+    400306: churchWall2 10
+    400308: churchWall2 11
+    400310: churchWall2 12
+    400312: churchWall2 2
+    400314: churchWall2 3
+    400316: churchWall2 4
+    400318: churchWall2 5
+    400320: churchWall2 6
+    400322: churchWall2 7
+    400324: churchWall2 8
+    400326: churchWall2 9
+    400328: churchWall3
+    400330: churchWall4
+    400332: churchWall5
+    400334: churchWall6
+    400336: churchWall7
+    400338: churchWall8
+    400340: churchWall9
+    400342: planarTrimmedSurface3
+    400344: planarTrimmedSurface4
+    2300000: //RootNode
+    2300002: churchFrontPillar1
+    2300004: churchFrontPillar10
+    2300006: churchFrontPillar11
+    2300008: churchFrontPillar12
+    2300010: churchFrontPillar13
+    2300012: churchFrontPillar14
+    2300014: churchFrontPillar15
+    2300016: churchFrontPillar16
+    2300018: churchFrontPillar17
+    2300020: churchFrontPillar18
+    2300022: churchFrontPillar19
+    2300024: churchFrontPillar2
+    2300026: churchFrontPillar20
+    2300028: churchFrontPillar21
+    2300030: churchFrontPillar22
+    2300032: churchFrontPillar23
+    2300034: churchFrontPillar24
+    2300036: churchFrontPillar25
+    2300038: churchFrontPillar26
+    2300040: churchFrontPillar3
+    2300042: churchFrontPillar4
+    2300044: churchFrontPillar5
+    2300046: churchFrontPillar6
+    2300048: churchFrontPillar7
+    2300050: churchFrontPillar8
+    2300052: churchFrontPillar9
+    2300054: churchFrontTop
+    2300056: churchMainRoof
+    2300058: churchPillarJoint
+    2300060: churchPillarJoint 1
+    2300062: churchPillarJoint 2
+    2300064: churchPillarJoint 3
+    2300066: churchPillarJoint1
+    2300068: churchPillarJoint1 1
+    2300070: churchPillarJoint1 10
+    2300072: churchPillarJoint1 11
+    2300074: churchPillarJoint1 12
+    2300076: churchPillarJoint1 13
+    2300078: churchPillarJoint1 14
+    2300080: churchPillarJoint1 15
+    2300082: churchPillarJoint1 16
+    2300084: churchPillarJoint1 17
+    2300086: churchPillarJoint1 18
+    2300088: churchPillarJoint1 19
+    2300090: churchPillarJoint1 2
+    2300092: churchPillarJoint1 20
+    2300094: churchPillarJoint1 21
+    2300096: churchPillarJoint1 22
+    2300098: churchPillarJoint1 23
+    2300100: churchPillarJoint1 24
+    2300102: churchPillarJoint1 25
+    2300104: churchPillarJoint1 3
+    2300106: churchPillarJoint1 4
+    2300108: churchPillarJoint1 5
+    2300110: churchPillarJoint1 6
+    2300112: churchPillarJoint1 7
+    2300114: churchPillarJoint1 8
+    2300116: churchPillarJoint1 9
+    2300118: churchPillarJoint2
+    2300120: churchPillarJoint2 1
+    2300122: churchPillarJoint2 10
+    2300124: churchPillarJoint2 11
+    2300126: churchPillarJoint2 12
+    2300128: churchPillarJoint2 13
+    2300130: churchPillarJoint2 14
+    2300132: churchPillarJoint2 15
+    2300134: churchPillarJoint2 16
+    2300136: churchPillarJoint2 17
+    2300138: churchPillarJoint2 18
+    2300140: churchPillarJoint2 19
+    2300142: churchPillarJoint2 2
+    2300144: churchPillarJoint2 20
+    2300146: churchPillarJoint2 21
+    2300148: churchPillarJoint2 22
+    2300150: churchPillarJoint2 23
+    2300152: churchPillarJoint2 24
+    2300154: churchPillarJoint2 25
+    2300156: churchPillarJoint2 3
+    2300158: churchPillarJoint2 4
+    2300160: churchPillarJoint2 5
+    2300162: churchPillarJoint2 6
+    2300164: churchPillarJoint2 7
+    2300166: churchPillarJoint2 8
+    2300168: churchPillarJoint2 9
+    2300170: churchPillarUp
+    2300172: churchPillarUp 1
+    2300174: churchPillarUp 2
+    2300176: churchPillarUp 3
+    2300178: churchPillarUp1
+    2300180: churchPillarUp1 1
+    2300182: churchPillarUp1 10
+    2300184: churchPillarUp1 11
+    2300186: churchPillarUp1 12
+    2300188: churchPillarUp1 13
+    2300190: churchPillarUp1 14
+    2300192: churchPillarUp1 15
+    2300194: churchPillarUp1 16
+    2300196: churchPillarUp1 17
+    2300198: churchPillarUp1 18
+    2300200: churchPillarUp1 19
+    2300202: churchPillarUp1 2
+    2300204: churchPillarUp1 20
+    2300206: churchPillarUp1 21
+    2300208: churchPillarUp1 22
+    2300210: churchPillarUp1 23
+    2300212: churchPillarUp1 24
+    2300214: churchPillarUp1 25
+    2300216: churchPillarUp1 3
+    2300218: churchPillarUp1 4
+    2300220: churchPillarUp1 5
+    2300222: churchPillarUp1 6
+    2300224: churchPillarUp1 7
+    2300226: churchPillarUp1 8
+    2300228: churchPillarUp1 9
+    2300230: churchPillarUp2
+    2300232: churchPillarUp2 1
+    2300234: churchPillarUp2 10
+    2300236: churchPillarUp2 11
+    2300238: churchPillarUp2 12
+    2300240: churchPillarUp2 13
+    2300242: churchPillarUp2 14
+    2300244: churchPillarUp2 15
+    2300246: churchPillarUp2 16
+    2300248: churchPillarUp2 17
+    2300250: churchPillarUp2 18
+    2300252: churchPillarUp2 19
+    2300254: churchPillarUp2 2
+    2300256: churchPillarUp2 20
+    2300258: churchPillarUp2 21
+    2300260: churchPillarUp2 22
+    2300262: churchPillarUp2 23
+    2300264: churchPillarUp2 24
+    2300266: churchPillarUp2 25
+    2300268: churchPillarUp2 3
+    2300270: churchPillarUp2 4
+    2300272: churchPillarUp2 5
+    2300274: churchPillarUp2 6
+    2300276: churchPillarUp2 7
+    2300278: churchPillarUp2 8
+    2300280: churchPillarUp2 9
+    2300282: churchRoof
+    2300284: churchTowerWall
+    2300286: churchTowerWall1
+    2300288: churchTowerWall2
+    2300290: churchWall
+    2300292: churchWall10
+    2300294: churchWall11
+    2300296: churchWall12
+    2300298: churchWall13
+    2300300: churchWall14
+    2300302: churchWall2
+    2300304: churchWall2 1
+    2300306: churchWall2 10
+    2300308: churchWall2 11
+    2300310: churchWall2 12
+    2300312: churchWall2 2
+    2300314: churchWall2 3
+    2300316: churchWall2 4
+    2300318: churchWall2 5
+    2300320: churchWall2 6
+    2300322: churchWall2 7
+    2300324: churchWall2 8
+    2300326: churchWall2 9
+    2300328: churchWall3
+    2300330: churchWall4
+    2300332: churchWall5
+    2300334: churchWall6
+    2300336: churchWall7
+    2300338: churchWall8
+    2300340: churchWall9
+    2300342: planarTrimmedSurface3
+    2300344: planarTrimmedSurface4
+    3300000: //RootNode
+    3300002: churchFrontPillar1
+    3300004: churchFrontPillar10
+    3300006: churchFrontPillar11
+    3300008: churchFrontPillar12
+    3300010: churchFrontPillar13
+    3300012: churchFrontPillar14
+    3300014: churchFrontPillar15
+    3300016: churchFrontPillar16
+    3300018: churchFrontPillar17
+    3300020: churchFrontPillar18
+    3300022: churchFrontPillar19
+    3300024: churchFrontPillar2
+    3300026: churchFrontPillar20
+    3300028: churchFrontPillar21
+    3300030: churchFrontPillar22
+    3300032: churchFrontPillar23
+    3300034: churchFrontPillar24
+    3300036: churchFrontPillar25
+    3300038: churchFrontPillar26
+    3300040: churchFrontPillar3
+    3300042: churchFrontPillar4
+    3300044: churchFrontPillar5
+    3300046: churchFrontPillar6
+    3300048: churchFrontPillar7
+    3300050: churchFrontPillar8
+    3300052: churchFrontPillar9
+    3300054: churchFrontTop
+    3300056: churchMainRoof
+    3300058: churchPillarJoint
+    3300060: churchPillarJoint 1
+    3300062: churchPillarJoint 2
+    3300064: churchPillarJoint 3
+    3300066: churchPillarJoint1
+    3300068: churchPillarJoint1 1
+    3300070: churchPillarJoint1 10
+    3300072: churchPillarJoint1 11
+    3300074: churchPillarJoint1 12
+    3300076: churchPillarJoint1 13
+    3300078: churchPillarJoint1 14
+    3300080: churchPillarJoint1 15
+    3300082: churchPillarJoint1 16
+    3300084: churchPillarJoint1 17
+    3300086: churchPillarJoint1 18
+    3300088: churchPillarJoint1 19
+    3300090: churchPillarJoint1 2
+    3300092: churchPillarJoint1 20
+    3300094: churchPillarJoint1 21
+    3300096: churchPillarJoint1 22
+    3300098: churchPillarJoint1 23
+    3300100: churchPillarJoint1 24
+    3300102: churchPillarJoint1 25
+    3300104: churchPillarJoint1 3
+    3300106: churchPillarJoint1 4
+    3300108: churchPillarJoint1 5
+    3300110: churchPillarJoint1 6
+    3300112: churchPillarJoint1 7
+    3300114: churchPillarJoint1 8
+    3300116: churchPillarJoint1 9
+    3300118: churchPillarJoint2
+    3300120: churchPillarJoint2 1
+    3300122: churchPillarJoint2 10
+    3300124: churchPillarJoint2 11
+    3300126: churchPillarJoint2 12
+    3300128: churchPillarJoint2 13
+    3300130: churchPillarJoint2 14
+    3300132: churchPillarJoint2 15
+    3300134: churchPillarJoint2 16
+    3300136: churchPillarJoint2 17
+    3300138: churchPillarJoint2 18
+    3300140: churchPillarJoint2 19
+    3300142: churchPillarJoint2 2
+    3300144: churchPillarJoint2 20
+    3300146: churchPillarJoint2 21
+    3300148: churchPillarJoint2 22
+    3300150: churchPillarJoint2 23
+    3300152: churchPillarJoint2 24
+    3300154: churchPillarJoint2 25
+    3300156: churchPillarJoint2 3
+    3300158: churchPillarJoint2 4
+    3300160: churchPillarJoint2 5
+    3300162: churchPillarJoint2 6
+    3300164: churchPillarJoint2 7
+    3300166: churchPillarJoint2 8
+    3300168: churchPillarJoint2 9
+    3300170: churchPillarUp
+    3300172: churchPillarUp 1
+    3300174: churchPillarUp 2
+    3300176: churchPillarUp 3
+    3300178: churchPillarUp1
+    3300180: churchPillarUp1 1
+    3300182: churchPillarUp1 10
+    3300184: churchPillarUp1 11
+    3300186: churchPillarUp1 12
+    3300188: churchPillarUp1 13
+    3300190: churchPillarUp1 14
+    3300192: churchPillarUp1 15
+    3300194: churchPillarUp1 16
+    3300196: churchPillarUp1 17
+    3300198: churchPillarUp1 18
+    3300200: churchPillarUp1 19
+    3300202: churchPillarUp1 2
+    3300204: churchPillarUp1 20
+    3300206: churchPillarUp1 21
+    3300208: churchPillarUp1 22
+    3300210: churchPillarUp1 23
+    3300212: churchPillarUp1 24
+    3300214: churchPillarUp1 25
+    3300216: churchPillarUp1 3
+    3300218: churchPillarUp1 4
+    3300220: churchPillarUp1 5
+    3300222: churchPillarUp1 6
+    3300224: churchPillarUp1 7
+    3300226: churchPillarUp1 8
+    3300228: churchPillarUp1 9
+    3300230: churchPillarUp2
+    3300232: churchPillarUp2 1
+    3300234: churchPillarUp2 10
+    3300236: churchPillarUp2 11
+    3300238: churchPillarUp2 12
+    3300240: churchPillarUp2 13
+    3300242: churchPillarUp2 14
+    3300244: churchPillarUp2 15
+    3300246: churchPillarUp2 16
+    3300248: churchPillarUp2 17
+    3300250: churchPillarUp2 18
+    3300252: churchPillarUp2 19
+    3300254: churchPillarUp2 2
+    3300256: churchPillarUp2 20
+    3300258: churchPillarUp2 21
+    3300260: churchPillarUp2 22
+    3300262: churchPillarUp2 23
+    3300264: churchPillarUp2 24
+    3300266: churchPillarUp2 25
+    3300268: churchPillarUp2 3
+    3300270: churchPillarUp2 4
+    3300272: churchPillarUp2 5
+    3300274: churchPillarUp2 6
+    3300276: churchPillarUp2 7
+    3300278: churchPillarUp2 8
+    3300280: churchPillarUp2 9
+    3300282: churchRoof
+    3300284: churchTowerWall
+    3300286: churchTowerWall1
+    3300288: churchTowerWall2
+    3300290: churchWall
+    3300292: churchWall10
+    3300294: churchWall11
+    3300296: churchWall12
+    3300298: churchWall13
+    3300300: churchWall14
+    3300302: churchWall2
+    3300304: churchWall2 1
+    3300306: churchWall2 10
+    3300308: churchWall2 11
+    3300310: churchWall2 12
+    3300312: churchWall2 2
+    3300314: churchWall2 3
+    3300316: churchWall2 4
+    3300318: churchWall2 5
+    3300320: churchWall2 6
+    3300322: churchWall2 7
+    3300324: churchWall2 8
+    3300326: churchWall2 9
+    3300328: churchWall3
+    3300330: churchWall4
+    3300332: churchWall5
+    3300334: churchWall6
+    3300336: churchWall7
+    3300338: churchWall8
+    3300340: churchWall9
+    3300342: planarTrimmedSurface3
+    3300344: planarTrimmedSurface4
+    4300000: churchFrontBottom
+    4300002: churchFrontTop
+    4300004: churchTowerWall
+    4300006: planarTrimmedSurface3
+    4300008: churchFrontPillar25
+    4300010: churchPillarUp
+    4300012: churchPillarUp1
+    4300014: churchPillarJoint
+    4300016: churchPillarJoint1
+    4300018: churchPillarUp2
+    4300020: churchPillarJoint2
+    4300022: churchFrontPillar26
+    4300024: churchPillarUp
+    4300026: churchPillarUp1
+    4300028: churchPillarJoint
+    4300030: churchPillarJoint1
+    4300032: churchPillarUp2
+    4300034: churchPillarJoint2
+    4300036: churchTowerWall1
+    4300038: churchTowerWall2
+    4300040: churchRoof
+    4300042: churchMainRoof
+    4300044: planarTrimmedSurface4
+    4300046: churchWall
+    4300048: churchWall2
+    4300050: churchWall3
+    4300052: churchWall2
+    4300054: churchWall4
+    4300056: churchWall2
+    4300058: churchWall5
+    4300060: churchWall2
+    4300062: churchWall6
+    4300064: churchWall2
+    4300066: churchWall7
+    4300068: churchWall2
+    4300070: churchWall8
+    4300072: churchWall2
+    4300074: churchWall9
+    4300076: churchWall2
+    4300078: churchWall10
+    4300080: churchWall2
+    4300082: churchWall11
+    4300084: churchWall2
+    4300086: churchWall12
+    4300088: churchWall2
+    4300090: churchWall13
+    4300092: churchWall2
+    4300094: churchWall14
+    4300096: churchWall2
+    4300098: churchFrontPillar2
+    4300100: churchPillarUp
+    4300102: churchPillarUp1
+    4300104: churchPillarJoint
+    4300106: churchPillarJoint1
+    4300108: churchPillarUp2
+    4300110: churchPillarJoint2
+    4300112: churchFrontPillar3
+    4300114: churchPillarUp1
+    4300116: churchPillarJoint1
+    4300118: churchPillarUp2
+    4300120: churchPillarJoint2
+    4300122: churchFrontPillar4
+    4300124: churchPillarUp1
+    4300126: churchPillarJoint1
+    4300128: churchPillarUp2
+    4300130: churchPillarJoint2
+    4300132: churchFrontPillar5
+    4300134: churchPillarUp1
+    4300136: churchPillarJoint1
+    4300138: churchPillarUp2
+    4300140: churchPillarJoint2
+    4300142: churchFrontPillar6
+    4300144: churchPillarUp1
+    4300146: churchPillarJoint1
+    4300148: churchPillarUp2
+    4300150: churchPillarJoint2
+    4300152: churchFrontPillar7
+    4300154: churchPillarUp1
+    4300156: churchPillarJoint1
+    4300158: churchPillarUp2
+    4300160: churchPillarJoint2
+    4300162: churchFrontPillar8
+    4300164: churchPillarUp1
+    4300166: churchPillarJoint1
+    4300168: churchPillarUp2
+    4300170: churchPillarJoint2
+    4300172: churchFrontPillar9
+    4300174: churchPillarUp1
+    4300176: churchPillarJoint1
+    4300178: churchPillarUp2
+    4300180: churchPillarJoint2
+    4300182: churchFrontPillar10
+    4300184: churchPillarUp1
+    4300186: churchPillarJoint1
+    4300188: churchPillarUp2
+    4300190: churchPillarJoint2
+    4300192: churchFrontPillar11
+    4300194: churchPillarUp1
+    4300196: churchPillarJoint1
+    4300198: churchPillarUp2
+    4300200: churchPillarJoint2
+    4300202: churchFrontPillar12
+    4300204: churchPillarUp1
+    4300206: churchPillarJoint1
+    4300208: churchPillarUp2
+    4300210: churchPillarJoint2
+    4300212: churchFrontPillar13
+    4300214: churchPillarUp1
+    4300216: churchPillarJoint1
+    4300218: churchPillarUp2
+    4300220: churchPillarJoint2
+    4300222: churchFrontPillar14
+    4300224: churchPillarUp1
+    4300226: churchPillarJoint1
+    4300228: churchPillarUp2
+    4300230: churchPillarJoint2
+    4300232: churchFrontPillar15
+    4300234: churchPillarUp1
+    4300236: churchPillarJoint1
+    4300238: churchPillarUp2
+    4300240: churchPillarJoint2
+    4300242: churchFrontPillar16
+    4300244: churchPillarUp1
+    4300246: churchPillarJoint1
+    4300248: churchPillarUp2
+    4300250: churchPillarJoint2
+    4300252: churchFrontPillar17
+    4300254: churchPillarUp1
+    4300256: churchPillarJoint1
+    4300258: churchPillarUp2
+    4300260: churchPillarJoint2
+    4300262: churchFrontPillar18
+    4300264: churchPillarUp1
+    4300266: churchPillarJoint1
+    4300268: churchPillarUp2
+    4300270: churchPillarJoint2
+    4300272: churchFrontPillar19
+    4300274: churchPillarUp1
+    4300276: churchPillarJoint1
+    4300278: churchPillarUp2
+    4300280: churchPillarJoint2
+    4300282: churchFrontPillar20
+    4300284: churchPillarUp1
+    4300286: churchPillarJoint1
+    4300288: churchPillarUp2
+    4300290: churchPillarJoint2
+    4300292: churchFrontPillar21
+    4300294: churchPillarUp1
+    4300296: churchPillarJoint1
+    4300298: churchPillarUp2
+    4300300: churchPillarJoint2
+    4300302: churchFrontPillar22
+    4300304: churchPillarUp1
+    4300306: churchPillarJoint1
+    4300308: churchPillarUp2
+    4300310: churchPillarJoint2
+    4300312: churchFrontPillar23
+    4300314: churchPillarUp1
+    4300316: churchPillarJoint1
+    4300318: churchPillarUp2
+    4300320: churchPillarJoint2
+    4300322: churchFrontPillar24
+    4300324: churchPillarUp1
+    4300326: churchPillarJoint1
+    4300328: churchPillarUp2
+    4300330: churchPillarJoint2
+    4300332: churchFrontPillar1
+    4300334: churchPillarUp
+    4300336: churchPillarUp1
+    4300338: churchPillarJoint
+    4300340: churchPillarJoint1
+    4300342: churchPillarUp2
+    4300344: churchPillarJoint2
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
