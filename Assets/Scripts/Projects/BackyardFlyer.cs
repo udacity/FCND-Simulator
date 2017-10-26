@@ -12,19 +12,7 @@ using FlightUtils;
 using Drones;
 using DroneInterface;
 
-// TODO: namespace?
-
-// TODO: possibly use a class like this to keep track of 
-// task/client pairs.
-public class MAVLinkClientConn
-{
-    public TcpClient client = null;
-
-    public Task task = null;
-}
-
-
-public class MavlinkTCP : MonoBehaviour
+public class BackyardFlyer : MonoBehaviour
 {
     private IDrone drone;
     private Mavlink mav;
