@@ -72,27 +72,8 @@ namespace DroneControllers
             moveSpeed = 15.0f;
             turnSpeed = 2.0f;
             maxTilt = 0.5f;
-            if (Input.GetKeyDown(KeyCode.F12))
-            {
-                motors_armed = !motors_armed;
 
-                if (motors_armed)
-                {
-                    controller.UseGravity = true;
-                    controller.rb.isKinematic = false;
-                    controller.rb.freezeRotation = false;
-                    controller.rb.velocity = Vector3.zero;
-                    controller.MotorsEnabled = true;
-                }
-                else
-                {
-                    controller.rb.freezeRotation = false;
-                    controller.MotorsEnabled = false;
-                }
-
-            }
-
-            if (Input.GetKeyDown(KeyCode.F11))
+            if (Input.GetKeyDown(KeyCode.P))
             {
                 posctl = !posctl;
 

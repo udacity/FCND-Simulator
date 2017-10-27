@@ -13,7 +13,7 @@ public class Menu : MonoBehaviour
 
 	void LateUpdate()
 	{
-		if (Input.GetKey(KeyCode.LeftShift)) {
+		if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
 			if (Input.GetKeyDown(KeyCode.R)) {
 				print("RELOADING SCENE");
 				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
