@@ -6,11 +6,13 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.IO;
 
 using MavLink;
 using FlightUtils;
 using Drones;
 using DroneInterface;
+
 
 public class MotionPlanning : MonoBehaviour
 {
@@ -18,7 +20,6 @@ public class MotionPlanning : MonoBehaviour
     private Mavlink mav;
     private bool running = true;
     // track all clients
-    // private ConcurrentBag<MAVLinkClientConn> clients = new ConcurrentBag<MAVLinkClientConn>();
     private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 10;
@@ -46,8 +47,8 @@ public class MotionPlanning : MonoBehaviour
         while (running && s.CanRead && s.CanWrite)
         {
             // retrieve the colliders
-            var colliders = collidersGenerator.GetNearbyColliders(drone.LocalCoords(), sensorRange);
-            Debug.Log(colliders);
+            var colliders = collidersGenerator.colliders;
+            Debug.Log(colliders.ToArray().Length);
             await Task.Delay(waitFor);
         }
     }
@@ -294,5 +295,38 @@ public class MotionPlanning : MonoBehaviour
     void MsgHeartbeat(MavlinkPacket pack)
     {
         // var msg = (MavLink.Msg_heartbeat) pack.Message;
+    }
+
+    void CollidersToCSV()
+    {
+        var go = GameObject.Find("ColliderGatherer");
+        if (go == null)
+        {
+            Debug.Log("ColliderGatherer GameObject not found in scene ...");
+            return;
+        }
+        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, false, null, "Select Folder", "Save");
+    }
+
+    void CreateFile(string path)  
+    {
+        var filename = "map.csv";
+        var fullPath = Path.Combine(path, filename);
+        var colliders = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>().colliders;
+
+        Debug.Log("Overwriting previous file");
+        // var fs = File.Create(fullPath);
+        // if (File.Exists(fullPath)) {
+        // }
+
+        // Write headers
+        File.AppendAllText(Path.Combine(filename), "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n");
+        foreach (var c in colliders)
+        {
+            var pos = c.position;
+            var hsize = c.halfSize;
+            var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.x, pos.y, pos.z, hsize.x, hsize.y, hsize.z);
+            File.AppendAllText(Path.Combine(filename), row);
+        }
     }
 }

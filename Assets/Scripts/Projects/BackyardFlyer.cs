@@ -18,7 +18,6 @@ public class BackyardFlyer : MonoBehaviour
     private Mavlink mav;
     private bool running = true;
     // track all clients
-    // private ConcurrentBag<MAVLinkClientConn> clients = new ConcurrentBag<MAVLinkClientConn>();
     private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 10;

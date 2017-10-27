@@ -13,9 +13,11 @@ public class Menu : MonoBehaviour
 
 	void LateUpdate()
 	{
-		if (Input.GetKey(KeyCode.Escape)) {
-			Debug.Log("reloading scene");
-			SceneManager.LoadScene("urban");
+		if (Input.GetKey(KeyCode.LeftShift)) {
+			if (Input.GetKeyDown(KeyCode.R)) {
+				print("RELOADING SCENE");
+				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			}
 		}
 	}
 

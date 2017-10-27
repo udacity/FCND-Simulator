@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DroneInterface;
 using Drones;
+using FlightUtils;
 
 // TODO(dom): Move these parts into separate files
 
@@ -43,6 +44,7 @@ public class DroneUI : MonoBehaviour
         var y = Input.mousePosition.y / rt.rect.height * Screen.height;
         var wp = c.ScreenToWorldPoint(new Vector3(x, y, initialCameraY));
         Debug.Log("world point " + wp);
+        FlightUtils.Utils.CollidersToCSV("foo.csv");
     }
 
     // Updates the minimap camera position to the new location of the drone.
