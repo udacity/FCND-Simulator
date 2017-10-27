@@ -21,9 +21,36 @@ public class BackyardFlyer : MonoBehaviour
     private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 10;
+    public int homePositionIntervalHz = 1;
 
     public Int32 port = 5760;
     public string ip = "127.0.0.1";
+
+    // enum to define the mode options
+    // this follows the PX4 mode option set
+    public enum MAIN_MODE : uint
+    {
+        CUSTOM_MAIN_MODE_MANUAL = 1,
+        // other PX4 modes not of interest at the moment
+        CUSTOM_MAIN_MODE_OFFBOARD = 6,  // guided
+    }
+
+
+    // enum for the set of masks that are used for setting the location position target
+    public enum SET_POSITION_MASK : UInt16
+    {
+        IGNORE_POSITION = 0x007,
+        IGNORE_VELOCITY = 0x038,
+        IGNORE_ACCELERATION = 0x1C0,
+        IGNORE_YAW = 0x400,
+        IGNORE_YAW_RATE = 0x800,
+
+        IS_FORCE = (1 << 9),
+        IS_TAKEOFF = 0x1000,
+        IS_LAND = 0x2000,
+        IS_LOITER = 0x3000,
+    }
+
 
     // Use this for initialization
     void Start()
@@ -45,11 +72,16 @@ public class BackyardFlyer : MonoBehaviour
     //      North Velocity (vx)
     //      East Velocity (vy)
     //      Vertical Velocity (vz)
+    //      
+    //      local coordinate - N
+    //      Local coordinate - E
+    //      Local coordinate - D
     async Task EmitTelemetry(NetworkStream stream)
     {
         var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
         while (running && stream.CanRead && stream.CanWrite)
         {
+            // send the GPS message
             // TODO: Make these magic numbers part of a util function?
             var lat = drone.Latitude() * 1e7d;
             var lon = drone.Longitude() * 1e7d;
@@ -71,6 +103,25 @@ public class BackyardFlyer : MonoBehaviour
             };
             var serializedPacket = mav.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
+
+            // send the local position message
+            var north = drone.LocalCoords().x;
+            var east = drone.LocalCoords().y;
+            var down = drone.LocalCoords().z;
+            var local_msg = new Msg_local_position_ned
+            {
+                x = north,
+                y = east,
+                z = down,
+                vx = (float) drone.NorthVelocity(),
+                vy = (float) drone.EastVelocity(),
+                vz = (float) drone.VerticalVelocity()
+            };
+            serializedPacket = mav.SendV2(msg);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
+
+
+            // wait
             await Task.Delay(waitFor);
         }
     }
@@ -81,33 +132,54 @@ public class BackyardFlyer : MonoBehaviour
         var waitFor = Utils.HertzToMilliSeconds(heartbeatIntervalHz);
         while (running && stream.CanRead && stream.CanWrite)
         {
-            byte base_mode;
             var guided = drone.Guided();
             var armed = drone.Armed();
-            if (guided && armed)
+
+            // build the base mode
+            byte base_mode = (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+            if (armed)
             {
-                base_mode = (byte)MAV_MODE.MAV_MODE_GUIDED_ARMED;
+                base_mode |= (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED;
             }
-            else if (guided)
+
+            // build the custom mode (this specifies the mode of operation, using PX4 mode set)
+            UInt32 custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_MANUAL << 16);
+            if (guided)
             {
-                base_mode = (byte)MAV_MODE.MAV_MODE_GUIDED_DISARMED;
+                custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
             }
-            else if (armed)
-            {
-                base_mode = (byte)MAV_MODE.MAV_MODE_MANUAL_ARMED;
-            }
-            else
-            {
-                base_mode = (byte)MAV_MODE.MAV_MODE_MANUAL_DISARMED;
-            }
+            
             Msg_heartbeat msg = new Msg_heartbeat
             {
                 type = 1,
                 autopilot = 1,
                 system_status = 1,
                 base_mode = base_mode,
-                custom_mode = 1,
+                custom_mode = custom_mode,
                 mavlink_version = 3
+            };
+            var serializedPacket = mav.SendV2(msg);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
+            await Task.Delay(waitFor);
+        }
+    }
+
+    // Emits the home position message.
+    async Task EmitHomePosition(NetworkStream stream)
+    {
+        var waitFor = Utils.HertzToMilliSeconds(homePositionIntervalHz);
+        while (running && stream.CanRead && stream.CanWrite)
+        {
+            // TODO: figure out where these are saved for the drone
+            var home_lat = 0 * 1e7d;
+            var home_lon = 0 * 1e7d;
+            var home_alt = 0 * 1000;
+            
+            Msg_home_position msg = new Msg_home_position
+            {
+                latitude = (int) home_lat,
+                longitude = (int) home_lon,
+                altitude = (int) home_alt
             };
             var serializedPacket = mav.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
@@ -120,6 +192,7 @@ public class BackyardFlyer : MonoBehaviour
         var stream = client.GetStream();
         var telemetryTask = EmitTelemetry(stream);
         var heartbeatTask = EmitHearbeat(stream);
+        var homePositionTask = EmitHomePosition(stream); // TODO: maybe only want to send this once
 
         while (running && client.Connected && stream.CanRead)
         {
@@ -195,9 +268,14 @@ public class BackyardFlyer : MonoBehaviour
             case "MavLink.Msg_heartbeat":
                 MsgHeartbeat(packet);
                 break;
-            case "MavLink.Msg_command_int":
-                MsgCommandInt(packet);
+            case "MavLink.Msg_command_long":
+                print("handling command long");
+                MsgCommandLong(packet);
                 break;
+            case "MavLink.Msg_set_position_target_local_ned":
+                MsgLocalPositionTarget(packet);
+                break;
+            // TODO: add attitude, etc
             default:
                 Debug.Log("Unknown message type !!!");
                 break;
@@ -209,15 +287,20 @@ public class BackyardFlyer : MonoBehaviour
         print("failed to receive a packet!!!");
     }
 
-    // The methods below determine what to do with the drone.
-    // TODO: Make this a separate file (DroneControllerMeta.cs?)
-    void MsgCommandInt(MavlinkPacket pack)
+    // handle the COMMAND_LONG message
+    // used for:
+    //      - arming / disarming
+    //      - setting the mode
+    //      - setting the home position
+    void MsgCommandLong(MavlinkPacket pack)
     {
-        var msg = (MavLink.Msg_command_int)pack.Message;
-        var command = (MAV_CMD)msg.command;
+        var msg = (MavLink.Msg_command_long) pack.Message;
+        var command = (MAV_CMD) msg.command;
 
+        // DEBUG
         print(string.Format("Command = {0}", command));
 
+        // handle the command types of interest
         if (command == MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM)
         {
             var param1 = msg.param1;
@@ -232,44 +315,86 @@ public class BackyardFlyer : MonoBehaviour
                 print("DISARMED VEHICLE !!!");
             }
         }
-        else if (command == MAV_CMD.MAV_CMD_NAV_GUIDED_ENABLE)
+        else if (command == MAV_CMD.MAV_CMD_DO_SET_MODE)
         {
-            var param1 = msg.param1;
-            if (param1 > 0.5)
+            var mode = (byte) msg.param1;
+            var custom_mode = (byte) msg.param2;
+            if ((mode & (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) > 0)
             {
-                drone.TakeControl(true);
-                print("VEHICLE IS BEING GUIDED !!!");
+                if (custom_mode == (byte) MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD)
+                {
+                    drone.TakeControl(true);
+                    print("VEHICLE IS BEING GUIDED !!!");
+                }
+                else
+                {
+                    drone.TakeControl(false);
+                    print("VEHICLE IS NOT BEING GUIDED !!!");
+                }
             }
-            else
-            {
-                drone.TakeControl(false);
-                print("VEHICLE IS NOT BEING GUIDED !!!");
-            }
         }
-        else if (command == MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM)
+        else if (command == MAV_CMD.MAV_CMD_DO_SET_HOME)
         {
-            var lat = msg.x / 1e7d;
-            var lon = msg.y / 1e7d;
-            var alt = msg.z;
-            print("Vehicle Command: " + msg.x + "," + msg.y + "," + msg.z);
-            print("Vehicle Command: (" + lat + "," + lon + "," + alt + ")");
-            drone.Goto(lat, lon, alt);
-        }
-        else if (command == MAV_CMD.MAV_CMD_NAV_TAKEOFF)
-        {
-            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
-            print(string.Format("TAKING OFF to {0} altitude", msg.z));
-        }
-        else if (command == MAV_CMD.MAV_CMD_NAV_LAND)
-        {
-            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
-            print("LANDING !!!");
+            // TODO: set the home location of the drone
         }
         else
         {
             print(string.Format("Unknown MAVLink Command: {0}", command));
         }
     }
+
+
+    // handle the SET_POSITION_TARGET_LOCAL_NED message
+    // used for:
+    //      - takeoff (to a given altitude)
+    //      - landing
+    //      - position control (goto)
+    //      - velocity control
+    void MsgLocalPositionTarget(MavlinkPacket pack)
+    {
+        var msg = (MavLink.Msg_set_position_target_local_ned) pack.Message;
+        var mask = (UInt16) msg.type_mask;
+
+        // split by the mask
+
+        // TAKEOFF
+        if ((mask & (UInt16) SET_POSITION_MASK.IS_TAKEOFF) > 0)
+        {
+            // TODO: z is being sent as negative, check to see if a sign change needs to occur
+            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
+            print(string.Format("TAKING OFF to {0} altitude", msg.z));
+        }
+        // LAND
+        else if ((mask & (UInt16) SET_POSITION_MASK.IS_LAND) > 0)
+        {
+            // TODO: z is being sent as 0 here, make sure that is ok
+            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
+            print("LANDING !!!");
+        }
+        // NEED TO REVIEW MASK
+        else
+        {
+            // POSITION COMMAND
+            if ((mask & (UInt16) SET_POSITION_MASK.IGNORE_POSITION) == 0)
+            {
+                // TODO: convert from local coordinate to lat/lon/alt
+                // TODO: or have a local goto function
+                var lat = msg.x;
+                var lon = msg.y;
+                var alt = msg.z;
+                print("Vehicle Command: " + msg.x + "," + msg.y + "," + msg.z);
+                print("Vehicle Command: (" + lat + "," + lon + "," + alt + ")");
+                drone.Goto(lat, lon, alt);
+            }
+            else if ((mask & (UInt16) SET_POSITION_MASK.IGNORE_VELOCITY) == 0)
+            {
+                // TODO: set velocity is not yet implemented
+                print("vehicle velocity command: " + msg.vx + ", " + msg.vy + ", " + msg.vz);
+                //drone.SetVelocity(msg.vx, msg.vy, msg.vz, msg.yaw);
+            }
+        }
+    }
+    
 
     // TODO: keep track of when last heartbeat was received and
     // potentially do something.
