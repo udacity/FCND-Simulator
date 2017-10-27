@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using System.IO;
 
+
 namespace DroneControllers
 {
 
@@ -15,7 +16,6 @@ namespace DroneControllers
         public static int ImageHeight = 480;
 
         const float M2Latitude = 1.0f / 111111.0f;
-        Vector3 initGPS = new Vector3(37.412939f, 0.0f, 121.995635f);
         double latitude0 = 37.412939d;
         double longitude0 = 121.995635d;
         const float M2Longitude = 1.0f / (0.8f * 111111.0f);
@@ -452,9 +452,49 @@ namespace DroneControllers
             return GPS.x + latitude0;
         }
 
+        public void SetHomeLatitude(double latitude)
+        {
+            latitude0 = latitude;
+        }
+
+        public double GetHomeLatitude()
+        {
+            return latitude0;
+        }
+
+        public float GetLocalNorth()
+        {
+            return (float)(GPS.x / M2Latitude);
+        }
+
         public double GetLongitude()
         {
             return -1.0d * (GPS.z + longitude0);
+        }
+
+        public void SetHomeLongitude(double longitude)
+        {
+            longitude0 = longitude;
+        }
+
+        public double GetHomeLongitude()
+        {
+            return longitude0;
+        }
+
+        public float GetLocalEast()
+        {
+            return (float)(GPS.z / M2Longitude);
+        }
+
+        public Vector3 GlobalToLocalPosition(double longitude, double latitude, double altitude)
+        {
+            Vector3 localPosition;
+            localPosition.x = (float)(latitude - GetHomeLatitude()) / M2Latitude;
+            localPosition.y = (float)(-longitude - GetHomeLongitude()) / M2Longitude;
+            localPosition.z = (float)(-altitude);
+            return localPosition;
+            
         }
 
         public double GetAltitude()
