@@ -270,6 +270,7 @@ public class BackyardFlyer : MonoBehaviour
                 MsgHeartbeat(packet);
                 break;
             case "MavLink.Msg_command_long":
+                print("handling command long");
                 MsgCommandLong(packet);
                 break;
             case "MavLink.Msg_set_position_target_local_ned":
