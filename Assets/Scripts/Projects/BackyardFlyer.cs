@@ -117,7 +117,7 @@ public class BackyardFlyer : MonoBehaviour
                 vy = (float) drone.EastVelocity(),
                 vz = (float) drone.VerticalVelocity()
             };
-            serializedPacket = mav.SendV2(msg);
+            serializedPacket = mav.SendV2(local_msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
 
 
