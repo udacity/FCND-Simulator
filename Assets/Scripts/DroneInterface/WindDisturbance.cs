@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#define USE_FASTNOISE
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,8 +18,7 @@ public class WindDisturbance : MonoBehaviour
 		}
 	}
 
-	public WindZone windZone;
-	public bool useWindZone;
+	public LayerMask ignoreLayers;
 
 	public Vector3 windDirection = Vector3.forward;
 	public bool useDirectionNoise = true;
@@ -33,6 +33,8 @@ public class WindDisturbance : MonoBehaviour
 	Vector3 windEuler;
 	Vector3 lastWind;
 	float lastNoise;
+
+	FastNoise fn = new FastNoise ();
 
 	void Awake ()
 	{
@@ -50,12 +52,12 @@ public class WindDisturbance : MonoBehaviour
 		}
 		instance = this;
 		windEuler = Quaternion.LookRotation ( windDirection.normalized ).eulerAngles;
+		#if USE_FASTNOISE
+		directionNoise = new Vector3 ( Random.value - 0.5f, Random.value - 0.5f, Random.value - 0.5f ) * 25;
+//		directionNoise = Random.insideUnitSphere * 2f;
+		#else
 		directionNoise = Random.insideUnitSphere * 2f;
-	}
-
-	void Start ()
-	{
-		
+		#endif
 	}
 
 	void FixedUpdate ()
@@ -63,13 +65,17 @@ public class WindDisturbance : MonoBehaviour
 
 		if ( useDirectionNoise )
 			windEuler = new Vector3 (
-//				windEuler.x + ( 0.25f - Mathf.PerlinNoise ( Time.time * directionNoise.x, Time.time * directionNoise.x ) * 0.5f ) * dirNoiseStrength,
-				Mathf.Lerp ( -dirNoiseStrength, dirNoiseStrength, Mathf.PerlinNoise ( Time.time * directionNoise.x, Time.time * directionNoise.x ) ),
-				windEuler.y + ( 0.25f - Mathf.PerlinNoise ( Time.time * directionNoise.y, Time.time * directionNoise.y ) * 0.5f ) * dirNoiseStrength,
-				Mathf.Lerp ( -dirNoiseStrength, dirNoiseStrength, Mathf.PerlinNoise ( Time.time * directionNoise.z, Time.time * directionNoise.z ) )
+				GetNoise ( Time.time * directionNoise.x, Time.time * directionNoise.x ) * dirNoiseStrength,
+				windEuler.y + GetNoise ( Time.time * directionNoise.y, Time.time * directionNoise.y ) * dirNoiseStrength,
+				GetNoise ( Time.time * directionNoise.z, Time.time * directionNoise.z ) * dirNoiseStrength
 			);
+//			windEuler = new Vector3 (
+//				Mathf.Lerp ( -dirNoiseStrength, dirNoiseStrength, GetNoise01 ( Time.time * directionNoise.x, Time.time * directionNoise.x ) ),
+//				windEuler.y + ( 0.25f - GetNoise01 ( Time.time * directionNoise.y, Time.time * directionNoise.y ) * 0.5f ) * dirNoiseStrength,
+//				Mathf.Lerp ( -dirNoiseStrength, dirNoiseStrength, GetNoise01 ( Time.time * directionNoise.z, Time.time * directionNoise.z ) )
+//			);
 
-		lastNoise = Mathf.PerlinNoise ( 0, Time.time * 2f );
+		lastNoise = GetNoise01 ( 0, Time.time * 21.2485f );
 		Vector3 curDirection = Quaternion.Euler ( windEuler ) * Vector3.forward;
 
 		lastWind = curDirection * Mathf.Lerp ( minForce, maxForce, lastNoise );
@@ -77,22 +83,47 @@ public class WindDisturbance : MonoBehaviour
 
 		for ( int i = 0; i < affectedObjects.Count; i++ )
 			affectedObjects [ i ].transform.position += frameWind;
-
-//		if ( useWindZone )
-//		{
-//			
-//		} else
-//		{
-//			
-//		}
 	}
 
 	void OnGUI ()
 	{
 		GUILayout.BeginArea ( new Rect ( 10, 10, 200, 50 ) );
 		GUILayout.Box ( "Last wind: " + lastWind.ToString () + "\nnoise: " + lastNoise.ToString ( "F2" ) );
-//		GUILayout.Box ( "x: " + lastWind.x + " y: " + lastWind.y + " z: " + lastWind.z + "\nnoise: " + lastNoise );
 		GUILayout.EndArea ();
+	}
+
+	void OnTriggerEnter (Collider other)
+	{
+		if ( ignoreLayers.ContainsLayer ( other.gameObject.layer ) )
+			return;
+		Rigidbody rb = other.transform.root.GetComponentInChildren<Rigidbody> ();
+		if ( rb != null )
+			affectedObjects.Add ( rb.transform );
+	}
+
+	void OnTriggerExit (Collider other)
+	{
+		Rigidbody rb = other.transform.root.GetComponentInChildren<Rigidbody> ();
+		if ( rb != null )
+			affectedObjects.Remove ( rb.transform );
+	}
+
+	float GetNoise (float x, float y)
+	{
+		#if USE_FASTNOISE
+		return fn.GetSimplex ( x, y );
+		#else
+		return Mathf.PerlinNoise ( x, y );
+		#endif
+	}
+
+	float GetNoise01 (float x, float y)
+	{
+		#if USE_FASTNOISE
+		return 0.5f * fn.GetSimplex ( x, y ) + 0.5f;
+		#else
+		return Mathf.PerlinNoise ( x, y );
+		#endif
 	}
 
 	public static void AddAffectedObject (Transform t)
