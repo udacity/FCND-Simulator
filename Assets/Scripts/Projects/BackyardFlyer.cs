@@ -335,7 +335,9 @@ public class BackyardFlyer : MonoBehaviour
         }
         else if (command == MAV_CMD.MAV_CMD_DO_SET_HOME)
         {
-            // TODO: set the home location of the drone
+            drone.SetHome(msg.param6, msg.param5, msg.param7);
+            print("HOME POSITION PARAMS: " + msg.param1 + ", " + msg.param2 + ", " + msg.param3 + ", " + msg.param4 + ", " + msg.param5 + ", " + msg.param6 + ", " + msg.param7);
+            print("Vehicle Home Position: " + msg.param6 + "," + msg.param5 + "," + msg.param7);
         }
         else
         {
@@ -361,14 +363,15 @@ public class BackyardFlyer : MonoBehaviour
         if ((mask & (UInt16) SET_POSITION_MASK.IS_TAKEOFF) > 0)
         {
             // TODO: z is being sent as negative, check to see if a sign change needs to occur
-            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
+            //drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
+            drone.Goto(drone.LocalCoords().x, drone.LocalCoords().y, msg.z);
             print(string.Format("TAKING OFF to {0} altitude", msg.z));
         }
         // LAND
         else if ((mask & (UInt16) SET_POSITION_MASK.IS_LAND) > 0)
         {
             // TODO: z is being sent as 0 here, make sure that is ok
-            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
+            drone.Goto(drone.LocalCoords().x, drone.LocalCoords().y, msg.z);
             print("LANDING !!!");
         }
         // NEED TO REVIEW MASK
@@ -379,12 +382,12 @@ public class BackyardFlyer : MonoBehaviour
             {
                 // TODO: convert from local coordinate to lat/lon/alt
                 // TODO: or have a local goto function
-                var lat = msg.x;
-                var lon = msg.y;
+                var north = msg.x;
+                var east = msg.y;
                 var alt = msg.z;
                 print("Vehicle Command: " + msg.x + "," + msg.y + "," + msg.z);
-                print("Vehicle Command: (" + lat + "," + lon + "," + alt + ")");
-                drone.Goto(lat, lon, alt);
+                print("Vehicle Command: (" + north + "," + east + "," + alt + ")");
+                drone.Goto(north, east, alt);
             }
             else if ((mask & (UInt16) SET_POSITION_MASK.IGNORE_VELOCITY) == 0)
             {

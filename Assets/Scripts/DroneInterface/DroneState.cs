@@ -16,6 +16,10 @@ namespace DroneInterface
 
         double Altitude();
 
+        double HomeLatitude();
+
+        double HomeLongitude();
+
         // Returns whether the drone is armed or disarmed
         bool Armed();
 

@@ -106,7 +106,7 @@ public class DroneUI : MonoBehaviour
         var lat = drone.Latitude();
         var lon = drone.Longitude();
         var alt = drone.Altitude();
-        gpsText.text = string.Format("Latitude = {0:0.000}\nLongitude = {1:0.000}\nAltitude = {2:0.000} (meters)", lat, lon, alt);
+        gpsText.text = string.Format("Latitude = {0:0.000000}\nLongitude = {1:0.000000}\nAltitude = {2:0.000} (meters)", lat, lon, alt);
         // _gpsText.color = new Color(255, 255, 255, 0);
 
         // Updates UI compass drone heading
@@ -114,7 +114,7 @@ public class DroneUI : MonoBehaviour
         // East -> 90
         // South -> 180
         // West - 270
-        var hdg = (float)drone.Yaw();
+        var hdg = -(float)drone.Yaw();
         var oldHdg = needleImage.rectTransform.rotation.eulerAngles.z;
         // rotate the needle by the yaw difference
         needleImage.rectTransform.Rotate(0, 0, -(-hdg - -oldHdg));

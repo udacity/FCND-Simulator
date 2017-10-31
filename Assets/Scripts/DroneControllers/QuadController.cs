@@ -16,8 +16,11 @@ namespace DroneControllers
         public static int ImageHeight = 480;
 
         const float M2Latitude = 1.0f / 111111.0f;
-        double latitude0 = 37.412939d;
-        double longitude0 = 121.995635d;
+        const double latitude0 = 37.412939d;
+        const double longitude0 = 121.995635d;
+
+        double homeLatitude = 0.0d;
+        double homeLongitude = 0.0d;
         const float M2Longitude = 1.0f / (0.8f * 111111.0f);
 
         public float ForceNoise = 2.0f;
@@ -447,6 +450,12 @@ namespace DroneControllers
 
 
         //Convenience retrieval functions. These probably should be set as properties
+        public void SetHomePosition(double longitude, double latitude, double altitude)
+        {
+            SetHomeLongitude(longitude);
+            SetHomeLatitude(latitude);
+            //Currently you can only set the home lat/lon, not altitude
+        }
         public double GetLatitude()
         {
             return GPS.x + latitude0;
@@ -454,17 +463,17 @@ namespace DroneControllers
 
         public void SetHomeLatitude(double latitude)
         {
-            latitude0 = latitude;
+            homeLatitude = latitude;
         }
 
         public double GetHomeLatitude()
         {
-            return latitude0;
+            return homeLatitude;
         }
 
         public float GetLocalNorth()
         {
-            return (float)(GPS.x / M2Latitude);
+            return GlobalToLocalPosition(GetLongitude(), GetLatitude(), GetAltitude()).x;
         }
 
         public double GetLongitude()
@@ -474,24 +483,25 @@ namespace DroneControllers
 
         public void SetHomeLongitude(double longitude)
         {
-            longitude0 = longitude;
+            homeLongitude = longitude;
         }
 
         public double GetHomeLongitude()
         {
-            return longitude0;
+            return homeLongitude;
         }
 
         public float GetLocalEast()
         {
-            return (float)(GPS.z / M2Longitude);
+            return GlobalToLocalPosition(GetLongitude(), GetLatitude(), GetAltitude()).y;
         }
 
         public Vector3 GlobalToLocalPosition(double longitude, double latitude, double altitude)
         {
             Vector3 localPosition;
+            
             localPosition.x = (float)(latitude - GetHomeLatitude()) / M2Latitude;
-            localPosition.y = (float)(-longitude - GetHomeLongitude()) / M2Longitude;
+            localPosition.y = (float)(longitude - GetHomeLongitude()) / M2Longitude;
             localPosition.z = (float)(-altitude);
             return localPosition;
             
