@@ -57,18 +57,6 @@ public class GenerateColliderList : MonoBehaviour
         Invoke("OnMapInitialized", 0.2f);
     }
 
-    void LateUpdate()
-    {
-		// var c = GetNearbyColliders(go.transform.position, 30);
-		// if (c == null) {
-		// 	return;
-		// }
-		// for (var i = 0; i < c.Length; i++) {
-		// 	var cv = c[i];
-		// 	Debug.Log(i + " " + cv.position);
-		// }
-    }
-
     void OnMapInitialized()
     {
         GameObject mapObject = mapScript.gameObject;
@@ -82,20 +70,20 @@ public class GenerateColliderList : MonoBehaviour
 
         allColliders.ForEach((x) =>
       {
-            // skip the tile objects
-            if (x.GetComponent<UnityTile>() != null)
+          // skip the tile objects
+          if (x.GetComponent<UnityTile>() != null)
               return;
           colliders.Add(ColliderVolume.FromCollider(x));
 
-            //			if ( x is BoxCollider )
-            //				colliders.Add ( ColliderVolume.FromBoxCollider ( (BoxCollider) x ) );
-            //			else
-            //			if ( x is SphereCollider )
-            //				colliders.Add ( ColliderVolume.FromSphereCollider ( (SphereCollider) x ) );
-            //			else
-            //			if ( x is CapsuleCollider )
-            //				colliders.Add ( ColliderVolume.FromCapsuleCollider ( (CapsuleCollider) x ) );
-        });
+          //			if ( x is BoxCollider )
+          //				colliders.Add ( ColliderVolume.FromBoxCollider ( (BoxCollider) x ) );
+          //			else
+          //			if ( x is SphereCollider )
+          //				colliders.Add ( ColliderVolume.FromSphereCollider ( (SphereCollider) x ) );
+          //			else
+          //			if ( x is CapsuleCollider )
+          //				colliders.Add ( ColliderVolume.FromCapsuleCollider ( (CapsuleCollider) x ) );
+      });
 
         if (OnCompleted != null)
             OnCompleted();

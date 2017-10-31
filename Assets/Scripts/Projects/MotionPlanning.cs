@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UnityEngine;
 
 // usings needed for TCP/IP
@@ -12,6 +13,21 @@ using MavLink;
 using FlightUtils;
 using Drones;
 using DroneInterface;
+
+/// <summary>
+/// 
+/// </summary>
+struct RayOrientation
+{
+    public Quaternion rotation { get; }
+    public MAV_SENSOR_ORIENTATION mavlinkOrientation { get; }
+
+    public RayOrientation(Quaternion r, MAV_SENSOR_ORIENTATION mo)
+    {
+        rotation = r;
+        mavlinkOrientation = mo;
+    }
+}
 
 
 public class MotionPlanning : MonoBehaviour
@@ -27,6 +43,7 @@ public class MotionPlanning : MonoBehaviour
     public float sensorRange = 30;
     public Int32 port = 5760;
     public string ip = "127.0.0.1";
+    private List<RayOrientation> orientations = new List<RayOrientation>();
 
     // Use this for initialization
     void Start()
@@ -37,32 +54,86 @@ public class MotionPlanning : MonoBehaviour
         mav.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
         mav.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
         var tcpTask = TcpListenAsync();
+
+        // roll -> x-axis, yaw -> y-axis, pitch -> z-axis
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_NONE));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_45));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_135));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 180, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_180));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 225, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_225));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 270, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 315, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_315));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_45));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_135));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 0, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 225, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_225));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 270, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 315, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_315));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_45));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_135));
+        orientations.Add(new RayOrientation(Quaternion.Euler(270, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(270, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_45));
+        orientations.Add(new RayOrientation(Quaternion.Euler(270, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(270, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_135));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 90, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180_YAW_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(0, 270, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180_YAW_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_PITCH_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(270, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 0, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_180));
+        orientations.Add(new RayOrientation(Quaternion.Euler(270, 0, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_180));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(180, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_PITCH_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(270, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 90, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_180_YAW_90));
+        orientations.Add(new RayOrientation(Quaternion.Euler(90, 270, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_270));
+        orientations.Add(new RayOrientation(Quaternion.Euler(315, 315, 315), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_315_PITCH_315_YAW_315));
     }
 
-    // 
     async Task EmitSensorInfo(NetworkStream s)
     {
         var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
         var collidersGenerator = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>();
         while (running && s.CanRead && s.CanWrite)
         {
-            // retrieve the colliders
-            var colliders = collidersGenerator.colliders;
-            Debug.Log(colliders.ToArray().Length);
+            // Send multiple messages for different orientations
+            foreach (var o in orientations)
+            {
+                var msg = new Msg_distance_sensor
+                {
+                    // A unity unit is 1m and the distance unit
+                    // required by this message is centimeters.
+                    min_distance = 0,
+                    max_distance = (UInt16)(sensorRange * 100),
+                    current_distance = 0,
+                    type = (byte)MAV_DISTANCE_SENSOR.MAV_DISTANCE_SENSOR_UNKNOWN,
+                    id = 0,
+                    orientation = (byte)MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_NONE,
+                    covariance = 0,
+                };
+            }
             await Task.Delay(waitFor);
         }
     }
 
-    // TODO: Make the sure the velocities correspond to the correct axis.
-    // Emits telemetry data:
-    //      Latitude
-    //      Longitude
-    //      Altitude
-    //      Relative Altitude
-    //      North Velocity (vx)
-    //      East Velocity (vy)
-    //      Vertical Velocity (vz)
-
+    /// <summary>
+    /// TODO: Make the sure the velocities correspond to the correct axis.
+    /// Emits telemetry data:
+    ///      Latitude
+    ///      Longitude
+    ///      Altitude
+    ///      Relative Altitude
+    ///      North Velocity (vx)
+    ///      East Velocity (vy)
+    ///      Vertical Velocity (vz)
+    /// </summary>
     async Task EmitTelemetry(NetworkStream s)
     {
         var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
@@ -85,7 +156,7 @@ public class MotionPlanning : MonoBehaviour
                 vx = (short)vx,
                 vy = (short)vy,
                 vz = (short)vz,
-                hdg = (ushort)hdg
+                hdg = (ushort)hdg,
             };
             var serializedPacket = mav.SendV2(msg);
             s.Write(serializedPacket, 0, serializedPacket.Length);
@@ -93,7 +164,9 @@ public class MotionPlanning : MonoBehaviour
         }
     }
 
-    // Emits a heartbeat message.
+    /// <summary>
+    /// Emits a heartbeat message.
+    /// </summary>
     async Task EmitHearbeat(NetworkStream s)
     {
         var waitFor = Utils.HertzToMilliSeconds(heartbeatIntervalHz);
@@ -125,7 +198,7 @@ public class MotionPlanning : MonoBehaviour
                 system_status = 1,
                 base_mode = base_mode,
                 custom_mode = 1,
-                mavlink_version = 3
+                mavlink_version = 3,
             };
             var serializedPacket = mav.SendV2(msg);
             s.Write(serializedPacket, 0, serializedPacket.Length);
@@ -169,7 +242,9 @@ public class MotionPlanning : MonoBehaviour
     {
     }
 
-    // Starts an HTTP server and listens for new client connections.
+    /// <summary>
+    /// Starts an HTTP server and listens for new client connections.
+    /// </summary>
     async Task TcpListenAsync()
     {
         try
@@ -308,7 +383,7 @@ public class MotionPlanning : MonoBehaviour
         SimpleFileBrowser.ShowSaveDialog(CreateFile, null, false, null, "Select Folder", "Save");
     }
 
-    void CreateFile(string path)  
+    void CreateFile(string path)
     {
         var filename = "map.csv";
         var fullPath = Path.Combine(path, filename);
@@ -320,6 +395,7 @@ public class MotionPlanning : MonoBehaviour
         // }
 
         // Write headers
+        // TODO: overwrite file
         File.AppendAllText(Path.Combine(filename), "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n");
         foreach (var c in colliders)
         {
