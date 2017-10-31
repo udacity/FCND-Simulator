@@ -26,7 +26,7 @@ namespace DroneControllers
         public float ForceNoise = 2.0f;
         public float TorqueNoise = 1.0f;
         public float HDOP = 0.5f;
-        public float VDOP = 0.5f;
+        public float VDOP = 0.1f;
 
         public bool MotorsEnabled { get; set; }
         public Vector3 Force { get { return force; } }

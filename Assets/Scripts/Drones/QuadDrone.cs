@@ -33,7 +33,14 @@ namespace Drones
 
         public void Arm(bool arm)
         {
-            simpleQuadCtrl.ArmVehicle();
+            if (arm == true)
+            {
+                simpleQuadCtrl.ArmVehicle();
+            }
+            else
+            {
+                simpleQuadCtrl.DisarmVehicle();
+            }
         }
 
         public bool Armed()

@@ -171,9 +171,9 @@ public class BackyardFlyer : MonoBehaviour
         while (running && stream.CanRead && stream.CanWrite)
         {
             // TODO: figure out where these are saved for the drone
-            var home_lat = 1.0 * 1e7d;
-            var home_lon = 1.0 * 1e7d;
-            var home_alt = 1.0 * 1000;
+            var home_lat = drone.HomeLatitude() * 1e7;
+            var home_lon = drone.HomeLongitude() * 1e7;
+            var home_alt = 0.0 * 1000;
             
             // NOTE: needed to initialize all the data for this to send properly
             var msg = new Msg_home_position
