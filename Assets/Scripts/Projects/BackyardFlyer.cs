@@ -223,14 +223,6 @@ public class BackyardFlyer : MonoBehaviour
         print("CLIENT DISCONNECTED !!!");
     }
 
-    void Update()
-    {
-    }
-
-    void FixedUpdate()
-    {
-    }
-
     // Starts an HTTP server and listens for new client connections.
     async Task TcpListenAsync()
     {
