@@ -117,7 +117,7 @@ public class BackyardFlyer : MonoBehaviour
                 vy = (float) drone.EastVelocity(),
                 vz = (float) drone.VerticalVelocity()
             };
-            serializedPacket = mav.SendV2(msg);
+            serializedPacket = mav.SendV2(local_msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
 
 
@@ -171,15 +171,23 @@ public class BackyardFlyer : MonoBehaviour
         while (running && stream.CanRead && stream.CanWrite)
         {
             // TODO: figure out where these are saved for the drone
-            var home_lat = 0 * 1e7d;
-            var home_lon = 0 * 1e7d;
-            var home_alt = 0 * 1000;
+            var home_lat = 1.0 * 1e7d;
+            var home_lon = 1.0 * 1e7d;
+            var home_alt = 1.0 * 1000;
             
-            Msg_home_position msg = new Msg_home_position
+            // NOTE: needed to initialize all the data for this to send properly
+            var msg = new Msg_home_position
             {
                 latitude = (int) home_lat,
                 longitude = (int) home_lon,
-                altitude = (int) home_alt
+                altitude = (int) home_alt,
+                x = 0,
+                y = 0,
+                z = 0,
+                q = new float[] { 0, 0, 0, 0 },
+                approach_x = 0,
+                approach_y = 0,
+                approach_z = 0
             };
             var serializedPacket = mav.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
