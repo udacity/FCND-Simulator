@@ -28,5 +28,8 @@ namespace DroneInterface
         // TODO: set appropriate variable names
         void SetMotors(double a, double b, double c, double d);
         // ...
+
+        // Set the home position
+        void SetHome(double longitude, double latitude, double altitude);
     }
 }

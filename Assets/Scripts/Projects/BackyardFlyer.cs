@@ -117,7 +117,7 @@ public class BackyardFlyer : MonoBehaviour
                 vy = (float) drone.EastVelocity(),
                 vz = (float) drone.VerticalVelocity()
             };
-            serializedPacket = mav.SendV2(msg);
+            serializedPacket = mav.SendV2(local_msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
 
 
@@ -171,15 +171,23 @@ public class BackyardFlyer : MonoBehaviour
         while (running && stream.CanRead && stream.CanWrite)
         {
             // TODO: figure out where these are saved for the drone
-            var home_lat = 0 * 1e7d;
-            var home_lon = 0 * 1e7d;
-            var home_alt = 0 * 1000;
+            var home_lat = drone.HomeLatitude() * 1e7;
+            var home_lon = drone.HomeLongitude() * 1e7;
+            var home_alt = 0.0 * 1000;
             
-            Msg_home_position msg = new Msg_home_position
+            // NOTE: needed to initialize all the data for this to send properly
+            var msg = new Msg_home_position
             {
                 latitude = (int) home_lat,
                 longitude = (int) home_lon,
-                altitude = (int) home_alt
+                altitude = (int) home_alt,
+                x = 0,
+                y = 0,
+                z = 0,
+                q = new float[] { 0, 0, 0, 0 },
+                approach_x = 0,
+                approach_y = 0,
+                approach_z = 0
             };
             var serializedPacket = mav.SendV2(msg);
             stream.Write(serializedPacket, 0, serializedPacket.Length);
@@ -335,7 +343,9 @@ public class BackyardFlyer : MonoBehaviour
         }
         else if (command == MAV_CMD.MAV_CMD_DO_SET_HOME)
         {
-            // TODO: set the home location of the drone
+            drone.SetHome(msg.param6, msg.param5, msg.param7);
+            print("HOME POSITION PARAMS: " + msg.param1 + ", " + msg.param2 + ", " + msg.param3 + ", " + msg.param4 + ", " + msg.param5 + ", " + msg.param6 + ", " + msg.param7);
+            print("Vehicle Home Position: " + msg.param6 + "," + msg.param5 + "," + msg.param7);
         }
         else
         {
@@ -361,14 +371,15 @@ public class BackyardFlyer : MonoBehaviour
         if ((mask & (UInt16) SET_POSITION_MASK.IS_TAKEOFF) > 0)
         {
             // TODO: z is being sent as negative, check to see if a sign change needs to occur
-            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
+            //drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
+            drone.Goto(drone.LocalCoords().x, drone.LocalCoords().y, msg.z);
             print(string.Format("TAKING OFF to {0} altitude", msg.z));
         }
         // LAND
         else if ((mask & (UInt16) SET_POSITION_MASK.IS_LAND) > 0)
         {
             // TODO: z is being sent as 0 here, make sure that is ok
-            drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
+            drone.Goto(drone.LocalCoords().x, drone.LocalCoords().y, msg.z);
             print("LANDING !!!");
         }
         // NEED TO REVIEW MASK
@@ -379,12 +390,12 @@ public class BackyardFlyer : MonoBehaviour
             {
                 // TODO: convert from local coordinate to lat/lon/alt
                 // TODO: or have a local goto function
-                var lat = msg.x;
-                var lon = msg.y;
+                var north = msg.x;
+                var east = msg.y;
                 var alt = msg.z;
                 print("Vehicle Command: " + msg.x + "," + msg.y + "," + msg.z);
-                print("Vehicle Command: (" + lat + "," + lon + "," + alt + ")");
-                drone.Goto(lat, lon, alt);
+                print("Vehicle Command: (" + north + "," + east + "," + alt + ")");
+                drone.Goto(north, east, alt);
             }
             else if ((mask & (UInt16) SET_POSITION_MASK.IGNORE_VELOCITY) == 0)
             {

@@ -7,8 +7,6 @@ namespace DroneControllers
 
         const float M2Latitude = 1.0f / 111111.0f;
         const float M2Longitude = 1.0f / (0.8f * 111111.0f);
-        double latitude0 = 37.412939d;
-        double longitude0 = 121.995635d;
         public Transform camTransform;
         public QuadController controller;
         // public FollowCamera followCam;
@@ -96,9 +94,7 @@ namespace DroneControllers
             if (Input.GetKeyDown(KeyCode.Alpha9))
             {
                 guided = true;
-                posHoldLocal.x = rb.position.x + 20.0f;
-                posHoldLocal.y = rb.position.y + 5.0f;
-                posHoldLocal.z = rb.position.z + 20.0f;
+                CommandLocal(controller.GetLocalNorth(), controller.GetLocalEast() + 10.0f, -1.0f * (float)controller.GetAltitude());
                 pos_set = true;
                 Debug.Log(posHoldLocal);
             }
@@ -117,11 +113,12 @@ namespace DroneControllers
             Vector3 rollYawPitch = controller.eulerAngles * Mathf.PI / 180.0f;
             Vector3 prq = controller.AngularVelocityBody;
             Vector3 prqRate = controller.AngularAccelerationBody;
-            Vector3 localPosition = controller.GPS;
+            Vector3 localPosition;
+            localPosition.x = controller.GetLocalNorth();
+            localPosition.y = (float) controller.GetAltitude();
+            localPosition.z = controller.GetLocalEast();
             Vector3 bodyVelocity = controller.BodyVelocity;
 
-            localPosition.x = (localPosition.x) / M2Latitude;
-            localPosition.z = (localPosition.z) / M2Longitude;
 
 
             //Direct Control of the moments
@@ -154,7 +151,9 @@ namespace DroneControllers
 
                         Vector3 posErrorLocal = posHoldLocal - localPosition;
                         Vector3 velCmdLocal;
-
+                        print("Position Hold: " + posHoldLocal);
+                        print("Local Position: " + localPosition);
+                        
                         //Deadband around the position hold
                         if (Mathf.Sqrt(Mathf.Pow(posErrorLocal.x, 2.0f) + Mathf.Pow(posErrorLocal.z, 2.0f)) < posHoldDeadband)
                         {
@@ -164,7 +163,7 @@ namespace DroneControllers
                         else
                         {
                             velCmdLocal.x = Kp_pos * posErrorLocal.x;
-                            velCmdLocal.z = Kp_pos * posErrorLocal.z;
+                            velCmdLocal.z = -Kp_pos * posErrorLocal.z;
                         }
 
                         velCmdLocal.y = Kp_alt * posErrorLocal.y;
@@ -287,15 +286,31 @@ namespace DroneControllers
         //Command the quad to a GPS location (latitude, relative_altitude, longitude)
         public void CommandGPS(double latitude, double longitude, double altitude)
         {
-            posHoldLocal.x = (float)(latitude - latitude0) / M2Latitude;
-            posHoldLocal.y = (float)(altitude);
-            posHoldLocal.z = (float)(-longitude - longitude0) / M2Longitude;
-            pos_set = true;
+            Vector3 localPosition;
+            localPosition = controller.GlobalToLocalPosition(longitude, latitude, altitude);
+            CommandLocal(localPosition.x, localPosition.y, localPosition.z);            
+        }
+
+        //Command the quad to a local position (north, east, down)
+        public void CommandLocal(float north, float east, float down)
+        {
+            // The hold position is defined in the Unity reference frame, where (x,y,z)=>(north,up, east) #TODO
+            if (guided)
+            {
+                posHoldLocal.x = north;
+                posHoldLocal.y = -down;
+                posHoldLocal.z = east;
+                pos_set = true;
+                print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
+                print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
+            }
+            
         }
 
         public void ArmVehicle()
         {
             motors_armed = true;
+            controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
         }
 
         public void DisarmVehicle()
