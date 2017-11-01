@@ -164,6 +164,7 @@ public class BackyardFlyer : MonoBehaviour
         }
     }
 
+    // TODO: send this only when explicitly queried
     // Emits the home position message.
     async Task EmitHomePosition(NetworkStream stream)
     {

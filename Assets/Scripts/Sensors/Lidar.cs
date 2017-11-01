@@ -95,8 +95,6 @@ namespace Sensors
                 offset_angle = (offset_angle + (angle_range / (Raysize * 10))) % (angle_range / (Raysize));
             }
             time_cycle++;
-
-
         }
 
         public void SenseDistance()

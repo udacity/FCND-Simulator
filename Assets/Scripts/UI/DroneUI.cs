@@ -50,8 +50,8 @@ public class DroneUI : MonoBehaviour
     // Updates the minimap camera position to the new location of the drone.
     void UpdateMinimapCameraPosition()
     {
-        var quadPos = drone.LocalCoords();
-        minimapCamera.transform.position = new Vector3(quadPos.x, quadPos.y + initialCameraY, quadPos.z);
+        var pos = drone.UnityCoords();
+        minimapCamera.transform.position = new Vector3(pos.x, pos.y + initialCameraY, pos.z);
     }
 
     // Toggles whether the drone is armed or disarmed.

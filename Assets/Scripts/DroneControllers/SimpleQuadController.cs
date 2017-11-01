@@ -151,8 +151,8 @@ namespace DroneControllers
 
                         Vector3 posErrorLocal = posHoldLocal - localPosition;
                         Vector3 velCmdLocal;
-                        print("Position Hold: " + posHoldLocal);
-                        print("Local Position: " + localPosition);
+                        // print("Position Hold: " + posHoldLocal);
+                        // print("Local Position: " + localPosition);
                         
                         //Deadband around the position hold
                         if (Mathf.Sqrt(Mathf.Pow(posErrorLocal.x, 2.0f) + Mathf.Pow(posErrorLocal.z, 2.0f)) < posHoldDeadband)
@@ -301,8 +301,8 @@ namespace DroneControllers
                 posHoldLocal.y = -down;
                 posHoldLocal.z = east;
                 pos_set = true;
-                print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
-                print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
+                // print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
+                // print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
             }
             
         }

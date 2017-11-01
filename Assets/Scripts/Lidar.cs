@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityStandardAssets.Vehicles.Car;
-using System;
+
+// Here as a placeholder
+// TODO(dom): Formalize a Sensor interface
 
 public class Lidar : MonoBehaviour
 {

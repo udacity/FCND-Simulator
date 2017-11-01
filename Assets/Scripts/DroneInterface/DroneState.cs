@@ -8,6 +8,8 @@ namespace DroneInterface
     interface IDroneState
     {
         // local coordinates (x, y, z) in Unity.
+        Vector3 UnityCoords();
+
         Vector3 LocalCoords();
 
         double Latitude();

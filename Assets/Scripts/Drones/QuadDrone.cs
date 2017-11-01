@@ -20,10 +20,14 @@ namespace Drones
             simpleQuadCtrl = GetComponent<SimpleQuadController>();
         }
 
+        public Vector3 UnityCoords()
+        {
+            return quadCtrl.transform.position;
+        }
+
         public Vector3 LocalCoords()
         {
-
-            return new Vector3(quadCtrl.GetLocalNorth(), quadCtrl.GetLocalEast(), -1.0f*(float)quadCtrl.GetAltitude());
+            return new Vector3(quadCtrl.GetLocalNorth(), quadCtrl.GetLocalEast(), -1.0f * (float)quadCtrl.GetAltitude());
         }
 
         public double Altitude()
