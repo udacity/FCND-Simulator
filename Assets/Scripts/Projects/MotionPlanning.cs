@@ -38,7 +38,7 @@ public class MotionPlanning : MonoBehaviour
     // track all clients
     private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
-    public int telemetryIntervalHz = 1;
+    public int telemetryIntervalHz = 4;
     public int sensorIntervalHz = 1;
     public float maxSensorRange = 30;
     public Int32 port = 5760;
