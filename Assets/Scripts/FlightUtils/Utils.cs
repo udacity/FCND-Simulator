@@ -1,3 +1,6 @@
+using UnityEngine;
+using System.IO;
+
 
 namespace FlightUtils
 {
@@ -13,6 +16,39 @@ namespace FlightUtils
         {
             return (int)(1000f / hz);
         }
+
+        public static void CollidersToCSV(string filename)
+        {
+            var go = GameObject.Find("ColliderGatherer");
+            if (go == null)
+            {
+                Debug.Log("ColliderGatherer GameObject not found in scene ...");
+                return;
+            }
+            var collidersGenerator = go.GetComponent<GenerateColliderList>();
+            var colliders = collidersGenerator.colliders;
+
+            Debug.Log(string.Format("Writing colliders to {0} ...", filename));
+
+            // SimpleFileBrowser.ShowSaveDialog
+
+            // Write headers
+            File.AppendAllText(Path.Combine(filename), "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n");
+            foreach (var c in colliders)
+            {
+                var pos = c.position;
+                var hsize = c.halfSize;
+                var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.x, pos.y, pos.z, hsize.x, hsize.y, hsize.z);
+                File.AppendAllText(Path.Combine(filename), row);
+            }
+        }
+
+        private static void CreateFile(string filename)
+        {
+            Debug.Log("ok " + filename);
+            // File.
+        }
+
     }
 }
 

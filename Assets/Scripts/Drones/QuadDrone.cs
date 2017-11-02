@@ -20,9 +20,14 @@ namespace Drones
             simpleQuadCtrl = GetComponent<SimpleQuadController>();
         }
 
+        public Vector3 UnityCoords()
+        {
+            return quadCtrl.transform.position;
+        }
+
         public Vector3 LocalCoords()
         {
-            return this.transform.position;
+            return new Vector3(quadCtrl.GetLocalNorth(), quadCtrl.GetLocalEast(), -1.0f * (float)quadCtrl.GetAltitude());
         }
 
         public double Altitude()
@@ -32,7 +37,14 @@ namespace Drones
 
         public void Arm(bool arm)
         {
-            simpleQuadCtrl.motors_armed = arm;
+            if (arm == true)
+            {
+                simpleQuadCtrl.ArmVehicle();
+            }
+            else
+            {
+                simpleQuadCtrl.DisarmVehicle();
+            }
         }
 
         public bool Armed()
@@ -49,10 +61,20 @@ namespace Drones
         {
             throw new System.NotImplementedException();
         }
-
+        /*
         public void Goto(double latitude, double longitude, double altitude)
         {
             simpleQuadCtrl.CommandGPS(latitude, longitude, altitude);
+        }
+        */
+        public void Goto(double north, double east, double altitude)
+        {
+            simpleQuadCtrl.CommandLocal((float)north, (float)east, (float)-altitude);
+        }
+
+        public void SetHome(double longitude, double latitude, double altitude)
+        {
+            quadCtrl.SetHomePosition(longitude, latitude, altitude);
         }
 
         public bool Guided()
@@ -76,6 +98,17 @@ namespace Drones
         {
             return quadCtrl.GetLongitude();
         }
+
+        public double HomeLatitude()
+        {
+            return quadCtrl.GetHomeLatitude();
+        }
+
+        public double HomeLongitude()
+        {
+            return quadCtrl.GetHomeLongitude();
+        }
+
 
         public double NorthVelocity()
         {

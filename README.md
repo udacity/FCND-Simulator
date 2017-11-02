@@ -7,9 +7,8 @@ To manually control the drone, you need to first arm the motors. When the motors
 * **arrow left/right or a/d**: move left/right
 * **q/e**: turn heading left/right
 * **space/c**: move upward/downward
-* **F12**: Arm/Disarm motors
-* **F11**: Change manual mode (position control or stabilized)
-* **ESC**: Reset the scene.
+* **P**: Change manual mode (position control or stabilized)
+* **Shift-R**: Reset the scene.
 
 ### Control Modes
 There are three control modes current sit up for the simulated drone. Two of the modes are meant for manual control and one is only meant for control via Mavlink commands. You can switch between the two manual modes and notice a difference in how the vehicle flies:

@@ -8,6 +8,8 @@ namespace DroneInterface
     interface IDroneState
     {
         // local coordinates (x, y, z) in Unity.
+        Vector3 UnityCoords();
+
         Vector3 LocalCoords();
 
         double Latitude();
@@ -15,6 +17,10 @@ namespace DroneInterface
         double Longitude();
 
         double Altitude();
+
+        double HomeLatitude();
+
+        double HomeLongitude();
 
         // Returns whether the drone is armed or disarmed
         bool Armed();
