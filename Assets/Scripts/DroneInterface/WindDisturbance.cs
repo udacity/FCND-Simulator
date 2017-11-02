@@ -97,7 +97,7 @@ public class WindDisturbance : MonoBehaviour
 		if ( ignoreLayers.ContainsLayer ( other.gameObject.layer ) )
 			return;
 		Rigidbody rb = other.transform.root.GetComponentInChildren<Rigidbody> ();
-		if ( rb != null )
+		if ( rb != null && !affectedObjects.Contains ( rb.transform ) )
 			affectedObjects.Add ( rb.transform );
 	}
 
