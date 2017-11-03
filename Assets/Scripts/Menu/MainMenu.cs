@@ -24,18 +24,20 @@ namespace Menu
 
         public void LoadControlMenu()
         {
+            Debug.Log("Loading to main menu");
             SceneManager.LoadScene("ControlMenu");
         }
 
         public void LoadMainMenu()
         {
-            Debug.Log("Go to main menu");
+            Debug.Log("Loading to main menu");
             SceneManager.LoadScene("MenuScene");
         }
 
-        public void SelectMode()
+        public void LoadSelectedProject()
         {
             var p = projects[projectIndex];
+            Debug.Log(string.Format("Loading {0}", p.name));
             SceneManager.LoadScene(p.sceneName);
         }
 
