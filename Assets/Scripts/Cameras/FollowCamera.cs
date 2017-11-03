@@ -81,12 +81,16 @@ public class FollowCamera : MonoBehaviour
 
 		if ( Input.GetMouseButtonDown ( 1 ) )
 			rmbTime = Time.time;
-//		if ( Input.GetMouseButtonUp ( 1 ) && Time.time - rmbTime < 0.1f )
-//		{
+		if ( Input.GetMouseButtonUp ( 1 ) && Time.time - rmbTime < 0.1f )
+		{
+			Vector3 euler = transform.eulerAngles;
+			euler.x = 45;
+			euler.y = targetTransform.eulerAngles.y;
+			transform.eulerAngles = euler;
 //			Vector3 forward = target.forward.forward;
 //			Vector3 right = target.right.right;
 //			transform.rotation = Quaternion.LookRotation ( forward - right - Vector3.up, forward - right + Vector3.up );
-//		}
+		}
 
 		bool isRMB = Input.GetMouseButton ( 1 );
 		if ( isRMB && Time.time - rmbTime > 0.2f )
