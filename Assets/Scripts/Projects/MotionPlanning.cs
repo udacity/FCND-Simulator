@@ -40,10 +40,34 @@ public class MotionPlanning : MonoBehaviour
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 4;
     public int sensorIntervalHz = 1;
+    public int homePositionIntervalHz = 1;
     public float maxSensorRange = 30;
     public Int32 port = 5760;
     public string ip = "127.0.0.1";
     private List<MavlinkRay> mavRays;
+
+    public enum MAIN_MODE : uint
+    {
+        CUSTOM_MAIN_MODE_MANUAL = 1,
+        // other PX4 modes not of interest at the moment
+        CUSTOM_MAIN_MODE_OFFBOARD = 6,  // guided
+    }
+
+
+    // enum for the set of masks that are used for setting the location position target
+    public enum SET_POSITION_MASK : UInt16
+    {
+        IGNORE_POSITION = 0x007,
+        IGNORE_VELOCITY = 0x038,
+        IGNORE_ACCELERATION = 0x1C0,
+        IGNORE_YAW = 0x400,
+        IGNORE_YAW_RATE = 0x800,
+
+        IS_FORCE = (1 << 9),
+        IS_TAKEOFF = 0x1000,
+        IS_LAND = 0x2000,
+        IS_LOITER = 0x3000,
+    }
 
     // Use this for initialization
     void Start()
@@ -59,11 +83,11 @@ public class MotionPlanning : MonoBehaviour
         SetupLidarRays();
     }
 
-    async Task EmitSensorInfo(NetworkStream s)
+    async Task EmitSensorInfo(NetworkStream stream)
     {
         var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
         var collidersGenerator = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>();
-        while (running && s.CanRead && s.CanWrite)
+        while (running && stream.CanRead && stream.CanWrite)
         {
             var pos = drone.UnityCoords();
             RaycastHit hitInfo;
@@ -90,7 +114,7 @@ public class MotionPlanning : MonoBehaviour
                         covariance = 0,
                     };
                     var serializedPacket = mav.SendV2(msg);
-                    s.Write(serializedPacket, 0, serializedPacket.Length);
+                    stream.Write(serializedPacket, 0, serializedPacket.Length);
                 }
             }
             await Task.Delay(waitFor);
@@ -107,12 +131,18 @@ public class MotionPlanning : MonoBehaviour
     ///      North Velocity (vx)
     ///      East Velocity (vy)
     ///      Vertical Velocity (vz)
+    ///      
+    ///      local coordinate - N
+    ///      Local coordinate - E
+    ///      Local coordinate - D
     /// </summary>
-    async Task EmitTelemetry(NetworkStream s)
+
+    async Task EmitTelemetry(NetworkStream stream)
     {
         var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
-        while (running && s.CanRead && s.CanWrite)
+        while (running && stream.CanRead && stream.CanWrite)
         {
+            // send the GPS message
             // TODO: Make these magic numbers part of a util function?
             var lat = drone.Latitude() * 1e7d;
             var lon = drone.Longitude() * 1e7d;
@@ -130,10 +160,29 @@ public class MotionPlanning : MonoBehaviour
                 vx = (short)vx,
                 vy = (short)vy,
                 vz = (short)vz,
-                hdg = (ushort)hdg,
+                hdg = (ushort)hdg
             };
             var serializedPacket = mav.SendV2(msg);
-            s.Write(serializedPacket, 0, serializedPacket.Length);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
+
+            // send the local position message
+            var north = drone.LocalCoords().x;
+            var east = drone.LocalCoords().y;
+            var down = drone.LocalCoords().z;
+            var local_msg = new Msg_local_position_ned
+            {
+                x = north,
+                y = east,
+                z = down,
+                vx = (float)drone.NorthVelocity(),
+                vy = (float)drone.EastVelocity(),
+                vz = (float)drone.VerticalVelocity()
+            };
+            serializedPacket = mav.SendV2(local_msg);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
+
+
+            // wait
             await Task.Delay(waitFor);
         }
     }
@@ -141,57 +190,89 @@ public class MotionPlanning : MonoBehaviour
     /// <summary>
     /// Emits a heartbeat message.
     /// </summary>
-    async Task EmitHearbeat(NetworkStream s)
+
+    async Task EmitHearbeat(NetworkStream stream)
     {
         var waitFor = Utils.HertzToMilliSeconds(heartbeatIntervalHz);
-        while (running && s.CanRead && s.CanWrite)
+        while (running && stream.CanRead && stream.CanWrite)
         {
-            byte base_mode;
             var guided = drone.Guided();
             var armed = drone.Armed();
-            if (guided && armed)
+
+            // build the base mode
+            byte base_mode = (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+            if (armed)
             {
-                base_mode = (byte)MAV_MODE.MAV_MODE_GUIDED_ARMED;
+                base_mode |= (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED;
             }
-            else if (guided)
+
+            // build the custom mode (this specifies the mode of operation, using PX4 mode set)
+            UInt32 custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_MANUAL << 16);
+            if (guided)
             {
-                base_mode = (byte)MAV_MODE.MAV_MODE_GUIDED_DISARMED;
+                custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
             }
-            else if (armed)
-            {
-                base_mode = (byte)MAV_MODE.MAV_MODE_MANUAL_ARMED;
-            }
-            else
-            {
-                base_mode = (byte)MAV_MODE.MAV_MODE_MANUAL_DISARMED;
-            }
+
             Msg_heartbeat msg = new Msg_heartbeat
             {
                 type = 1,
                 autopilot = 1,
                 system_status = 1,
                 base_mode = base_mode,
-                custom_mode = 1,
-                mavlink_version = 3,
+                custom_mode = custom_mode,
+                mavlink_version = 3
             };
             var serializedPacket = mav.SendV2(msg);
-            s.Write(serializedPacket, 0, serializedPacket.Length);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
+            await Task.Delay(waitFor);
+        }
+    }
+
+    // TODO: send this only when explicitly queried
+    // Emits the home position message.
+    async Task EmitHomePosition(NetworkStream stream)
+    {
+        var waitFor = Utils.HertzToMilliSeconds(homePositionIntervalHz);
+        while (running && stream.CanRead && stream.CanWrite)
+        {
+            // TODO: figure out where these are saved for the drone
+            var home_lat = drone.HomeLatitude() * 1e7;
+            var home_lon = drone.HomeLongitude() * 1e7;
+            var home_alt = 0.0 * 1000;
+
+            // NOTE: needed to initialize all the data for this to send properly
+            var msg = new Msg_home_position
+            {
+                latitude = (int)home_lat,
+                longitude = (int)home_lon,
+                altitude = (int)home_alt,
+                x = 0,
+                y = 0,
+                z = 0,
+                q = new float[] { 0, 0, 0, 0 },
+                approach_x = 0,
+                approach_y = 0,
+                approach_z = 0
+            };
+            var serializedPacket = mav.SendV2(msg);
+            stream.Write(serializedPacket, 0, serializedPacket.Length);
             await Task.Delay(waitFor);
         }
     }
 
     async Task HandleClientAsync(TcpClient client)
     {
-        var s = client.GetStream();
-        var telemetryTask = EmitTelemetry(s);
-        var heartbeatTask = EmitHearbeat(s);
-        // var sensorTask = EmitSensorInfo(s);
+        var stream = client.GetStream();
+        var telemetryTask = EmitTelemetry(stream);
+        var heartbeatTask = EmitHearbeat(stream);
+        var homePositionTask = EmitHomePosition(stream); // TODO: maybe only want to send this once
+        // var sensorTask = EmitSensorInfo(stream);
 
-        while (running && client.Connected && s.CanRead)
+        while (running && client.Connected && stream.CanRead)
         {
             print("Reading from stream ... ");
             var buf = new byte[1024];
-            var bytesRead = await s.ReadAsync(buf, 0, buf.Length);
+            var bytesRead = await stream.ReadAsync(buf, 0, buf.Length);
             if (bytesRead > 0)
             {
                 var dest = new byte[bytesRead];
@@ -203,7 +284,7 @@ public class MotionPlanning : MonoBehaviour
                 break;
             }
         }
-        s.Close();
+        stream.Close();
         client.Close();
         print("CLIENT DISCONNECTED !!!");
     }
@@ -383,14 +464,18 @@ public class MotionPlanning : MonoBehaviour
     {
         // roll -> x-axis, yaw -> y-axis, pitch -> z-axis
         mavRays = new List<MavlinkRay>();
+
+        // rays for forward, backward, left, right, up, down
         mavRays.Add(new MavlinkRay(new Vector3(0, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_NONE));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_45));
         mavRays.Add(new MavlinkRay(new Vector3(0, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_90));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_135));
         mavRays.Add(new MavlinkRay(new Vector3(0, 180, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_180));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 225, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_225));
         mavRays.Add(new MavlinkRay(new Vector3(0, 270, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_270));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 315, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_315));
+        mavRays.Add(new MavlinkRay(new Vector3(0, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_90));
+        mavRays.Add(new MavlinkRay(new Vector3(0, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_270));
+        // mavRays.Add(new MavlinkRay(new Vector3(0, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_45));
+        // mavRays.Add(new MavlinkRay(new Vector3(0, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_135));
+        // mavRays.Add(new MavlinkRay(new Vector3(0, 225, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_225));
+        // mavRays.Add(new MavlinkRay(new Vector3(0, 315, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_315));
         // mavRays.Add(new MavlinkRay(new Vector3(180, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180));
         // mavRays.Add(new MavlinkRay(new Vector3(180, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_45));
         // mavRays.Add(new MavlinkRay(new Vector3(180, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_90));
@@ -407,8 +492,6 @@ public class MotionPlanning : MonoBehaviour
         // mavRays.Add(new MavlinkRay(new Vector3(270, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_45));
         // mavRays.Add(new MavlinkRay(new Vector3(270, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_90));
         // mavRays.Add(new MavlinkRay(new Vector3(270, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_135));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_270));
         // mavRays.Add(new MavlinkRay(new Vector3(0, 90, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180_YAW_90));
         // mavRays.Add(new MavlinkRay(new Vector3(0, 270, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180_YAW_270));
         // mavRays.Add(new MavlinkRay(new Vector3(90, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_90));
