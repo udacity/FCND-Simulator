@@ -10,16 +10,16 @@ namespace Menu
     {
         // project selection index
         public int projectIndex;
-        public Text project_name;
-        public Image project_image;
+        public Text ProjectName;
+        public Image ProjectImage;
         public List<Project> projects;
 
         public void Start()
         {
             projectIndex = 0;
             var p = projects[projectIndex];
-            project_name.text = p.title;
-            project_image.sprite = p.image;
+            ProjectName.text = p.title;
+            ProjectImage.sprite = p.image;
         }
 
         public void LoadControlMenu()
@@ -43,8 +43,8 @@ namespace Menu
         {
             projectIndex = (projectIndex + 1) % projects.Count;
             var p = projects[projectIndex];
-            project_name.text = p.title;
-            project_image.sprite = p.image;
+            ProjectName.text = p.title;
+            ProjectImage.sprite = p.image;
         }
 
         public void Previous()
@@ -59,8 +59,8 @@ namespace Menu
             }
             projectIndex = (projectIndex + 1) % projects.Count;
             var p = projects[projectIndex];
-            project_name.text = p.title;
-            project_image.sprite = p.image;
+            ProjectName.text = p.title;
+            ProjectImage.sprite = p.image;
         }
     }
 
