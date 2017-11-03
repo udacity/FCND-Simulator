@@ -12,8 +12,8 @@ namespace Menu
 
         public void LoadMainMenu()
         {
-            Debug.Log("Loading to main menu");
-            SceneManager.LoadScene("MenuScene");
+            Debug.Log("Loading the main menu");
+            SceneManager.LoadScene("MainMenu");
         }
     }
 }
