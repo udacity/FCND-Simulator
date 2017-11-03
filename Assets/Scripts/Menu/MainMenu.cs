@@ -9,10 +9,10 @@ namespace Menu
     public class MainMenu : MonoBehaviour
     {
         // project selection index
-        public int projectIndex;
+        private int projectIndex;
+        public List<Project> projects;
         public Text ProjectName;
         public Image ProjectImage;
-        public List<Project> projects;
 
         public void Start()
         {
@@ -29,14 +29,14 @@ namespace Menu
 
         public void LoadMainMenu()
         {
-            Debug.Log("go to main menu");
+            Debug.Log("Go to main menu");
             SceneManager.LoadScene("MenuScene");
         }
 
         public void SelectMode()
         {
             var p = projects[projectIndex];
-            SceneManager.LoadScene(p.scene.name);
+            SceneManager.LoadScene(p.sceneName);
         }
 
         public void Next()
@@ -63,5 +63,4 @@ namespace Menu
             ProjectImage.sprite = p.image;
         }
     }
-
 }
