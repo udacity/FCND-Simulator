@@ -1,7 +1,8 @@
+using DroneInterface;
 namespace DroneInterface
 {
     // Minimal drone interface (commands and state).
-    interface IDrone : IDroneCommands, IDroneState
+	public interface IDrone : IDroneCommands, IDroneState
     {
     }
 }

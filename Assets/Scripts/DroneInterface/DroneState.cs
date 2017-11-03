@@ -5,8 +5,9 @@ namespace DroneInterface
 {
     // This interface describes the minimal information that must be retrievable
     // pertaining to a drone's state.
-    interface IDroneState
+	public interface IDroneState
     {
+		Vector3 Forward { get; }
         // local coordinates (x, y, z) in Unity.
         Vector3 UnityCoords();
 
