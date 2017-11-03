@@ -36,13 +36,14 @@ public class BuildScript : MonoBehaviour
 	static void Build (BuildTarget target, bool showBuilt = true)
 	{
 		string[] scenes = new string[] {
-//			"Assets/Scenes/loader.unity",
-//			"Assets/Scenes/quad_indoor.unity",
-			"Assets/Scenes/proto4.unity"
+			"Assets/Scenes/Launcher.unity",
+			"Assets/Scenes/MainMenu.unity",
+			"Assets/Scenes/ControlsMenu.unity",
+			"Assets/Scenes/urban.unity",
+			"Assets/CityMap/MapScene.unity",
 		};
 
 		string basePath = "Builds/QuadSim/";
-		string settingFile = Application.dataPath + "/ros_settings.txt";
 		string settingPath = "QuadSim_Win_Data";
 
 		string extension = "QuadSim_Win.exe";
@@ -58,10 +59,5 @@ public class BuildScript : MonoBehaviour
 		}
 		
 		BuildPipeline.BuildPlayer ( scenes, basePath + extension, target, showBuilt ? BuildOptions.ShowBuiltPlayer : BuildOptions.None );
-
-		// go up one from Assets
-		string targetFile = Application.dataPath + "/../" + basePath + settingPath + "/ros_settings.txt";
-//		Debug.Log ( "source file: " + settingFile + "\ntarget file: " + targetFile );
-		System.IO.File.Copy ( settingFile, targetFile );
 	}
 }
