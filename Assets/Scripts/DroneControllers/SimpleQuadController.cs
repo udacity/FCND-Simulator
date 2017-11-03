@@ -133,7 +133,7 @@ namespace DroneControllers
                 //Outer control loop for from a position/velocity command to a hdot, yaw rate, pitch, roll command
                 if (posctl || guided)
                 {
-                    Vector3 velCmdBody = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Thrust"), -Input.GetAxis("Horizontal"));
+					Vector3 velCmdBody = new Vector3 ( Input.GetAxis ( "Horizontal" ), Input.GetAxis ( "Thrust" ), Input.GetAxis ( "Vertical" ) );
 
                     float yawCmd = Input.GetAxis("Yaw");
 

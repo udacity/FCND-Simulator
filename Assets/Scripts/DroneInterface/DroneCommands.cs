@@ -1,7 +1,7 @@
 namespace DroneInterface
 {
     // This interface describes the minimal set of commands a drone must be able to perform.
-    interface IDroneCommands
+	public interface IDroneCommands
     {
         // The drone will navigate to the 3D point (local_north, local_east, local_down)
         void Goto(double latitude, double longitude, double altitude);
