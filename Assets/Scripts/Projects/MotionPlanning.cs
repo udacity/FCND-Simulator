@@ -530,13 +530,13 @@ public class MotionPlanning : MonoBehaviour
                     var dist = hit.distance;
                     print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", pos, r.rotation, dist, hit.point));
                     // draw line
-                    var line = new LineRenderer();
-                    var linePoints = new List<Vector3>();
-                    linePoints.Add(pos);
-                    linePoints.Add(hit.point);
-                    line.SetPositions(linePoints.ToArray());
-                    line.enabled = true;
-                    lines.Add(line);
+                    // var line = new LineRenderer();
+                    // var linePoints = new List<Vector3>();
+                    // linePoints.Add(pos);
+                    // linePoints.Add(hit.point);
+                    // line.SetPositions(linePoints.ToArray());
+                    // line.enabled = true;
+                    // lines.Add(line);
                 }
             }
         }
