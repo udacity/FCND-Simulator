@@ -130,6 +130,8 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 			var meshData = new MeshData();
 			meshData.TileRect = tile.Rect;
 
+//			if ( _key == "road" )
+//				Debug.Log ( feature.Properties.DictionaryToString () );
 //			if ( _key == "landuse" )
 //				Debug.Log ( styleSelectorKey );
 
