@@ -24,7 +24,7 @@ namespace Drones
 
         public Vector3 UnityCoords()
         {
-            return quadCtrl.transform.position;
+            return this.transform.position;
         }
 
         public Vector3 LocalCoords()

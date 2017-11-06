@@ -512,6 +512,7 @@ public class MotionPlanning : MonoBehaviour
         Sense();
     }
 
+    // For debugging
     void Sense()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -524,7 +525,7 @@ public class MotionPlanning : MonoBehaviour
             {
                 var dir = Quaternion.Euler(r.rotation) * droneGO.transform.forward;
                 Physics.Raycast(pos, dir, out hit, maxSensorRange);
-                if (hit.collider && hit.distance > 3)
+                if (hit.collider && hit.distance > 1)
                 {
                     var dist = hit.distance;
                     print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", pos, r.rotation, dist, hit.point));
