@@ -130,6 +130,9 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 			var meshData = new MeshData();
 			meshData.TileRect = tile.Rect;
 
+//			if ( _key == "landuse" )
+//				Debug.Log ( styleSelectorKey );
+
 			//and finally, running the modifier stack on the feature
 			var mod = Stacks.FirstOrDefault(x => x.Type.Contains(styleSelectorKey));
 			if (mod != null)
