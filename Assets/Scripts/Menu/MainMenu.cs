@@ -11,7 +11,7 @@ namespace Menu
         // project selection index
         private int projectIndex;
         public List<Project> projects;
-        public Text ProjectName;
+        public TMPro.TextMeshProUGUI ProjectName;
         public Image ProjectImage;
 
         public void Start()

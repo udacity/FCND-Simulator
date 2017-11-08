@@ -110,7 +110,7 @@ public class MotionPlanning : MonoBehaviour
                         type = (byte)MAV_DISTANCE_SENSOR.MAV_DISTANCE_SENSOR_LASER,
                         id = 0,
                         orientation = (byte)r.mavlinkOrientation,
-                        // TODO: whatever this is
+                        // TODO: add variance model, probbaly using FastNoise
                         covariance = 0,
                     };
                     var serializedPacket = mav.SendV2(msg);
