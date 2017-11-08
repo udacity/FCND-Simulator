@@ -1,5 +1,5 @@
 # FCND Simulator
-## Backyard Flyer Drone controls
+## Simulator controls
 
 To manually control the drone, you need to first arm the motors. When the motors are armed, the telemetry data will both display "Local input on" and the rotors of the Drone will be spinning. The vehicle is manually controlled using the buttons described below:
 
