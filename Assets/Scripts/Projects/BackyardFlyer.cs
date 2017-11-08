@@ -20,7 +20,7 @@ public class BackyardFlyer : MonoBehaviour
     // track all clients
     private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
-    public int telemetryIntervalHz = 10;
+    public int telemetryIntervalHz = 4;
     public int homePositionIntervalHz = 1;
 
     public Int32 port = 5760;

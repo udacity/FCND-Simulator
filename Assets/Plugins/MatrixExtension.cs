@@ -76,6 +76,26 @@ public static class VectorExtension
 	{
 		return new Vector3 ( -v.y, v.z, v.x );
 	}
+
+	public static Vector3 UnityToENUDirection (this Vector3 v)
+	{
+		return new Vector3 ( v.x, v.z, v.y );
+	}
+
+	public static Vector3 ENUToUnityDirection (this Vector3 v)
+	{
+		return new Vector3 ( v.x, v.z, v.y );
+	}
+
+	public static Vector3 UnityToENURotation (this Vector3 v)
+	{
+		return new Vector3 ( -v.x, -v.z, -v.y );
+	}
+
+	public static Vector3 ENUToUnityRotation (this Vector3 v)
+	{
+		return new Vector3 ( -v.x, -v.z, -v.y );
+	}
 }
 
 public static class QuaternionExtension
