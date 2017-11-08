@@ -36,26 +36,26 @@ public class BuildScript : MonoBehaviour
 	static void Build (BuildTarget target, bool showBuilt = true)
 	{
 		string[] scenes = new string[] {
-			"Assets/Scenes/Launcher.unity",
+			// "Assets/Scenes/Launcher.unity",
 			"Assets/Scenes/MainMenu.unity",
 			"Assets/Scenes/ControlsMenu.unity",
 			"Assets/Scenes/urban.unity",
-			"Assets/CityMap/MapScene.unity",
+			"Assets/Scenes/MapScene2.unity",
 		};
 
-		string basePath = "Builds/QuadSim/";
-		string settingPath = "QuadSim_Win_Data";
+		string basePath = "Builds/FlyingCarND-Sim/";
+		string settingPath = "FlyingCarND-Sim_Win_Data";
 
-		string extension = "QuadSim_Win.exe";
+		string extension = "FlyingCarND-Sim_Win.exe";
 		if ( target == BuildTarget.StandaloneOSXIntel64 )
 		{
-			extension = "QuadSim_OSX.app";
+			extension = "FlyingCarND-Sim_OSX.app";
 			settingPath = extension + "/Contents";
 		} else
 		if ( target == BuildTarget.StandaloneLinux64 )
 		{
-			extension = "QuadSim_Lin.x86_64";
-			settingPath = "QuadSim_Lin_Data";
+			extension = "FlyingCarND-Sim_Lin.x86_64";
+			settingPath = "FlyingCarND-Sim_Lin_Data";
 		}
 		
 		BuildPipeline.BuildPlayer ( scenes, basePath + extension, target, showBuilt ? BuildOptions.ShowBuiltPlayer : BuildOptions.None );
