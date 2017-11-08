@@ -17,11 +17,16 @@ namespace ENUTest
 	{
 		public Transform arrow;
 		public Transform box;
+		public Renderer[] boxAxes;
+		public Material[] axisMaterials;
 
 		public DD dropdown;
 		public Slider xSlider;
 		public Slider ySlider;
 		public Slider zSlider;
+		public Slider xRotSlider;
+		public Slider yRotSlider;
+		public Slider zRotSlider;
 
 		CoordSpace coords;
 
@@ -34,29 +39,34 @@ namespace ENUTest
 		{
 			coords = (CoordSpace) dropdown.value;
 			xSlider.value = ySlider.value = zSlider.value = 0;
+			xRotSlider.value = yRotSlider.value = zRotSlider.value = 0;
+
+			boxAxes [ 0 ].sharedMaterial = axisMaterials [ 0 ];
+			boxAxes [ 1 ].sharedMaterial = boxAxes [ 1 ].sharedMaterial;
+
+			boxAxes [ 2 ].sharedMaterial = index == 0 ? axisMaterials [ 1 ] : axisMaterials [ 2 ];
+			boxAxes [ 3 ].sharedMaterial = boxAxes [ 2 ].sharedMaterial;
+
+			boxAxes [ 4 ].sharedMaterial = index == 0 ? axisMaterials [ 2 ] : axisMaterials [ 1 ];
+			boxAxes [ 5 ].sharedMaterial = boxAxes [ 4 ].sharedMaterial;
 		}
 
-		public void OnSliderValueChanged ()
+		public void OnPositionSliderChanged ()
 		{
 			Vector3 pos = new Vector3 ( xSlider.value, ySlider.value, zSlider.value );
 			if ( coords == CoordSpace.ENU )
 				pos = pos.UnityToENUDirection ();
-//			Vector3 pos = Vector3.zero;
-//			switch ( coords )
-//			{
-//			case CoordSpace.Unity:
-//				pos = new Vector3 ( xSlider.value, ySlider.value, zSlider.value );
-//				break;
-//
-//			case CoordSpace.ENU:
-//				pos = new Vector3 ( xSlider.value, zSlider.value, ySlider.value );
-//				break;
-//
-//			case CoordSpace.Other:
-//				break;
-//			}
 
 			box.position = pos;
+		}
+
+		public void OnRotationSliderChanged ()
+		{
+			Vector3 euler = new Vector3 ( xRotSlider.value, yRotSlider.value, zRotSlider.value );
+			if ( coords == CoordSpace.ENU )
+				euler = euler.UnityToENURotation ();
+
+			box.eulerAngles = euler;
 		}
 
 		public void OnCenterButton (Slider s)
