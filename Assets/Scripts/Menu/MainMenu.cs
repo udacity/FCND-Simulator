@@ -9,14 +9,13 @@ namespace Menu
     public class MainMenu : MonoBehaviour
     {
         // project selection index
-        private int projectIndex;
+        private int projectIndex = 0;
         public List<Project> projects;
-        public Text ProjectName;
+        public TMPro.TextMeshProUGUI ProjectName;
         public Image ProjectImage;
 
         public void Start()
         {
-            projectIndex = 0;
             var p = projects[projectIndex];
             ProjectName.text = p.title;
             ProjectImage.sprite = p.image;
@@ -36,6 +35,7 @@ namespace Menu
 
         public void LoadProject()
         {
+            Debug.Log("here");
             var p = projects[projectIndex];
             Debug.Log(string.Format("Loading {0}", p.name));
             SceneManager.LoadScene(p.sceneName);
@@ -57,9 +57,8 @@ namespace Menu
             }
             else
             {
-                projectIndex = (projectIndex - 1) % projects.Count;
+                projectIndex -= 1;
             }
-            projectIndex = (projectIndex + 1) % projects.Count;
             var p = projects[projectIndex];
             ProjectName.text = p.title;
             ProjectImage.sprite = p.image;
