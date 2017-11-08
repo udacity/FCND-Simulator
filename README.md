@@ -9,7 +9,9 @@ To manually control the drone, you need to first arm the motors. When the motors
 * **space/c**: move upward/downward
 * **P**: Change manual mode (position control or stabilized)
 * **Shift-R**: Reset the scene.
-* **Escape**: Exit to main menu.
+* **Shift-S**: Save colliders file. Only applicable in `3D Motion Planning` project.
+* **Shift-C**: Toggle controls menu overlay. Applicable in all projects.
+* **Escape**: Exit to main menu. Applicable in all projects.
 
 ### Control Modes
 There are three control modes current sit up for the simulated drone. Two of the modes are meant for manual control and one is only meant for control via Mavlink commands. You can switch between the two manual modes and notice a difference in how the vehicle flies:
