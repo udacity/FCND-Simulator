@@ -31,10 +31,10 @@ public class MotionPlanning : MonoBehaviour
 {
     private IDrone drone;
     private GameObject droneGO;
-    private GameObject lidarLayer;
     public float lidarLengthWidth = 0.10f;
     private Mavlink mav;
     private bool running = true;
+    private string collidersFile = "colliders.csv";
     // track all clients
     private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
@@ -72,13 +72,13 @@ public class MotionPlanning : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        lidarLayer = GameObject.Find("LidarLayer");
         droneGO = GameObject.Find("Quad Drone");
         drone = droneGO.GetComponent<QuadDrone>();
         mav = new Mavlink();
         // setup event listeners
         mav.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
         mav.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
+        
         var tcpTask = TcpListenAsync();
         SetupLidarRays();
     }
@@ -86,7 +86,6 @@ public class MotionPlanning : MonoBehaviour
     async Task EmitSensorInfo(NetworkStream stream)
     {
         var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
-        var collidersGenerator = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>();
         while (running && stream.CanRead && stream.CanWrite)
         {
             var pos = drone.UnityCoords();
@@ -434,29 +433,34 @@ public class MotionPlanning : MonoBehaviour
             Debug.Log("ColliderGatherer GameObject not found in scene ...");
             return;
         }
-        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, false, null, "Select Folder", "Save");
+        var collidersGenerator = go.GetComponent<GenerateColliderList>();
+        var colliders = collidersGenerator.colliders;
+
+        // CreateFile("");
+        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
     }
 
     void CreateFile(string path)
     {
-        var filename = "map.csv";
-        var fullPath = Path.Combine(path, filename);
+        var filepath = Path.Combine(path, collidersFile);
+        Debug.Log(string.Format("Writing colliders to {0} ...", filepath));
+        if (File.Exists(filepath))
+        {
+            Debug.Log("Overwriting previous file");
+        }
+
         var colliders = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>().colliders;
+        var header = "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n";
 
-        Debug.Log("Overwriting previous file");
-        // var fs = File.Create(fullPath);
-        // if (File.Exists(fullPath)) {
-        // }
-
-        // Write headers
-        // TODO: overwrite file
-        File.AppendAllText(Path.Combine(filename), "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n");
+        File.Create(filepath).Close();
+        // for comparison
+        File.AppendAllText(filepath, header);
         foreach (var c in colliders)
         {
             var pos = c.position;
             var hsize = c.halfSize;
             var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.x, pos.y, pos.z, hsize.x, hsize.y, hsize.z);
-            File.AppendAllText(Path.Combine(filename), row);
+            File.AppendAllText(filepath, row);
         }
     }
 
@@ -509,7 +513,17 @@ public class MotionPlanning : MonoBehaviour
 
     void LateUpdate()
     {
+        // manually sense lidar rays (for debugging)
         Sense();
+
+        // Save colliders file
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                CollidersToCSV();
+            }
+        }
     }
 
     // For debugging

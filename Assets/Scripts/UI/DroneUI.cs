@@ -50,7 +50,6 @@ public class DroneUI : MonoBehaviour
     //     var y = Input.mousePosition.y / rt.rect.height * Screen.height;
     //     var wp = c.ScreenToWorldPoint(new Vector3(x, y, initialCameraY));
     //     Debug.Log("world point " + wp);
-    //     FlightUtils.Utils.CollidersToCSV("foo.csv");
     // }
 
     // Toggles whether the drone is armed or disarmed.
