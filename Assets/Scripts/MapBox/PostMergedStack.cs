@@ -56,6 +56,7 @@ public class PostMergedStack : ModifierStack
 //		List<int> indices = new List<int> ();
 		int[] tris;
 		MeshData md;
+		return parent;
 		for ( int i = 0; i < objects.Length; i++ )
 		{
 			mf = filters [ i ];
@@ -66,7 +67,7 @@ public class PostMergedStack : ModifierStack
 			uvs = mesh.uv;
 			for ( int m = 0; m < mr.sharedMaterials.Length; m++ )
 			{
-				mat = mr.sharedMaterials [ i ];
+				mat = mr.sharedMaterials [ m ];
 				md = new MeshData ( mesh, m, mat, verts, normals, uvs );
 			}
 
