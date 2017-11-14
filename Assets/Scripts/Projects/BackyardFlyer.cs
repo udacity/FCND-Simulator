@@ -11,20 +11,23 @@ using MavLink;
 using FlightUtils;
 using Drones;
 using DroneInterface;
+using UdacityNetworking;
 
 public class BackyardFlyer : MonoBehaviour
 {
     private IDrone drone;
     private Mavlink mav;
-    private bool running = true;
+//    private bool running = true;
+	public NetworkController networkController;
+
     // track all clients
-    private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
+//    private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 4;
     public int homePositionIntervalHz = 1;
 
-    public Int32 port = 5760;
-    public string ip = "127.0.0.1";
+//    public Int32 port = 5760;
+//    public string ip = "127.0.0.1";
 
     // enum to define the mode options
     // this follows the PX4 mode option set
@@ -60,7 +63,13 @@ public class BackyardFlyer : MonoBehaviour
         // setup event listeners
         mav.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
         mav.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
-        var tcpTask = TcpListenAsync();
+//        var tcpTask = TcpListenAsync();
+
+		networkController.AddMessageHandler ( OnMessageReceived );
+		networkController.EnqueueRecurringMessage ( GlobalPosition, Utils.HertzToMilliSeconds ( telemetryIntervalHz ) );
+		networkController.EnqueueRecurringMessage ( LocalPosition, Utils.HertzToMilliSeconds ( telemetryIntervalHz ) );
+		networkController.EnqueueRecurringMessage ( Heartbeat, Utils.HertzToMilliSeconds ( heartbeatIntervalHz ) );
+		networkController.EnqueueRecurringMessage ( HomePosition, Utils.HertzToMilliSeconds ( homePositionIntervalHz ) );
     }
 
     // TODO: Make the sure the velocities correspond to the correct axis.
@@ -76,193 +85,293 @@ public class BackyardFlyer : MonoBehaviour
     //      local coordinate - N
     //      Local coordinate - E
     //      Local coordinate - D
-    async Task EmitTelemetry(NetworkStream stream)
-    {
-        var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
-        while (running && stream.CanRead && stream.CanWrite)
-        {
-            // send the GPS message
-            // TODO: Make these magic numbers part of a util function?
-            var lat = drone.Latitude() * 1e7d;
-            var lon = drone.Longitude() * 1e7d;
-            var alt = drone.Altitude() * 1000;
-            var vx = drone.NorthVelocity() * 100;
-            var vy = drone.EastVelocity() * 100;
-            var vz = drone.VerticalVelocity() * 100;
-            var hdg = drone.Yaw() * 100;
-            var msg = new Msg_global_position_int
-            {
-                lat = (int)lat,
-                lon = (int)lon,
-                alt = (int)alt,
-                relative_alt = (int)alt,
-                vx = (short)vx,
-                vy = (short)vy,
-                vz = (short)vz,
-                hdg = (ushort)hdg
-            };
-            var serializedPacket = mav.SendV2(msg);
-            stream.Write(serializedPacket, 0, serializedPacket.Length);
-
-            // send the local position message
-            var north = drone.LocalCoords().x;
-            var east = drone.LocalCoords().y;
-            var down = drone.LocalCoords().z;
-            var local_msg = new Msg_local_position_ned
-            {
-                x = north,
-                y = east,
-                z = down,
-                vx = (float) drone.NorthVelocity(),
-                vy = (float) drone.EastVelocity(),
-                vz = (float) drone.VerticalVelocity()
-            };
-            serializedPacket = mav.SendV2(local_msg);
-            stream.Write(serializedPacket, 0, serializedPacket.Length);
-
-
-            // wait
-            await Task.Delay(waitFor);
-        }
-    }
+//    async Task EmitTelemetry(NetworkStream stream)
+//    {
+//        var waitFor = Utils.HertzToMilliSeconds(telemetryIntervalHz);
+//        while (running && stream.CanRead && stream.CanWrite)
+//        {
+//            // send the GPS message
+//            // TODO: Make these magic numbers part of a util function?
+//            var lat = drone.Latitude() * 1e7d;
+//            var lon = drone.Longitude() * 1e7d;
+//            var alt = drone.Altitude() * 1000;
+//            var vx = drone.NorthVelocity() * 100;
+//            var vy = drone.EastVelocity() * 100;
+//            var vz = drone.VerticalVelocity() * 100;
+//            var hdg = drone.Yaw() * 100;
+//            var msg = new Msg_global_position_int
+//            {
+//                lat = (int)lat,
+//                lon = (int)lon,
+//                alt = (int)alt,
+//                relative_alt = (int)alt,
+//                vx = (short)vx,
+//                vy = (short)vy,
+//                vz = (short)vz,
+//                hdg = (ushort)hdg
+//            };
+//            var serializedPacket = mav.SendV2(msg);
+//            stream.Write(serializedPacket, 0, serializedPacket.Length);
+//
+//            // send the local position message
+//            var north = drone.LocalCoords().x;
+//            var east = drone.LocalCoords().y;
+//            var down = drone.LocalCoords().z;
+//            var local_msg = new Msg_local_position_ned
+//            {
+//                x = north,
+//                y = east,
+//                z = down,
+//                vx = (float) drone.NorthVelocity(),
+//                vy = (float) drone.EastVelocity(),
+//                vz = (float) drone.VerticalVelocity()
+//            };
+//            serializedPacket = mav.SendV2(local_msg);
+//            stream.Write(serializedPacket, 0, serializedPacket.Length);
+//
+//
+//            // wait
+//            await Task.Delay(waitFor);
+//        }
+//    }
+	byte[] GlobalPosition ()
+	{
+		var lat = drone.Latitude() * 1e7d;
+		var lon = drone.Longitude() * 1e7d;
+		var alt = drone.Altitude() * 1000;
+		var vx = drone.NorthVelocity() * 100;
+		var vy = drone.EastVelocity() * 100;
+		var vz = drone.VerticalVelocity() * 100;
+		var hdg = drone.Yaw() * 100;
+		var msg = new Msg_global_position_int
+		{
+			lat = (int)lat,
+			lon = (int)lon,
+			alt = (int)alt,
+			relative_alt = (int)alt,
+			vx = (short)vx,
+			vy = (short)vy,
+			vz = (short)vz,
+			hdg = (ushort)hdg
+		};
+		var serializedPacket = mav.SendV2 ( msg );
+		return serializedPacket;
+	}
+	byte[] LocalPosition ()
+	{
+		var north = drone.LocalCoords().x;
+		var east = drone.LocalCoords().y;
+		var down = drone.LocalCoords().z;
+		var local_msg = new Msg_local_position_ned
+		{
+			x = north,
+			y = east,
+			z = down,
+			vx = (float) drone.NorthVelocity(),
+			vy = (float) drone.EastVelocity(),
+			vz = (float) drone.VerticalVelocity()
+		};
+		var serializedPacket = mav.SendV2 ( local_msg );
+		return serializedPacket;
+	}
 
     // Emits a heartbeat message.
-    async Task EmitHearbeat(NetworkStream stream)
-    {
-        var waitFor = Utils.HertzToMilliSeconds(heartbeatIntervalHz);
-        while (running && stream.CanRead && stream.CanWrite)
-        {
-            var guided = drone.Guided();
-            var armed = drone.Armed();
+//    async Task EmitHearbeat(NetworkStream stream)
+//    {
+//        var waitFor = Utils.HertzToMilliSeconds(heartbeatIntervalHz);
+//        while (running && stream.CanRead && stream.CanWrite)
+//        {
+//            var guided = drone.Guided();
+//            var armed = drone.Armed();
+//
+//            // build the base mode
+//            byte base_mode = (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+//            if (armed)
+//            {
+//                base_mode |= (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED;
+//            }
+//
+//            // build the custom mode (this specifies the mode of operation, using PX4 mode set)
+//            UInt32 custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_MANUAL << 16);
+//            if (guided)
+//            {
+//                custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
+//            }
+//            
+//            Msg_heartbeat msg = new Msg_heartbeat
+//            {
+//                type = 1,
+//                autopilot = 1,
+//                system_status = 1,
+//                base_mode = base_mode,
+//                custom_mode = custom_mode,
+//                mavlink_version = 3
+//            };
+//            var serializedPacket = mav.SendV2(msg);
+//            stream.Write(serializedPacket, 0, serializedPacket.Length);
+//            await Task.Delay(waitFor);
+//        }
+//    }
+	byte[] Heartbeat ()
+	{
+		var guided = drone.Guided();
+		var armed = drone.Armed();
 
-            // build the base mode
-            byte base_mode = (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
-            if (armed)
-            {
-                base_mode |= (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED;
-            }
+		// build the base mode
+		byte base_mode = (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+		if (armed)
+		{
+			base_mode |= (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED;
+		}
 
-            // build the custom mode (this specifies the mode of operation, using PX4 mode set)
-            UInt32 custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_MANUAL << 16);
-            if (guided)
-            {
-                custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
-            }
-            
-            Msg_heartbeat msg = new Msg_heartbeat
-            {
-                type = 1,
-                autopilot = 1,
-                system_status = 1,
-                base_mode = base_mode,
-                custom_mode = custom_mode,
-                mavlink_version = 3
-            };
-            var serializedPacket = mav.SendV2(msg);
-            stream.Write(serializedPacket, 0, serializedPacket.Length);
-            await Task.Delay(waitFor);
-        }
-    }
+		// build the custom mode (this specifies the mode of operation, using PX4 mode set)
+		UInt32 custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_MANUAL << 16);
+		if (guided)
+		{
+			custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
+		}
+
+		Msg_heartbeat msg = new Msg_heartbeat
+		{
+			type = 1,
+			autopilot = 1,
+			system_status = 1,
+			base_mode = base_mode,
+			custom_mode = custom_mode,
+			mavlink_version = 3
+		};
+		var serializedPacket = mav.SendV2 ( msg );
+		return serializedPacket;
+	}
 
     // TODO: send this only when explicitly queried
     // Emits the home position message.
-    async Task EmitHomePosition(NetworkStream stream)
-    {
-        var waitFor = Utils.HertzToMilliSeconds(homePositionIntervalHz);
-        while (running && stream.CanRead && stream.CanWrite)
-        {
-            // TODO: figure out where these are saved for the drone
-            var home_lat = drone.HomeLatitude() * 1e7;
-            var home_lon = drone.HomeLongitude() * 1e7;
-            var home_alt = 0.0 * 1000;
-            
-            // NOTE: needed to initialize all the data for this to send properly
-            var msg = new Msg_home_position
-            {
-                latitude = (int) home_lat,
-                longitude = (int) home_lon,
-                altitude = (int) home_alt,
-                x = 0,
-                y = 0,
-                z = 0,
-                q = new float[] { 0, 0, 0, 0 },
-                approach_x = 0,
-                approach_y = 0,
-                approach_z = 0
-            };
-            var serializedPacket = mav.SendV2(msg);
-            stream.Write(serializedPacket, 0, serializedPacket.Length);
-            await Task.Delay(waitFor);
-        }
-    }
+//    async Task EmitHomePosition(NetworkStream stream)
+//    {
+//        var waitFor = Utils.HertzToMilliSeconds(homePositionIntervalHz);
+//        while (running && stream.CanRead && stream.CanWrite)
+//        {
+//            // TODO: figure out where these are saved for the drone
+//            var home_lat = drone.HomeLatitude() * 1e7;
+//            var home_lon = drone.HomeLongitude() * 1e7;
+//            var home_alt = 0.0 * 1000;
+//            
+//            // NOTE: needed to initialize all the data for this to send properly
+//            var msg = new Msg_home_position
+//            {
+//                latitude = (int) home_lat,
+//                longitude = (int) home_lon,
+//                altitude = (int) home_alt,
+//                x = 0,
+//                y = 0,
+//                z = 0,
+//                q = new float[] { 0, 0, 0, 0 },
+//                approach_x = 0,
+//                approach_y = 0,
+//                approach_z = 0
+//            };
+//            var serializedPacket = mav.SendV2(msg);
+//            stream.Write(serializedPacket, 0, serializedPacket.Length);
+//            await Task.Delay(waitFor);
+//        }
+//    }
+	byte[] HomePosition ()
+	{
+		// TODO: figure out where these are saved for the drone
+		var home_lat = drone.HomeLatitude() * 1e7;
+		var home_lon = drone.HomeLongitude() * 1e7;
+		var home_alt = 0.0 * 1000;
 
-    async Task HandleClientAsync(TcpClient client)
-    {
-        var stream = client.GetStream();
-        var telemetryTask = EmitTelemetry(stream);
-        var heartbeatTask = EmitHearbeat(stream);
-        var homePositionTask = EmitHomePosition(stream); // TODO: maybe only want to send this once
+		// NOTE: needed to initialize all the data for this to send properly
+		var msg = new Msg_home_position
+		{
+			latitude = (int) home_lat,
+			longitude = (int) home_lon,
+			altitude = (int) home_alt,
+			x = 0,
+			y = 0,
+			z = 0,
+			q = new float[] { 0, 0, 0, 0 },
+			approach_x = 0,
+			approach_y = 0,
+			approach_z = 0
+		};
+		var serializedPacket = mav.SendV2 ( msg );
+		return serializedPacket;
+	}
 
-        while (running && client.Connected && stream.CanRead)
-        {
-            print("Reading from stream ... ");
-            var buf = new byte[1024];
-            var bytesRead = await stream.ReadAsync(buf, 0, buf.Length);
-            if (bytesRead > 0)
-            {
-                var dest = new byte[bytesRead];
-                Array.Copy(buf, dest, bytesRead);
-                mav.ParseBytesV2(dest);
-            }
-            else
-            {
-                break;
-            }
-        }
-        stream.Close();
-        client.Close();
-        print("CLIENT DISCONNECTED !!!");
-    }
+//    async Task HandleClientAsync(TcpClient client)
+//    {
+//        var stream = client.GetStream();
+//        var telemetryTask = EmitTelemetry(stream);
+//        var heartbeatTask = EmitHearbeat(stream);
+//        var homePositionTask = EmitHomePosition(stream); // TODO: maybe only want to send this once
+//
+//        while (running && client.Connected && stream.CanRead)
+//        {
+//            print("Reading from stream ... ");
+//            var buf = new byte[1024];
+//            var bytesRead = await stream.ReadAsync(buf, 0, buf.Length);
+//            if (bytesRead > 0)
+//            {
+//                var dest = new byte[bytesRead];
+//                Array.Copy(buf, dest, bytesRead);
+//                mav.ParseBytesV2(dest);
+//            }
+//            else
+//            {
+//                break;
+//            }
+//        }
+//        stream.Close();
+//        client.Close();
+//        print("CLIENT DISCONNECTED !!!");
+//    }
 
     // Starts an HTTP server and listens for new client connections.
-    async Task TcpListenAsync()
-    {
-        try
-        {
-            // Setup the TcpListener 
-            var addr = IPAddress.Parse(ip);
-            var listener = new TcpListener(addr, port);
-            // Start listening for client requests.
-            listener.Start();
-            print("Starting TCP MAVLink server ...");
-
-            while (running)
-            {
-                var client = await listener.AcceptTcpClientAsync();
-                print("Accepted connection !!!");
-                clients.Add(client);
-                var clientTask = HandleClientAsync(client);
-            }
-        }
-        catch (SocketException e)
-        {
-            print(string.Format("SocketException: {0}", e));
-        }
-        finally
-        {
-            // this is to ensure the sever stops once a disconnection happens, or when done with everything
-        }
-    }
+//    async Task TcpListenAsync()
+//    {
+//        try
+//        {
+//            // Setup the TcpListener 
+//            var addr = IPAddress.Parse(ip);
+//            var listener = new TcpListener(addr, port);
+//            // Start listening for client requests.
+//            listener.Start();
+//            print("Starting TCP MAVLink server ...");
+//
+//            while (running)
+//            {
+//                var client = await listener.AcceptTcpClientAsync();
+//                print("Accepted connection !!!");
+//                clients.Add(client);
+//                var clientTask = HandleClientAsync(client);
+//            }
+//        }
+//        catch (SocketException e)
+//        {
+//            print(string.Format("SocketException: {0}", e));
+//        }
+//        finally
+//        {
+//            // this is to ensure the sever stops once a disconnection happens, or when done with everything
+//        }
+//    }
 
     // called when this is destroyed
     private void OnDestroy()
     {
-        running = false;
+//        running = false;
     }
+
+	void OnMessageReceived (MessageInfo msgInfo)
+	{
+		mav.ParseBytesV2 ( msgInfo.message );
+	}
 
     void OnPacketReceived(object sender, MavlinkPacket packet)
     {
-        print(string.Format("Received packet, message type = {0}", packet.Message));
+		print ( string.Format ( "Received packet, message type = {0}", packet.Message ) );
         var msgstr = packet.Message.ToString();
         switch (msgstr)
         {
