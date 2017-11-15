@@ -17,6 +17,7 @@ namespace UdacityNetworking
 
 		List<TcpClient> clients = new List<TcpClient> ();
 		object clientLock = new object ();
+//		ConcurrentDictionary<int, TcpClient> clients = new ConcurrentDictionary<int, TcpClient> ();
 //		ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
 		string ip;
 		int port;
@@ -24,7 +25,7 @@ namespace UdacityNetworking
 		event Action<MessageInfo> messageHandler = delegate { };
 		TcpListener listener;
 		TcpClient client;
-		Queue<MessageInfo> messages = new Queue<MessageInfo> ();
+		ConcurrentQueue<MessageInfo> messages = new ConcurrentQueue<MessageInfo> ();
 
 		void Start ()
 		{
@@ -32,34 +33,6 @@ namespace UdacityNetworking
 
 		void Update ()
 		{
-			bool remove = false;
-			for ( int i = clients.Count - 1; i >= 0; i-- )
-			{
-				TcpClient c = clients [ i ];
-				if ( c == null )
-					remove = true;
-				else
-				if ( !c.Connected )
-				{
-					c.Dispose ();
-					c = null;
-					remove = true;
-				}
-			}
-
-			if ( remove )
-			{
-				List<TcpClient> newClients = new List<TcpClient> ();
-				lock ( clientLock )
-				{
-					for ( int i = 0; i < clients.Count; i++ )
-					{
-						if ( clients [ i ] != null )
-							newClients.Add ( clients [ i ] );
-					}
-					clients = newClients;
-				}
-			}
 		}
 
 		public void StartServer (string ip, int port)
@@ -89,10 +62,7 @@ namespace UdacityNetworking
 
 		public void SendMessage (byte[] message, string destIP = "", int destPort = -1)
 		{
-			lock ( messages )
-			{
-				messages.Enqueue ( new MessageInfo ( message, destIP, destPort ) );
-			}
+			messages.Enqueue ( new MessageInfo ( message, destIP, destPort ) );
 		}
 
 		public async Task DispatchMessages ()
@@ -103,16 +73,23 @@ namespace UdacityNetworking
 			
 			while ( IsServerStarted )
 			{
-				lock ( messages )
+//				Debug.Log ( "checking messages" );
+//				TcpClient[] clientArr = new TcpClient[clients.Count];
+//				clients.Values.CopyTo ( clientArr, 0 );
+				var clientArr = clients.ToArray ();
+				while ( !messages.IsEmpty )
 				{
-					while ( messages.Count > 0 )
+					MessageInfo msg = null;
+					if ( messages.TryDequeue ( out msg ) && msg != null )
 					{
-						MessageInfo msg = messages.Dequeue ();
-						foreach ( var client in clients )
+						foreach ( var client in clientArr )
 						{
-							var stream = client.GetStream ();
-							if ( running && stream.CanWrite && stream.CanRead )
-								stream.Write ( msg.message, 0, msg.message.Length );
+							if ( client != null && client.Connected )
+							{
+								var stream = client.GetStream ();
+								if ( running && stream != null && stream.CanWrite && stream.CanRead )
+									stream.Write ( msg.message, 0, msg.message.Length );
+							}
 						}
 					}
 				}
@@ -141,6 +118,8 @@ namespace UdacityNetworking
 				{
 					var client = await listener.AcceptTcpClientAsync();
 					Debug.Log ("Accepted a connection.");
+//					if ( !clients.TryAdd ( client.GetHashCode (), client ) )
+//						clients [ client.GetHashCode () ] = client;
 					lock ( clientLock )
 					{
 						clients.Add ( client );
@@ -163,7 +142,7 @@ namespace UdacityNetworking
 		async Task HandleClient (TcpClient client)
 		{
 			NetworkStream stream = client.GetStream ();
-			while ( running && client.Connected && stream.CanRead )
+			while ( running && client != null && client.Connected && stream != null && stream.CanRead )
 			{
 //				Debug.Log ( "Reading from stream ... " );
 				var buf = new byte[1024];
@@ -179,8 +158,18 @@ namespace UdacityNetworking
 					break;
 				}
 			}
-			stream.Close();
-			client.Close();
+			if ( stream != null )
+				stream.Close ();
+//			int hash = client.GetHashCode ();
+//			clients.TryRemove ( hash, out client );
+			if ( client != null )
+			{
+				client.Close ();
+				lock ( clientLock )
+				{
+					clients.Remove ( client );
+				}
+			}
 		}
 
 		void OnDestroy ()
