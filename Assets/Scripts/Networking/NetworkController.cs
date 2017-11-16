@@ -33,6 +33,12 @@ namespace UdacityNetworking
 			if ( autoStartServer )
 				StartServer ();
 		}
+
+		void Update ()
+		{
+			if ( connection != null )
+				connection.DoUpdate ();
+		}
 		
 		public void StartServer ()
 		{

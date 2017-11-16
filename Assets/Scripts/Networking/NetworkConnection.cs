@@ -29,5 +29,6 @@ namespace UdacityNetworking
 		void AddMessageHandler ( Action<MessageInfo> handler );
 		void RemoveMessageHandler ( Action<MessageInfo> handler );
 		void SendMessage (byte[] message, string destIP = "", int destPort = -1);
+		void DoUpdate ();
 	}
 }

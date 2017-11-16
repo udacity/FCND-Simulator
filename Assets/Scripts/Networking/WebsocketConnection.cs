@@ -37,5 +37,10 @@ namespace UdacityNetworking
 		{
 			throw new NotImplementedException ();
 		}
+
+		public void DoUpdate ()
+		{
+			
+		}
 	}
 }
