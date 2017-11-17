@@ -69,7 +69,6 @@ namespace UdacityNetworking
 		TcpListener listener;
 		TcpClient myClient;
 		ConcurrentQueue<MessageInfo> messages = new ConcurrentQueue<MessageInfo> ();
-		ConcurrentQueue<string> errors = new ConcurrentQueue<string> ();
 		float nextTimeoutCheck;
 
 		public void StartServer (string ip, int port)
@@ -83,16 +82,6 @@ namespace UdacityNetworking
 
 		public void DoUpdate ()
 		{
-			if ( Input.GetKeyDown ( KeyCode.K ) )
-			{
-				OutputClientList ();
-			}
-			if ( Input.GetKeyDown ( KeyCode.L ) )
-			{
-				OutputErrors ();
-			}
-
-
 			if ( Time.unscaledTime > nextTimeoutCheck )
 			{
 				var keys = clients.Keys;
@@ -144,23 +133,32 @@ namespace UdacityNetworking
 //				TcpClient[] clientArr = new TcpClient[clients.Count];
 				clients.Values.CopyTo ( clientArr, 0 );
 //				var clientArr = clients.ToArray ();
-				while ( !messages.IsEmpty )
+				try
 				{
-					MessageInfo msg = null;
-					if ( messages.TryDequeue ( out msg ) && msg != null )
+					while ( !messages.IsEmpty )
 					{
-						foreach ( var ci in clientArr )
-//						foreach ( var client in clientArr )
+						MessageInfo msg = null;
+						if ( messages.TryDequeue ( out msg ) && msg != null )
 						{
-							TcpClient c = ci.client;
-							if ( c != null && c.Connected )
+							foreach ( var ci in clientArr )
+//							foreach ( var client in clientArr )
 							{
-								var stream = c.GetStream ();
-								if ( running && stream != null && stream.CanWrite ) //&& stream.CanRead )
-									stream.Write ( msg.message, 0, msg.message.Length );
+								TcpClient c = ci.client;
+								if ( c != null && c.Connected )
+								{
+									var stream = c.GetStream ();
+									if ( running && stream != null && stream.CanWrite ) //&& stream.CanRead )
+										await stream.WriteAsync ( msg.message, 0, msg.message.Length );
+//										stream.Write ( msg.message, 0, msg.message.Length );
+								}
 							}
 						}
 					}
+					
+				}
+				catch (Exception e)
+				{
+					Debug.LogException ( e );
 				}
 				await Task.Delay ( 10 );
 			}
@@ -188,29 +186,23 @@ namespace UdacityNetworking
 					var client = await listener.AcceptTcpClientAsync ();
 					Debug.Log ("Accepted a connection.");
 					ClientInfo ci = new ClientInfo ( client, OnClientTimeout );
-					ClientInfo dummy;
-					foreach ( var pair in clients )
-					{
-						if ( pair.Value.client.Equals ( client ) && pair.Key != client.GetHashCode () )
-						{
-							Debug.LogWarning ( "removing an old identical client" );
-							clients.TryRemove ( pair.Key, out dummy );
-							break;
-						}
-					}
-					clients[ client.GetHashCode () ] = ci;
-//					if ( !clients.TryAdd ( client.GetHashCode (), client ) )
-//						clients [ client.GetHashCode () ] = client;
-//					lock ( clientLock )
+//					ClientInfo dummy;
+//					foreach ( var pair in clients )
 //					{
-//						clients.Add ( client );
+//						if ( pair.Value.client.Equals ( client ) && pair.Key != client.GetHashCode () )
+//						{
+//							Debug.LogWarning ( "removing an old identical client" );
+//							clients.TryRemove ( pair.Key, out dummy );
+//							break;
+//						}
 //					}
+					clients[ client.GetHashCode () ] = ci;
 					HandleClient ( client );
 				}
 			}
 			catch (SocketException e)
 			{
-				errors.Enqueue ( string.Format ( "SocketException: {0}", e ) );
+				Debug.LogException ( e );
 //				Debug.Log (string.Format("SocketException: {0}", e));
 				listener.Stop ();
 				listener = null;
@@ -236,37 +228,22 @@ namespace UdacityNetworking
 					Array.Copy ( buf, dest, bytesRead );
 					clients [ client.GetHashCode () ].OnRead (); // update the last read time from this client
 					messageHandler ( new MessageInfo ( dest ) );
-//					mav.ParseBytesV2 ( dest );
 				} else
 				{
-					Debug.LogWarning ( "stream ended" );
+					Debug.Log ( "stream ended" );
 					break;
 				}
-				errors.Enqueue ( "post stream read" );
 			}
 			if ( stream != null )
 				stream.Close ();
 			if ( client != null )
 			{
-				foreach ( var c in clients.Values )
-				{
-					if ( c != null )
-						Debug.LogWarning ( c.GetHashCode () + " " + c.client.Connected );
-					else
-						Debug.LogWarning ( "a null client" );
-				}
 				int hash = client.GetHashCode ();
 				ClientInfo dummy = null;
 				Debug.LogWarning ( "trying to remove client " + hash );
 				if ( !clients.TryRemove ( hash, out dummy ) )
-//				if ( !clients.TryRemove ( hash, out client ) )
-					errors.Enqueue ( "couldn't remove a client? " + hash + " " + ( dummy == null ).ToString () );
-//					Debug.LogError ( "couldn't remove a client? " + hash + " " + ( client == null ).ToString () );
+					Debug.LogError ( "couldn't remove a client? " + hash + " " + ( dummy == null ).ToString () );
 				client.Close ();
-//				lock ( clientLock )
-//				{
-//					clients.Remove ( client );
-//				}
 			} else
 			{
 				Debug.LogWarning ("null client?");
@@ -288,28 +265,6 @@ namespace UdacityNetworking
 			bool removed = clients.TryRemove ( info.clientHash, out ci );
 //			bool removed = clients.TryRemove ( info.clientHash, out client );
 			Debug.LogWarning ( "client " + info.clientHash + " was removed? " + removed );
-		}
-
-		public void OutputClientList ()
-		{
-			if ( clients.IsEmpty )
-				Debug.Log ( "no clients" );
-			foreach ( var pair in clients )
-			{
-				Debug.Log ( pair.Value == null ? "null client" : ( pair.Key + " " + pair.Value.client.Connected ) );
-			}
-		}
-
-		public void OutputErrors ()
-		{
-			if ( errors.IsEmpty )
-				Debug.LogWarning ( "no errors" );
-			while ( !errors.IsEmpty )
-			{
-				string s = "";
-				if ( errors.TryDequeue ( out s ) )
-					Debug.LogError ( s );
-			}
 		}
 	}
 }
