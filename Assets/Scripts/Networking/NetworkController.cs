@@ -70,7 +70,7 @@ namespace UdacityNetworking
 			messageHandler ( message );
 		}
 
-		public void EnqueueRecurringMessage (Func<HashSet<byte[]>> messageFunc, int delayMilliseconds)
+		public void EnqueueRecurringMessage (Func<List<byte[]>> messageFunc, int delayMilliseconds)
 		{
 			#if UNITY_WEBGL && !UNITY_EDITOR
 			StartCoroutine ( RecurringMessage ( messageFunc, delayMilliseconds ) );
@@ -80,7 +80,7 @@ namespace UdacityNetworking
 		}
 
 		#if UNITY_WEBGL && !UNITY_EDITOR
-		IEnumerator RecurringMessage (Func<HashSet<byte[]>> msgFunc, int delayMS)
+		IEnumerator RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
 		{
 			float delay = 1f * delayMS / 1000f;
 			while ( connection.IsServerStarted )
@@ -94,7 +94,7 @@ namespace UdacityNetworking
 			}
 		}
 		#else
-		async Task RecurringMessage (Func<HashSet<byte[]>> msgFunc, int delayMS)
+		async Task RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
 		{
 			while ( connection.IsServerStarted )
 			{

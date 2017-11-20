@@ -73,7 +73,7 @@ public class BackyardFlyer : MonoBehaviour
         networkController.EnqueueRecurringMessage(HomePosition, Utils.HertzToMilliSeconds(homePositionIntervalHz));
     }
 
-    HashSet<byte[]> GlobalPosition()
+    List<byte[]> GlobalPosition()
     {
         var lat = drone.Latitude() * 1e7d;
         var lon = drone.Longitude() * 1e7d;
@@ -94,12 +94,12 @@ public class BackyardFlyer : MonoBehaviour
             hdg = (ushort)hdg
         };
         var serializedPacket = mav.SendV2(msg);
-        var msgs = new HashSet<byte[]>();
+        var msgs = new List<byte[]>();
         msgs.Add(serializedPacket);
         return msgs;
     }
 
-    HashSet<byte[]> LocalPosition()
+    List<byte[]> LocalPosition()
     {
         var north = drone.LocalCoords().x;
         var east = drone.LocalCoords().y;
@@ -115,12 +115,12 @@ public class BackyardFlyer : MonoBehaviour
         };
 
         var serializedPacket = mav.SendV2(msg);
-        var msgs = new HashSet<byte[]>();
+        var msgs = new List<byte[]>();
         msgs.Add(serializedPacket);
         return msgs;
     }
 
-    HashSet<byte[]> Heartbeat()
+    List<byte[]> Heartbeat()
     {
         var guided = drone.Guided();
         var armed = drone.Armed();
@@ -150,12 +150,12 @@ public class BackyardFlyer : MonoBehaviour
         };
 
         var serializedPacket = mav.SendV2(msg);
-        var msgs = new HashSet<byte[]>();
+        var msgs = new List<byte[]>();
         msgs.Add(serializedPacket);
         return msgs;
     }
 
-    HashSet<byte[]> HomePosition()
+    List<byte[]> HomePosition()
     {
         // TODO: figure out where these are saved for the drone
         var home_lat = drone.HomeLatitude() * 1e7;
@@ -177,7 +177,7 @@ public class BackyardFlyer : MonoBehaviour
             approach_z = 0
         };
         var serializedPacket = mav.SendV2(msg);
-        var msgs = new HashSet<byte[]>();
+        var msgs = new List<byte[]>();
         msgs.Add(serializedPacket);
         return msgs;
     }
