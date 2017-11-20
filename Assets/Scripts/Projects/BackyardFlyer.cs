@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UnityEngine;
 
 // usings needed for TCP/IP
@@ -72,7 +73,7 @@ public class BackyardFlyer : MonoBehaviour
         networkController.EnqueueRecurringMessage(HomePosition, Utils.HertzToMilliSeconds(homePositionIntervalHz));
     }
 
-    byte[] GlobalPosition()
+    HashSet<byte[]> GlobalPosition()
     {
         var lat = drone.Latitude() * 1e7d;
         var lon = drone.Longitude() * 1e7d;
@@ -93,15 +94,17 @@ public class BackyardFlyer : MonoBehaviour
             hdg = (ushort)hdg
         };
         var serializedPacket = mav.SendV2(msg);
-        return serializedPacket;
+        var msgs = new HashSet<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
     }
 
-    byte[] LocalPosition()
+    HashSet<byte[]> LocalPosition()
     {
         var north = drone.LocalCoords().x;
         var east = drone.LocalCoords().y;
         var down = drone.LocalCoords().z;
-        var local_msg = new Msg_local_position_ned
+        var msg = new Msg_local_position_ned
         {
             x = north,
             y = east,
@@ -110,11 +113,14 @@ public class BackyardFlyer : MonoBehaviour
             vy = (float)drone.EastVelocity(),
             vz = (float)drone.VerticalVelocity()
         };
-        var serializedPacket = mav.SendV2(local_msg);
-        return serializedPacket;
+
+        var serializedPacket = mav.SendV2(msg);
+        var msgs = new HashSet<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
     }
 
-    byte[] Heartbeat()
+    HashSet<byte[]> Heartbeat()
     {
         var guided = drone.Guided();
         var armed = drone.Armed();
@@ -133,7 +139,7 @@ public class BackyardFlyer : MonoBehaviour
             custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
         }
 
-        Msg_heartbeat msg = new Msg_heartbeat
+        var msg = new Msg_heartbeat
         {
             type = 1,
             autopilot = 1,
@@ -142,11 +148,14 @@ public class BackyardFlyer : MonoBehaviour
             custom_mode = custom_mode,
             mavlink_version = 3
         };
+
         var serializedPacket = mav.SendV2(msg);
-        return serializedPacket;
+        var msgs = new HashSet<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
     }
 
-    byte[] HomePosition()
+    HashSet<byte[]> HomePosition()
     {
         // TODO: figure out where these are saved for the drone
         var home_lat = drone.HomeLatitude() * 1e7;
@@ -168,7 +177,9 @@ public class BackyardFlyer : MonoBehaviour
             approach_z = 0
         };
         var serializedPacket = mav.SendV2(msg);
-        return serializedPacket;
+        var msgs = new HashSet<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
     }
 
     void OnMessageReceived(MessageInfo msgInfo)

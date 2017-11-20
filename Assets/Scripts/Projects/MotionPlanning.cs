@@ -90,19 +90,21 @@ public class MotionPlanning : MonoBehaviour
         networkController.EnqueueRecurringMessage(SensorInfo, Utils.HertzToMilliSeconds(sensorIntervalHz));
     }
 
-    byte[] SensorInfo()
+    HashSet<byte[]> SensorInfo()
     {
         var pos = drone.UnityCoords();
         RaycastHit hitInfo;
         // Send multiple messages for different orientations
-        BinarySerializer b = new BinarySerializer();
+        var msgs = new HashSet<byte[]>();
+        print("Sensing distances ...");
         foreach (var r in mavRays)
         {
             var dir = Quaternion.Euler(r.rotation) * droneGO.transform.forward;
+            // dir = transform.InverseTransformDirection(dir.x, dir.y, dir.z);
             if (Physics.Raycast(pos, dir, out hitInfo, maxSensorRange))
             {
                 var dist = hitInfo.distance;
-                print(string.Format("ray hit - drone location {0}, rotation {1}, distance (meters) {2}", pos, r.rotation, dist));
+                print(string.Format("ray hit - drone location {0}, rotation {1}, distance (meters) {2}, direction {3}", pos, r.rotation, dist, dir));
                 var msg = new Msg_distance_sensor
                 {
                     // A unity unit is 1m and the distance unit
@@ -117,10 +119,10 @@ public class MotionPlanning : MonoBehaviour
                     covariance = 0,
                 };
                 var serializedPacket = mav.SendV2(msg);
-                b.WriteBytes(serializedPacket);
+                msgs.Add(serializedPacket);
             }
         }
-        return b.GetBytes();
+        return msgs;
     }
 
     /// <summary>
@@ -138,7 +140,7 @@ public class MotionPlanning : MonoBehaviour
     ///      Local coordinate - E
     ///      Local coordinate - D
     /// </summary>
-    byte[] GlobalPosition()
+    HashSet<byte[]> GlobalPosition()
     {
         var lat = drone.Latitude() * 1e7d;
         var lon = drone.Longitude() * 1e7d;
@@ -158,15 +160,18 @@ public class MotionPlanning : MonoBehaviour
             vz = (short)vz,
             hdg = (ushort)hdg
         };
+
         var serializedPacket = mav.SendV2(msg);
-        return serializedPacket;
+        var msgs = new HashSet<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
     }
-    byte[] LocalPosition()
+    HashSet<byte[]> LocalPosition()
     {
         var north = drone.LocalCoords().x;
         var east = drone.LocalCoords().y;
         var down = drone.LocalCoords().z;
-        var local_msg = new Msg_local_position_ned
+        var msg = new Msg_local_position_ned
         {
             x = north,
             y = east,
@@ -175,11 +180,14 @@ public class MotionPlanning : MonoBehaviour
             vy = (float)drone.EastVelocity(),
             vz = (float)drone.VerticalVelocity()
         };
-        var serializedPacket = mav.SendV2(local_msg);
-        return serializedPacket;
+
+        var serializedPacket = mav.SendV2(msg);
+        var msgs = new HashSet<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
     }
 
-    byte[] Heartbeat()
+    HashSet<byte[]> Heartbeat()
     {
         var guided = drone.Guided();
         var armed = drone.Armed();
@@ -198,7 +206,7 @@ public class MotionPlanning : MonoBehaviour
             custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
         }
 
-        Msg_heartbeat msg = new Msg_heartbeat
+        var msg = new Msg_heartbeat
         {
             type = 1,
             autopilot = 1,
@@ -207,11 +215,14 @@ public class MotionPlanning : MonoBehaviour
             custom_mode = custom_mode,
             mavlink_version = 3
         };
+
         var serializedPacket = mav.SendV2(msg);
-        return serializedPacket;
+        var msgs = new HashSet<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
     }
 
-    byte[] HomePosition()
+    HashSet<byte[]> HomePosition()
     {
         // TODO: figure out where these are saved for the drone
         var home_lat = drone.HomeLatitude() * 1e7;
@@ -232,8 +243,11 @@ public class MotionPlanning : MonoBehaviour
             approach_y = 0,
             approach_z = 0
         };
+
         var serializedPacket = mav.SendV2(msg);
-        return serializedPacket;
+        var msgs = new HashSet<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
     }
 
     void OnMessageReceived(MessageInfo msgInfo)
