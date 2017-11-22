@@ -76,7 +76,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
             var bd = go.AddComponent<FeatureBehaviour>();
             bd.Init(feature);
 
-            foreach (GameObjectModifier mod in GoModifiers.Where(x => x.Active))
+			foreach (GameObjectModifier mod in GoModifiers.Where(x => x != null && x.Active))
             {
 				mod.Run(bd, tile);
             }
