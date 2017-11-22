@@ -532,7 +532,7 @@ namespace DroneControllers
 
         public float GetYaw()
         {
-            float yaw = eulerAngles.y;
+            float yaw = (eulerAngles.y-90.0f);
             if (yaw < 0)
                 yaw = yaw + 360.0f;
             return yaw;

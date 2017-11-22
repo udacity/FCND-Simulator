@@ -95,7 +95,7 @@ namespace UdacityNetworking
 						bool removed = clients.TryRemove ( key, out dummy );
 						Debug.LogWarning ( "timeout remove client " + key + " successful: " + removed );
 					}
-				nextTimeoutCheck = Time.unscaledTime + 0.5f;
+				nextTimeoutCheck = Time.unscaledTime + 2000.5f;
 			}
 		}
 

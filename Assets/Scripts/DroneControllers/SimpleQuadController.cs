@@ -18,6 +18,7 @@ namespace DroneControllers
         public bool posctl = true;
         //Control Gains
         public float Kp_hdot = 10.0f;
+        public float Kp_yaw = 6.5f;
         public float Kp_r = 20.0f;
         public float Kp_roll = 6.5f;
         public float Kp_p = 10.0f;
@@ -50,6 +51,7 @@ namespace DroneControllers
 
         private bool pos_set = false;
         Vector3 posHoldLocal = new Vector3(0.0f, 0.0f, 0.0f);
+        float yawHold = 0.0f;
         Vector3 lastVelocityErrorBody = new Vector3(0.0f, 0.0f, 0.0f);
         float hDotInt = 0.0f;
 
@@ -145,6 +147,7 @@ namespace DroneControllers
                         if (!pos_set)
                         {
                             posHoldLocal = localPosition;
+                            yawHold = rollYawPitch[1];
                             pos_set = true;
                             //                        Debug.Log(posHoldLocal);
                         }
@@ -153,7 +156,7 @@ namespace DroneControllers
                         Vector3 velCmdLocal;
                         // print("Position Hold: " + posHoldLocal);
                         // print("Local Position: " + localPosition);
-                        
+
                         //Deadband around the position hold
                         if (Mathf.Sqrt(Mathf.Pow(posErrorLocal.x, 2.0f) + Mathf.Pow(posErrorLocal.z, 2.0f)) < posHoldDeadband)
                         {
@@ -177,6 +180,15 @@ namespace DroneControllers
 
                         velCmdBody.y = velCmdLocal.y;
 
+                        float yawError = yawHold - rollYawPitch[1];
+                        if (yawError > Mathf.PI)
+                        {
+                            yawError = yawError - 2.0f*Mathf.PI;
+                        } else if (yawError < -1.0f*Mathf.PI)
+                        {
+                            yawError = yawError + 2.0f*Mathf.PI;
+                        }
+                        yawCmd = Kp_yaw * yawError;
                     }
                     else
                     {
@@ -307,10 +319,16 @@ namespace DroneControllers
             
         }
 
+        public void CommandHeading(float heading)
+        {
+            yawHold = (heading + 90.0f) * Mathf.PI / 180.0f;
+        }
+
         public void ArmVehicle()
         {
             motors_armed = true;
-            controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
+            //controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
+            controller.SetHomePosition(-121.995635d, 37.412939d, 0.0d);
         }
 
         public void DisarmVehicle()
