@@ -17,12 +17,11 @@ namespace DroneControllers
 
         const float M2Latitude = 1.0f / 111111.0f;
         const double latitude0 = 37.412939d;
-        const double longitude0 = 121.995635d;
+        const double longitude0 = -121.995635d;
 
         double homeLatitude = 0.0d;
         double homeLongitude = 0.0d;
         const float M2Longitude = 1.0f / (0.8f * 111111.0f);
-
         public float ForceNoise = 2.0f;
         public float TorqueNoise = 1.0f;
         public float HDOP = 0.5f;
@@ -39,7 +38,7 @@ namespace DroneControllers
         public Vector3 LinearVelocity { get; protected set; }
         public Vector3 BodyVelocity { get; protected set; }
         public Vector3 LinearAcceleration { get; protected set; }
-        public Vector3 GPS;// defined as latitude, altitude, longitude
+        public Vector3 GPS;// defined as lon,altitude,lat
         public Vector3 eulerAngles; //yaw, roll, pitch, in degrees
 
 
@@ -461,7 +460,7 @@ namespace DroneControllers
         }
         public double GetLatitude()
         {
-            return GPS.x + latitude0;
+            return GPS.z + latitude0;
         }
 
         public void SetHomeLatitude(double latitude)
@@ -481,7 +480,7 @@ namespace DroneControllers
 
         public double GetLongitude()
         {
-            return -1.0d * (GPS.z + longitude0);
+            return GPS.x + longitude0;
         }
 
         public void SetHomeLongitude(double longitude)
@@ -517,12 +516,12 @@ namespace DroneControllers
 
         public float GetNorthVelocity()
         {
-            return LinearVelocity.x;
+            return LinearVelocity.z;
         }
 
         public float GetEastVelocity()
         {
-            return -LinearVelocity.z;
+            return LinearVelocity.x;
         }
 
         public float GetVerticalVelocity()
@@ -532,7 +531,7 @@ namespace DroneControllers
 
         public float GetYaw()
         {
-            float yaw = (eulerAngles.y-90.0f);
+            float yaw = (eulerAngles.y);
             if (yaw < 0)
                 yaw = yaw + 360.0f;
             return yaw;
@@ -579,9 +578,9 @@ namespace DroneControllers
 //            lon_noise = 0.9f * lon_noise + 0.1f * 2.0f * HDOP * (Random.value - 0.5f);
 
             //GPS only reported in local frame because float doesn't have precision required for full GPS coordinate
-            GPS.x = rb.position.x * M2Latitude + M2Latitude * lat_noise;
+            GPS.z = rb.position.z * M2Latitude + M2Latitude * lat_noise;
             GPS.y = rb.position.y + alt_noise;
-            GPS.z = rb.position.z * M2Longitude + M2Longitude * lon_noise;
+            GPS.x = rb.position.x * M2Longitude + M2Longitude * lon_noise;
 
             curSpeed = rb.velocity.magnitude;
         }

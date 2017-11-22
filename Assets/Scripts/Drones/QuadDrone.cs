@@ -129,7 +129,8 @@ namespace Drones
 
         public void SetAttitude(double roll, double pitch, double yaw, double velocity)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            simpleQuadCtrl.CommandHeading((float)yaw);
         }
 
         public void SetAttitudeRate(double rollRate, double pitchRate, double yawRate, double thrust)

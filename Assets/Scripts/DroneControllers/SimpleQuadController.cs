@@ -52,6 +52,7 @@ namespace DroneControllers
         private bool pos_set = false;
         Vector3 posHoldLocal = new Vector3(0.0f, 0.0f, 0.0f);
         float yawHold = 0.0f;
+        private bool yawSet = false;
         Vector3 lastVelocityErrorBody = new Vector3(0.0f, 0.0f, 0.0f);
         float hDotInt = 0.0f;
 
@@ -80,45 +81,17 @@ namespace DroneControllers
                 pos_set = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                pos_set = false;
-                controller.ResetOrientation();
-                // followCam.ChangePoseType(CameraPoseType.Iso);
-            }
+            
 
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                controller.UseGravity = !controller.UseGravity;
-            }
-
-            //TODO: Remove this, it is for testing the Guided Mode
-            if (Input.GetKeyDown(KeyCode.Alpha9))
-            {
-                guided = true;
-                CommandLocal(controller.GetLocalNorth(), controller.GetLocalEast() + 10.0f, -1.0f * (float)controller.GetAltitude());
-                pos_set = true;
-                Debug.Log(posHoldLocal);
-            }
-
-
-            /*
-            Vector3 rollYawPitch = controller.navTransform.eulerAngles*Mathf.PI/180.0f;
-            for (int i = 0;i < 3; i++)
-            {
-                if (rollYawPitch[i] > Mathf.PI)
-                    rollYawPitch[i] = rollYawPitch[i] - 2.0f*Mathf.PI;
-                else if (rollYawPitch[i] < -Mathf.PI)
-                    rollYawPitch[i] = rollYawPitch[i] + 2.0f*Mathf.PI;
-            }
-            */
-            Vector3 rollYawPitch = controller.eulerAngles * Mathf.PI / 180.0f;
-            Vector3 prq = controller.AngularVelocityBody;
+            
+            Vector3 pitchYawRoll = controller.eulerAngles * Mathf.PI / 180.0f;            
+            Vector3 qrp = controller.AngularVelocityBody;
+            
             Vector3 prqRate = controller.AngularAccelerationBody;
             Vector3 localPosition;
-            localPosition.x = controller.GetLocalNorth();
+            localPosition.z = controller.GetLocalNorth();
             localPosition.y = (float) controller.GetAltitude();
-            localPosition.z = controller.GetLocalEast();
+            localPosition.x = controller.GetLocalEast();
             Vector3 bodyVelocity = controller.BodyVelocity;
 
 
@@ -146,11 +119,12 @@ namespace DroneControllers
                         //Set position
                         if (!pos_set)
                         {
-                            posHoldLocal = localPosition;
-                            yawHold = rollYawPitch[1];
+                            posHoldLocal = localPosition;                            
                             pos_set = true;
                             //                        Debug.Log(posHoldLocal);
                         }
+
+                        
 
                         Vector3 posErrorLocal = posHoldLocal - localPosition;
                         Vector3 velCmdLocal;
@@ -166,34 +140,50 @@ namespace DroneControllers
                         else
                         {
                             velCmdLocal.x = Kp_pos * posErrorLocal.x;
-                            velCmdLocal.z = -Kp_pos * posErrorLocal.z;
+                            velCmdLocal.z = Kp_pos * posErrorLocal.z;
                         }
 
                         velCmdLocal.y = Kp_alt * posErrorLocal.y;
 
 
                         //Rotate into the local heading frame
-                        float cosYaw = Mathf.Cos(rollYawPitch.y);
-                        float sinYaw = Mathf.Sin(rollYawPitch.y);
+                        float cosYaw = Mathf.Cos(pitchYawRoll.y);
+                        float sinYaw = Mathf.Sin(pitchYawRoll.y);
                         velCmdBody.x = cosYaw * velCmdLocal.x - sinYaw * velCmdLocal.z;
                         velCmdBody.z = sinYaw * velCmdLocal.x + cosYaw * velCmdLocal.z;
 
                         velCmdBody.y = velCmdLocal.y;
-
-                        float yawError = yawHold - rollYawPitch[1];
-                        if (yawError > Mathf.PI)
-                        {
-                            yawError = yawError - 2.0f*Mathf.PI;
-                        } else if (yawError < -1.0f*Mathf.PI)
-                        {
-                            yawError = yawError + 2.0f*Mathf.PI;
-                        }
-                        yawCmd = Kp_yaw * yawError;
                     }
                     else
                     {
                         pos_set = false;
                     }
+
+                    //Heading hold if in guided mode or no input
+                    if (guided || Mathf.Abs(yawCmd) <= 0.0f)
+                    {
+                        if (!yawSet)
+                        {
+                            yawHold = pitchYawRoll.y;
+                            yawSet = true;
+                        }
+
+                        float yawError = yawHold - pitchYawRoll.y;
+                        if (yawError > Mathf.PI)
+                        {
+                            yawError = yawError - 2.0f * Mathf.PI;
+                        }
+                        else if (yawError < -1.0f * Mathf.PI)
+                        {
+                            yawError = yawError + 2.0f * Mathf.PI;
+                        }
+                        yawCmd = Kp_yaw * yawError;
+                    }
+                    else
+                    {
+                        yawSet = false;
+                    }
+
 
 
                     //Control loop from a body velocity command to a Hdot, yaw rate, pitch, and roll command
@@ -204,8 +194,8 @@ namespace DroneControllers
                     velocityErrorBodyD = (velocityErrorBody - lastVelocityErrorBody) / Time.deltaTime;
                     lastVelocityErrorBody = velocityErrorBody;
 
-                    angle_input[2] = -Kp_vel * velocityErrorBody.x - Kd_vel * velocityErrorBodyD.x;
-                    angle_input[3] = Kp_vel * velocityErrorBody.z + Kd_vel * velocityErrorBodyD.z;
+                    angle_input[2] = Kp_vel * velocityErrorBody.z + Kd_vel * velocityErrorBodyD.z;
+                    angle_input[3] = -Kp_vel * velocityErrorBody.x + -Kd_vel * velocityErrorBodyD.x;
 
                     float angle_magnitude = Mathf.Sqrt(Mathf.Pow(angle_input[2], 2.0f) + Mathf.Pow(angle_input[3], 2.0f));
                     if (angle_magnitude > maxTilt)
@@ -221,9 +211,9 @@ namespace DroneControllers
                 else
                 {
                     pos_set = false;
-
+                    yawSet = false;
                     //Pilot Input: Hdot, Yawrate, pitch, roll
-                    angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), -Input.GetAxis("Vertical") * maxTilt, -Input.GetAxis("Horizontal") * maxTilt);
+                    angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), Input.GetAxis("Vertical") * maxTilt, -Input.GetAxis("Horizontal") * maxTilt);
                 }
 
 
@@ -254,21 +244,21 @@ namespace DroneControllers
                     hDotInt = hDotInt + hDotError * Time.deltaTime;
 
                     //hdot to thrust
-                    thrust[1] = (Kp_hdot * hDotError + Ki_hdot * hDotInt + thrust_nom) / (Mathf.Cos(rollYawPitch.x) * Mathf.Cos(rollYawPitch.z));
+                    thrust[1] = (Kp_hdot * hDotError + Ki_hdot * hDotInt + thrust_nom) / (Mathf.Cos(pitchYawRoll.x) * Mathf.Cos(pitchYawRoll.z));
 
                     //yaw rate to yaw moment
-                    yaw_moment[1] = Kp_r * (turnSpeed * angle_input[1] - prq[1]);
+                    yaw_moment[1] = Kp_r * (turnSpeed * angle_input[1] - qrp.y);
 
 
                     //angle to angular rate command (for pitch and roll)
-                    float pitchError = angle_input[2] - rollYawPitch.z;
-                    float rollError = angle_input[3] - rollYawPitch.x;
-                    float pitchRateError = Kp_pitch * pitchError - prq.z;
-                    float rollRateError = Kp_roll * rollError - prq.x;
+                    float pitchError = angle_input[2] - pitchYawRoll.x;
+                    float rollError = angle_input[3] - pitchYawRoll.z;
+                    float pitchRateError = Kp_pitch * pitchError - qrp.x;
+                    float rollRateError = Kp_roll * rollError - qrp.z;
 
                     //angular rate to moment (pitch and roll)
-                    pitch_moment[2] = Kp_q * pitchRateError;
-                    roll_moment[0] = Kp_p * rollRateError;
+                    pitch_moment[0] = Kp_q * pitchRateError;
+                    roll_moment[2] = Kp_p * rollRateError;
 
 
 
@@ -306,12 +296,13 @@ namespace DroneControllers
         //Command the quad to a local position (north, east, down)
         public void CommandLocal(float north, float east, float down)
         {
+            
             // The hold position is defined in the Unity reference frame, where (x,y,z)=>(north,up, east) #TODO
             if (guided)
             {
-                posHoldLocal.x = north;
+                posHoldLocal.x = east;
                 posHoldLocal.y = -down;
-                posHoldLocal.z = east;
+                posHoldLocal.z = north;
                 pos_set = true;
                 // print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
                 // print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
@@ -321,7 +312,8 @@ namespace DroneControllers
 
         public void CommandHeading(float heading)
         {
-            yawHold = (heading + 90.0f) * Mathf.PI / 180.0f;
+            yawHold = heading * Mathf.PI / 180.0f;
+            yawSet = true;
         }
 
         public void ArmVehicle()
