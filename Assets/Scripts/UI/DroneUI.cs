@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using DroneInterface;
 using Drones;
 using FlightUtils;
+using TMPText = TMPro.TextMeshProUGUI;
 
 // NOTE: The minimap is currently disabled since
 // we don't use it for anything.
@@ -10,10 +11,11 @@ using FlightUtils;
 public class DroneUI : MonoBehaviour
 {
 
-    public TMPro.TextMeshProUGUI gpsText;
+    public TMPText gpsText;
     public Image needleImage;
     public Button armButton;
     public Button guideButton;
+
     private IDrone drone;
     // public Image minimapImage;
     // public Camera minimapCamera;
@@ -69,11 +71,11 @@ public class DroneUI : MonoBehaviour
         var v = drone.Armed();
         if (v)
         {
-            armButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armed";
+//            armButton.GetComponentInChildren<TMPText>().text = "Armed";
         }
         else
         {
-            armButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Disarmed";
+//            armButton.GetComponentInChildren<TMPText>().text = "Disarmed";
         }
     }
 
@@ -82,11 +84,11 @@ public class DroneUI : MonoBehaviour
         var v = drone.Guided();
         if (v)
         {
-            guideButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Guided";
+//            guideButton.GetComponentInChildren<TMPText>().text = "Guided";
         }
         else
         {
-            guideButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Manual";
+//            guideButton.GetComponentInChildren<TMPText>().text = "Manual";
         }
     }
 
