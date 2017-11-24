@@ -26,22 +26,22 @@ namespace Menu
         void LateUpdate()
         {
             // Return to the main menu
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Debug.Log("Loading main menu");
-                SceneManager.LoadScene("MainMenu");
-            }
-            else if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+			if ( Input.GetButtonDown ( "Back/Exit" ) )
+			{
+				Debug.Log ( "Loading main menu" );
+				SceneManager.LoadScene ( "MainMenu" );
+			}
+			else if ( Input.GetButton ( "Shift Modifier" ) )
             {
                 // Reload current scene
-                if (Input.GetKeyDown(KeyCode.R))
-                {
-                    Debug.Log("Resetting scene");
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                }
+				if ( Input.GetButtonDown ( "Reload/Reset" ) )
+				{
+					Debug.Log ( "Resetting scene" );
+					SceneManager.LoadScene ( SceneManager.GetActiveScene ().name );
+				}
                 // NOTE: not the same as loading the menu, which is done via
                 // the main menu
-                else if (controlsOverlay != null && Input.GetKeyDown(KeyCode.C))
+				else if (controlsOverlay != null && Input.GetButtonDown ( "Controls Menu" ))
                 {
                     Debug.Log("Toggling control menu overlay");
                     var active = controlsOverlay.activeSelf;

@@ -74,7 +74,7 @@ namespace DroneControllers
             turnSpeed = 2.0f;
             maxTilt = 0.5f;
 
-            if (Input.GetKeyDown(KeyCode.P))
+			if ( Input.GetButtonDown ( "Position Control" ) )
             {
                 posctl = !posctl;
 

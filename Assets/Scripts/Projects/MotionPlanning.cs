@@ -489,13 +489,10 @@ public class MotionPlanning : MonoBehaviour
         }
 
         // Save colliders file
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                CollidersToCSV();
-            }
-        }
+		if ( Input.GetButton ( "Shift Modifier" ) && Input.GetButtonDown ( "Save" ) )
+		{
+			CollidersToCSV ();
+		}
     }
 
     // For debugging

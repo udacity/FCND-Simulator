@@ -205,10 +205,6 @@ namespace DroneControllers
             }
             CheckSetPose();
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-            }
-
             if (Input.GetKeyDown(KeyCode.L))
                 showLegend = !showLegend;
 
