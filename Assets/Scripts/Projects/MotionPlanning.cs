@@ -1,9 +1,10 @@
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using UnityEngine;
 
 // usings needed for TCP/IP
 using System;
+using System.Linq;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -14,49 +15,43 @@ using FlightUtils;
 using Drones;
 using DroneInterface;
 using UdacityNetworking;
-
-struct MavlinkRay
-{
-    public Vector3 rotation { get; }
-    public MAV_SENSOR_ORIENTATION mavlinkOrientation { get; }
-
-    public MavlinkRay(Vector3 r, MAV_SENSOR_ORIENTATION mo)
-    {
-        rotation = r;
-        mavlinkOrientation = mo;
-    }
-}
+using Sensors;
 
 
 public class MotionPlanning : MonoBehaviour
 {
     private IDrone drone;
     private GameObject droneGO;
-    public float lidarLengthWidth = 0.10f;
+    private GameObject rayList;
+    private List<GameObject> rays;
+    public float lidarLineWidth = 0.05f;
     private Mavlink mav;
-    //    private bool running = true;
     public NetworkController networkController;
     private string collidersFile = "colliders.csv";
-    // track all clients
-    //    private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 4;
     public int sensorIntervalHz = 1;
     public int homePositionIntervalHz = 1;
-    public float maxSensorRange = 30;
-    //    public Int32 port = 5760;
-    //    public string ip = "127.0.0.1";
-    private List<MavlinkRay> mavRays;
+    public float sensorRange = 50;
+    private Dictionary<Quaternion, MAV_SENSOR_ORIENTATION> mavSensorLookup = new Dictionary<Quaternion, MAV_SENSOR_ORIENTATION>();
 
     public enum MAIN_MODE : uint
     {
+        /// <summary>
+        /// Manual mode.
+        /// </summary>
         CUSTOM_MAIN_MODE_MANUAL = 1,
         // other PX4 modes not of interest at the moment
-        CUSTOM_MAIN_MODE_OFFBOARD = 6,  // guided
+
+        /// <summary>
+        /// Guided mode.
+        /// </summary>
+        CUSTOM_MAIN_MODE_OFFBOARD = 6,
     }
 
-
-    // enum for the set of masks that are used for setting the location position target
+    /// <summary>
+    // The set of masks that are used for setting the location position target.
+    /// </summary>
     public enum SET_POSITION_MASK : UInt16
     {
         IGNORE_POSITION = 0x007,
@@ -64,23 +59,21 @@ public class MotionPlanning : MonoBehaviour
         IGNORE_ACCELERATION = 0x1C0,
         IGNORE_YAW = 0x400,
         IGNORE_YAW_RATE = 0x800,
-
         IS_FORCE = (1 << 9),
         IS_TAKEOFF = 0x1000,
         IS_LAND = 0x2000,
         IS_LOITER = 0x3000,
     }
 
-    // Use this for initialization
     void Start()
     {
         droneGO = GameObject.Find("Quad Drone");
+        rayList = GameObject.Find("RayList");
         drone = droneGO.GetComponent<QuadDrone>();
         mav = new Mavlink();
         // setup event listeners
         mav.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
         mav.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
-
         SetupLidarRays();
         networkController.AddMessageHandler(OnMessageReceived);
         networkController.EnqueueRecurringMessage(GlobalPosition, Utils.HertzToMilliSeconds(telemetryIntervalHz));
@@ -92,35 +85,46 @@ public class MotionPlanning : MonoBehaviour
 
     List<byte[]> SensorInfo()
     {
-        var pos = drone.UnityCoords();
-        RaycastHit hitInfo;
         // Send multiple messages for different orientations
         var msgs = new List<byte[]>();
         print("Sensing distances ...");
-        foreach (var r in mavRays)
+        var pos = drone.UnityCoords();
+        var collisions = Sensors.Lidar.Sense(droneGO, mavSensorLookup.Keys.ToList(), sensorRange);
+
+
+        for (int i = 0; i < collisions.Count; i++)
         {
-            var dir = Quaternion.Euler(r.rotation) * droneGO.transform.forward;
-            // dir = transform.InverseTransformDirection(dir.x, dir.y, dir.z);
-            if (Physics.Raycast(pos, dir, out hitInfo, maxSensorRange))
+            var c = collisions[i];
+
+            // Instantiate LineRenderer components for Lidar.
+            var ray = (GameObject) Instantiate(rayList);
+            LineRenderer line = ray.AddComponent<LineRenderer>();
+            line.startWidth = lidarLineWidth;
+            line.endWidth = lidarLineWidth;
+            line.SetPosition(0, c.origin);
+            line.SetPosition(1, c.target);
+            ray.transform.parent = rayList.transform;
+            rays.Add(ray);
+
+            print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", c.origin, c.rotation, c.distance, c.target));
+            var mo = mavSensorLookup[c.rotation];
+            var dist = c.distance;
+            var msg = new Msg_distance_sensor
             {
-                var dist = hitInfo.distance;
-                print(string.Format("ray hit - drone location {0}, rotation {1}, distance (meters) {2}, direction {3}", pos, r.rotation, dist, dir));
-                var msg = new Msg_distance_sensor
-                {
-                    // A unity unit is 1m and the distance unit
-                    // required by this message is centimeters.
-                    min_distance = 0,
-                    max_distance = (UInt16)(maxSensorRange * 100),
-                    current_distance = (UInt16)(dist * 100),
-                    type = (byte)MAV_DISTANCE_SENSOR.MAV_DISTANCE_SENSOR_LASER,
-                    id = 0,
-                    orientation = (byte)r.mavlinkOrientation,
-                    // TODO: add variance model, likely using FastNoise
-                    covariance = 0,
-                };
-                var serializedPacket = mav.SendV2(msg);
-                msgs.Add(serializedPacket);
-            }
+                // A unity unit is 1m and the distance unit
+                // required by this message is centimeters,
+                // hence the 100x multiplication.
+                min_distance = 0,
+                max_distance = (UInt16)(sensorRange * 100),
+                current_distance = (UInt16)(dist * 100),
+                type = (byte)MAV_DISTANCE_SENSOR.MAV_DISTANCE_SENSOR_LASER,
+                id = 0,
+                orientation = (byte)mo,
+                // TODO: add variance model, likely using FastNoise
+                covariance = 0,
+            };
+            var serializedPacket = mav.SendV2(msg);
+            msgs.Add(serializedPacket);
         }
         return msgs;
     }
@@ -128,17 +132,16 @@ public class MotionPlanning : MonoBehaviour
     /// <summary>
     /// TODO: Make the sure the velocities correspond to the correct axis.
     /// Emits telemetry data:
-    ///      Latitude
-    ///      Longitude
-    ///      Altitude
-    ///      Relative Altitude
-    ///      North Velocity (vx)
-    ///      East Velocity (vy)
-    ///      Vertical Velocity (vz)
-    ///      
-    ///      local coordinate - N
-    ///      Local coordinate - E
-    ///      Local coordinate - D
+    ///     Latitude
+    ///     Longitude
+    ///     Altitude
+    ///     Relative Altitude
+    ///     North Velocity (vx)
+    ///     East Velocity (vy)
+    ///     Vertical Velocity (vz)
+    ///     local coordinate - N
+    ///     Local coordinate - E
+    ///     Local coordinate - D
     /// </summary>
     List<byte[]> GlobalPosition()
     {
@@ -166,6 +169,7 @@ public class MotionPlanning : MonoBehaviour
         msgs.Add(serializedPacket);
         return msgs;
     }
+
     List<byte[]> LocalPosition()
     {
         var north = drone.LocalCoords().x;
@@ -329,11 +333,13 @@ public class MotionPlanning : MonoBehaviour
         }
     }
 
-    // handle the COMMAND_LONG message
-    // used for:
-    //      - arming / disarming
-    //      - setting the mode
-    //      - setting the home position
+    /// <summary>
+    /// Handle the COMMAND_LONG message
+    /// used for:
+    ///     - arming / disarming
+    ///     - setting the mode
+    ///     - setting the home position
+    /// </summary>
     void MsgCommandLong(MavlinkPacket pack)
     {
         var msg = (MavLink.Msg_command_long)pack.Message;
@@ -435,48 +441,47 @@ public class MotionPlanning : MonoBehaviour
     void SetupLidarRays()
     {
         // roll -> x-axis, yaw -> y-axis, pitch -> z-axis
-        mavRays = new List<MavlinkRay>();
+        mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_NONE;
+        mavSensorLookup[Quaternion.Euler(new Vector3(0, 90, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_90;
+        mavSensorLookup[Quaternion.Euler(new Vector3(0, 180, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_180;
+        mavSensorLookup[Quaternion.Euler(new Vector3(0, 270, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_270;
+        mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 90))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_90;
+        mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 270))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_270;
+        mavSensorLookup[Quaternion.Euler(new Vector3(90, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90;
+        mavSensorLookup[Quaternion.Euler(new Vector3(270, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 45, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_45;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 135, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_135;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 225, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_225;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 315, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_315;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 0, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 45, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_45;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 90, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 135, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_135;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 180))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 225, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_225;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 270, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_270;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 315, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_315;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(90, 45, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_45;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(90, 90, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(90, 135, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_135;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(270, 45, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_45;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(270, 90, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(270, 135, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_135;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 90, 180))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180_YAW_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 270, 180))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180_YAW_270;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(90, 0, 90))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 0, 90))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_PITCH_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(270, 0, 90))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(90, 0, 180))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_180;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(270, 0, 180))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_180;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(90, 0, 270))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_270;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(180, 0, 270))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_PITCH_270;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(270, 0, 270))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_270;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(90, 90, 180))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_180_YAW_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(90, 270, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_270;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(315, 315, 315))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_315_PITCH_315_YAW_315;
 
-        // rays for forward, backward, left, right, up, down
-        mavRays.Add(new MavlinkRay(new Vector3(0, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_NONE));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_90));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 180, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_180));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 270, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_270));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_90));
-        mavRays.Add(new MavlinkRay(new Vector3(0, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_270));
-        mavRays.Add(new MavlinkRay(new Vector3(90, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90));
-        mavRays.Add(new MavlinkRay(new Vector3(270, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_45));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_135));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 225, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_225));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 315, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_315));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 0, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_45));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_135));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 0, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 225, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_225));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 270, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_270));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 315, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_YAW_315));
-        // mavRays.Add(new MavlinkRay(new Vector3(90, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_45));
-        // mavRays.Add(new MavlinkRay(new Vector3(90, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(90, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_135));
-        // mavRays.Add(new MavlinkRay(new Vector3(270, 45, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_45));
-        // mavRays.Add(new MavlinkRay(new Vector3(270, 90, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(270, 135, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_YAW_135));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 90, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180_YAW_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(0, 270, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_180_YAW_270));
-        // mavRays.Add(new MavlinkRay(new Vector3(90, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_PITCH_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(270, 0, 90), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(90, 0, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_180));
-        // mavRays.Add(new MavlinkRay(new Vector3(270, 0, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_180));
-        // mavRays.Add(new MavlinkRay(new Vector3(90, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_270));
-        // mavRays.Add(new MavlinkRay(new Vector3(180, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_180_PITCH_270));
-        // mavRays.Add(new MavlinkRay(new Vector3(270, 0, 270), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270_PITCH_270));
-        // mavRays.Add(new MavlinkRay(new Vector3(90, 90, 180), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_PITCH_180_YAW_90));
-        // mavRays.Add(new MavlinkRay(new Vector3(90, 270, 0), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90_YAW_270));
-        // mavRays.Add(new MavlinkRay(new Vector3(315, 315, 315), MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_315_PITCH_315_YAW_315));
+
     }
 
     void LateUpdate()
@@ -497,29 +502,12 @@ public class MotionPlanning : MonoBehaviour
         }
     }
 
-    // For debugging
     void Sense()
     {
-        var lines = new List<LineRenderer>();
-        var pos = drone.UnityCoords();
-        print("Sensing ... from location " + pos);
-        RaycastHit hit;
-        foreach (var r in mavRays)
+        var collisions = Sensors.Lidar.Sense(droneGO, mavSensorLookup.Keys.ToList(), sensorRange);
+        foreach (var c in collisions)
         {
-            var dir = Quaternion.Euler(r.rotation) * droneGO.transform.forward;
-            if (Physics.Raycast(pos, dir, out hit, maxSensorRange))
-            {
-                var dist = hit.distance;
-                print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", pos, r.rotation, dist, hit.point));
-                // draw line
-                // var line = new LineRenderer();
-                // var linePoints = new List<Vector3>();
-                // linePoints.Add(pos);
-                // linePoints.Add(hit.point);
-                // line.SetPositions(linePoints.ToArray());
-                // line.enabled = true;
-                // lines.Add(line);
-            }
+            print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", c.origin, c.rotation, c.distance, c.target));
         }
     }
 }
