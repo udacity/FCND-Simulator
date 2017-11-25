@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
+using MovementBehaviors;
 
 namespace DroneControllers
 {
     public class SimpleQuadController : MonoBehaviour
     {
-
         const float M2Latitude = 1.0f / 111111.0f;
         const float M2Longitude = 1.0f / (0.8f * 111111.0f);
         public Transform camTransform;
@@ -41,20 +41,30 @@ namespace DroneControllers
         public float maxTilt = 0.5f;
         public float maxAscentRate = 5.0f;
         public float maxDescentRate = 2.0f;
-        Rigidbody rb;
+
+		// movement behaviors: one of these will be selected when control switches between manual/guided, stabilized, position control, etc
+		public QuadMovementBehavior mb_Manual;
+		public QuadMovementBehavior mb_ManualPosCtrl;
+		public QuadMovementBehavior mb_Guided;
+		public QuadMovementBehavior mb_GuidedPosCtrl;
+
+		[System.NonSerialized]
+        public Rigidbody rb;
         float tiltX;
         float tiltZ;
 
         private float h_des = 0.0f;
-
-
-
-        private bool pos_set = false;
-        Vector3 posHoldLocal = new Vector3(0.0f, 0.0f, 0.0f);
-        float yawHold = 0.0f;
-        private bool yawSet = false;
-        Vector3 lastVelocityErrorBody = new Vector3(0.0f, 0.0f, 0.0f);
+		[System.NonSerialized]
+		public bool pos_set = false;
+		[System.NonSerialized]
+		public Vector3 posHoldLocal = Vector3.zero;
+		[System.NonSerialized]
+        public float yawHold = 0.0f;
+		[System.NonSerialized]
+		public bool yawSet = false;
+		Vector3 lastVelocityErrorBody = Vector3.zero;
         float hDotInt = 0.0f;
+		QuadMovementBehavior currentMovementBehavior;
 
 
         void Awake()
@@ -66,22 +76,46 @@ namespace DroneControllers
             // if (followCam == null)
             //     followCam = camTransform.GetComponent<FollowCamera>();
             motors_armed = false;
+			SelectMovementBehavior ();
         }
 
-        void FixedUpdate()
+		void LateUpdate ()
+		{
+			if ( Input.GetButtonDown ( "Position Control" ) )
+			{
+				posctl = !posctl;
+				pos_set = false;
+				SelectMovementBehavior ();
+			}
+
+			if ( motors_armed )
+			{
+				currentMovementBehavior.OnLateUpdate ();
+				
+			} else
+			{
+				pos_set = false;
+			}
+		}
+
+        void FixedUpdate ()
         {
+			// moved all input code to LateUpdate and offloaded to MovementBehavior
+//			if ( motors_armed )
+//			{
+//				currentMovementBehavior.OnFixedUpdate ();
+//				
+//			} else
+//			{
+//				pos_set = false;
+//			}
+			return;
+
+
             moveSpeed = 15.0f;
             turnSpeed = 2.0f;
             maxTilt = 0.5f;
 
-			if ( Input.GetButtonDown ( "Position Control" ) )
-            {
-                posctl = !posctl;
-
-                pos_set = false;
-            }
-
-            
 
             
             Vector3 pitchYawRoll = controller.eulerAngles * Mathf.PI / 180.0f;            
@@ -316,21 +350,42 @@ namespace DroneControllers
             yawSet = true;
         }
 
-        public void ArmVehicle()
-        {
-            motors_armed = true;
-            //controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
-            controller.SetHomePosition(-121.995635d, 37.412939d, 0.0d);
-        }
+        public void ArmVehicle ()
+		{
+			motors_armed = true;
+			//controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
+			controller.SetHomePosition ( -121.995635d, 37.412939d, 0.0d );
+		}
 
-        public void DisarmVehicle()
+        public void DisarmVehicle ()
         {
             motors_armed = false;
         }
 
-        public void SetGuidedMode(bool input_guided)
+        public void SetGuidedMode (bool input_guided)
         {
             guided = input_guided;
+			SelectMovementBehavior ();
         }
+
+		// use this when any control variables change
+		void SelectMovementBehavior ()
+		{
+			if ( guided )
+			{
+				if ( posctl )
+					currentMovementBehavior = mb_GuidedPosCtrl;
+				else
+					currentMovementBehavior = mb_Guided;
+				
+			} else
+			{
+				if ( posctl )
+					currentMovementBehavior = mb_ManualPosCtrl;
+				else
+					currentMovementBehavior = mb_Manual;
+			}
+			currentMovementBehavior.OnSelect ( this );
+		}
     }
 }
