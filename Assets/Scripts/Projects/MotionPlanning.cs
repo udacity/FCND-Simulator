@@ -22,9 +22,6 @@ public class MotionPlanning : MonoBehaviour
 {
     private IDrone drone;
     private GameObject droneGO;
-    private GameObject rayList;
-    private List<GameObject> rays;
-    public float lidarLineWidth = 0.05f;
     private Mavlink mav;
     public NetworkController networkController;
     private string collidersFile = "colliders.csv";
@@ -42,7 +39,7 @@ public class MotionPlanning : MonoBehaviour
         /// </summary>
         CUSTOM_MAIN_MODE_MANUAL = 1,
         // other PX4 modes not of interest at the moment
-
+    
         /// <summary>
         /// Guided mode.
         /// </summary>
@@ -68,7 +65,6 @@ public class MotionPlanning : MonoBehaviour
     void Start()
     {
         droneGO = GameObject.Find("Quad Drone");
-        rayList = GameObject.Find("RayList");
         drone = droneGO.GetComponent<QuadDrone>();
         mav = new Mavlink();
         // setup event listeners
@@ -91,20 +87,9 @@ public class MotionPlanning : MonoBehaviour
         var pos = drone.UnityCoords();
         var collisions = Sensors.Lidar.Sense(droneGO, mavSensorLookup.Keys.ToList(), sensorRange);
 
-
         for (int i = 0; i < collisions.Count; i++)
         {
             var c = collisions[i];
-
-            // Instantiate LineRenderer components for Lidar.
-            var ray = (GameObject) Instantiate(rayList);
-            LineRenderer line = ray.AddComponent<LineRenderer>();
-            line.startWidth = lidarLineWidth;
-            line.endWidth = lidarLineWidth;
-            line.SetPosition(0, c.origin);
-            line.SetPosition(1, c.target);
-            ray.transform.parent = rayList.transform;
-            rays.Add(ray);
 
             print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", c.origin, c.rotation, c.distance, c.target));
             var mo = mavSensorLookup[c.rotation];
@@ -486,12 +471,6 @@ public class MotionPlanning : MonoBehaviour
 
     void LateUpdate()
     {
-        // manually sense lidar rays (for debugging)
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Sense();
-        }
-
         // Save colliders file
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
@@ -499,15 +478,6 @@ public class MotionPlanning : MonoBehaviour
             {
                 CollidersToCSV();
             }
-        }
-    }
-
-    void Sense()
-    {
-        var collisions = Sensors.Lidar.Sense(droneGO, mavSensorLookup.Keys.ToList(), sensorRange);
-        foreach (var c in collisions)
-        {
-            print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", c.origin, c.rotation, c.distance, c.target));
         }
     }
 }
