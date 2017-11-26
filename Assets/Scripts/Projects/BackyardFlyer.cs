@@ -27,9 +27,6 @@ public class BackyardFlyer : MonoBehaviour
     public int telemetryIntervalHz = 4;
     public int homePositionIntervalHz = 1;
 
-    //    public Int32 port = 5760;
-    //    public string ip = "127.0.0.1";
-
     // enum to define the mode options
     // this follows the PX4 mode option set
     public enum MAIN_MODE : uint
