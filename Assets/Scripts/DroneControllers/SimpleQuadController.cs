@@ -46,7 +46,6 @@ namespace DroneControllers
 		public QuadMovementBehavior mb_Manual;
 		public QuadMovementBehavior mb_ManualPosCtrl;
 		public QuadMovementBehavior mb_Guided;
-		public QuadMovementBehavior mb_GuidedPosCtrl;
 
 		[System.NonSerialized]
         public Rigidbody rb;
@@ -373,10 +372,7 @@ namespace DroneControllers
 		{
 			if ( guided )
 			{
-				if ( posctl )
-					currentMovementBehavior = mb_GuidedPosCtrl;
-				else
-					currentMovementBehavior = mb_Guided;
+				currentMovementBehavior = mb_Guided;
 				
 			} else
 			{
