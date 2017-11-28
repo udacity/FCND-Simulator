@@ -1,4 +1,5 @@
 ﻿#define USE_FASTNOISE
+#define DebugWind // use this for on screen debug of wind force
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,7 @@ public class WindDisturbance : MonoBehaviour
 	public float dirNoiseStrength = 0.2f;
 	public float minForce = 0.1f;
 	public float maxForce = 5f;
+	public bool enabled;
 
 	public List<Transform> affectedObjects = new List<Transform> ();
 
@@ -62,7 +64,9 @@ public class WindDisturbance : MonoBehaviour
 
 	void FixedUpdate ()
 	{
-
+		if ( !enabled )
+			return;
+		
 		if ( useDirectionNoise )
 			windEuler = new Vector3 (
 				GetNoise ( Time.time * directionNoise.x, Time.time * directionNoise.x ) * dirNoiseStrength,
@@ -85,12 +89,22 @@ public class WindDisturbance : MonoBehaviour
 			affectedObjects [ i ].transform.position += frameWind;
 	}
 
+	void LateUpdate ()
+	{
+		if ( Input.GetButtonDown ( "Toggle Wind" ) )
+		{
+			enabled = !enabled;
+		}
+	}
+
+	#if DebugWind
 	void OnGUI ()
 	{
 		GUILayout.BeginArea ( new Rect ( 10, 10, 200, 50 ) );
 		GUILayout.Box ( "Last wind: " + lastWind.ToString () + "\nnoise: " + lastNoise.ToString ( "F2" ) );
 		GUILayout.EndArea ();
 	}
+	#endif
 
 	void OnTriggerEnter (Collider other)
 	{
