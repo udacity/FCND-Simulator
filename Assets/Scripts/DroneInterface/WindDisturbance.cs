@@ -18,6 +18,7 @@ public class WindDisturbance : MonoBehaviour
 			return instance;
 		}
 	}
+	public static bool Enabled { get { return instance != null && instance.enabled; } }
 
 	public LayerMask ignoreLayers;
 
@@ -149,5 +150,20 @@ public class WindDisturbance : MonoBehaviour
 	public static void RemoveAffectedObject (Transform t)
 	{
 		Instance.affectedObjects.Remove ( t );
+	}
+
+	public static Vector3 Direction ()
+	{
+		return Instance.lastWind;
+	}
+
+	public static float StrengthPercent ()
+	{
+		return Instance.lastNoise;
+	}
+
+	public static float Angle ()
+	{
+		return Instance.windEuler.y;
 	}
 }
