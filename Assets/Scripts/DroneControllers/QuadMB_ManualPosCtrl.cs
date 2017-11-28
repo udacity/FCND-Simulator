@@ -110,6 +110,7 @@ namespace MovementBehaviors
                             controller.yawSet = false;
                         }*/
 
+			/*
             //Control loop from a body velocity command to a Hdot, yaw rate, pitch, and roll command
             float yawError = 0.0f - pitchYawRoll.y;
             if (yawError > Mathf.PI)
@@ -123,7 +124,7 @@ namespace MovementBehaviors
             }
 
             yawCmd = controller.Kp_yaw * (0.0f - pitchYawRoll.y);
-
+			*/
             
 			Vector3 velocityErrorBody = Vector3.zero;
 			Vector3 velocityErrorBodyD = Vector3.zero;
