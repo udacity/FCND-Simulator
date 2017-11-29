@@ -1,5 +1,5 @@
 ﻿#define USE_FASTNOISE
-#define DebugWind // use this for on screen debug of wind force
+//#define DebugWind // use this for on screen debug of wind force
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
