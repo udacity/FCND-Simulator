@@ -13,8 +13,11 @@ public class DroneUI : MonoBehaviour
 
     public TMPText gpsText;
     public Image needleImage;
+	public Image windArrow;
     public Button armButton;
     public Button guideButton;
+
+	public bool localizeWind;
 
     private IDrone drone;
     // public Image minimapImage;
@@ -24,6 +27,7 @@ public class DroneUI : MonoBehaviour
     // // Need this to reference the previous used to render
     // // the last minimap frame in the UI.
     // private Texture2D tex = null;
+
 
     void Awake()
     {
@@ -115,9 +119,30 @@ public class DroneUI : MonoBehaviour
         // South -> 180
         // West - 270
         var hdg = -(float)drone.Yaw();
-        var oldHdg = needleImage.rectTransform.rotation.eulerAngles.z;
+//        var oldHdg = needleImage.rectTransform.rotation.eulerAngles.z;
         // rotate the needle by the yaw difference
-        needleImage.rectTransform.Rotate(0, 0, -(-hdg - -oldHdg));
+//        needleImage.rectTransform.Rotate(0, 0, -(-hdg - -oldHdg));
+		needleImage.rectTransform.eulerAngles = Vector3.forward * hdg;
+
+		// update wind direction arrow
+		if ( WindDisturbance.Enabled )
+		{
+			windArrow.enabled = true;
+			float angle = -WindDisturbance.Angle () + 90;
+			if ( localizeWind )
+				angle -= hdg;
+//			float angle = ( -WindDisturbance.Angle () + 90 - hdg );
+			windArrow.rectTransform.eulerAngles = Vector3.forward * angle;
+			Vector2 size = windArrow.rectTransform.sizeDelta;
+			size.x = size.y * 0.5f + size.y * WindDisturbance.StrengthPercent ();
+			windArrow.rectTransform.sizeDelta = size;
+			float radAngle = angle * Mathf.Deg2Rad;
+			Vector2 anchor = new Vector2 ( 0.5f + Mathf.Cos ( radAngle ) * 0.15f, 0.5f + Mathf.Sin ( radAngle ) * 0.15f );
+//			Vector2 anchor = new Vector2 ( 0.5f + Mathf.Cos ( radAngle ) * 0.55f, 0.5f + Mathf.Sin ( radAngle ) * 0.55f );
+			windArrow.rectTransform.anchorMin = windArrow.rectTransform.anchorMax = anchor;
+
+		} else
+			windArrow.enabled = false;
 
         // Update minimap UI
         // UpdateMinimapCameraPosition();

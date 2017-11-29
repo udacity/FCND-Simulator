@@ -150,7 +150,7 @@ namespace Drones
 
         public void TakeControl(bool guided)
         {
-            simpleQuadCtrl.guided = guided;
+			simpleQuadCtrl.SetGuidedMode ( guided );
         }
 
         public double VerticalVelocity()
