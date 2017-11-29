@@ -39,7 +39,7 @@ public class MotionPlanning : MonoBehaviour
         /// </summary>
         CUSTOM_MAIN_MODE_MANUAL = 1,
         // other PX4 modes not of interest at the moment
-    
+
         /// <summary>
         /// Guided mode.
         /// </summary>
@@ -91,7 +91,7 @@ public class MotionPlanning : MonoBehaviour
         {
             var c = collisions[i];
 
-            print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", c.origin, c.rotation, c.distance, c.target));
+            // print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", c.origin, c.rotation.eulerAngles, c.distance, c.target));
             var mo = mavSensorLookup[c.rotation];
             var dist = c.distance;
             var msg = new Msg_distance_sensor
@@ -426,15 +426,18 @@ public class MotionPlanning : MonoBehaviour
 
     void SetupLidarRays()
     {
-        // roll -> x-axis, yaw -> y-axis, pitch -> z-axis
-        mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_NONE;
-        mavSensorLookup[Quaternion.Euler(new Vector3(0, 90, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_90;
-        mavSensorLookup[Quaternion.Euler(new Vector3(0, 180, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_180;
-        mavSensorLookup[Quaternion.Euler(new Vector3(0, 270, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_270;
-        mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 90))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_90;
-        mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 270))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_270;
-        mavSensorLookup[Quaternion.Euler(new Vector3(90, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90;
-        mavSensorLookup[Quaternion.Euler(new Vector3(270, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270;
+        // z, x, y -> roll, pitch, yaw - https://en.wikibooks.org/wiki/Cg_Programming/Unity/Rotations
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_NONE;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 90, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_90;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 180, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_180;
+        // mavSensorLookup[Quaternion.Euler(new Vector3(0, 270, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_270;
+        mavSensorLookup[Quaternion.Euler(new Vector3(90, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_90;
+        mavSensorLookup[Quaternion.Euler(new Vector3(270, 0, 0))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_PITCH_270;
+        mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 90))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_90;
+        mavSensorLookup[Quaternion.Euler(new Vector3(0, 0, 270))] = MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_ROLL_270;
+
+        // TODO: swap x and z axis, had roll and pitch mixed up
+        //
         // mavSensorLookup[Quaternion.Euler(new Vector3(0, 45, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_45;
         // mavSensorLookup[Quaternion.Euler(new Vector3(0, 135, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_135;
         // mavSensorLookup[Quaternion.Euler(new Vector3(0, 225, 0))] =  MAV_SENSOR_ORIENTATION.MAV_SENSOR_ROTATION_YAW_225;
@@ -473,9 +476,9 @@ public class MotionPlanning : MonoBehaviour
     void LateUpdate()
     {
         // Save colliders file
-		if ( Input.GetButton ( "Shift Modifier" ) && Input.GetButtonDown ( "Save" ) )
-		{
-			CollidersToCSV ();
-		}
+        if (Input.GetButton("Shift Modifier") && Input.GetButtonDown("Save"))
+        {
+            CollidersToCSV();
+        }
     }
 }
