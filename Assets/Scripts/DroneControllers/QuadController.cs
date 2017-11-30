@@ -20,6 +20,8 @@ namespace DroneControllers
 
         const float Meter2Latitude = 1.0f / 111111.0f;
 
+        const float Meter2Longitude = 1.0f / (0.8f * 111111.0f);
+
         const double latitude0 = 37.412939d;
 
         const double longitude0 = -121.995635d;
@@ -27,8 +29,6 @@ namespace DroneControllers
         double homeLatitude = 0.0d;
 
         double homeLongitude = 0.0d;
-
-        const float Meter2Longitude = 1.0f / (0.8f * 111111.0f);
 
         public float ForceNoise = 2.0f;
 
@@ -150,7 +150,7 @@ namespace DroneControllers
 
         public bool spinRotors = true;
 
-        public const float maxRotorRPM = 3600;
+        public float maxRotorRPM = 150;
 
         [SerializeField]
         float curRotorSpeed;
@@ -158,7 +158,6 @@ namespace DroneControllers
         //
         // Recording vars
         //
-
         public float pathRecordFrequency = 3;
         [System.NonSerialized]
         public bool isRecordingPath;
