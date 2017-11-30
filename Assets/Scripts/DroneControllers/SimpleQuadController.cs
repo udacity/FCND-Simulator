@@ -102,7 +102,6 @@ namespace DroneControllers
 //			if ( rotors_armed )
 //			{
 //				currentMovementBehavior.OnFixedUpdate ();
-//				r
 //			} else
 //			{
 //				pos_set = false;
@@ -317,7 +316,7 @@ namespace DroneControllers
 
         }
 
-        //Cormand the quad to a GPS location (latitude, relative_altitude, longitude)
+        //Command the quad to a GPS location (latitude, relative_altitude, longitude)
         public void CommandGPS(double latitude, double longitude, double altitude)
         {
             Vector3 localPosition;

@@ -38,7 +38,7 @@ namespace DroneControllers
 
         public float VDOP = 0.1f;
 
-        public bool MotorsEnabled { get; set; }
+        public bool RotorsEnabled { get; set; }
 
         public Vector3 Force { get { return force; } }
 
@@ -202,7 +202,7 @@ namespace DroneControllers
             }
             rb = GetComponent<Rigidbody>();
             rotors = new Transform[4] { frontLeftRotor, frontRightRotor, rearLeftRotor, rearRightRotor };
-            MotorsEnabled = true;
+            RotorsEnabled = true;
             //		UseGravity = false;
             Forward = forward.forward;
             Right = right.forward;
@@ -327,7 +327,7 @@ namespace DroneControllers
 
         void FixedUpdate()
         {
-            MotorsEnabled = inputCtrl.rotors_armed;
+            RotorsEnabled = inputCtrl.rotors_armed;
             if (resetFlag)
             {
                 ResetOrientation();
@@ -338,7 +338,7 @@ namespace DroneControllers
             rb.useGravity = UseGravity;
             CheckConstraints();
 
-            if (MotorsEnabled)
+            if (RotorsEnabled)
             {
                 // add force
                 if (clampForce)
@@ -346,6 +346,11 @@ namespace DroneControllers
                     force = Vector3.ClampMagnitude(force, maxForce);
                 }
                 rb.AddRelativeForce(force, forceMode);
+
+                if (maxTorqueDegrees != 0)
+                {
+                    maxTorqueRadians = maxTorqueDegrees * Mathf.Deg2Rad;
+                }
 
                 if (clampTorque)
                 {
