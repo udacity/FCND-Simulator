@@ -40,7 +40,12 @@ namespace DroneControllers
         public float maxAscentRate = 5.0f;
         public float maxDescentRate = 2.0f;
 
-        // movement behaviors: one of these will be selected when control switches between manual/guided, stabilized, position control, etc
+        // Movement behaviors are enabled based on the active control mode.
+        // Movement behavior hierachy:
+        // - Manual
+        //   - Stabilized
+        //   - Position Control
+        // - Guided
         public QuadMovementBehavior mb_Manual;
         public QuadMovementBehavior mb_ManualPosCtrl;
         public QuadMovementBehavior mb_Guided;
@@ -68,10 +73,9 @@ namespace DroneControllers
             rb = GetComponent<Rigidbody>();
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             if (controller == null)
+            {
                 controller = GetComponent<QuadController>();
-            // if (followCam == null)
-            //     followCam = camTransform.GetComponent<FollowCamera>();
-            rotors_armed = false;
+            }
             SelectMovementBehavior();
         }
 
@@ -87,7 +91,6 @@ namespace DroneControllers
             if (rotors_armed)
             {
                 currentMovementBehavior.OnLateUpdate();
-
             }
             else
             {
@@ -95,6 +98,7 @@ namespace DroneControllers
             }
         }
 
+        /* 
         void FixedUpdate()
         {
             // moved all input code to LateUpdate and offloaded to MovementBehavior
@@ -105,11 +109,10 @@ namespace DroneControllers
             //			{
             //				pos_set = false;
             //			}
+            return;
             moveSpeed = 15.0f;
             turnSpeed = 2.0f;
             maxTilt = 0.5f;
-
-
 
             Vector3 pitchYawRoll = controller.eulerAngles * Mathf.PI / 180.0f;
             Vector3 qrp = controller.AngularVelocityBody;
@@ -140,9 +143,8 @@ namespace DroneControllers
                     float yawCmd = Input.GetAxis("Yaw");
 
                     // If no control input provided (or in guided mode), use position hold
-                    if (guided || Mathf.Sqrt(Mathf.Pow(velCmdBody.x, 2.0f) + Mathf.Pow(velCmdBody.y, 2.0f) + Mathf.Pow(velCmdBody.z, 2.0f)) < posctl_band)
+                    if (guided || velCmdBody.magnitude < posctl_band)
                     {
-
                         // Set position
                         if (!pos_set)
                         {
@@ -150,8 +152,6 @@ namespace DroneControllers
                             pos_set = true;
                             // Debug.Log(posHoldLocal);
                         }
-
-
 
                         Vector3 posErrorLocal = posHoldLocal - localPosition;
                         Vector3 velCmdLocal;
@@ -228,7 +228,6 @@ namespace DroneControllers
                         angle_input[3] = maxTilt * angle_input[3] / angle_magnitude;
                     }
 
-
                     angle_input[0] = velCmdBody.y;
                     angle_input[1] = yawCmd;
                 }
@@ -239,7 +238,6 @@ namespace DroneControllers
                     // Pilot Input: Hdot, yawrate, pitch, roll
                     angle_input = new Vector4(Input.GetAxis("Thrust"), Input.GetAxis("Yaw"), Input.GetAxis("Vertical") * maxTilt, -Input.GetAxis("Horizontal") * maxTilt);
                 }
-
 
                 // Constrain the angle inputs between -1 and 1 (tilt, turning speed, and vert speed taken into account later)
                 for (int i = 1; i < 2; i++)
@@ -283,10 +281,6 @@ namespace DroneControllers
                     // angular rate to moment (pitch and roll)
                     pitch_moment[0] = Kp_q * pitchRateError;
                     roll_moment[2] = Kp_p * rollRateError;
-
-
-
-
                 }
                 else // User controls forces directly (not updated, do not use)
                 {
@@ -307,6 +301,7 @@ namespace DroneControllers
             }
 
         }
+        */
 
         // Command the quad to a GPS location (latitude, relative_altitude, longitude)
         public void CommandGPS(double latitude, double longitude, double altitude)
