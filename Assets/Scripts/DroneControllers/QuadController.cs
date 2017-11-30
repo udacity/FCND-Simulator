@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Profiling;
-using System.IO;
+﻿using UnityEngine;
 
 
 namespace DroneControllers
@@ -10,13 +6,7 @@ namespace DroneControllers
 
     public class QuadController : MonoBehaviour
     {
-        const float MPHToMS = 2.23693629205f;
-
         public static QuadController ActiveController;
-
-        public static int ImageWidth = 640;
-
-        public static int ImageHeight = 480;
 
         const float Meter2Latitude = 1.0f / 111111.0f;
 
@@ -114,8 +104,6 @@ namespace DroneControllers
 
         public Transform right;
 
-        public Camera droneCam1;
-
         public SimpleQuadController inputCtrl;
 
         public bool clampForce = true;
@@ -169,7 +157,6 @@ namespace DroneControllers
 
         Vector3 posePosition;
         Quaternion poseOrientation;
-        Texture2D dot;
 
         float lat_noise = 0.0f;
         float lon_noise = 0.0f;
