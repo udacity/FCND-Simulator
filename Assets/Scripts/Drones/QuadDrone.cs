@@ -51,7 +51,7 @@ namespace Drones
 
         public bool Armed()
         {
-            return simpleQuadCtrl.motors_armed;
+            return simpleQuadCtrl.rotors_armed;
         }
 
         public double EastVelocity()
@@ -63,12 +63,7 @@ namespace Drones
         {
             throw new System.NotImplementedException();
         }
-        /*
-        public void Goto(double latitude, double longitude, double altitude)
-        {
-            simpleQuadCtrl.CommandGPS(latitude, longitude, altitude);
-        }
-        */
+
         public void Goto(double north, double east, double altitude)
         {
             simpleQuadCtrl.CommandLocal((float)north, (float)east, (float)-altitude);
@@ -129,7 +124,6 @@ namespace Drones
 
         public void SetAttitude(double roll, double pitch, double yaw, double velocity)
         {
-            //throw new System.NotImplementedException();
             simpleQuadCtrl.CommandHeading((float)yaw);
         }
 

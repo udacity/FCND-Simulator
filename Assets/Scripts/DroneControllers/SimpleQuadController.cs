@@ -11,7 +11,7 @@ namespace DroneControllers
         public QuadController controller;
         // public FollowCamera followCam;
         //Vehicle status indicators
-        public bool motors_armed = false;
+        public bool rotors_armed = false;
         //Flight modes
         public bool guided = false;
         public bool stabilized = true;
@@ -65,7 +65,6 @@ namespace DroneControllers
         float hDotInt = 0.0f;
 		QuadMovementBehavior currentMovementBehavior;
 
-
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
@@ -74,7 +73,7 @@ namespace DroneControllers
                 controller = GetComponent<QuadController>();
             // if (followCam == null)
             //     followCam = camTransform.GetComponent<FollowCamera>();
-            motors_armed = false;
+            rotors_armed = false;
 			SelectMovementBehavior ();
         }
 
@@ -87,7 +86,7 @@ namespace DroneControllers
 				SelectMovementBehavior ();
 			}
 
-			if ( motors_armed )
+			if ( rotors_armed )
 			{
 				currentMovementBehavior.OnLateUpdate ();
 				
@@ -100,10 +99,10 @@ namespace DroneControllers
         void FixedUpdate ()
         {
 			// moved all input code to LateUpdate and offloaded to MovementBehavior
-//			if ( motors_armed )
+//			if ( rotors_armed )
 //			{
 //				currentMovementBehavior.OnFixedUpdate ();
-//				
+//				r
 //			} else
 //			{
 //				pos_set = false;
@@ -136,7 +135,7 @@ namespace DroneControllers
             var roll_moment = new Vector3(0.0f, 0.0f, 0.0f);
             var angle_input = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
-            if (motors_armed)
+            if (rotors_armed)
             {
                 //Outer control loop for from a position/velocity command to a hdot, yaw rate, pitch, roll command
                 if (posctl || guided)
@@ -308,8 +307,8 @@ namespace DroneControllers
                 //rb.AddRelativeTorque(yaw_moment + pitch_moment + roll_moment);
                 Vector3 total_moment = yaw_moment + pitch_moment + roll_moment;
 
-                controller.ApplyMotorForce(thrust);
-                controller.ApplyMotorTorque(total_moment);
+                controller.ApplyRotorForce(thrust);
+                controller.ApplyRotorTorque(total_moment);
             }
             else
             {
@@ -318,14 +317,13 @@ namespace DroneControllers
 
         }
 
-        //Command the quad to a GPS location (latitude, relative_altitude, longitude)
+        //Cormand the quad to a GPS location (latitude, relative_altitude, longitude)
         public void CommandGPS(double latitude, double longitude, double altitude)
         {
             Vector3 localPosition;
             localPosition = controller.GlobalToLocalPosition(longitude, latitude, altitude);
             CommandLocal(localPosition.x, localPosition.y, localPosition.z);            
         }
-
         //Command the quad to a local position (north, east, down)
         public void CommandLocal(float north, float east, float down)
         {
@@ -351,14 +349,14 @@ namespace DroneControllers
 
         public void ArmVehicle ()
 		{
-			motors_armed = true;
+			rotors_armed = true;
 			//controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
 			controller.SetHomePosition ( -121.995635d, 37.412939d, 0.0d );
 		}
 
         public void DisarmVehicle ()
         {
-            motors_armed = false;
+            rotors_armed = false;
         }
 
         public void SetGuidedMode (bool input_guided)
