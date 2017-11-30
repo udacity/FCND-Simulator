@@ -191,8 +191,8 @@ namespace MovementBehaviors
 
 			Vector3 total_moment = yaw_moment + pitch_moment + roll_moment;
 
-			controller.controller.ApplyMotorForce ( thrust );
-			controller.controller.ApplyMotorTorque ( total_moment );
+			controller.controller.ApplyRotorForce ( thrust );
+			controller.controller.ApplyRotorTorque ( total_moment );
 		}
 	}
 }
