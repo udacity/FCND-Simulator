@@ -16,6 +16,8 @@ public class DroneUI : MonoBehaviour
 	public Image windArrow;
     public Button armButton;
     public Button guideButton;
+	public ToggleGroup qualityGroup;
+	Toggle[] toggles;
 
 	public bool localizeWind;
 
@@ -34,6 +36,11 @@ public class DroneUI : MonoBehaviour
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
         // initialCameraY = minimapCamera.transform.position.y;
         // UpdateMinimapCameraPosition();
+		int quality = QualitySettings.GetQualityLevel ();
+		toggles = qualityGroup.transform.GetComponentsInChildren<Toggle> ();
+		for ( int i = 0; i < toggles.Length; i++ )
+			toggles [ i ].isOn = ( i == quality );
+		qualityGroup.NotifyToggleOn ( toggles [ quality ] );
     }
 
     // When the minimap is clicked, the point "birds-eye" is converted to the in game
@@ -175,4 +182,10 @@ public class DroneUI : MonoBehaviour
         // RenderTexture.active = null;
         // rt.Release();
     }
+
+	public void OnQualityToggle (int toggle)
+	{
+		if ( toggles [ toggle ].isOn && toggle != QualitySettings.GetQualityLevel () )
+			QualitySettings.SetQualityLevel ( toggle );
+	}
 }
