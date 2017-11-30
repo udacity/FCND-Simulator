@@ -122,7 +122,6 @@ namespace DroneControllers
         public bool clampTorque = true;
         public float maxForce = 100;
         public float maxTorqueDegrees = 17;
-        public float maxTorqueRadians;
         //	public bool clampMaxSpeed = true;
         //	public bool clampAngularVelocity = true;
         //	public float maxSpeedMPH = 60;
@@ -214,7 +213,6 @@ namespace DroneControllers
             rb.maxAngularVelocity = Mathf.Infinity;
             inputCtrl = GetComponent<SimpleQuadController>();
             fnNoise = new FastNoise(System.TimeSpan.FromTicks(System.DateTime.UtcNow.Ticks).Seconds);
-            maxTorqueRadians = maxTorqueDegrees * Mathf.Deg2Rad;
         }
 
         void Start()
@@ -260,11 +258,6 @@ namespace DroneControllers
                 resetFlag = false;
             }
             CheckSetPose();
-
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                showLegend = !showLegend;
-            }
 
             // Use this to have a follow camera rotate with the quad. not proper torque!
             if (rotateWithTorque)
@@ -347,10 +340,7 @@ namespace DroneControllers
                 }
                 rb.AddRelativeForce(force, forceMode);
 
-                if (maxTorqueDegrees != 0)
-                {
-                    maxTorqueRadians = maxTorqueDegrees * Mathf.Deg2Rad;
-                }
+                var maxTorqueRadians = maxTorqueDegrees * Mathf.Deg2Rad;
 
                 if (clampTorque)
                 {
@@ -446,19 +436,11 @@ namespace DroneControllers
             }
         }
 
-        public void SetPositionAndOrientation(Vector3 pos, Quaternion orientation, bool convertFromRos = false)
+        public void SetPositionAndOrientation(Vector3 pos, Quaternion orientation)
         {
             setPoseFlag = true;
-            if (convertFromRos)
-            {
-                posePosition = pos.ToUnity();
-                poseOrientation = orientation.ToUnity();
-            }
-            else
-            {
-                posePosition = pos;
-                poseOrientation = orientation;
-            }
+            posePosition = pos;
+            poseOrientation = orientation;
         }
 
         void CreateCameraTex()
@@ -640,6 +622,7 @@ namespace DroneControllers
             eulerAngles = ConstrainEuler(eulerAngles);
 
             // Temporary low pass filtered noise on the position (need to implement a Gaussian distribution in the future)
+            // NOTE: These numbers result in nice noise values and are MAGICAL
             lat_noise = 0.9f * lat_noise + 0.04f * HDOP * fnNoise.GetSimplex(Time.time * 121.7856f, 0, 0);
             alt_noise = 0.9f * alt_noise + 0.04f * VDOP * fnNoise.GetSimplex(0, Time.time * 23.14141f, 0);
             lon_noise = 0.9f * lon_noise + 0.04f * HDOP * fnNoise.GetSimplex(0, 0, Time.time * 127.7334f);
