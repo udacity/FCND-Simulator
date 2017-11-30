@@ -134,18 +134,6 @@ namespace DroneControllers
 
         public ForceMode torqueMode = ForceMode.Force;
 
-        public Texture2D[] axisArrows;
-
-        public Color[] axisColors;
-
-        public float arrowScreenSize = 100f;
-
-        public bool drawArrows;
-
-        public bool drawArrowsAlways;
-
-        public bool showLegend;
-
         public bool rotateWithTorque;
 
         public bool spinRotors = true;
@@ -170,9 +158,6 @@ namespace DroneControllers
         Vector3 torque;
         Vector3 lastVelocity;
         Vector3 lastAngularVelocity;
-        Ray ray;
-        RaycastHit rayHit;
-        BinarySerializer b = new BinarySerializer(1000);
 
         [SerializeField]
         float curSpeed;
