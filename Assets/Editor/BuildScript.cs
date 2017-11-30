@@ -38,7 +38,7 @@ public class BuildScript : MonoBehaviour
 		string[] scenes = new string[] {
 			// "Assets/Scenes/Launcher.unity",
 			"Assets/Scenes/MainMenu.unity",
-			"Assets/Scenes/ControlsMenu.unity",
+//			"Assets/Scenes/ControlsMenu.unity",
 			"Assets/Scenes/urban.unity",
 			"Assets/Scenes/MapScene2.unity",
 		};
