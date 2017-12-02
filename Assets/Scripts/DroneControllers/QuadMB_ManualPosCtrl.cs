@@ -6,27 +6,27 @@ using MovementBehaviors;
 
 namespace MovementBehaviors
 {
-	[CreateAssetMenu (menuName = "MovementBehaviors/Quad Manual Pos Ctrl")]
-	public class QuadMB_ManualPosCtrl : QuadMovementBehavior
-	{
-		Vector3 lastVelocityErrorBody;
-		float hDotInt;
+    [CreateAssetMenu(menuName = "MovementBehaviors/Quad Manual Pos Ctrl")]
+    public class QuadMB_ManualPosCtrl : QuadMovementBehavior
+    {
+        Vector3 lastVelocityErrorBody;
+        float hDotInt;
 
-		public override void OnLateUpdate ()
-		{
-			controller.moveSpeed = 15.0f;
-			controller.turnSpeed = 2.0f;
-			controller.maxTilt = 0.5f;
+        public override void OnLateUpdate()
+        {
+            controller.moveSpeed = 15.0f;
+            controller.turnSpeed = 2.0f;
+            controller.maxTilt = 0.5f;
 
-			Vector3 pitchYawRoll = controller.controller.eulerAngles * Mathf.PI / 180.0f;            
-			Vector3 qrp = controller.controller.AngularVelocityBody;
+            Vector3 pitchYawRoll = controller.controller.eulerAngles * Mathf.Deg2Rad;
+            Vector3 qrp = controller.controller.AngularVelocityBody;
 
-			Vector3 prqRate = controller.controller.AngularAccelerationBody;
-			Vector3 localPosition;
-			localPosition.z = controller.controller.GetLocalNorth ();
-			localPosition.y = (float) controller.controller.GetAltitude ();
-			localPosition.x = controller.controller.GetLocalEast ();
-			Vector3 bodyVelocity = controller.controller.BodyVelocity;
+            Vector3 prqRate = controller.controller.AngularAccelerationBody;
+            Vector3 localPosition;
+            localPosition.z = controller.controller.GetLocalNorth();
+            localPosition.y = (float)controller.controller.GetAltitude();
+            localPosition.x = controller.controller.GetLocalEast();
+            Vector3 bodyVelocity = controller.controller.BodyVelocity;
 
             Vector3 linearVelocity = controller.controller.LinearVelocity;
             linearVelocity.x = linearVelocity.x * Mathf.Cos(pitchYawRoll.y) - linearVelocity.z * Mathf.Sin(pitchYawRoll.y);
@@ -34,13 +34,13 @@ namespace MovementBehaviors
 
             //Direct Control of the moments
             Vector3 thrust = Vector3.zero;
-			Vector3 yaw_moment = Vector3.zero;
-			Vector3 pitch_moment = Vector3.zero;
-			Vector3 roll_moment = Vector3.zero;
-			Vector4 angle_input = Vector4.zero;
+            Vector3 yaw_moment = Vector3.zero;
+            Vector3 pitch_moment = Vector3.zero;
+            Vector3 roll_moment = Vector3.zero;
+            Vector4 angle_input = Vector4.zero;
 
-			Vector3 velCmdBody = new Vector3 ( Input.GetAxis ( "Horizontal" ), Input.GetAxis ( "Thrust" ), Input.GetAxis ( "Vertical" ) );
-			float yawCmd = Input.GetAxis ( "Yaw" );
+            Vector3 velCmdBody = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Thrust"), Input.GetAxis("Vertical"));
+            float yawCmd = Input.GetAxis("Yaw");
             //Outer control loop for from a position/velocity command to a hdot, yaw rate, pitch, roll command
 
             //If no control input provided (or in guided mode), use position hold
@@ -110,7 +110,7 @@ namespace MovementBehaviors
                             controller.yawSet = false;
                         }*/
 
-			/*
+            /*
             //Control loop from a body velocity command to a Hdot, yaw rate, pitch, and roll command
             float yawError = 0.0f - pitchYawRoll.y;
             if (yawError > Mathf.PI)
@@ -125,74 +125,74 @@ namespace MovementBehaviors
 
             yawCmd = controller.Kp_yaw * (0.0f - pitchYawRoll.y);
 			*/
-            
-			Vector3 velocityErrorBody = Vector3.zero;
-			Vector3 velocityErrorBodyD = Vector3.zero;
+
+            Vector3 velocityErrorBody = Vector3.zero;
+            Vector3 velocityErrorBodyD = Vector3.zero;
             velocityErrorBody.x = controller.moveSpeed * velCmdBody.x - linearVelocity.x;// (bodyVelocity.x);
             velocityErrorBody.z = controller.moveSpeed * velCmdBody.z - linearVelocity.z;// (bodyVelocity.z);
             velocityErrorBodyD = (velocityErrorBody - lastVelocityErrorBody) / Time.deltaTime;
-			lastVelocityErrorBody = velocityErrorBody;
+            lastVelocityErrorBody = velocityErrorBody;
 
-			angle_input[2] = controller.Kp_vel * velocityErrorBody.z + controller.Kd_vel * velocityErrorBodyD.z;
-			angle_input[3] = -controller.Kp_vel * velocityErrorBody.x + -controller.Kd_vel * velocityErrorBodyD.x;
+            angle_input[2] = controller.Kp_vel * velocityErrorBody.z + controller.Kd_vel * velocityErrorBodyD.z;
+            angle_input[3] = -controller.Kp_vel * velocityErrorBody.x + -controller.Kd_vel * velocityErrorBodyD.x;
 
-			float angle_magnitude = Mathf.Sqrt(Mathf.Pow(angle_input[2], 2.0f) + Mathf.Pow(angle_input[3], 2.0f));
-			if ( angle_magnitude > controller.maxTilt )
-			{
-				angle_input [ 2 ] = controller.maxTilt * angle_input [ 2 ] / angle_magnitude;
-				angle_input [ 3 ] = controller.maxTilt * angle_input [ 3 ] / angle_magnitude;
-			}
-
-
-			angle_input[0] = velCmdBody.y;
-			angle_input[1] = yawCmd;
-
-			//Constrain the angle inputs between -1 and 1 (tilt, turning speed, and vert speed taken into account later)
-			angle_input [ 1 ] = Mathf.Clamp ( angle_input [ 1 ], -1f, 1f );
-
-//			for (int i = 1; i < 2; i++)
-//			{
-//				if (angle_input[i] > 1.0f)
-//					angle_input[i] = 1.0f;
-//				else if (angle_input[i] < -1.0f)
-//					angle_input[i] = -1.0f;
-//			}
+            float angle_magnitude = Mathf.Sqrt(Mathf.Pow(angle_input[2], 2.0f) + Mathf.Pow(angle_input[3], 2.0f));
+            if (angle_magnitude > controller.maxTilt)
+            {
+                angle_input[2] = controller.maxTilt * angle_input[2] / angle_magnitude;
+                angle_input[3] = controller.maxTilt * angle_input[3] / angle_magnitude;
+            }
 
 
-			//Inner control loop: angle commands to forces
-			float thrust_nom = -1.0f * controller.rb.mass * Physics.gravity[1];
-			float hDotError = 0.0f;
-			if (angle_input[0] > 0.0f)
-			{
-				hDotError = (controller.maxAscentRate * angle_input[0] - 1.0f * controller.controller.LinearVelocity.y);
-			}
-			else
-			{
-				hDotError = (controller.maxDescentRate * angle_input[0] - 1.0f * controller.controller.LinearVelocity.y);
-			}
-			hDotInt = hDotInt + hDotError * Time.deltaTime;
+            angle_input[0] = velCmdBody.y;
+            angle_input[1] = yawCmd;
 
-			//hdot to thrust
-			thrust[1] = (controller.Kp_hdot * hDotError + controller.Ki_hdot * hDotInt + thrust_nom) / (Mathf.Cos(pitchYawRoll.x) * Mathf.Cos(pitchYawRoll.z));
+            //Constrain the angle inputs between -1 and 1 (tilt, turning speed, and vert speed taken into account later)
+            angle_input[1] = Mathf.Clamp(angle_input[1], -1f, 1f);
 
-			//yaw rate to yaw moment
-			yaw_moment[1] = controller.Kp_r * (controller.turnSpeed * angle_input[1] - qrp.y);
+            //			for (int i = 1; i < 2; i++)
+            //			{
+            //				if (angle_input[i] > 1.0f)
+            //					angle_input[i] = 1.0f;
+            //				else if (angle_input[i] < -1.0f)
+            //					angle_input[i] = -1.0f;
+            //			}
 
 
-			//angle to angular rate command (for pitch and roll)
-			float pitchError = angle_input[2] - pitchYawRoll.x;
-			float rollError = angle_input[3] - pitchYawRoll.z;
-			float pitchRateError = controller.Kp_pitch * pitchError - qrp.x;
-			float rollRateError = controller.Kp_roll * rollError - qrp.z;
+            //Inner control loop: angle commands to forces
+            float thrust_nom = -1.0f * controller.rb.mass * Physics.gravity[1];
+            float hDotError = 0.0f;
+            if (angle_input[0] > 0.0f)
+            {
+                hDotError = (controller.maxAscentRate * angle_input[0] - 1.0f * controller.controller.LinearVelocity.y);
+            }
+            else
+            {
+                hDotError = (controller.maxDescentRate * angle_input[0] - 1.0f * controller.controller.LinearVelocity.y);
+            }
+            hDotInt = hDotInt + hDotError * Time.deltaTime;
 
-			//angular rate to moment (pitch and roll)
-			pitch_moment[0] = controller.Kp_q * pitchRateError;
-			roll_moment[2] = controller.Kp_p * rollRateError;
+            //hdot to thrust
+            thrust[1] = (controller.Kp_hdot * hDotError + controller.Ki_hdot * hDotInt + thrust_nom) / (Mathf.Cos(pitchYawRoll.x) * Mathf.Cos(pitchYawRoll.z));
 
-			Vector3 total_moment = yaw_moment + pitch_moment + roll_moment;
+            //yaw rate to yaw moment
+            yaw_moment[1] = controller.Kp_r * (controller.turnSpeed * angle_input[1] - qrp.y);
 
-			controller.controller.ApplyRotorForce ( thrust );
-			controller.controller.ApplyRotorTorque ( total_moment );
-		}
-	}
+
+            //angle to angular rate command (for pitch and roll)
+            float pitchError = angle_input[2] - pitchYawRoll.x;
+            float rollError = angle_input[3] - pitchYawRoll.z;
+            float pitchRateError = controller.Kp_pitch * pitchError - qrp.x;
+            float rollRateError = controller.Kp_roll * rollError - qrp.z;
+
+            //angular rate to moment (pitch and roll)
+            pitch_moment[0] = controller.Kp_q * pitchRateError;
+            roll_moment[2] = controller.Kp_p * rollRateError;
+
+            Vector3 total_moment = yaw_moment + pitch_moment + roll_moment;
+
+            controller.controller.ApplyRotorForce(thrust);
+            controller.controller.ApplyRotorTorque(total_moment);
+        }
+    }
 }
