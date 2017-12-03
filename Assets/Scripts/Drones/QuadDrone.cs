@@ -132,7 +132,7 @@ namespace Drones
             throw new System.NotImplementedException();
         }
 
-        public void SetMotors(double a, double b, double c, double d)
+        public void SetMotors(double thrust, double pitchMoment, double yawMoment, double rollMoment)
         {
             throw new System.NotImplementedException();
         }

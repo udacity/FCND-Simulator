@@ -25,8 +25,7 @@ namespace DroneInterface
         void SetVelocity(double northVelocity, double eastVelocity, double verticalVelocity, double heading);
 
         // Command the following thrust (possible RPM) to the motors directly
-        // TODO: set appropriate variable names
-        void SetMotors(double a, double b, double c, double d);
+        void SetMotors(double thrust, double pitchMoment, double yawMoment, double rollMoment);
         // ...
 
         // Set the home position
