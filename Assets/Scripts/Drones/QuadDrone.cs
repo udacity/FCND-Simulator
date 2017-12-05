@@ -20,13 +20,16 @@ namespace Drones
             simpleQuadCtrl = GetComponent<SimpleQuadController>();
         }
 
-		public Vector3 Forward { get { return quadCtrl.Forward; } }
+        public Vector3 Forward { get { return quadCtrl.Forward; } }
 
         public Vector3 UnityCoords()
         {
             return this.transform.position;
         }
 
+        /// <summary>
+        /// NED coordinate frame
+        /// </summary>
         public Vector3 LocalCoords()
         {
             return new Vector3(quadCtrl.GetLocalNorth(), quadCtrl.GetLocalEast(), -1.0f * (float)quadCtrl.GetAltitude());
@@ -132,9 +135,9 @@ namespace Drones
             throw new System.NotImplementedException();
         }
 
-        public void SetMotors(double thrust, double pitchMoment, double yawMoment, double rollMoment)
+        public void SetMotors(float throttle, float pitchRate, float yawRate, float rollRate)
         {
-            throw new System.NotImplementedException();
+            simpleQuadCtrl.currentMovementBehavior.OverrideUpdate(throttle, pitchRate, yawRate, rollRate);
         }
 
         public void SetVelocity(double northVelocity, double eastVelocity, double verticalVelocity, double heading)
@@ -144,7 +147,7 @@ namespace Drones
 
         public void TakeControl(bool guided)
         {
-			simpleQuadCtrl.SetGuidedMode ( guided );
+            simpleQuadCtrl.SetGuidedMode(guided);
         }
 
         public double VerticalVelocity()
@@ -156,5 +159,21 @@ namespace Drones
         {
             return quadCtrl.GetYaw();
         }
+
+        public Vector3 AngularVelocity()
+        {
+            return quadCtrl.AngularVelocityBody;
+        }
+
+        public Vector3 AngularAcceleration()
+        {
+            return quadCtrl.AngularAccelerationBody;
+        }
+
+        public Vector3 LinearAcceleration()
+        {
+            return quadCtrl.LinearAcceleration;
+        }
     }
+
 }

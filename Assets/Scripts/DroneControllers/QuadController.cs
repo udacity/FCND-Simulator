@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using FlightUtils;
 
 
 namespace DroneControllers
@@ -7,10 +8,6 @@ namespace DroneControllers
     public class QuadController : MonoBehaviour
     {
         public static QuadController ActiveController;
-
-        const float Meter2Latitude = 1.0f / 111111.0f;
-
-        const float Meter2Longitude = 1.0f / (0.8f * 111111.0f);
 
         const double latitude0 = 37.412939d;
 
@@ -134,10 +131,6 @@ namespace DroneControllers
         //
         // Recording vars
         //
-        public float pathRecordFrequency = 3;
-        [System.NonSerialized]
-        public bool isRecordingPath;
-        float nextNodeTime;
 
         [System.NonSerialized]
         public Rigidbody rb;
@@ -150,7 +143,6 @@ namespace DroneControllers
         [SerializeField]
         float curSpeed;
 
-        byte[] cameraData;
         bool resetFlag;
         bool setPoseFlag;
         bool useTwist;
@@ -177,7 +169,6 @@ namespace DroneControllers
             Forward = forward.forward;
             Right = right.forward;
             Up = transform.up;
-            CreateCameraTex();
             // transform.position = Vector3.up * 10;
             UseGravity = rb.useGravity;
             UpdateConstraints();
@@ -213,12 +204,6 @@ namespace DroneControllers
             Up = transform.up;
             XAxis = xAxis.forward;
             YAxis = yAxis.forward;
-
-            if (isRecordingPath && Time.time > nextNodeTime)
-            {
-                PathPlanner.AddNode(Position, Rotation);
-                nextNodeTime = Time.time + pathRecordFrequency;
-            }
         }
 
         void LateUpdate()
@@ -414,34 +399,6 @@ namespace DroneControllers
             poseOrientation = orientation;
         }
 
-        void CreateCameraTex()
-        {
-            // for now, just prep a byte[] that we can put raycast data into
-
-
-            //		cameraTex = new RenderTexture ( ImageWidth, ImageHeight, 0, RenderTextureFormat.RHalf );
-            //		cameraTex.enableRandomWrite = true;
-            //		cameraTex.Create ();
-        }
-
-        public byte[] GetImageData()
-        {
-            return cameraData;
-        }
-
-        public void BeginRecordPath()
-        {
-            isRecordingPath = true;
-            PathPlanner.AddNode(Position, Rotation);
-            nextNodeTime = Time.time + pathRecordFrequency;
-        }
-
-        public void EndRecordPath()
-        {
-            PathPlanner.AddNode(Position, Rotation);
-            isRecordingPath = false;
-        }
-
         void CheckConstraints()
         {
             RigidbodyConstraints c = RigidbodyConstraints.None;
@@ -531,13 +488,7 @@ namespace DroneControllers
 
         public Vector3 GlobalToLocalPosition(double longitude, double latitude, double altitude)
         {
-            Vector3 localPosition;
-
-            localPosition.x = (float)(latitude - GetHomeLatitude()) / Meter2Latitude;
-            localPosition.y = (float)(longitude - GetHomeLongitude()) / Meter2Longitude;
-            localPosition.z = (float)(-altitude);
-            return localPosition;
-
+            return FlightUtils.Utils.GlobalToLocalCoords(longitude, latitude, altitude, GetHomeLongitude(), GetHomeLatitude());
         }
 
         public double GetAltitude()
@@ -603,6 +554,8 @@ namespace DroneControllers
             //            lon_noise = 0.9f * lon_noise + 0.2f * HDOP * (Random.value - 0.5f);
 
             // GPS only reported in local frame because float doesn't have precision required for full GPS coordinate
+            var Meter2Latitude = FlightUtils.Utils.Meter2Latitude;
+            var Meter2Longitude = FlightUtils.Utils.Meter2Longitude;
             GPS.z = rb.position.z * Meter2Latitude + Meter2Latitude * lat_noise;
             GPS.y = rb.position.y + alt_noise;
             GPS.x = rb.position.x * Meter2Longitude + Meter2Longitude * lon_noise;
