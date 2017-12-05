@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 
 namespace UdacityNetworking
 {
-	class ClientInfo
+	class TCPClientInfo
 	{
 		public int clientHash;
 		public TcpClient client;
@@ -19,7 +19,7 @@ namespace UdacityNetworking
 		public CancellationToken token;
 		public float lastRead;
 
-		public ClientInfo (TcpClient c, Action<object> cancellationCallback)
+		public TCPClientInfo (TcpClient c, Action<object> cancellationCallback)
 		{
 			client = c;
 			clientHash = c.GetHashCode ();
@@ -60,7 +60,7 @@ namespace UdacityNetworking
 		public bool IsServerStarted { get { return listener != null; } }
 		public bool IsConnected { get { return myClient != null && myClient.Connected; } }
 
-		ConcurrentDictionary<int, ClientInfo> clients = new ConcurrentDictionary<int, ClientInfo> ();
+		ConcurrentDictionary<int, TCPClientInfo> clients = new ConcurrentDictionary<int, TCPClientInfo> ();
 //		ConcurrentDictionary<int, TcpClient> clients = new ConcurrentDictionary<int, TcpClient> ();
 		string ip;
 		int port;
@@ -87,7 +87,7 @@ namespace UdacityNetworking
 				var keys = clients.Keys;
 				var _keys = new int[keys.Count];
 				keys.CopyTo ( _keys, 0 );
-				ClientInfo dummy;
+				TCPClientInfo dummy;
 				foreach ( var key in _keys )
 					if ( clients [ key ].IsTimeout () )
 					{
@@ -95,7 +95,7 @@ namespace UdacityNetworking
 						bool removed = clients.TryRemove ( key, out dummy );
 						Debug.LogWarning ( "timeout remove client " + key + " successful: " + removed );
 					}
-				nextTimeoutCheck = Time.unscaledTime + 2000.5f;
+				nextTimeoutCheck = Time.unscaledTime + NetworkController.Timeout;
 			}
 		}
 
@@ -129,7 +129,7 @@ namespace UdacityNetworking
 			while ( IsServerStarted )
 			{
 //				Debug.Log ( "checking messages" );
-				ClientInfo[] clientArr = new ClientInfo[clients.Count];
+				TCPClientInfo[] clientArr = new TCPClientInfo[clients.Count];
 //				TcpClient[] clientArr = new TcpClient[clients.Count];
 				clients.Values.CopyTo ( clientArr, 0 );
 //				var clientArr = clients.ToArray ();
@@ -164,7 +164,7 @@ namespace UdacityNetworking
 			}
 		}
 
-		// Starts an HTTP server and listens for new client connections.
+		// Starts an TCP server and listens for new client connections.
 		async Task TcpListenAsync()
 		{
 			try
@@ -181,12 +181,12 @@ namespace UdacityNetworking
 				listener.Start ();
 				Debug.Log ("Starting TCP MAVLink server ...");
 
-				while (running)
+				while ( running )
 				{
 					var client = await listener.AcceptTcpClientAsync ();
 					Debug.Log ("Accepted a connection.");
-					ClientInfo ci = new ClientInfo ( client, OnClientTimeout );
-//					ClientInfo dummy;
+					TCPClientInfo ci = new TCPClientInfo ( client, OnClientTimeout );
+//					TCPClientInfo dummy;
 //					foreach ( var pair in clients )
 //					{
 //						if ( pair.Value.client.Equals ( client ) && pair.Key != client.GetHashCode () )
@@ -239,7 +239,7 @@ namespace UdacityNetworking
 			if ( client != null )
 			{
 				int hash = client.GetHashCode ();
-				ClientInfo dummy = null;
+				TCPClientInfo dummy = null;
 				Debug.LogWarning ( "trying to remove client " + hash );
 				if ( !clients.TryRemove ( hash, out dummy ) )
 					Debug.LogError ( "couldn't remove a client? " + hash + " " + ( dummy == null ).ToString () );
@@ -255,13 +255,17 @@ namespace UdacityNetworking
 			running = false;
 			listener.Stop ();
 			listener = null;
+			if ( myClient != null )
+			{
+				myClient.Close ();
+			}
 		}
 
 		void OnClientTimeout (object obj)
 		{
-			ClientInfo info = (ClientInfo) obj;
+			TCPClientInfo info = (TCPClientInfo) obj;
 			TcpClient client;
-			ClientInfo ci;
+			TCPClientInfo ci;
 			bool removed = clients.TryRemove ( info.clientHash, out ci );
 //			bool removed = clients.TryRemove ( info.clientHash, out client );
 			Debug.LogWarning ( "client " + info.clientHash + " was removed? " + removed );
