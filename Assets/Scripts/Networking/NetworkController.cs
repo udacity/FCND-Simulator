@@ -11,21 +11,31 @@ using System.Threading.Tasks;
 
 namespace UdacityNetworking
 {
+	public enum ConnectionProtocol { TCP, UDP };
+
 	public class NetworkController : MonoBehaviour
 	{
+		public static float Timeout = 30;
+
 		public bool autoStartServer;
 		public Int32 port = 5760;
 		public string ip = "127.0.0.1";
+		public ConnectionProtocol protocol;
+		public float timeout = 30;
 
 		NetworkConnection connection;
 		event Action<MessageInfo> messageHandler = delegate {};
 
 		void Awake ()
 		{
+			Timeout = timeout;
 			#if UNITY_WEBGL && !UNITY_EDITOR
 			connection = new WebsocketConnection ();
 			#else
+			if ( protocol == ConnectionProtocol.TCP )
 			connection = new TCPConnection ();
+			else
+				connection = new UDPConnection ();
 			#endif
 
 			connection.AddMessageHandler ( MessageReceived );
