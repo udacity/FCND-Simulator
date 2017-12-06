@@ -67,7 +67,7 @@ public class Controls : MonoBehaviour
         networkController.EnqueueRecurringMessage(LocalPosition, Utils.HertzToMilliSeconds(telemetryIntervalHz));
         networkController.EnqueueRecurringMessage(Heartbeat, Utils.HertzToMilliSeconds(heartbeatIntervalHz));
         networkController.EnqueueRecurringMessage(HomePosition, Utils.HertzToMilliSeconds(homePositionIntervalHz));
-        networkController.EnqueueRecurringMessage(RawIMU, Utils.HertzToMilliSeconds(telemetryIntervalHz));
+        networkController.EnqueueRecurringMessage(HILStateQuaternion, Utils.HertzToMilliSeconds(telemetryIntervalHz));
     }
 
     List<byte[]> GlobalPosition()
@@ -96,19 +96,44 @@ public class Controls : MonoBehaviour
         return msgs;
     }
 
-    List<byte[]> RawIMU()
+    // List<byte[]> RawIMU()
+    // {
+    //     var gyro = drone.AngularVelocity();
+    //     var acc = drone.LinearAcceleration();
+    //     // only need the gyro fields
+    //     var msg = new Msg_raw_imu
+    //     {
+    //         xacc = (short)acc.x,
+    //         yacc = (short)acc.y,
+    //         zacc = (short)acc.z,
+    //         xgyro = (short)gyro.x,
+    //         ygyro = (short)gyro.y,
+    //         zgyro = (short)gyro.z,
+    //     };
+    //     var serializedPacket = mav.SendV2(msg);
+    //     var msgs = new List<byte[]>();
+    //     msgs.Add(serializedPacket);
+    //     return msgs;
+    // }
+
+    List<byte[]> HILStateQuaternion()
     {
         var gyro = drone.AngularVelocity();
         var acc = drone.LinearAcceleration();
-        // only need the gyro fields
-        var msg = new Msg_raw_imu
+        var q = new float[4] { 0, 0, 0, 0 };
+        var msg = new Msg_hil_state_quaternion
         {
+            attitude_quaternion = q,
+            yawspeed = gyro.y,
+            rollspeed = gyro.x,
+            pitchspeed = gyro.z,
             xacc = (short)acc.x,
             yacc = (short)acc.y,
             zacc = (short)acc.z,
-            xgyro = (short)gyro.x,
-            ygyro = (short)gyro.y,
-            zgyro = (short)gyro.z,
+            // NED
+            // vx = (short)drone.NorthVelocity(),
+            // vy = (short)drone.EastVelocity(),
+            // vz = (short)drone.VerticalVelocity()
         };
         var serializedPacket = mav.SendV2(msg);
         var msgs = new List<byte[]>();

@@ -90,11 +90,7 @@ namespace DroneControllers
 
             if (rotors_armed)
             {
-                // if (controlledRemotely) {
-
-                // } else {
-                currentMovementBehavior.OnLateUpdate();
-                // }
+                // currentMovementBehavior.OnLateUpdate();
             }
             else
             {
