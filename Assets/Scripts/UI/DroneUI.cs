@@ -22,6 +22,8 @@ public class DroneUI : MonoBehaviour
 	public bool localizeWind;
 
     private IDrone drone;
+	ButtonStateWatcher armWatcher;
+	ButtonStateWatcher guideWatcher;
     // public Image minimapImage;
     // public Camera minimapCamera;
     // private float initialCameraY;
@@ -41,70 +43,12 @@ public class DroneUI : MonoBehaviour
 		for ( int i = 0; i < toggles.Length; i++ )
 			toggles [ i ].isOn = ( i == quality );
 		qualityGroup.NotifyToggleOn ( toggles [ quality ] );
-    }
-
-    // When the minimap is clicked, the point "birds-eye" is converted to the in game
-    // 3D point, "world point".
-    //
-    // TODO: Use the world point for things, i.e. move the drone to that point.
-
-    // Updates the minimap camera position to the new location of the drone.
-    // void UpdateMinimapCameraPosition()
-    // {
-    //     var pos = drone.UnityCoords();
-    //     minimapCamera.transform.position = new Vector3(pos.x, pos.y + initialCameraY, pos.z);
-    // }
-
-    // public void MinimapOnClick()
-    // {
-    //     var c = minimapCamera;
-    //     var rt = minimapImage.GetComponent<RectTransform>();
-    //     var x = ((Input.mousePosition.x - (Screen.width - rt.rect.width)) / rt.rect.width) * Screen.width;
-    //     var y = Input.mousePosition.y / rt.rect.height * Screen.height;
-    //     var wp = c.ScreenToWorldPoint(new Vector3(x, y, initialCameraY));
-    //     Debug.Log("world point " + wp);
-    // }
-
-    // Toggles whether the drone is armed or disarmed.
-    public void ArmButtonOnClick()
-    {
-        drone.Arm(!drone.Armed());
-    }
-
-    // Toggles whether the drone is guided (autonomously controlled) or unguided (manually controlled).
-    public void GuideButtonOnClick()
-    {
-        drone.TakeControl(!drone.Guided());
-    }
-
-    void UpdateArmedButton()
-    {
-        var v = drone.Armed();
-        if (v)
-        {
-//            armButton.GetComponentInChildren<TMPText>().text = "Armed";
-        }
-        else
-        {
-//            armButton.GetComponentInChildren<TMPText>().text = "Disarmed";
-        }
-    }
-
-    void UpdateGuidedButton()
-    {
-        var v = drone.Guided();
-        if (v)
-        {
-//            guideButton.GetComponentInChildren<TMPText>().text = "Guided";
-        }
-        else
-        {
-//            guideButton.GetComponentInChildren<TMPText>().text = "Manual";
-        }
+		armWatcher = armButton.GetComponent<ButtonStateWatcher> ();
+		guideWatcher = guideButton.GetComponent<ButtonStateWatcher> ();
     }
 
     // Might be able to move this over to `LateUpdate`.
-    void FixedUpdate()
+    void Update()
     {
         UpdateArmedButton();
         UpdateGuidedButton();
@@ -112,7 +56,6 @@ public class DroneUI : MonoBehaviour
 
     void LateUpdate()
     {
-
         // Updates UI drone position
         var lat = drone.Latitude();
         var lon = drone.Longitude();
@@ -182,6 +125,54 @@ public class DroneUI : MonoBehaviour
         // RenderTexture.active = null;
         // rt.Release();
     }
+
+	// When the minimap is clicked, the point "birds-eye" is converted to the in game
+	// 3D point, "world point".
+	//
+	// TODO: Use the world point for things, i.e. move the drone to that point.
+
+	// Updates the minimap camera position to the new location of the drone.
+	// void UpdateMinimapCameraPosition()
+	// {
+	//     var pos = drone.UnityCoords();
+	//     minimapCamera.transform.position = new Vector3(pos.x, pos.y + initialCameraY, pos.z);
+	// }
+
+	// public void MinimapOnClick()
+	// {
+	//     var c = minimapCamera;
+	//     var rt = minimapImage.GetComponent<RectTransform>();
+	//     var x = ((Input.mousePosition.x - (Screen.width - rt.rect.width)) / rt.rect.width) * Screen.width;
+	//     var y = Input.mousePosition.y / rt.rect.height * Screen.height;
+	//     var wp = c.ScreenToWorldPoint(new Vector3(x, y, initialCameraY));
+	//     Debug.Log("world point " + wp);
+	// }
+
+	// Toggles whether the drone is armed or disarmed.
+	public void ArmButtonOnClick()
+	{
+		drone.Arm(!drone.Armed());
+	}
+
+	// Toggles whether the drone is guided (autonomously controlled) or unguided (manually controlled).
+	public void GuideButtonOnClick()
+	{
+		drone.TakeControl(!drone.Guided());
+	}
+
+	void UpdateArmedButton()
+	{
+		var v = drone.Armed();
+		if ( v != ( armWatcher.CurrentState == 1 ) )
+			armWatcher.OnClick ();
+	}
+
+	void UpdateGuidedButton()
+	{
+		var v = drone.Guided();
+		if ( v != ( guideWatcher.CurrentState == 1 ) )
+			guideWatcher.OnClick ();
+	}
 
 	public void OnQualityToggle (int toggle)
 	{
