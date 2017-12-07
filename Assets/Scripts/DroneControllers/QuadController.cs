@@ -511,22 +511,22 @@ namespace DroneControllers
             return LinearVelocity.y;
         }
 
+        // In Radians
         public float GetYaw()
         {
-            float yaw = (eulerAngles.y);
-            if (yaw < 0)
-                yaw = yaw + 360.0f;
-            return yaw;
+            return eulerAngles.y * Mathf.Deg2Rad;
         }
 
+        // In Radians
         public float GetPitch()
         {
-            return eulerAngles.x;
+            return eulerAngles.x * Mathf.Deg2Rad;
         }
 
+        // In Radians
         public float GetRoll()
         {
-            return eulerAngles.z;
+            return eulerAngles.z * Mathf.Deg2Rad;
         }
 
         public void NavigationUpdate()

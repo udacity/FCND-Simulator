@@ -18,13 +18,9 @@ public class Controls : MonoBehaviour
 {
     private IDrone drone;
     private Mavlink mav;
-    //    private bool running = true;
     public NetworkController networkController;
-
-    // track all clients
-    //    private ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
     public int heartbeatIntervalHz = 1;
-    public int telemetryIntervalHz = 4;
+    public int telemetryIntervalHz = 15;
     public int homePositionIntervalHz = 1;
 
     // enum to define the mode options
@@ -96,37 +92,22 @@ public class Controls : MonoBehaviour
         return msgs;
     }
 
-    // List<byte[]> RawIMU()
-    // {
-    //     var gyro = drone.AngularVelocity();
-    //     var acc = drone.LinearAcceleration();
-    //     // only need the gyro fields
-    //     var msg = new Msg_raw_imu
-    //     {
-    //         xacc = (short)acc.x,
-    //         yacc = (short)acc.y,
-    //         zacc = (short)acc.z,
-    //         xgyro = (short)gyro.x,
-    //         ygyro = (short)gyro.y,
-    //         zgyro = (short)gyro.z,
-    //     };
-    //     var serializedPacket = mav.SendV2(msg);
-    //     var msgs = new List<byte[]>();
-    //     msgs.Add(serializedPacket);
-    //     return msgs;
-    // }
-
     List<byte[]> HILStateQuaternion()
     {
         var gyro = drone.AngularVelocity();
         var acc = drone.LinearAcceleration();
-        var q = new float[4] { 0, 0, 0, 0 };
+        var pitch = (float)drone.Pitch();
+        var yaw = (float)drone.Yaw();
+        var roll = (float)drone.Roll();
+        // var q = Quaternion.Euler(pitch, yaw, roll);
         var msg = new Msg_hil_state_quaternion
         {
-            attitude_quaternion = q,
+            // attitude_quaternion = new float[4]{q.w, q.z, q.x, q.y},
+            // NOTE: sending euler angles back instead of the quaternion
+            attitude_quaternion = new float[4]{0, roll, pitch, yaw},
+            pitchspeed = gyro.x,
             yawspeed = gyro.y,
-            rollspeed = gyro.x,
-            pitchspeed = gyro.z,
+            rollspeed = gyro.z,
             xacc = (short)acc.x,
             yacc = (short)acc.y,
             zacc = (short)acc.z,
@@ -272,6 +253,7 @@ public class Controls : MonoBehaviour
 
         Debug.Log(string.Format("throttle = {0}, pitch rate = {1}, yaw rate = {2}, roll rate = {3}",
             throttle, pitchRate, yawRate, rollRate));
+        // pitch -> x, yaw -> y, roll -> z
         drone.SetMotors(throttle, pitchRate, yawRate, rollRate);
     }
 

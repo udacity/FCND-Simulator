@@ -14,33 +14,27 @@ namespace MovementBehaviors
 
         public override void OverrideUpdate(float throttle, float pitchRate, float yawRate, float rollRate)
         {
-            Vector3 pitchYawRoll = controller.controller.eulerAngles * Mathf.Deg2Rad;
+            var pitchYawRoll = new Vector3(controller.controller.GetPitch(), controller.controller.GetYaw(), controller.controller.GetRoll());
             Vector3 qrp = controller.controller.AngularVelocityBody;
 
             // Direct Control of the moments
             Vector3 thrust = Vector3.zero;
-            Vector3 yaw_moment = Vector3.zero;
             Vector3 pitch_moment = Vector3.zero;
+            Vector3 yaw_moment = Vector3.zero;
             Vector3 roll_moment = Vector3.zero;
-            Vector4 angle_input = Vector4.zero;
-
-            angle_input[0] = throttle;
-            angle_input[1] = yawRate;
-            angle_input[2] = pitchRate;
-            angle_input[3] = rollRate;
 
             // Inner control loop: angle commands to forces
             if (controller.stabilized)
             {
                 float thrust_nom = -1.0f * controller.rb.mass * Physics.gravity[1];
                 float hDotError = 0.0f;
-                if (angle_input[0] > 0.0f)
+                if (throttle > 0.0f)
                 {
-                    hDotError = (controller.maxAscentRate * angle_input[0] - 1.0f * controller.controller.LinearVelocity.y);
+                    hDotError = (controller.maxAscentRate * throttle - 1.0f * controller.controller.LinearVelocity.y);
                 }
                 else
                 {
-                    hDotError = (controller.maxDescentRate * angle_input[0] - 1.0f * controller.controller.LinearVelocity.y);
+                    hDotError = (controller.maxDescentRate * throttle - 1.0f * controller.controller.LinearVelocity.y);
                 }
                 hDotInt = hDotInt + hDotError * Time.deltaTime;
 
@@ -48,11 +42,11 @@ namespace MovementBehaviors
                 thrust[1] = (controller.Kp_hdot * hDotError + controller.Ki_hdot * hDotInt + thrust_nom) / (Mathf.Cos(pitchYawRoll.x) * Mathf.Cos(pitchYawRoll.z));
 
                 // yaw rate to yaw moment
-                yaw_moment[1] = controller.Kp_r * (controller.turnSpeed * angle_input[1] - qrp.y);
+                yaw_moment[1] = controller.Kp_r * (controller.turnSpeed * yawRate - qrp.y);
 
                 // angle to angular rate command (for pitch and roll)
-                float pitchError = angle_input[2] - pitchYawRoll.x;
-                float rollError = angle_input[3] - pitchYawRoll.z;
+                float pitchError = pitchRate - pitchYawRoll.x;
+                float rollError = rollRate - pitchYawRoll.z;
                 float pitchRateError = controller.Kp_pitch * pitchError - qrp.x;
                 float rollRateError = controller.Kp_roll * rollError - qrp.z;
 
@@ -62,10 +56,10 @@ namespace MovementBehaviors
             }
             else // User controls forces directly (not updated, do not use)
             {
-                thrust = controller.thrustForce * (new Vector3(0.0f, angle_input[0], 0.0f));
-                yaw_moment = controller.thrustMoment * (new Vector3(0.0f, angle_input[1], 0.0f));
-                pitch_moment = controller.thrustMoment * (new Vector3(angle_input[2] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, angle_input[2] * Mathf.Sqrt(2.0f) / 2.0f));
-                roll_moment = controller.thrustMoment * (new Vector3(angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, -1.0f * angle_input[3] * Mathf.Sqrt(2.0f) / 2.0f));
+                thrust = controller.thrustForce * (new Vector3(0.0f, throttle, 0.0f));
+                pitch_moment = controller.thrustMoment * (new Vector3(pitchRate * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, yawRate * Mathf.Sqrt(2.0f) / 2.0f));
+                yaw_moment = controller.thrustMoment * (new Vector3(0.0f, yawRate, 0.0f));
+                roll_moment = controller.thrustMoment * (new Vector3(rollRate * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, -1.0f * rollRate * Mathf.Sqrt(2.0f) / 2.0f));
             }
 
             Vector3 total_moment = yaw_moment + pitch_moment + roll_moment;
@@ -80,7 +74,11 @@ namespace MovementBehaviors
             controller.turnSpeed = 2.0f;
             controller.maxTilt = 0.5f;
 
-            Vector3 pitchYawRoll = controller.controller.eulerAngles * Mathf.PI / 180.0f;
+            var pitch = controller.controller.GetPitch();
+            var yaw = controller.controller.GetYaw();
+            var roll = controller.controller.GetRoll();
+
+            var pitchYawRoll = new Vector3(pitch, yaw, roll);
             Vector3 qrp = controller.controller.AngularVelocityBody;
 
             Vector3 prqRate = controller.controller.AngularAccelerationBody;
@@ -114,6 +112,7 @@ namespace MovementBehaviors
             Vector3 velCmdLocal;
             // print("Position Hold: " + posHoldLocal);
             // print("Local Position: " + localPosition);
+            Debug.Log("Position error " + posErrorLocal);
 
             //Deadband around the position hold
             if (Mathf.Sqrt(Mathf.Pow(posErrorLocal.x, 2.0f) + Mathf.Pow(posErrorLocal.z, 2.0f)) < controller.posHoldDeadband)
@@ -128,7 +127,7 @@ namespace MovementBehaviors
             }
 
             velCmdLocal.y = controller.Kp_alt * posErrorLocal.y;
-
+            // Debug.Log(controller.Kp_alt);
 
             //Rotate into the local heading frame
             float cosYaw = Mathf.Cos(pitchYawRoll.y);
@@ -155,6 +154,7 @@ namespace MovementBehaviors
                 yawError = yawError + 2.0f * Mathf.PI;
             }
             yawCmd = controller.Kp_yaw * yawError;
+            // yawCmd = 0f;
 
             //Control loop from a body velocity command to a Hdot, yaw rate, pitch, and roll command
             Vector3 velocityErrorBody = Vector3.zero;
@@ -186,6 +186,8 @@ namespace MovementBehaviors
             //				else if (angle_input[i] < -1.0f)
             //					angle_input[i] = -1.0f;
             //			}
+
+            Debug.Log(string.Format("Throttle, yawr, pitchr, rollr {0}", angle_input));
 
             //Inner control loop: angle commands to forces
             if (controller.stabilized)

@@ -38,18 +38,19 @@ namespace DroneInterface
         // Corresponds to velocity along the z axis.
         double VerticalVelocity();
 
-        // In degrees
+        // In radians
         double Roll();
 
-        // In degrees
+        // In radians
         double Yaw();
 
-        // In degrees
+        // In radians
         double Pitch();
 
-        // in Radians/sec
+        // In Radians/sec
         Vector3 AngularVelocity();
 
+        // In Radians/sec^2
         Vector3 AngularAcceleration();
 
         Vector3 LinearAcceleration();

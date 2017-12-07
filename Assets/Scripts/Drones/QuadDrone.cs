@@ -22,6 +22,9 @@ namespace Drones
 
         public Vector3 Forward { get { return quadCtrl.Forward; } }
 
+        /// <summary>
+        /// EUN coordinate frame
+        /// </summary>
         public Vector3 UnityCoords()
         {
             return this.transform.position;
