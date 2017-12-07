@@ -18,8 +18,11 @@ namespace UdacityNetworking
 		public static float Timeout = 30;
 
 		public bool autoStartServer;
-		public Int32 port = 5760;
-		public string ip = "127.0.0.1";
+		public Int32 serverPort = 5760;
+		public string serverIP = "127.0.0.1";
+		public bool autoStartClient;
+		public Int32 remotePort = 5760;
+		public string remoteIP = "127.0.0.1";
 		public ConnectionProtocol protocol;
 		public float timeout = 30;
 
@@ -28,6 +31,8 @@ namespace UdacityNetworking
 
 		void Awake ()
 		{
+			if ( autoStartServer && autoStartClient )
+				Debug.LogWarning ( "AutoStartServer and AutoStartClient are both set. Server will override the client option" );
 			Timeout = timeout;
 			#if UNITY_WEBGL && !UNITY_EDITOR
 			connection = new WebsocketConnection ();
@@ -42,6 +47,9 @@ namespace UdacityNetworking
 
 			if ( autoStartServer )
 				StartServer ();
+			else
+			if ( autoStartClient )
+				StartClient ();
 		}
 
 		void Update ()
@@ -52,7 +60,12 @@ namespace UdacityNetworking
 		
 		public void StartServer ()
 		{
-			connection.StartServer ( ip, port );
+			connection.StartServer ( serverIP, serverPort );
+		}
+
+		public void StartClient ()
+		{
+			connection.Connect ( remoteIP, remotePort );
 		}
 
 		public void AddMessageHandler (Action<MessageInfo> handler)
