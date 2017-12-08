@@ -6,14 +6,16 @@ namespace DroneControllers
     public class SimpleQuadController : MonoBehaviour
     {
         public QuadController controller;
-        // public FollowCamera followCam;
-        //Vehicle status indicators
-        public bool rotors_armed = false;
-        //Flight modes
+        public bool armed = false;
         public bool guided = false;
         public bool stabilized = true;
         public bool posctl = true;
-        //Control Gains
+        public bool remoteController = false;
+
+        ///
+        /// Control Gains
+        ///
+
         public float Kp_hdot = 10.0f;
         public float Kp_yaw = 6.5f;
         public float Kp_r = 20.0f;
@@ -22,12 +24,12 @@ namespace DroneControllers
         public float Kp_pitch = 6.5f;
         public float Kp_q = 10.0f;
         public float Kp_pos = 0.1f;
-        public float Kp_vel = 0.3f;//-0.05f;
+        public float Kp_vel = 0.3f;
         public float Kd_vel = 0.0f;
         public float Kp_alt = 1.0f;
         public float Ki_hdot = 0.1f;
 
-        //Vehicle control thresholds
+        // Vehicle control thresholds
         public float posctl_band = 0.1f;
         public float posHoldDeadband = 1.0f;
         public float moveSpeed = 10;
@@ -88,9 +90,9 @@ namespace DroneControllers
                 SelectMovementBehavior();
             }
 
-            if (rotors_armed)
+            if (armed && !remoteController)
             {
-                // currentMovementBehavior.OnLateUpdate();
+                currentMovementBehavior.OnLateUpdate();
             }
             else
             {
@@ -130,14 +132,14 @@ namespace DroneControllers
 
         public void ArmVehicle()
         {
-            rotors_armed = true;
+            armed = true;
             // controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
             controller.SetHomePosition(-121.995635d, 37.412939d, 0.0d);
         }
 
         public void DisarmVehicle()
         {
-            rotors_armed = false;
+            armed = false;
         }
 
         public void SetGuidedMode(bool input_guided)

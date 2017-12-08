@@ -23,8 +23,10 @@ public class Controls : MonoBehaviour
     public int telemetryIntervalHz = 15;
     public int homePositionIntervalHz = 1;
 
-    // enum to define the mode options
-    // this follows the PX4 mode option set
+    /// <summary>
+    /// enum to define the mode options
+    /// this follows the PX4 mode option set
+    /// </summary>
     public enum MAIN_MODE : uint
     {
         CUSTOM_MAIN_MODE_MANUAL = 1,
@@ -48,8 +50,6 @@ public class Controls : MonoBehaviour
         IS_LOITER = 0x3000,
     }
 
-
-    // Use this for initialization
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
@@ -60,12 +60,43 @@ public class Controls : MonoBehaviour
 
         networkController.AddMessageHandler(OnMessageReceived);
         networkController.EnqueueRecurringMessage(GlobalPosition, Utils.HertzToMilliSeconds(telemetryIntervalHz));
-        networkController.EnqueueRecurringMessage(LocalPosition, Utils.HertzToMilliSeconds(telemetryIntervalHz));
+        networkController.EnqueueRecurringMessage(LocalPositionNED, Utils.HertzToMilliSeconds(telemetryIntervalHz));
         networkController.EnqueueRecurringMessage(Heartbeat, Utils.HertzToMilliSeconds(heartbeatIntervalHz));
         networkController.EnqueueRecurringMessage(HomePosition, Utils.HertzToMilliSeconds(homePositionIntervalHz));
-        networkController.EnqueueRecurringMessage(HILStateQuaternion, Utils.HertzToMilliSeconds(telemetryIntervalHz));
+        networkController.EnqueueRecurringMessage(AttitudeTarget, Utils.HertzToMilliSeconds(telemetryIntervalHz));
     }
 
+    /// <summary>
+    /// http://mavlink.org/messages/common#SCALED_PRESSURE
+    /// </summary>
+    List<byte[]> ScaledPressure()
+    {
+        var msg = new Msg_raw_imu
+        {
+        };
+        var serializedPacket = mav.SendV2(msg);
+        var msgs = new List<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
+    }
+
+    /// <summary>
+    /// http://mavlink.org/messages/common#RAW_IMU
+    /// </summary>
+    List<byte[]> RawIMU()
+    {
+        var msg = new Msg_raw_imu
+        {
+        };
+        var serializedPacket = mav.SendV2(msg);
+        var msgs = new List<byte[]>();
+        msgs.Add(serializedPacket);
+        return msgs;
+    }
+
+    /// <summary>
+    /// http://mavlink.org/messages/common#GLOBAL_POSITION_INT
+    /// </summary>
     List<byte[]> GlobalPosition()
     {
         var lat = drone.Latitude() * 1e7d;
@@ -92,29 +123,26 @@ public class Controls : MonoBehaviour
         return msgs;
     }
 
-    List<byte[]> HILStateQuaternion()
+    /// <summary>
+    /// http://mavlink.org/messages/common#ATTITUDE_TARGET
+    /// <summary>
+    List<byte[]> AttitudeTarget()
     {
         var gyro = drone.AngularVelocity();
-        var acc = drone.LinearAcceleration();
         var pitch = (float)drone.Pitch();
         var yaw = (float)drone.Yaw();
         var roll = (float)drone.Roll();
-        // var q = Quaternion.Euler(pitch, yaw, roll);
-        var msg = new Msg_hil_state_quaternion
+        var q = Quaternion.Euler(pitch, yaw, roll);
+        var msg = new Msg_attitude_target
         {
-            // attitude_quaternion = new float[4]{q.w, q.z, q.x, q.y},
-            // NOTE: sending euler angles back instead of the quaternion
-            attitude_quaternion = new float[4]{0, roll, pitch, yaw},
-            pitchspeed = gyro.x,
-            yawspeed = gyro.y,
-            rollspeed = gyro.z,
-            xacc = (short)acc.x,
-            yacc = (short)acc.y,
-            zacc = (short)acc.z,
-            // NED
-            // vx = (short)drone.NorthVelocity(),
-            // vy = (short)drone.EastVelocity(),
-            // vz = (short)drone.VerticalVelocity()
+            type_mask = 0x00,
+            // ENU to NED frame
+            q = new float[4] { q.w, q.z, q.x, q.y },
+            body_pitch_rate = gyro.x,
+            body_roll_rate = gyro.y,
+            body_yaw_rate = gyro.z,
+            // TODO: Get drone thrust
+            thrust = 0,
         };
         var serializedPacket = mav.SendV2(msg);
         var msgs = new List<byte[]>();
@@ -122,7 +150,10 @@ public class Controls : MonoBehaviour
         return msgs;
     }
 
-    List<byte[]> LocalPosition()
+    /// <summary>
+    ///  http://mavlink.org/messages/common#LOCAL_POSITION_NED
+    /// <summary>
+    List<byte[]> LocalPositionNED()
     {
         var north = drone.LocalCoords().x;
         var east = drone.LocalCoords().y;
@@ -143,6 +174,9 @@ public class Controls : MonoBehaviour
         return msgs;
     }
 
+    /// <summary>
+    ///  http://mavlink.org/messages/common#HEARTBEAT
+    /// <summary>
     List<byte[]> Heartbeat()
     {
         var guided = drone.Guided();
@@ -178,6 +212,9 @@ public class Controls : MonoBehaviour
         return msgs;
     }
 
+    /// <summary>
+    ///  http://mavlink.org/messages/common#HOME_POSITION
+    /// <summary>
     List<byte[]> HomePosition()
     {
         // TODO: figure out where these are saved for the drone
@@ -226,10 +263,9 @@ public class Controls : MonoBehaviour
             case "MavLink.Msg_set_position_target_local_ned":
                 MsgLocalPositionTarget(packet);
                 break;
-            case "MavLink.Msg_set_actuator_control_target":
-                MsgActuatorControl(packet);
+            case "MavLink.Msg_set_attitude_target":
+                MsgSetAttitudeTarget(packet);
                 break;
-            // TODO: add attitude, etc
             default:
                 Debug.Log("Unknown message type !!!");
                 break;
@@ -242,19 +278,16 @@ public class Controls : MonoBehaviour
         print("failed to receive a packet!!!");
     }
 
-    void MsgActuatorControl(MavlinkPacket pack)
+    void MsgSetAttitudeTarget(MavlinkPacket pack)
     {
-        var msg = (MavLink.Msg_set_actuator_control_target)pack.Message;
-        var controls = msg.controls;
-        var rollRate = controls[0];
-        var pitchRate = controls[1];
-        var yawRate = controls[2];
-        var throttle = controls[3];
+        var msg = (MavLink.Msg_set_attitude_target)pack.Message;
+        var rollRate = msg.body_roll_rate;
+        var pitchRate = msg.body_pitch_rate;
+        var yawRate = msg.body_yaw_rate;
+        var thrust = msg.thrust;
 
-        Debug.Log(string.Format("throttle = {0}, pitch rate = {1}, yaw rate = {2}, roll rate = {3}",
-            throttle, pitchRate, yawRate, rollRate));
-        // pitch -> x, yaw -> y, roll -> z
-        drone.SetMotors(throttle, pitchRate, yawRate, rollRate);
+        Debug.Log(string.Format("thrust = {0}, pitch rate = {1}, yaw rate = {2}, roll rate = {3}", thrust, pitchRate, yawRate, rollRate));
+        drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
     }
 
     // handle the COMMAND_LONG message
@@ -369,8 +402,10 @@ public class Controls : MonoBehaviour
     }
 
 
-    // TODO: keep track of when last heartbeat was received and
-    // potentially do something.
+    /// <summary>
+    /// TODO: Potentially keep track of when last heartbeat was received and
+    /// do something.
+    /// </summary>
     void MsgHeartbeat(MavlinkPacket pack)
     {
         // var msg = (MavLink.Msg_heartbeat) pack.Message;

@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace DroneInterface
 {
-    // This interface describes the minimal information that must be retrievable
-    // pertaining to a drone's state.
+    /// <summary>
+    /// This interface describes the minimal information that must be retrievable
+    /// pertaining to a drone's state.
+    /// </summary>
     public interface IDroneState
     {
         Vector3 Forward { get; }
@@ -23,42 +25,63 @@ namespace DroneInterface
 
         double HomeLongitude();
 
-        // Returns whether the drone is armed or disarmed
+        /// <summary>
+        /// Returns whether the drone is armed or disarmed.
+        /// </summary>
         bool Armed();
 
-        // Returns whether the drone is being driven guided (autonomous) or unguided (manual)
+        /// <summary>
+        /// Returns whether the drone is being driven guided (autonomous) or unguided (manual)
+        /// </summary>
         bool Guided();
 
-        // Corresponds to velocity along the x axis.
+        /// <summary>
+        /// Corresponds to velocity along the x axis.
+        /// </summary>
         double NorthVelocity();
 
-        // Corresponds to velocity along the y axis.
+        /// <summary>
+        /// Corresponds to velocity along the y axis.
+        /// </summary>
         double EastVelocity();
 
-        // Corresponds to velocity along the z axis.
+        /// <summary>
+        /// Corresponds to velocity along the z axis.
+        /// </summary>
         double VerticalVelocity();
 
-        // In radians
+        /// <summary>
+        /// Returns the rotation around the z-axis in radians.
+        /// </summary>
         double Roll();
 
-        // In radians
+        /// <summary>
+        /// Returns the rotation around the y-axis in radians.
+        /// </summary>
         double Yaw();
 
-        // In radians
+        /// <summary>
+        /// Returns the rotation around the x-axis in radians.
+        /// </summary>
         double Pitch();
 
-        // In Radians/sec
+        /// <summary>
+        /// Returns angular velocity in Radians/sec
+        /// </summary>
         Vector3 AngularVelocity();
 
-        // In Radians/sec^2
+        /// <summary>
+        /// Returns angular acceleration in Radians/sec^2
+        /// </summary>
         Vector3 AngularAcceleration();
 
         Vector3 LinearAcceleration();
 
-        // TODO: flesh this out more, determine if it's necessary.
-        // Returns whether the drone is executing a command (we possibly return the info about the command being executed).
-        // I'm not sure this is a required method but it seems it could be useful.
+        /// <summary>
+        /// TODO: flesh this out more, determine if it's necessary.
+        /// Returns whether the drone is executing a command (we possibly return the info about the command being executed).
+        /// I'm not sure this is a required method but it seems it could be useful.
+        /// </summary>
         bool ExecutingCommand();
-        // ...
     }
 }

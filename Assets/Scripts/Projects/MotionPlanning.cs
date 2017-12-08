@@ -308,7 +308,7 @@ public class MotionPlanning : MonoBehaviour
                 print("Vehicle Command: " + msg.x + "," + msg.y + "," + msg.z);
                 print("Vehicle Command: (" + north + "," + east + "," + alt + ")");
                 drone.Goto(north, east, alt);
-                drone.SetAttitude(0.0, 0.0, msg.yaw, 0.0);
+                drone.SetAttitude(0.0, msg.yaw, 0.0, 0.0);
             }
             else if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_VELOCITY) == 0)
             {

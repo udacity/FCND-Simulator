@@ -53,9 +53,9 @@ namespace DroneControllers
         public Vector3 GPS;
 
         /// <summary>
-        /// x -> pitch
-        /// y -> yaw
-        /// z -> roll
+        /// x-axis -> pitch
+        /// y-axis -> yaw
+        /// z-axis -> roll
         /// </summary>
         public Vector3 eulerAngles;
 
@@ -128,9 +128,9 @@ namespace DroneControllers
         [SerializeField]
         float curRotorSpeed;
 
-        //
-        // Recording vars
-        //
+        ///
+        /// Recording vars
+        ///
 
         [System.NonSerialized]
         public Rigidbody rb;
@@ -244,7 +244,7 @@ namespace DroneControllers
             {
                 float rps = maxRotorRPM / 60f;
                 float degPerSec = rps * 360f;
-                if (inputCtrl.rotors_armed)
+                if (inputCtrl.armed)
                 {
                     curRotorSpeed = degPerSec;
                 }
@@ -276,7 +276,7 @@ namespace DroneControllers
 
         void FixedUpdate()
         {
-            RotorsEnabled = inputCtrl.rotors_armed;
+            RotorsEnabled = inputCtrl.armed;
             if (resetFlag)
             {
                 ResetOrientation();
@@ -332,13 +332,13 @@ namespace DroneControllers
             return angle;
         }
 
-        public void ApplyRotorForce(Vector3 v)
+        public void ApplyMotorForce(Vector3 v)
         {
             useTwist = false;
             force = v + ForceNoise * Random.insideUnitSphere;
         }
 
-        public void ApplyRotorTorque(Vector3 v)
+        public void ApplyMotorTorque(Vector3 v)
         {
             useTwist = false;
             torque = v + TorqueNoise * Random.insideUnitSphere;
@@ -439,12 +439,12 @@ namespace DroneControllers
             ConstrainTorqueZ = (rb.constraints & RigidbodyConstraints.FreezeRotationY) != 0;
         }
 
-        // Convenience retrieval functions. These probably should be set as properties
+        /// Convenience retrieval functions. These probably should be set as properties
         public void SetHomePosition(double longitude, double latitude, double altitude)
         {
+            // NOTE: Currently you can only set the home lat/lon, not altitude
             SetHomeLongitude(longitude);
             SetHomeLatitude(latitude);
-            // Currently you can only set the home lat/lon, not altitude
         }
         public double GetLatitude()
         {
@@ -511,19 +511,16 @@ namespace DroneControllers
             return LinearVelocity.y;
         }
 
-        // In Radians
         public float GetYaw()
         {
             return eulerAngles.y * Mathf.Deg2Rad;
         }
 
-        // In Radians
         public float GetPitch()
         {
             return eulerAngles.x * Mathf.Deg2Rad;
         }
 
-        // In Radians
         public float GetRoll()
         {
             return eulerAngles.z * Mathf.Deg2Rad;

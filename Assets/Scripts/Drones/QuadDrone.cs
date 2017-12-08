@@ -4,18 +4,16 @@ using UnityEngine;
 
 namespace Drones
 {
-    // Drone based off a quadrotor/quadcopter.
+    /// <summary>
+    /// Drone based off a Quadrotor.
+    /// </summary>
     class QuadDrone : MonoBehaviour, IDrone
     {
         public QuadController quadCtrl;
         public SimpleQuadController simpleQuadCtrl;
 
-        // TODO: Add the components here at runtime instead of in
-        // the unity editor.
         void Awake()
         {
-            // gameObject.AddComponent<QuadController>();
-            // gameObject.AddComponent<SimpleQuadController>();
             quadCtrl = GetComponent<QuadController>();
             simpleQuadCtrl = GetComponent<SimpleQuadController>();
         }
@@ -23,7 +21,7 @@ namespace Drones
         public Vector3 Forward { get { return quadCtrl.Forward; } }
 
         /// <summary>
-        /// EUN coordinate frame
+        /// Returns coordinates in EUN frame
         /// </summary>
         public Vector3 UnityCoords()
         {
@@ -31,7 +29,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// NED coordinate frame
+        /// Returns coordinates in NED frame
         /// </summary>
         public Vector3 LocalCoords()
         {
@@ -57,7 +55,7 @@ namespace Drones
 
         public bool Armed()
         {
-            return simpleQuadCtrl.rotors_armed;
+            return simpleQuadCtrl.armed;
         }
 
         public double EastVelocity()
@@ -128,22 +126,22 @@ namespace Drones
             return quadCtrl.GetRoll();
         }
 
-        public void SetAttitude(double roll, double pitch, double yaw, double velocity)
+        public void SetAttitude(double pitch, double yaw, double roll, double velocity)
         {
             simpleQuadCtrl.CommandHeading((float)yaw);
         }
 
-        public void SetAttitudeRate(double rollRate, double pitchRate, double yawRate, double thrust)
+        public void SetAttitudeRate(double pitchRate, double yawRate, double rollRate, double thrust)
         {
-            throw new System.NotImplementedException();
+            simpleQuadCtrl.currentMovementBehavior.RemoteUpdate((float)thrust, (float)pitchRate, (float)yawRate, (float)rollRate);
         }
 
         public void SetMotors(float throttle, float pitchRate, float yawRate, float rollRate)
         {
-            simpleQuadCtrl.currentMovementBehavior.OverrideUpdate(throttle, pitchRate, yawRate, rollRate);
+            throw new System.NotImplementedException();
         }
 
-        public void SetVelocity(double northVelocity, double eastVelocity, double verticalVelocity, double heading)
+        public void SetVelocity(double vx, double vy, double vz, double heading)
         {
             throw new System.NotImplementedException();
         }
