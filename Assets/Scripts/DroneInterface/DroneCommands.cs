@@ -6,14 +6,19 @@ namespace DroneInterface
 	public interface IDroneCommands
     {
         /// <summary>
-        /// The drone will navigate to the 3D point (local_north, local_east, local_down)
+        /// The drone will navigate to the local 3D point in NED frame
         /// </summary>
-        void Goto(double latitude, double longitude, double altitude);
+        void Goto(double north, double east, double down);
 
         /// <summary>
         /// The drone will fly up or down to the desired relative altitude
         /// </summary>
         void Hover(double altitude);
+
+        /// <summary>
+        /// Set whether the drone is using a remote controller.
+        /// </summary>
+        void ControlRemotely(bool remote);
 
         /// <summary>
         /// Arm/disarm the drone
@@ -36,11 +41,12 @@ namespace DroneInterface
         void SetAttitudeRate(double pitchRate, double yawRate, double rollRate, double thrust);
 
         /// <summary>
-        /// The drone will fly at the commanded velocity in EUN frame and heading
+        /// The drone will fly at the commanded velocity in EUN frame and heading (radians).
         /// </summary>
         void SetVelocity(double vx, double vy, double vz, double heading);
 
         /// <summary>
+        /// TODO: Make sure this is correct
         /// Command the following throttle (possible RPM) to the motors directly
         /// </summary>
         void SetMotors(float throttle, float pitchRate, float yawRate, float rollRate);

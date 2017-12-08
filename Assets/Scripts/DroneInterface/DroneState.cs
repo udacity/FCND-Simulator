@@ -26,6 +26,12 @@ namespace DroneInterface
         double HomeLongitude();
 
         /// <summary>
+        /// Returns whether the drone is using a remote controller.
+        /// For example, a PID controller from a client python script.
+        /// </summary>
+        bool ControlledRemotely();
+
+        /// <summary>
         /// Returns whether the drone is armed or disarmed.
         /// </summary>
         bool Armed();

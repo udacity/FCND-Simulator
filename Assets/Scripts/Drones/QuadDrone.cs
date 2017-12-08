@@ -175,6 +175,16 @@ namespace Drones
         {
             return quadCtrl.LinearAcceleration;
         }
+
+        public void ControlRemotely(bool remote)
+        {
+            this.simpleQuadCtrl.remote = remote;
+        }
+
+        public bool ControlledRemotely()
+        {
+            return this.simpleQuadCtrl.remote;
+        }
     }
 
 }

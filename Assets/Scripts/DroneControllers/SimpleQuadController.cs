@@ -10,7 +10,7 @@ namespace DroneControllers
         public bool guided = false;
         public bool stabilized = true;
         public bool posctl = true;
-        public bool remoteController = false;
+        public bool remote = false;
 
         ///
         /// Control Gains
@@ -90,7 +90,7 @@ namespace DroneControllers
                 SelectMovementBehavior();
             }
 
-            if (armed && !remoteController)
+            if (armed && !remote)
             {
                 currentMovementBehavior.OnLateUpdate();
             }

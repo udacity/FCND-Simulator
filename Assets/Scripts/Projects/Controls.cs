@@ -53,6 +53,7 @@ public class Controls : MonoBehaviour
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
+        drone.ControlRemotely(true);
         mav = new Mavlink();
         // setup event listeners
         mav.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
