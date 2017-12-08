@@ -1,7 +1,7 @@
 # FCND Simulator
 
 ## Download and Launch the Simulator
-Download the simulator build that's appropriate for your operating system. Here are the links for [Linux](https://github.com/udacity/FlyingCarND-Sim "Linux"), [Mac](https://github.com/udacity/FlyingCarND-Sim "Mac"), or [Windows](https://github.com/udacity/FlyingCarND-Sim "Windows").
+Download the simulator build that's appropriate for your operating system from the [releases tab](https://github.com/udacity/FCND-Simulator/releases).
 
 Unzip the compressed file and launch the simulator by double clicking on the app / executable file.
 

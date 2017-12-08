@@ -18,6 +18,7 @@ public class ButtonStateWatcher : MonoBehaviour, ISerializationCallbackReceiver
 {
 	public bool resetOnEnable;
 	public ButtonState[] states;
+	public int CurrentState { get { return curState; } }
 
 	Button button;
 	TMPText buttonTitle;

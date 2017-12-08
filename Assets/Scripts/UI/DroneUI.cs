@@ -13,56 +13,31 @@ public class DroneUI : MonoBehaviour
     public Image windArrow;
     public Button armButton;
     public Button guideButton;
+    public ToggleGroup qualityGroup;
+    Toggle[] toggles;
 
     public bool localizeWind;
 
     private IDrone drone;
+    ButtonStateWatcher armWatcher;
+    ButtonStateWatcher guideWatcher;
 
     void Awake()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-    }
-
-    // Toggles whether the drone is armed or disarmed.
-    public void ArmButtonOnClick()
-    {
-        drone.Arm(!drone.Armed());
-    }
-
-    // Toggles whether the drone is guided (autonomously controlled) or unguided (manually controlled).
-    public void GuideButtonOnClick()
-    {
-        drone.TakeControl(!drone.Guided());
-    }
-
-    void UpdateArmedButton()
-    {
-        var v = drone.Armed();
-        if (v)
+        int quality = QualitySettings.GetQualityLevel();
+        toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
+        for (int i = 0; i < toggles.Length; i++)
         {
-            //            armButton.GetComponentInChildren<TMPText>().text = "Armed";
+            toggles[i].isOn = (i == quality);
         }
-        else
-        {
-            //            armButton.GetComponentInChildren<TMPText>().text = "Disarmed";
-        }
+        qualityGroup.NotifyToggleOn(toggles[quality]);
+        armWatcher = armButton.GetComponent<ButtonStateWatcher>();
+        guideWatcher = guideButton.GetComponent<ButtonStateWatcher>();
     }
 
-    void UpdateGuidedButton()
-    {
-        var v = drone.Guided();
-        if (v)
-        {
-            //            guideButton.GetComponentInChildren<TMPText>().text = "Guided";
-        }
-        else
-        {
-            //            guideButton.GetComponentInChildren<TMPText>().text = "Manual";
-        }
-    }
-
-    // Might be able to move this over to `LateUpdate`.
-    void FixedUpdate()
+    // Might be able to move this over to LateUpdate.
+    void Update()
     {
         UpdateArmedButton();
         UpdateGuidedButton();
@@ -70,7 +45,6 @@ public class DroneUI : MonoBehaviour
 
     void LateUpdate()
     {
-
         // Updates UI drone position
         var lat = drone.Latitude();
         var lon = drone.Longitude();
@@ -111,7 +85,43 @@ public class DroneUI : MonoBehaviour
         {
             windArrow.enabled = false;
         }
+    }
 
+    // Toggles whether the drone is armed or disarmed.
+    public void ArmButtonOnClick()
+    {
+        drone.Arm(!drone.Armed());
+    }
 
+    // Toggles whether the drone is guided (autonomously controlled) or unguided (manually controlled).
+    public void GuideButtonOnClick()
+    {
+        drone.TakeControl(!drone.Guided());
+    }
+
+    void UpdateArmedButton()
+    {
+        var v = drone.Armed();
+        if (v != (armWatcher.CurrentState == 1))
+        {
+            armWatcher.OnClick();
+        }
+    }
+
+    void UpdateGuidedButton()
+    {
+        var v = drone.Guided();
+        if (v != (guideWatcher.CurrentState == 1))
+        {
+            guideWatcher.OnClick();
+        }
+    }
+
+    public void OnQualityToggle(int toggle)
+    {
+        if (toggles[toggle].isOn && toggle != QualitySettings.GetQualityLevel())
+        {
+            QualitySettings.SetQualityLevel(toggle);
+        }
     }
 }
