@@ -1,14 +1,5 @@
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using UnityEngine;
 
-// usings needed for TCP/IP
-using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-
-using MavLink;
 using FlightUtils;
 using Drones;
 using DroneInterface;
