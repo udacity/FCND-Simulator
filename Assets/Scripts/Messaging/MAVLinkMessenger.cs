@@ -38,7 +38,7 @@ namespace Messaging
             IS_LAND = 0x2000,
             IS_LOITER = 0x3000,
         }
-        private Mavlink mav;
+        public Mavlink mav {get; private set;}
         private IDrone drone;
 
         public MAVLinkMessenger()
