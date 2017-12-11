@@ -130,7 +130,7 @@ namespace Messaging
             var msg = new Msg_attitude_target
             {
                 type_mask = 0x00,
-                // ENU to NED frame
+                // EUN to NED frame
                 q = new float[4] { q.w, q.z, q.x, q.y },
                 body_pitch_rate = gyro.x,
                 body_roll_rate = gyro.y,
@@ -340,7 +340,7 @@ namespace Messaging
 
             var msg = new Msg_hil_state_quaternion
             {
-                // ENU to NED frame
+                // EUN to NED frame
                 attitude_quaternion = new float[4] { q.w, q.z, q.x, q.y },
 
                 rollspeed = (float)roll,
