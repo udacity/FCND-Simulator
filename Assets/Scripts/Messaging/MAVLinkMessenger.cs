@@ -5,7 +5,7 @@ using DroneInterface;
 using MavLink;
 using UnityEngine;
 using UdacityNetworking;
-using ReferenceFrames;
+using FlightUtils;
 
 // TODO: Is an Interface a reference or value type?
 namespace Messaging
@@ -285,6 +285,8 @@ namespace Messaging
             var vz = drone.VerticalVelocity();
 
             var acc = drone.LinearAcceleration().EUNToNED();
+            // Latitude and longitude defined in WGS84
+            // https://en.wikipedia.org/wiki/World_Geodetic_System
             var lat = drone.Latitude() * 1e7d;
             var lon = drone.Longitude() * 1e7d;
             // NOTE: Altitude needs to be AMSL (above mean sea level, positive)
@@ -303,11 +305,12 @@ namespace Messaging
                 eph = (ushort)0,
                 epv = (ushort)0,
                 vel = (ushort)0,
-                vn = (short)0,
-                ve = (short)0,
-                vd = (short)0,
+                vn = (short)drone.NorthVelocity(),
+                ve = (short)drone.EastVelocity(),
+                vd = (short)drone.VerticalVelocity(),
                 cog = (ushort)0,
-                satellites_visible = (byte)0,
+                // Set to 255 if unknown
+                satellites_visible = (byte)255,
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();

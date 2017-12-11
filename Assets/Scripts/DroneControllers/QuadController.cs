@@ -488,7 +488,7 @@ namespace DroneControllers
 
         public Vector3 GlobalToLocalPosition(double longitude, double latitude, double altitude)
         {
-            return FlightUtils.Utils.GlobalToLocalCoords(longitude, latitude, altitude, GetHomeLongitude(), GetHomeLatitude());
+            return FlightUtils.Conversions.GlobalToLocalCoords(longitude, latitude, altitude, GetHomeLongitude(), GetHomeLatitude());
         }
 
         public double GetAltitude()
@@ -551,8 +551,8 @@ namespace DroneControllers
             //            lon_noise = 0.9f * lon_noise + 0.2f * HDOP * (Random.value - 0.5f);
 
             // GPS only reported in local frame because float doesn't have precision required for full GPS coordinate
-            var Meter2Latitude = FlightUtils.Utils.Meter2Latitude;
-            var Meter2Longitude = FlightUtils.Utils.Meter2Longitude;
+            var Meter2Latitude = FlightUtils.Conversions.Meter2Latitude;
+            var Meter2Longitude = FlightUtils.Conversions.Meter2Longitude;
             GPS.z = rb.position.z * Meter2Latitude + Meter2Latitude * lat_noise;
             GPS.y = rb.position.y + alt_noise;
             GPS.x = rb.position.x * Meter2Longitude + Meter2Longitude * lon_noise;
