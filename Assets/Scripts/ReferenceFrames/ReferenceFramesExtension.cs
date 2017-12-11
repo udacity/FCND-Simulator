@@ -2,57 +2,79 @@ using UnityEngine;
 
 namespace ReferenceFrames
 {
-    // x -> east/long
-    // z -> north/lat
-    // y -> altitude
+    /// <summary>
+    /// Converts between coordinate frames, supported:
+    ///     NED, ENU, EUN (Unity)
+    ///  
+    /// D - negative altitude
+    /// U - positive altitude
+    /// </summary>
     public static class ReferenceFramesExtension
     {
         /// <summary>
-        /// (x, y, z) -> (z, x, -y)
+        /// EUN -> NED
         /// </summary>
-        public static Vector3 UnityToNED(this Vector3 v)
+        public static Vector3 EUNToNED(this Vector3 v)
         {
-            return new Vector3(v.z, v.x, -v.y);
+            var east = v.x;
+            var up = v.y;
+            var north = v.z;
+            return new Vector3(north, east, -up);
         }
 
         /// <summary>
-        /// (x, y, z) -> (x, z, y)
+        /// EUN -> ENU
         /// </summary>
-        public static Vector3 UnityToENU(this Vector3 v)
+        public static Vector3 EUNToENU(this Vector3 v)
         {
-            return new Vector3(v.x, v.z, v.y);
+            var east = v.x;
+            var up = v.y;
+            var north = v.z;
+            return new Vector3(east, north, up);
         }
         
         /// <summary>
-        /// (z, x, -y) -> (x, y, z)
+        /// NED -> EUN
         /// </summary>
-        public static Vector3 NEDToUnity(this Vector3 v)
+        public static Vector3 NEDToEUN(this Vector3 v)
         {
-            return new Vector3(v.y, -v.z, v.x);
+            var north = v.x;
+            var east = v.y;
+            var down = v.z;
+            return new Vector3(east, -down, north);
         }
 
         /// <summary>
-        /// (x, z, y) -> (x, y, z)
+        /// ENU -> EUN
         /// </summary>
-        public static Vector3 ENUToUnity(this Vector3 v)
+        public static Vector3 ENUToEUN(this Vector3 v)
         {
-            return new Vector3(v.x, v.z, v.y);
+            var east = v.x;
+            var north = v.y;
+            var up = v.z;
+            return new Vector3(east, up, north);
         }
 
         /// <summary>
-        /// (z, x, -y) -> (x, z, y)
+        /// NED -> ENU
         /// </summary>
         public static Vector3 NEDToENU(this Vector3 v)
         {
-            return new Vector3(v.y, v.x, -v.z);
+            var north = v.x;
+            var east = v.y;
+            var down = v.z;
+            return new Vector3(east, north, -down);
         }
 
         /// <summary>
-        /// (x, z, y) -> (z, x, -y)
+        /// ENU -> NED
         /// </summary>
-        public static Vector3 ENUToNed(this Vector3 v)
+        public static Vector3 ENUToNED(this Vector3 v)
         {
-            return new Vector3(v.y, v.x, -v.z);
+            var east = v.x;
+            var north = v.y;
+            var up = v.z;
+            return new Vector3(north, east, -up);
         }
     }
 }
