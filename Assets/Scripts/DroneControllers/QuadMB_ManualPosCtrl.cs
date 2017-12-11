@@ -39,8 +39,61 @@ namespace MovementBehaviors
 			Vector3 roll_moment = Vector3.zero;
 			Vector4 angle_input = Vector4.zero;
 
-			Vector3 velCmdBody = new Vector3 ( Input.GetAxis ( "Horizontal" ), Input.GetAxis ( "Thrust" ), Input.GetAxis ( "Vertical" ) );
+            Vector3 velCmdBody = new Vector3();
+            Vector3 deltaPosition = new Vector3(0.0f,0.0f,0.0f);
+            Vector3 posCmd = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Thrust"), Input.GetAxis("Vertical"));
 			float yawCmd = Input.GetAxis ( "Yaw" );
+
+
+            float cosYaw = Mathf.Cos(pitchYawRoll.y);
+            float sinYaw = Mathf.Sin(pitchYawRoll.y);
+            float posCmdNorm = Mathf.Sqrt(posCmd.x * posCmd.x + posCmd.z * posCmd.z);
+            float maxDistance = 5.0f;
+            if (posCmdNorm > controller.posctl_band)
+            {
+                
+                deltaPosition.x = posCmd.x/posCmdNorm* maxDistance;
+                deltaPosition.z = posCmd.z / posCmdNorm * maxDistance;
+                controller.posHoldLocal.x = localPosition.x + deltaPosition.x * cosYaw + deltaPosition.z * sinYaw;
+                controller.posHoldLocal.z = localPosition.z - deltaPosition.x * sinYaw + deltaPosition.z * cosYaw;
+            }
+
+            float maxDeltaAltitude = 5.0f;
+            if(Mathf.Abs(posCmd.y) > controller.posctl_band)
+            {
+                deltaPosition.y = posCmd.y * maxDeltaAltitude;
+                controller.posHoldLocal.y = localPosition.y + deltaPosition.y;
+            }
+
+
+            
+            Vector3 posErrorLocal = controller.posHoldLocal - localPosition;
+            Vector3 velCmdLocal;
+
+            //Deadband around the position hold
+            if (Mathf.Sqrt(Mathf.Pow(posErrorLocal.x, 2.0f) + Mathf.Pow(posErrorLocal.z, 2.0f)) < controller.posHoldDeadband)
+            {
+                velCmdLocal.x = 0.0f;
+                velCmdLocal.z = 0.0f;
+            }
+            else
+            {
+                velCmdLocal.x = controller.Kp_pos * posErrorLocal.x;
+                velCmdLocal.z = controller.Kp_pos * posErrorLocal.z;
+            }
+            //Deadband around the position hold
+            if (Mathf.Sqrt(Mathf.Pow(posErrorLocal.x, 2.0f) + Mathf.Pow(posErrorLocal.z, 2.0f)) < controller.posHoldDeadband)
+            {
+                velCmdLocal.x = 0.0f;
+                velCmdLocal.z = 0.0f;
+            }
+
+            velCmdLocal.y = controller.Kp_alt * posErrorLocal.y;
+
+            //Rotate into the local heading frame
+            velCmdBody.x = cosYaw * velCmdLocal.x - sinYaw * velCmdLocal.z;
+            velCmdBody.z = sinYaw * velCmdLocal.x + cosYaw * velCmdLocal.z;
+            velCmdBody.y = velCmdLocal.y;
             //Outer control loop for from a position/velocity command to a hdot, yaw rate, pitch, roll command
 
             //If no control input provided (or in guided mode), use position hold
@@ -110,7 +163,7 @@ namespace MovementBehaviors
                             controller.yawSet = false;
                         }*/
 
-			/*
+            /*
             //Control loop from a body velocity command to a Hdot, yaw rate, pitch, and roll command
             float yawError = 0.0f - pitchYawRoll.y;
             if (yawError > Mathf.PI)
@@ -125,8 +178,9 @@ namespace MovementBehaviors
 
             yawCmd = controller.Kp_yaw * (0.0f - pitchYawRoll.y);
 			*/
-            
-			Vector3 velocityErrorBody = Vector3.zero;
+
+            //Horizontal Controller
+            Vector3 velocityErrorBody = Vector3.zero;
 			Vector3 velocityErrorBodyD = Vector3.zero;
             velocityErrorBody.x = controller.moveSpeed * velCmdBody.x - linearVelocity.x;// (bodyVelocity.x);
             velocityErrorBody.z = controller.moveSpeed * velCmdBody.z - linearVelocity.z;// (bodyVelocity.z);
@@ -143,9 +197,11 @@ namespace MovementBehaviors
 				angle_input [ 3 ] = controller.maxTilt * angle_input [ 3 ] / angle_magnitude;
 			}
 
+            //Vertical controller
+            angle_input[0] = velCmdBody.y;
 
-			angle_input[0] = velCmdBody.y;
-			angle_input[1] = yawCmd;
+            //Yaw controller
+            angle_input[1] = yawCmd;
 
 			//Constrain the angle inputs between -1 and 1 (tilt, turning speed, and vert speed taken into account later)
 			angle_input [ 1 ] = Mathf.Clamp ( angle_input [ 1 ], -1f, 1f );
