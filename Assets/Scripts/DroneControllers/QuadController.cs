@@ -325,10 +325,13 @@ namespace DroneControllers
         float ConstrainAngle(float angle)
         {
             if (angle > 180f)
+            {
                 angle -= 360f;
+            }
             if (angle < -180f)
+            {
                 angle += 360f;
-
+            }
             return angle;
         }
 

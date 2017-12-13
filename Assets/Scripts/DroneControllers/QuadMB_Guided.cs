@@ -14,58 +14,52 @@ namespace MovementBehaviors
 
         public override void RemoteUpdate(float thrust, float pitchRate, float yawRate, float rollRate)
         {
-            var pitchYawRoll = new Vector3(controller.controller.GetPitch(), controller.controller.GetYaw(), controller.controller.GetRoll());
-            Vector3 qrp = controller.controller.AngularVelocityBody;
+            // var pitchYawRoll = new Vector3(controller.controller.GetPitch(), controller.controller.GetYaw(), controller.controller.GetRoll());
+            // Vector3 qrp = controller.controller.AngularVelocityBody;
 
-            // Direct Control of the moments
-            Vector3 thrustV = Vector3.zero;
-            Vector3 pitchMoment = Vector3.zero;
-            Vector3 yawMoment = Vector3.zero;
-            Vector3 rollMoment = Vector3.zero;
+            // // Direct Control of the moments
+            var thrustV = Vector3.zero;
 
-            // Inner control loop: angle commands to forces
-            if (controller.stabilized)
-            {
-                float thrust_nom = -1.0f * controller.rb.mass * Physics.gravity[1];
-                float hDotError = 0.0f;
-                if (thrust > 0.0f)
-                {
-                    hDotError = (controller.maxAscentRate * thrust - 1.0f * controller.controller.LinearVelocity.y);
-                }
-                else
-                {
-                    hDotError = (controller.maxDescentRate * thrust - 1.0f * controller.controller.LinearVelocity.y);
-                }
-                hDotInt = hDotInt + hDotError * Time.deltaTime;
+            // // Inner control loop: angle commands to forces
+            // float thrust_nom = -1.0f * controller.rb.mass * Physics.gravity[1];
+            // float hDotError = 0.0f;
+            // if (thrust > 0.0f)
+            // {
+            //     hDotError = (controller.maxAscentRate * thrust - 1.0f * controller.controller.LinearVelocity.y);
+            // }
+            // else
+            // {
+            //     hDotError = (controller.maxDescentRate * thrust - 1.0f * controller.controller.LinearVelocity.y);
+            // }
+            // hDotInt = hDotInt + hDotError * Time.deltaTime;
 
-                // hdot to thrust
-                thrustV[1] = (controller.Kp_hdot * hDotError + controller.Ki_hdot * hDotInt + thrust_nom) / (Mathf.Cos(pitchYawRoll.x) * Mathf.Cos(pitchYawRoll.z));
+            // // hdot to thrust
+            // thrustV[1] = (controller.Kp_hdot * hDotError + controller.Ki_hdot * hDotInt + thrust_nom) / (Mathf.Cos(pitchYawRoll.x) * Mathf.Cos(pitchYawRoll.z));
 
-                // yaw rate to yaw moment
-                yawMoment[1] = controller.Kp_r * (controller.turnSpeed * yawRate - qrp.y);
+            // // yaw rate to yaw moment
+            // var yawMoment = controller.Kp_r * (controller.turnSpeed * yawRate - qrp.y);
 
-                // angle to angular rate command (for pitch and roll)
-                float pitchError = pitchRate - pitchYawRoll.x;
-                float rollError = rollRate - pitchYawRoll.z;
-                float pitchRateError = controller.Kp_pitch * pitchError - qrp.x;
-                float rollRateError = controller.Kp_roll * rollError - qrp.z;
+            // // angle to angular rate command (for pitch and roll)
+            // float pitchError = pitchRate - pitchYawRoll.x;
+            // float rollError = rollRate - pitchYawRoll.z;
+            // float pitchRateError = controller.Kp_pitch * pitchError - qrp.x;
+            // float rollRateError = controller.Kp_roll * rollError - qrp.z;
 
-                // angular rate to moment (pitch and roll)
-                pitchMoment[0] = controller.Kp_q * pitchRateError;
-                rollMoment[2] = controller.Kp_p * rollRateError;
-            }
-            else // User controls forces directly (not updated, do not use)
-            {
-                thrustV = controller.thrustForce * (new Vector3(0.0f, thrust, 0.0f));
-                pitchMoment = controller.thrustMoment * (new Vector3(pitchRate * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, yawRate * Mathf.Sqrt(2.0f) / 2.0f));
-                yawMoment = controller.thrustMoment * (new Vector3(0.0f, yawRate, 0.0f));
-                rollMoment = controller.thrustMoment * (new Vector3(rollRate * Mathf.Sqrt(2.0f) / 2.0f, 0.0f, -1.0f * rollRate * Mathf.Sqrt(2.0f) / 2.0f));
-            }
+            // // angular rate to moment (pitch and roll)
+            // var pitchMoment = controller.Kp_q * pitchRateError;
+            // var rollMoment = controller.Kp_p * rollRateError;
 
-            Vector3 total_moment = yawMoment + pitchMoment + rollMoment;
+            thrustV[1] = thrust;
+            var pitchMoment = pitchRate;
+            var yawMoment = yawRate;
+            var rollMoment = rollRate;
+
+            var totalMoment = new Vector3(pitchMoment, yawMoment, rollMoment);
+
+            Debug.Log(string.Format("thrust vector {0}, moments vector {1}", thrustV, totalMoment));
 
             controller.controller.ApplyMotorForce(thrustV);
-            controller.controller.ApplyMotorTorque(total_moment);
+            controller.controller.ApplyMotorTorque(totalMoment);
         }
 
         public override void OnLateUpdate()

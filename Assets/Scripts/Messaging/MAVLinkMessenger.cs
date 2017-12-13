@@ -411,8 +411,6 @@ namespace Messaging
             var pitchRate = msg.body_pitch_rate;
             var yawRate = msg.body_yaw_rate;
             var thrust = msg.thrust;
-
-            Debug.Log(string.Format("thrust = {0}, pitch rate = {1}, yaw rate = {2}, roll rate = {3}", thrust, pitchRate, yawRate, rollRate));
             drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
         }
 
