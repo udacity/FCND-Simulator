@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ReferenceFrames
+namespace FlightUtils
 {
     /// <summary>
     /// Converts between coordinate frames, supported:

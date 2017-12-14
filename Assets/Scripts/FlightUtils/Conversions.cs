@@ -1,11 +1,9 @@
 using UnityEngine;
-using System.IO;
-using MavLink;
 
 
 namespace FlightUtils
 {
-    public static class Utils
+    public static class Conversions
     {
 
         /// <summary>

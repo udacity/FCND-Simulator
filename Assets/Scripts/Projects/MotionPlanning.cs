@@ -43,11 +43,11 @@ public class MotionPlanning : MonoBehaviour
         SetupLidarRays();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);
-        networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Utils.HertzToMilliSeconds(telemetryIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Utils.HertzToMilliSeconds(telemetryIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.Heartbeat, Utils.HertzToMilliSeconds(heartbeatIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.HomePosition, Utils.HertzToMilliSeconds(homePositionIntervalHz));
-        networkController.EnqueueRecurringMessage(SensorInfo, Utils.HertzToMilliSeconds(sensorIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
+        networkController.EnqueueRecurringMessage(SensorInfo, Conversions.HertzToMilliSeconds(sensorIntervalHz));
 
     }
 

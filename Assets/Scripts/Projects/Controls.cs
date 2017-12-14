@@ -12,7 +12,7 @@ public class Controls : MonoBehaviour
     private IDrone drone;
     public NetworkController networkController;
     public int heartbeatIntervalHz = 1;
-    public int telemetryIntervalHz = 20;
+    public int telemetryIntervalHz = 15;
     public int homePositionIntervalHz = 1;
 
     void Start()
@@ -22,10 +22,10 @@ public class Controls : MonoBehaviour
         messenger = new MAVLinkMessenger();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);
-        networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Utils.HertzToMilliSeconds(telemetryIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Utils.HertzToMilliSeconds(telemetryIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.Heartbeat, Utils.HertzToMilliSeconds(heartbeatIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.HomePosition, Utils.HertzToMilliSeconds(homePositionIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.AttitudeTarget, Utils.HertzToMilliSeconds(telemetryIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
+        networkController.EnqueueRecurringMessage(messenger.AttitudeTarget, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
     }
 }
