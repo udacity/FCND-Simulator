@@ -45,6 +45,7 @@ namespace Drones
         {
             if (arm == true)
             {
+                quadCtrl.TriggerReset();
                 simpleQuadCtrl.ArmVehicle();
             }
             else

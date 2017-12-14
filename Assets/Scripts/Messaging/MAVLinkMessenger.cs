@@ -5,6 +5,7 @@ using DroneInterface;
 using MavLink;
 using UnityEngine;
 using UdacityNetworking;
+using FlightUtils;
 
 // TODO: Is an Interface a reference or value type?
 namespace Messaging
@@ -38,7 +39,7 @@ namespace Messaging
             IS_LAND = 0x2000,
             IS_LOITER = 0x3000,
         }
-        public Mavlink mav {get; private set;}
+        public Mavlink mav { get; private set; }
         private IDrone drone;
 
         public MAVLinkMessenger()
@@ -121,7 +122,7 @@ namespace Messaging
         /// <summary>
         public List<byte[]> AttitudeTarget()
         {
-            var gyro = drone.AngularVelocity();
+            var gyro = drone.AngularVelocity().EUNToNED();
             var pitch = (float)drone.Pitch();
             var yaw = (float)drone.Yaw();
             var roll = (float)drone.Roll();
@@ -129,10 +130,10 @@ namespace Messaging
             var msg = new Msg_attitude_target
             {
                 type_mask = 0x00,
-                // ENU to NED frame
+                // EUN to NED frame
                 q = new float[4] { q.w, q.z, q.x, q.y },
-                body_pitch_rate = gyro.x,
-                body_roll_rate = gyro.y,
+                body_roll_rate = gyro.x,
+                body_pitch_rate = gyro.y,
                 body_yaw_rate = gyro.z,
                 // TODO: Get drone thrust
                 thrust = 0,
@@ -235,8 +236,142 @@ namespace Messaging
             return msgs;
         }
 
+        /// <summary>
+        /// http://mavlink.org/messages/common/#HIL_SENSOR
+        /// </summary>
+        public List<byte[]> HILSensor()
+        {
+            var gyro = drone.AngularVelocity();
+            var pitch = (float)drone.Pitch();
+            var yaw = (float)drone.Yaw();
+            var roll = (float)drone.Roll();
+            var q = Quaternion.Euler(pitch, yaw, roll);
+            var msg = new Msg_hil_sensor
+            {
+                xacc = (float)0,
+                yacc = (float)0,
+                zacc = (float)0,
+                xgyro = (float)0,
+                ygyro = (float)0,
+                zgyro = (float)0,
+                xmag = (float)0,
+                ymag = (float)0,
+                zmag = (float)0,
+                abs_pressure = (float)0,
+                diff_pressure = (float)0,
+                pressure_alt = (float)0,
+                temperature = (float)0,
+                fields_updated = (UInt32)0,
+            };
+            var serializedPacket = mav.SendV2(msg);
+            var msgs = new List<byte[]>();
+            msgs.Add(serializedPacket);
+            return msgs;
+        }
+
+        /// <summary>
+        /// http://mavlink.org/messages/common/#HIL_GPS
+        /// </summary>
+        public List<byte[]> HILGPS()
+        {
+            var gyro = drone.AngularVelocity();
+            var pitch = (float)drone.Pitch();
+            var yaw = (float)drone.Yaw();
+            var roll = (float)drone.Roll();
+            var q = Quaternion.Euler(pitch, yaw, roll);
+
+            var vx = drone.NorthVelocity();
+            var vy = drone.EastVelocity();
+            var vz = drone.VerticalVelocity();
+
+            var acc = drone.LinearAcceleration().EUNToNED();
+            // Latitude and longitude defined in WGS84
+            // https://en.wikipedia.org/wiki/World_Geodetic_System
+            var lat = drone.Latitude() * 1e7d;
+            var lon = drone.Longitude() * 1e7d;
+            // NOTE: Altitude needs to be AMSL (above mean sea level, positive)
+            var alt = drone.Altitude() * 1000;
+            if (alt < 0)
+            {
+                alt = -alt;
+            }
+
+            var msg = new Msg_hil_gps
+            {
+                fix_type = (byte)0,
+                lat = (Int32)lat,
+                lon = (Int32)lon,
+                alt = (Int32)alt,
+                eph = (ushort)0,
+                epv = (ushort)0,
+                vel = (ushort)0,
+                vn = (short)drone.NorthVelocity(),
+                ve = (short)drone.EastVelocity(),
+                vd = (short)drone.VerticalVelocity(),
+                cog = (ushort)0,
+                // Set to 255 if unknown
+                satellites_visible = (byte)255,
+            };
+            var serializedPacket = mav.SendV2(msg);
+            var msgs = new List<byte[]>();
+            msgs.Add(serializedPacket);
+            return msgs;
+        }
+
+        /// <summary>
+        /// http://mavlink.org/messages/common/#HIL_STATE_QUATERNION
+        /// </summary>
+        public List<byte[]> HILStateQuaternion()
+        {
+            var gyro = drone.AngularVelocity();
+            var pitch = (float)drone.Pitch();
+            var yaw = (float)drone.Yaw();
+            var roll = (float)drone.Roll();
+            var q = Quaternion.Euler(pitch, yaw, roll);
+
+            var vx = drone.NorthVelocity();
+            var vy = drone.EastVelocity();
+            var vz = drone.VerticalVelocity();
+
+            var acc = drone.LinearAcceleration().EUNToNED();
+            var lat = drone.Latitude() * 1e7d;
+            var lon = drone.Longitude() * 1e7d;
+            var alt = drone.Altitude() * 1000;
+
+            var msg = new Msg_hil_state_quaternion
+            {
+                // EUN to NED frame
+                attitude_quaternion = new float[4] { q.w, q.z, q.x, q.y },
+
+                rollspeed = (float)roll,
+                pitchspeed = (float)pitch,
+                yawspeed = (float)yaw,
+
+                lat = (Int32)lat,
+                lon = (Int32)lon,
+                alt = (Int32)alt,
+
+                // TODO: make these cm/s
+                vx = (short)vx,
+                vy = (short)vy,
+                vz = (short)vz,
+
+                // TODO: make these cm/s
+                ind_airspeed = (ushort)0,
+                true_airspeed = (ushort)0,
+
+                xacc = (short)acc.x,
+                yacc = (short)acc.y,
+                zacc = (short)acc.z,
+            };
+            var serializedPacket = mav.SendV2(msg);
+            var msgs = new List<byte[]>();
+            msgs.Add(serializedPacket);
+            return msgs;
+        }
+
         ///
-        /// Receivers
+        /// Receiver methods
         ///
 
         void OnPacketReceived(object sender, MavlinkPacket packet)
@@ -276,8 +411,6 @@ namespace Messaging
             var pitchRate = msg.body_pitch_rate;
             var yawRate = msg.body_yaw_rate;
             var thrust = msg.thrust;
-
-            Debug.Log(string.Format("thrust = {0}, pitch rate = {1}, yaw rate = {2}, roll rate = {3}", thrust, pitchRate, yawRate, rollRate));
             drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
         }
 
