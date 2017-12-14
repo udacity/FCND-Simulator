@@ -122,7 +122,7 @@ namespace Messaging
         /// <summary>
         public List<byte[]> AttitudeTarget()
         {
-            var gyro = drone.AngularVelocity();
+            var gyro = drone.AngularVelocity().EUNToNED();
             var pitch = (float)drone.Pitch();
             var yaw = (float)drone.Yaw();
             var roll = (float)drone.Roll();
@@ -132,8 +132,8 @@ namespace Messaging
                 type_mask = 0x00,
                 // EUN to NED frame
                 q = new float[4] { q.w, q.z, q.x, q.y },
-                body_pitch_rate = gyro.x,
-                body_roll_rate = gyro.y,
+                body_roll_rate = gyro.x,
+                body_pitch_rate = gyro.y,
                 body_yaw_rate = gyro.z,
                 // TODO: Get drone thrust
                 thrust = 0,
