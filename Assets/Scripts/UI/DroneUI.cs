@@ -57,7 +57,7 @@ public class DroneUI : MonoBehaviour
         // East -> 90
         // South -> 180
         // West - 270
-        var hdg = -(float)drone.Yaw();
+		var hdg = -(float)drone.Yaw() * Mathf.Rad2Deg;
         //        var oldHdg = needleImage.rectTransform.rotation.eulerAngles.z;
         // rotate the needle by the yaw difference
         //        needleImage.rectTransform.Rotate(0, 0, -(-hdg - -oldHdg));
