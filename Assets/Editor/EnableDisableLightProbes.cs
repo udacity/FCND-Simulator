@@ -15,9 +15,18 @@ public class EnableDisableLightProbes : MonoBehaviour
 				continue;
 			
 			if ( GameObjectUtility.AreStaticEditorFlagsSet ( r.gameObject, StaticEditorFlags.LightmapStatic ) )
+			{
 				r.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
+				var proxy = r.GetComponent<LightProbeProxyVolume> ();
+				if ( proxy != null )
+					DestroyImmediate ( proxy );
+			}
 			else
-				r.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.BlendProbes;
+			{
+				if ( r.GetComponent<LightProbeProxyVolume> () == null )
+					r.gameObject.AddComponent<LightProbeProxyVolume> ();
+				r.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.UseProxyVolume;
+			}
 		}
 	}
 }

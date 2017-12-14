@@ -53,4 +53,25 @@ public class AddLODGroup : MonoBehaviour
 			g.RecalculateBounds ();
 		}
 	}
+
+	[MenuItem ("Utility/Set LOD distances", false, 23)]
+	static void SetLODDistances ()
+	{
+		// adjust distances and count and save.
+		// todo: make editor window...
+		GameObject[] gobs = Selection.gameObjects;
+		foreach ( GameObject gob in gobs )
+		{
+			
+			LODGroup g = gob.GetComponent<LODGroup> ();
+			if ( g == null )
+				continue;
+
+			LOD[] lods = g.GetLODs ();
+			lods [ 0 ].screenRelativeTransitionHeight = 0.08f;
+			lods [ 1 ].screenRelativeTransitionHeight = 0.015f;
+			g.SetLODs ( lods );
+		}
+		Undo.RegisterCompleteObjectUndo ( gobs, "set lod" );
+	}
 }
