@@ -4,29 +4,33 @@ using UnityEngine;
 
 namespace Drones
 {
-    // Drone based off a quadrotor/quadcopter.
+    /// <summary>
+    /// Drone based off a Quadrotor.
+    /// </summary>
     class QuadDrone : MonoBehaviour, IDrone
     {
         public QuadController quadCtrl;
         public SimpleQuadController simpleQuadCtrl;
 
-        // TODO: Add the components here at runtime instead of in
-        // the unity editor.
         void Awake()
         {
-            // gameObject.AddComponent<QuadController>();
-            // gameObject.AddComponent<SimpleQuadController>();
             quadCtrl = GetComponent<QuadController>();
             simpleQuadCtrl = GetComponent<SimpleQuadController>();
         }
 
-		public Vector3 Forward { get { return quadCtrl.Forward; } }
+        public Vector3 Forward { get { return quadCtrl.Forward; } }
 
+        /// <summary>
+        /// Returns coordinates in EUN frame
+        /// </summary>
         public Vector3 UnityCoords()
         {
             return this.transform.position;
         }
 
+        /// <summary>
+        /// Returns coordinates in NED frame
+        /// </summary>
         public Vector3 LocalCoords()
         {
             return new Vector3(quadCtrl.GetLocalNorth(), quadCtrl.GetLocalEast(), -1.0f * (float)quadCtrl.GetAltitude());
@@ -41,6 +45,7 @@ namespace Drones
         {
             if (arm == true)
             {
+                quadCtrl.TriggerReset();
                 simpleQuadCtrl.ArmVehicle();
             }
             else
@@ -51,7 +56,7 @@ namespace Drones
 
         public bool Armed()
         {
-            return simpleQuadCtrl.motors_armed;
+            return simpleQuadCtrl.armed;
         }
 
         public double EastVelocity()
@@ -63,12 +68,7 @@ namespace Drones
         {
             throw new System.NotImplementedException();
         }
-        /*
-        public void Goto(double latitude, double longitude, double altitude)
-        {
-            simpleQuadCtrl.CommandGPS(latitude, longitude, altitude);
-        }
-        */
+
         public void Goto(double north, double east, double altitude)
         {
             simpleQuadCtrl.CommandLocal((float)north, (float)east, (float)-altitude);
@@ -127,30 +127,29 @@ namespace Drones
             return quadCtrl.GetRoll();
         }
 
-        public void SetAttitude(double roll, double pitch, double yaw, double velocity)
+        public void SetAttitude(double pitch, double yaw, double roll, double velocity)
         {
-            //throw new System.NotImplementedException();
             simpleQuadCtrl.CommandHeading((float)yaw);
         }
 
-        public void SetAttitudeRate(double rollRate, double pitchRate, double yawRate, double thrust)
+        public void SetAttitudeRate(double pitchRate, double yawRate, double rollRate, double thrust)
+        {
+            simpleQuadCtrl.currentMovementBehavior.RemoteUpdate((float)thrust, (float)pitchRate, (float)yawRate, (float)rollRate);
+        }
+
+        public void SetMotors(float throttle, float pitchRate, float yawRate, float rollRate)
         {
             throw new System.NotImplementedException();
         }
 
-        public void SetMotors(double a, double b, double c, double d)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SetVelocity(double northVelocity, double eastVelocity, double verticalVelocity, double heading)
+        public void SetVelocity(double vx, double vy, double vz, double heading)
         {
             throw new System.NotImplementedException();
         }
 
         public void TakeControl(bool guided)
         {
-			simpleQuadCtrl.SetGuidedMode ( guided );
+            simpleQuadCtrl.SetGuidedMode(guided);
         }
 
         public double VerticalVelocity()
@@ -162,5 +161,31 @@ namespace Drones
         {
             return quadCtrl.GetYaw();
         }
+
+        public Vector3 AngularVelocity()
+        {
+            return quadCtrl.AngularVelocityBody;
+        }
+
+        public Vector3 AngularAcceleration()
+        {
+            return quadCtrl.AngularAccelerationBody;
+        }
+
+        public Vector3 LinearAcceleration()
+        {
+            return quadCtrl.LinearAcceleration;
+        }
+
+        public void ControlRemotely(bool remote)
+        {
+            this.simpleQuadCtrl.remote = remote;
+        }
+
+        public bool ControlledRemotely()
+        {
+            return this.simpleQuadCtrl.remote;
+        }
     }
+
 }
