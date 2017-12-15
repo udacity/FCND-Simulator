@@ -83,11 +83,11 @@ namespace DroneControllers
 
         void LateUpdate()
         {
+            SelectMovementBehavior();
             if (Input.GetButtonDown("Position Control"))
             {
                 posctl = !posctl;
                 pos_set = false;
-                SelectMovementBehavior();
             }
 
             if (armed && !remote)

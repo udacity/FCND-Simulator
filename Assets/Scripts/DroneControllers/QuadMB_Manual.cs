@@ -9,14 +9,14 @@ namespace MovementBehaviors
     [CreateAssetMenu(menuName = "MovementBehaviors/Quad Manual")]
     public class QuadMB_Manual : QuadMovementBehavior
     {
-        Vector4 angle_input;
+        // Vector4 angle_input;
         Vector3 lastVelocityErrorBody;
         float hDotInt;
 
         public override void OnSelect(SimpleQuadController _controller)
         {
             base.OnSelect(_controller);
-            angle_input = Vector4.zero;
+            // angle_input = Vector4.zero;
         }
 
         public override void OnLateUpdate()
@@ -25,6 +25,7 @@ namespace MovementBehaviors
             controller.turnSpeed = 2.0f;
             controller.maxTilt = 0.5f;
 
+            Vector4 angle_input = Vector4.zero;
             Vector3 pitchYawRoll = controller.controller.eulerAngles * Mathf.Deg2Rad;
             Vector3 qrp = controller.controller.AngularVelocityBody;
 
