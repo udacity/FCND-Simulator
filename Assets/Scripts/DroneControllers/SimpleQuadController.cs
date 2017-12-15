@@ -23,10 +23,10 @@ namespace DroneControllers
         public float Kp_p = 10.0f;
         public float Kp_pitch = 6.5f;
         public float Kp_q = 10.0f;
-        public float Kp_pos = 0.1f;
+        public float Kp_pos = 2.0f;
         public float Kp_vel = 0.3f;
         public float Kd_vel = 0.0f;
-        public float Kp_alt = 1.0f;
+        public float Kp_alt = 10.0f;
         public float Ki_hdot = 0.1f;
 
         // Vehicle control thresholds

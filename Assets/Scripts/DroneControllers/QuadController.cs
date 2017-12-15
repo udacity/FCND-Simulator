@@ -341,6 +341,19 @@ namespace DroneControllers
             force = v + ForceNoise * Random.insideUnitSphere;
         }
 
+        public void CmdThrust(float thrust)
+        {
+            force.y = thrust + ForceNoise * Random.value;
+        }
+
+        public void CmdTorque(Vector3 t)
+        {
+            torque.x = -t.y;
+            torque.y = t.z;
+            torque.z = -t.x;
+            torque = torque + TorqueNoise * Random.insideUnitSphere;
+        }
+
         public void ApplyMotorTorque(Vector3 v)
         {
             useTwist = false;
@@ -469,6 +482,11 @@ namespace DroneControllers
             return GlobalToLocalPosition(GetLongitude(), GetLatitude(), GetAltitude()).x;
         }
 
+        public float GetLocalDown()
+        {
+            return GlobalToLocalPosition(GetLongitude(), GetLatitude(), GetAltitude()).z;
+        }
+
         public double GetLongitude()
         {
             return GPS.x + longitude0;
@@ -509,6 +527,11 @@ namespace DroneControllers
             return LinearVelocity.x;
         }
 
+        public float GetDownVelocity()
+        {
+            return -LinearVelocity.y;
+        }
+
         public float GetVerticalVelocity()
         {
             return LinearVelocity.y;
@@ -521,14 +544,28 @@ namespace DroneControllers
 
         public float GetPitch()
         {
-            return eulerAngles.x * Mathf.Deg2Rad;
+            return -eulerAngles.x * Mathf.Deg2Rad;
         }
 
         public float GetRoll()
         {
-            return eulerAngles.z * Mathf.Deg2Rad;
+            return -eulerAngles.z * Mathf.Deg2Rad;
         }
 
+        public float GetRollrate()
+        {
+            return -AngularVelocityBody.z;
+        }
+
+        public float GetPitchrate()
+        {
+            return -AngularVelocityBody.x;
+        }
+
+        public float GetYawrate()
+        {
+            return AngularVelocityBody.y;
+        }
         public void NavigationUpdate()
         {
             // Update acceleration
