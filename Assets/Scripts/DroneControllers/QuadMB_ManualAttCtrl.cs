@@ -23,9 +23,12 @@ namespace MovementBehaviors
             Vector3 localVelocity = new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
             Vector3 localPosition = new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
 
-            Vector3 attCmd = new Vector3(controller.maxTilt * Input.GetAxis("Horizontal"), -controller.maxTilt * Input.GetAxis("Vertical"), 0.0f);
-            float yawCmd = controller.turnSpeed * Input.GetAxis("Yaw");
-            float altCmd = Input.GetAxis("Thrust");
+            Vector3 attCmd = Vector3.zero;
+            attCmd.x = controller.guidedCommand.x;
+            attCmd.y = controller.guidedCommand.y;
+
+            float yawCmd = controller.guidedCommand.w;
+            float altCmd = controller.guidedCommand.z;
             if (altCmd > 0.0f)
                 altCmd = altCmd * controller.maxAscentRate;
             else
