@@ -6,16 +6,15 @@ using MovementBehaviors;
 
 namespace MovementBehaviors
 {
-	[CreateAssetMenu (menuName = "MovementBehaviors/Quad Manual Pos Ctrl")]
-	public class QuadMB_ManualPosCtrl : QuadMovementBehavior
+	[CreateAssetMenu (menuName = "MovementBehaviors/Quad Manual Att Ctrl")]
+	public class QuadMB_ManualAttCtrl : QuadMovementBehavior
 	{
 		Vector3 lastVelocityErrorBody;
-        float hDotInt = 0.0f;
+		float hDotInt;
 
         public override void OnLateUpdate()
         {
 
-            controller.moveSpeed = 15.0f;
             controller.turnSpeed = 2.0f;
             controller.maxTilt = 0.5f;
             var nav = controller.controller;
@@ -24,40 +23,22 @@ namespace MovementBehaviors
             Vector3 localVelocity = new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
             Vector3 localPosition = new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
 
-            float cosYaw = Mathf.Cos(attitude.z);
-            float sinYaw = Mathf.Sin(attitude.z);
+            Vector3 attCmd = new Vector3(controller.maxTilt * Input.GetAxis("Horizontal"), -controller.maxTilt * Input.GetAxis("Vertical"), 0.0f);
+            float yawCmd = controller.turnSpeed * Input.GetAxis("Yaw");
+            float altCmd = Input.GetAxis("Thrust");
+            if (altCmd > 0.0f)
+                altCmd = altCmd * controller.maxAscentRate;
+            else
+                altCmd = altCmd * controller.maxDescentRate;
 
-            Vector3 deltaPosition = new Vector3(0.0f, 0.0f, 0.0f);
-            Vector3 posCmd = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), -Input.GetAxis("Thrust"));
-            float yawCmd = Input.GetAxis("Yaw");
-            float posCmdNorm = Mathf.Sqrt(posCmd.x * posCmd.x + posCmd.y * posCmd.y);
-            float maxDistance = 0.5f*Mathf.Sqrt(localVelocity.x*localVelocity.x+localVelocity.y*localVelocity.y)+1.0f;
-            if (posCmdNorm > controller.posctl_band)
-            {
-
-                deltaPosition.x = posCmd.x / posCmdNorm * maxDistance;
-                deltaPosition.y = posCmd.y / posCmdNorm * maxDistance;
-                controller.posHoldLocal.x = localPosition.x + deltaPosition.x * cosYaw - deltaPosition.y * sinYaw;
-                controller.posHoldLocal.y = localPosition.y + deltaPosition.x * sinYaw + deltaPosition.y * cosYaw;
-            }
-
-            float maxDeltaAltitude = 5.0f;
-            if (Mathf.Abs(posCmd.z) > controller.posctl_band)
-            {
-                deltaPosition.z = posCmd.z * maxDeltaAltitude;
-                controller.posHoldLocal.z = localPosition.z + deltaPosition.z;
-            }
-
-            Vector3 targetPosition = controller.posHoldLocal;
-
-            Debug.Log("Target Position: " + targetPosition);
             float yawOutput = YawRateControl(yawCmd, angularVelocity.z);
-            Vector3 posOutput = PositionControl(targetPosition, attitude, angularVelocity, localVelocity,localPosition);
-            //posOutput = VelocityControl(controller.moveSpeed*posCmd, attitude, angularVelocity, localVelocity);
-            Vector3 totalMoment = new Vector3(posOutput.y, posOutput.z, yawOutput);
+            Vector2 attOutput = RollPitchControl(attCmd, attitude, angularVelocity);
+            float altOutput = VerticalVelocityControl(altCmd, attitude, -localVelocity.z);
+
+            Vector3 totalMoment = new Vector3(attOutput.x, attOutput.y, yawOutput);
             nav.CmdTorque(totalMoment);
-            nav.CmdThrust(posOutput.x);
-            
+            nav.CmdThrust(altOutput);
+
         }
 
         private Vector3 PositionControl(Vector3 targetPosition, Vector3 attitude, Vector3 angularVelocity, Vector3 localVelocity, Vector3 localPosition)
@@ -131,9 +112,9 @@ namespace MovementBehaviors
             else if (targetVerticalVelocity < -controller.maxDescentRate)
                 targetVerticalVelocity = -controller.maxDescentRate;
 
-            float hDotError = targetVerticalVelocity - verticalVelocity;           
-
+            float hDotError = targetVerticalVelocity - verticalVelocity;
             hDotInt += hDotError * dt;
+
             float thrust = (controller.Kp_hdot * hDotError + controller.Ki_hdot * hDotInt + thrustNom) / (Mathf.Cos(attitude.x) * Mathf.Cos(attitude.y));
             return thrust;
         }
@@ -181,5 +162,6 @@ namespace MovementBehaviors
             return new Vector2(rollMoment, pitchMoment);
         }
 
-    }
+        
+	}
 }

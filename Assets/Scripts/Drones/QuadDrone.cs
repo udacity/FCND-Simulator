@@ -127,9 +127,10 @@ namespace Drones
             return quadCtrl.GetRoll();
         }
 
-        public void SetAttitude(double pitch, double yaw, double roll, double velocity)
+        public void SetAttitude(double pitch, double yawrate, double roll, double verticalVelocity)
         {
-            simpleQuadCtrl.CommandHeading((float)yaw);
+            simpleQuadCtrl.CommandAttitude((float)roll, (float)pitch, (float)yawrate, (float)verticalVelocity);
+            //simpleQuadCtrl.CommandHeading((float)yaw);
         }
 
         public void SetAttitudeRate(double pitchRate, double yawRate, double rollRate, double thrust)

@@ -8,8 +8,8 @@ namespace DroneControllers
         public QuadController controller;
         public bool armed = false;
         public bool guided = false;
-        public bool stabilized = true;
-        public bool posctl = true;
+        public bool attitudeControl = true;
+        public bool positionControl = true;
         public bool remote = false;
 
         ///
@@ -50,7 +50,9 @@ namespace DroneControllers
         // - Guided
         public QuadMovementBehavior mb_Manual;
         public QuadMovementBehavior mb_ManualPosCtrl;
+        public QuadMovementBehavior mb_ManualAttCtrl;
         public QuadMovementBehavior mb_Guided;
+        
 
         [System.NonSerialized]
         public Rigidbody rb;
@@ -62,6 +64,8 @@ namespace DroneControllers
         public bool pos_set = false;
         [System.NonSerialized]
         public Vector3 posHoldLocal = Vector3.zero;
+        [System.NonSerialized]
+        public Vector4 guidedCommand = Vector4.zero;
         [System.NonSerialized]
         public float yawHold = 0.0f;
         [System.NonSerialized]
@@ -85,8 +89,7 @@ namespace DroneControllers
         {
             if (Input.GetButtonDown("Position Control"))
             {
-                posctl = !posctl;
-                pos_set = false;
+                positionControl = !positionControl;
                 SelectMovementBehavior();
             }
 
@@ -111,14 +114,16 @@ namespace DroneControllers
         // Command the quad to a local position (north, east, down)
         public void CommandLocal(float north, float east, float down)
         {
-
             // The hold position is defined in the Unity reference frame, where (x,y,z)=>(north,up, east) #TODO
             if (guided)
             {
-                posHoldLocal.x = east;
-                posHoldLocal.y = -down;
-                posHoldLocal.z = north;
-                pos_set = true;
+                positionControl = true;
+                attitudeControl = false;
+
+                guidedCommand.x = north;
+                guidedCommand.y = east;
+                guidedCommand.z = down;
+                
                 // print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
                 // print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
             }
@@ -126,10 +131,19 @@ namespace DroneControllers
 
         public void CommandHeading(float heading)
         {
-            yawHold = heading * Mathf.Deg2Rad;
-            yawSet = true;
+            guidedCommand.w = heading;
         }
 
+        public void CommandAttitude(float roll,float pitch,float yawrate,float verticalVelocity)
+        {
+
+            positionControl = false;
+            attitudeControl = true;
+            guidedCommand.x = roll;
+            guidedCommand.y = pitch;
+            guidedCommand.w = yawrate;
+            guidedCommand.z = verticalVelocity;
+        }
         public void ArmVehicle()
         {
             armed = true;
@@ -153,15 +167,27 @@ namespace DroneControllers
         {
             if (guided)
             {
-                currentMovementBehavior = mb_Guided;
+                if (positionControl)
+                {
+                    currentMovementBehavior = mb_Guided;
+                }else if (attitudeControl)
+                {
+                    
+                    currentMovementBehavior = mb_Guided;
+                }
+                
             }
             else // manual
             {
-                if (posctl)
+                if (positionControl)
                 {
                     currentMovementBehavior = mb_ManualPosCtrl;
                 }
-                else
+                else if (attitudeControl)
+                {
+
+                    currentMovementBehavior = mb_ManualAttCtrl;
+                }else
                 {
                     currentMovementBehavior = mb_Manual;
                 }
