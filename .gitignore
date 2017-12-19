@@ -27,3 +27,6 @@ sdc.app
 
 Assets/Logs/navLog.txt*
 Assets/Logs.meta
+
+# Not sure if this should be in here or not ...
+UnityPackageManager
