@@ -77,6 +77,7 @@ namespace UdacityNetworking
 
 	public class UDPConnection : NetworkConnection
 	{
+		public NetworkController Controller { get; set; }
 		public bool IsServerStarted { get { return listener != null; } }
 		public bool IsConnected { get { return myClient != null && myClient.Client.Connected; } }
 
@@ -189,7 +190,7 @@ namespace UdacityNetworking
 				listener = new UdpListener ( addr, port );
 				// Start listening for client requests.
 //				listener.Start ();
-				Debug.Log ( "Starting UDP MAVLink server ..." );
+				Debug.Log ( "Starting UDP server ..." );
 
 				while ( running )
 				{

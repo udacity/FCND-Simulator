@@ -57,6 +57,7 @@ namespace UdacityNetworking
 
 	public class TCPConnection : NetworkConnection
 	{
+		public NetworkController Controller { get; set; }
 		public bool IsServerStarted { get { return listener != null; } }
 		public bool IsConnected { get { return myClient != null && myClient.Connected; } }
 
@@ -179,7 +180,7 @@ namespace UdacityNetworking
 				listener = new TcpListener(addr, port);
 				// Start listening for client requests.
 				listener.Start ();
-				Debug.Log ("Starting TCP MAVLink server ...");
+				Debug.Log ("Starting TCP server ...");
 
 				while ( running )
 				{

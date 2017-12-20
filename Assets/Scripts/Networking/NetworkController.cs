@@ -11,10 +11,17 @@ using System.Threading.Tasks;
 
 namespace UdacityNetworking
 {
-	public enum ConnectionProtocol { TCP, UDP };
+	public enum ConnectionProtocol { TCP, UDP, WebSocket };
 
 	public class NetworkController : MonoBehaviour
 	{
+		#if UNITY_WEBGL && !UNITY_EDITOR
+		[System.Runtime.InteropServices.DllImport ("__Internal")]
+		static extern string ObtainHost ();
+		#else
+		string ObtainHost () { return ""; }
+		#endif
+
 		public static float Timeout = 30;
 
 		public bool autoStartServer;
@@ -34,17 +41,26 @@ namespace UdacityNetworking
 			if ( autoStartServer && autoStartClient )
 				Debug.LogWarning ( "AutoStartServer and AutoStartClient are both set. Server will override the client option" );
 			Timeout = timeout;
-			#if UNITY_WEBGL && !UNITY_EDITOR
+			#if UNITY_WEBGL
+			protocol = ConnectionProtocol.WebSocket;
 			connection = new WebsocketConnection ();
 			#else
 			if ( protocol == ConnectionProtocol.TCP )
-			connection = new TCPConnection ();
+				connection = new TCPConnection ();
 			else
+			if ( protocol == ConnectionProtocol.UDP )
 				connection = new UDPConnection ();
+			else
+				connection = new WebsocketConnection ();
 			#endif
 
+			connection.Controller = this;
 			connection.AddMessageHandler ( MessageReceived );
+			Debug.Log ( "app absolute url is " + Application.absoluteURL );
 
+			if ( protocol == ConnectionProtocol.WebSocket && ( autoStartClient || autoStartServer ) )
+				StartClient ();
+			else
 			if ( autoStartServer )
 				StartServer ();
 			else
@@ -65,6 +81,15 @@ namespace UdacityNetworking
 
 		public void StartClient ()
 		{
+			if ( protocol == ConnectionProtocol.WebSocket )
+			{
+				string host = ObtainHost ();
+				Debug.Log ( "host is " + host );
+				if ( string.IsNullOrWhiteSpace ( host ) )
+					remoteIP = "ws://" + remoteIP + ":" + remotePort.ToString ();
+				else
+					remoteIP = host.Replace ( "####", remotePort.ToString () );
+			}
 			connection.Connect ( remoteIP, remotePort );
 		}
 
