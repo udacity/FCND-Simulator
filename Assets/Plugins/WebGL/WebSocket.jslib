@@ -81,10 +81,14 @@ SocketError: function (socketInstance, ptr, bufsize)
  	var socket = webSocketInstances[socketInstance];
  	if (socket.error == null)
  		return 0;
-    var str = socket.error.slice(0, Math.max(0, bufsize - 1));
-    var strSize = lengthBytesUTF8 ( str ) + 1;
-    ptr = _malloc ( strSize );
-    stringToUTF8 ( str, ptr, strSize );
+    //console.log (socket.error);
+    //socket.error = null;
+    //return 0;
+//    var str = socket.error.slice(0, Math.max(0, bufsize - 1));
+//    stringToUTF8 ( str, ptr, bufSize );
+//    var strSize = lengthBytesUTF8 ( str ) + 1;
+//    ptr = _malloc ( strSize );
+//    stringToUTF8 ( str, ptr, strSize );
 
     // writeStringToMemory not supported anymore
 //    writeStringToMemory(str, ptr, false);
@@ -97,7 +101,7 @@ SocketSend: function (socketInstance, ptr, length)
 	socket.socket.send (HEAPU8.buffer.slice(ptr, ptr+length));
 },
 
-SocketRecvLength: function(socketInstance)
+SocketRecvLength: function (socketInstance)
 {
 	var socket = webSocketInstances[socketInstance];
 	if (socket.messages.length == 0)
@@ -109,10 +113,15 @@ SocketRecv: function (socketInstance, ptr, length)
 {
 	var socket = webSocketInstances[socketInstance];
 	if (socket.messages.length == 0)
-		return 0;
-	if (socket.messages[0].length > length)
-		return 0;
-	HEAPU8.set(socket.messages[0], ptr);
+		return;
+	console.log ('received a message!');
+	var msg = socket.messages[0];
+	if ( msg.length > length )
+		msg = msg.slice ( 0, length );
+	HEAPU8.set ( msg, ptr );
+//	if (socket.messages[0].length > length)
+//		return;
+//	HEAPU8.set(socket.messages[0], ptr);
 	socket.messages = socket.messages.slice(1);
 },
 

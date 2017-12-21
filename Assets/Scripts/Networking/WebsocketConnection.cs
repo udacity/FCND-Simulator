@@ -70,7 +70,6 @@ namespace UdacityNetworking
 				if ( message != null )
 				{
 					messageHandler ( new MessageInfo ( message ) );
-					Debug.Log ( "message came in" );
 				}
 			}
 		}
