@@ -11,6 +11,7 @@ namespace UdacityNetworking
 	public class WebsocketConnection : NetworkConnection
 	{
 		public NetworkController Controller { get; set; }
+		public ConnectionState ConnectionState { get { return socket != null ? ( (ConnectionState) (int) socket.State ) : ConnectionState.Disconnected; } }
 		public bool IsServerStarted { get { return false; } }
 		public bool IsConnected { get { return connected; } }
 
@@ -61,11 +62,15 @@ namespace UdacityNetworking
 			}
 			if ( socket.State == WebSocketState.Closed || socket.State == WebSocketState.Closing )
 			{
+				if ( connected )
+					connected = false;
 				Debug.Log ( "Socket is closed or closing." );
 				return;
 			}
 			if ( socket.State == WebSocketState.Open )
 			{
+				if ( !connected )
+					connected = true;
 				byte[] message = socket.Receive ();
 				if ( message != null )
 				{

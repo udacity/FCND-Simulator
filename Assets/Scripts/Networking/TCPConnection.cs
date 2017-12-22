@@ -58,6 +58,7 @@ namespace UdacityNetworking
 	public class TCPConnection : NetworkConnection
 	{
 		public NetworkController Controller { get; set; }
+		public ConnectionState ConnectionState { get { return connectionState; } }
 		public bool IsServerStarted { get { return listener != null; } }
 		public bool IsConnected { get { return myClient != null && myClient.Connected; } }
 
@@ -71,12 +72,14 @@ namespace UdacityNetworking
 		TcpClient myClient;
 		ConcurrentQueue<MessageInfo> messages = new ConcurrentQueue<MessageInfo> ();
 		float nextTimeoutCheck;
+		ConnectionState connectionState;
 
 		public void StartServer (string ip, int port)
 		{
 			running = true;
 			this.ip = ip;
 			this.port = port;
+			connectionState = ConnectionState.Connecting;
 			TcpListenAsync ();
 			DispatchMessages ();
 		}
@@ -98,12 +101,20 @@ namespace UdacityNetworking
 					}
 				nextTimeoutCheck = Time.unscaledTime + NetworkController.Timeout;
 			}
+			if ( connectionState == ConnectionState.Connected && myClient != null && !myClient.Connected )
+				connectionState = ConnectionState.Disconnected;
 		}
 
 		public void Connect (string ip, int port)
 		{
 			myClient = new TcpClient ();
-			myClient.ConnectAsync ( ip, port );
+			_Connect ( ip, port );
+		}
+		async Task _Connect (string ip, int port)
+		{
+			connectionState = ConnectionState.Connecting;
+			await myClient.ConnectAsync ( ip, port );
+			connectionState = ConnectionState.Connected;
 		}
 
 		public void AddMessageHandler (Action<MessageInfo> handler)
@@ -181,6 +192,7 @@ namespace UdacityNetworking
 				// Start listening for client requests.
 				listener.Start ();
 				Debug.Log ("Starting TCP server ...");
+				connectionState = ConnectionState.Connected;
 
 				while ( running )
 				{
@@ -207,10 +219,12 @@ namespace UdacityNetworking
 //				Debug.Log (string.Format("SocketException: {0}", e));
 				listener.Stop ();
 				listener = null;
+				connectionState = ConnectionState.Disconnected;
 			}
 			finally
 			{
 				// this is to ensure the sever stops once a disconnection happens, or when done with everything
+				connectionState = ConnectionState.Disconnected;
 			}
 		}
 

@@ -21,6 +21,7 @@ namespace UdacityNetworking
 
 	public interface NetworkConnection
 	{
+		ConnectionState ConnectionState { get; }
 		NetworkController Controller { get; set; }
 		bool IsServerStarted { get; }
 		bool IsConnected { get; }
