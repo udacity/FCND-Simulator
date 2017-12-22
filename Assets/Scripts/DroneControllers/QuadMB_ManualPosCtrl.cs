@@ -34,7 +34,6 @@ namespace MovementBehaviors
             float maxDistance = 0.5f*Mathf.Sqrt(localVelocity.x*localVelocity.x+localVelocity.y*localVelocity.y)+1.0f;
             if (posCmdNorm > controller.posctl_band)
             {
-
                 deltaPosition.x = posCmd.x / posCmdNorm * maxDistance;
                 deltaPosition.y = posCmd.y / posCmdNorm * maxDistance;
                 controller.posHoldLocal.x = localPosition.x + deltaPosition.x * cosYaw - deltaPosition.y * sinYaw;
@@ -50,7 +49,7 @@ namespace MovementBehaviors
 
             Vector3 targetPosition = controller.posHoldLocal;
 
-            Debug.Log("Target Position: " + targetPosition);
+            
             float yawOutput = YawRateControl(yawCmd, angularVelocity.z);
             Vector3 posOutput = PositionControl(targetPosition, attitude, angularVelocity, localVelocity,localPosition);
             //posOutput = VelocityControl(controller.moveSpeed*posCmd, attitude, angularVelocity, localVelocity);
@@ -64,12 +63,17 @@ namespace MovementBehaviors
         {
             Vector3 positionError = targetPosition - localPosition;
             Vector3 velocityCmd = Vector3.zero;
-
+            float Kp_pos = 0.0f;
             if(Mathf.Sqrt(positionError.x*positionError.x+positionError.y*positionError.y) >= controller.posHoldDeadband)
             {
-                velocityCmd.x = controller.Kp_pos * positionError.x;
-                velocityCmd.y = controller.Kp_pos * positionError.y;
+                Kp_pos = controller.Kp_pos;
+            }else
+            {
+                Kp_pos = controller.Kp_pos2;
             }
+
+            velocityCmd.x = Kp_pos * positionError.x;
+            velocityCmd.y = Kp_pos * positionError.y;
 
             velocityCmd.z = controller.Kp_alt * positionError.z;
 

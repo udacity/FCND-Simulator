@@ -24,6 +24,7 @@ namespace DroneControllers
         public float Kp_pitch = 6.5f;
         public float Kp_q = 10.0f;
         public float Kp_pos = 2.0f;
+        public float Kp_pos2 = 0.4f; //Different gain used for small error (within posHoldDeadband)
         public float Kp_vel = 0.3f;
         public float Kd_vel = 0.0f;
         public float Kp_alt = 10.0f;
@@ -32,6 +33,7 @@ namespace DroneControllers
         // Vehicle control thresholds
         public float posctl_band = 0.1f;
         public float posHoldDeadband = 1.0f;
+        public float velDeadband = 1.0f;
         public float moveSpeed = 10;
         // in radians
         public float turnSpeed = 2.0f;
@@ -51,7 +53,8 @@ namespace DroneControllers
         public QuadMovementBehavior mb_Manual;
         public QuadMovementBehavior mb_ManualPosCtrl;
         public QuadMovementBehavior mb_ManualAttCtrl;
-        public QuadMovementBehavior mb_Guided;
+        public QuadMovementBehavior mb_GuidedPosCtrl;
+        public QuadMovementBehavior mb_GuidedAttCtrl;
         
 
         [System.NonSerialized]
@@ -90,8 +93,11 @@ namespace DroneControllers
             if (Input.GetButtonDown("Position Control"))
             {
                 positionControl = !positionControl;
-                SelectMovementBehavior();
+                if(positionControl)
+                    posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+
             }
+            SelectMovementBehavior();
 
             if (armed && !remote)
             {
@@ -149,6 +155,9 @@ namespace DroneControllers
             armed = true;
             // controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
             controller.SetHomePosition(-121.995635d, 37.412939d, 0.0d);
+
+            //Set the hold position to the current position
+            posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
         }
 
         public void DisarmVehicle()
@@ -169,11 +178,11 @@ namespace DroneControllers
             {
                 if (positionControl)
                 {
-                    currentMovementBehavior = mb_Guided;
+                    currentMovementBehavior = mb_GuidedPosCtrl;
                 }else if (attitudeControl)
                 {
                     
-                    currentMovementBehavior = mb_Guided;
+                    currentMovementBehavior = mb_GuidedAttCtrl;
                 }
                 
             }
@@ -185,7 +194,6 @@ namespace DroneControllers
                 }
                 else if (attitudeControl)
                 {
-
                     currentMovementBehavior = mb_ManualAttCtrl;
                 }else
                 {
