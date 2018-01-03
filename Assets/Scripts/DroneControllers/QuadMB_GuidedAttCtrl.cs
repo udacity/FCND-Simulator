@@ -69,17 +69,18 @@ namespace MovementBehaviors
             attCmd.y = controller.guidedCommand.y;
 
             float yawCmd = controller.guidedCommand.w;
+            float yawOutput = YawRateControl(yawCmd, angularVelocity.z);
+            Vector2 attOutput = RollPitchControl(attCmd, attitude, angularVelocity);
+            Vector3 totalMoment = new Vector3(attOutput.x, attOutput.y, yawOutput);
+
             float altCmd = controller.guidedCommand.z;
             if (altCmd > 0.0f)
                 altCmd = altCmd * controller.maxAscentRate;
             else
                 altCmd = altCmd * controller.maxDescentRate;
-
-            float yawOutput = YawRateControl(yawCmd, angularVelocity.z);
-            Vector2 attOutput = RollPitchControl(attCmd, attitude, angularVelocity);
             float altOutput = VerticalVelocityControl(altCmd, attitude, -localVelocity.z);
-
-            Vector3 totalMoment = new Vector3(attOutput.x, attOutput.y, yawOutput);
+            
+            
             nav.CmdTorque(totalMoment);
             nav.CmdThrust(altOutput);
 

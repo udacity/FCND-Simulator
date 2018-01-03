@@ -140,24 +140,36 @@ namespace DroneControllers
             guidedCommand.w = heading;
         }
 
-        public void CommandAttitude(float roll,float pitch,float yawrate,float verticalVelocity)
+        public void CommandAttitude(float roll,float pitch,float yawRate,float thrust)
         {
 
             positionControl = false;
             attitudeControl = true;
             guidedCommand.x = roll;
             guidedCommand.y = pitch;
-            guidedCommand.w = yawrate;
-            guidedCommand.z = verticalVelocity;
+            guidedCommand.w = yawRate;
+            guidedCommand.z = thrust;
         }
         public void ArmVehicle()
         {
-            armed = true;
+            
             // controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
             controller.SetHomePosition(-121.995635d, 37.412939d, 0.0d);
 
+            if (guided)
+            {
+                guidedCommand.x = controller.GetLocalNorth();
+                guidedCommand.y = controller.GetLocalEast();
+                guidedCommand.z = controller.GetLocalDown();
+            }
+            else
+            {
+                posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+            }
+
             //Set the hold position to the current position
-            posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+            
+            armed = true;
         }
 
         public void DisarmVehicle()
@@ -167,7 +179,13 @@ namespace DroneControllers
 
         public void SetGuidedMode(bool input_guided)
         {
+            if (!input_guided)
+            {
+                posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+            }
+
             guided = input_guided;
+            
             SelectMovementBehavior();
         }
 

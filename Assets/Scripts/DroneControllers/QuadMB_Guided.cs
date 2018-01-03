@@ -72,6 +72,7 @@ namespace MovementBehaviors
             float yawCmd = controller.guidedCommand.w;
 
             Debug.Log("Target Position: " + targetPosition);
+            Debug.Log("Local Position: " + localPosition);
             float yawOutput = YawRateControl(yawCmd, angularVelocity.z);
             Vector3 posOutput = PositionControl(targetPosition, attitude, angularVelocity, localVelocity, localPosition);
             //posOutput = VelocityControl(controller.moveSpeed*posCmd, attitude, angularVelocity, localVelocity);
@@ -247,6 +248,11 @@ namespace MovementBehaviors
             {
                 velocityCmd.x = controller.Kp_pos * positionError.x;
                 velocityCmd.y = controller.Kp_pos * positionError.y;
+            }
+            else
+            {
+                velocityCmd.x = controller.Kp_pos2 * positionError.x;
+                velocityCmd.y = controller.Kp_pos2 * positionError.y;
             }
 
             velocityCmd.z = controller.Kp_alt * positionError.z;

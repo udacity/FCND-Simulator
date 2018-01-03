@@ -407,11 +407,20 @@ namespace Messaging
         /// </summary>
         void MsgSetAttitudeTarget(Msg_set_attitude_target msg)
         {
-            var rollRate = msg.body_roll_rate;
-            var pitchRate = msg.body_pitch_rate;
-            var yawRate = msg.body_yaw_rate;
+
+            //var rollRate = msg.body_roll_rate;
+            //var pitchRate = msg.body_pitch_rate;
+            var yawrate = msg.body_yaw_rate;
             var thrust = msg.thrust;
-            drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
+            Vector4 attitudeQ;
+            attitudeQ.w = msg.q[0];
+            attitudeQ.x = msg.q[1];
+            attitudeQ.y = msg.q[2];
+            attitudeQ.z = msg.q[3];
+            Vector3 attitudeEuler = attitudeQ.ToRHEuler();
+            //drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
+
+            drone.SetAttitude(attitudeEuler.y, yawrate, attitudeEuler.x, thrust);
         }
 
         /// <summary>
