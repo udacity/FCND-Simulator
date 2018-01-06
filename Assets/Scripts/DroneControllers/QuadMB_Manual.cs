@@ -60,7 +60,7 @@ namespace MovementBehaviors
             //			}
 
             // Inner control loop: angle commands to forces
-            if (controller.stabilized)
+            if (controller.attitudeControl)
             {
                 float thrust_nom = -1.0f * controller.rb.mass * Physics.gravity[1];
                 float hDotError = 0.0f;

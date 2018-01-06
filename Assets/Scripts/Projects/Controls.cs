@@ -12,13 +12,13 @@ public class Controls : MonoBehaviour
     private IDrone drone;
     public NetworkController networkController;
     public int heartbeatIntervalHz = 1;
-    public int telemetryIntervalHz = 15;
+    public int telemetryIntervalHz = 50;//15;
     public int homePositionIntervalHz = 1;
 
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-        drone.ControlRemotely(true);
+        //drone.ControlRemotely(true);
         messenger = new MAVLinkMessenger();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);
@@ -27,5 +27,6 @@ public class Controls : MonoBehaviour
         networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.AttitudeTarget, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
+        
     }
 }

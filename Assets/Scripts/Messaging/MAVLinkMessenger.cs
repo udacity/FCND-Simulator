@@ -126,12 +126,14 @@ namespace Messaging
             var pitch = (float)drone.Pitch();
             var yaw = (float)drone.Yaw();
             var roll = (float)drone.Roll();
-            var q = Quaternion.Euler(pitch, yaw, roll);
+            //var q = Quaternion.Euler(pitch, yaw, roll);
+            var q = new Vector3(roll, pitch, yaw).ToRHQuaternion();
             var msg = new Msg_attitude_target
             {
                 type_mask = 0x00,
                 // EUN to NED frame
-                q = new float[4] { q.w, q.z, q.x, q.y },
+                //q = new float[4] { q.w, q.z, q.x, q.y },
+                q = new float[4] { q.w, q.x, q.y, q.z },
                 body_roll_rate = gyro.x,
                 body_pitch_rate = gyro.y,
                 body_yaw_rate = gyro.z,
@@ -159,7 +161,8 @@ namespace Messaging
                 z = down,
                 vx = (float)drone.NorthVelocity(),
                 vy = (float)drone.EastVelocity(),
-                vz = (float)drone.VerticalVelocity()
+                vz = (float)drone.VerticalVelocity(),
+                time_boot_ms=(uint)Mathf.Round(Time.time*1000.0f)
             };
 
             var serializedPacket = mav.SendV2(msg);
@@ -407,11 +410,20 @@ namespace Messaging
         /// </summary>
         void MsgSetAttitudeTarget(Msg_set_attitude_target msg)
         {
-            var rollRate = msg.body_roll_rate;
-            var pitchRate = msg.body_pitch_rate;
-            var yawRate = msg.body_yaw_rate;
+
+            //var rollRate = msg.body_roll_rate;
+            //var pitchRate = msg.body_pitch_rate;
+            var yawrate = msg.body_yaw_rate;
             var thrust = msg.thrust;
-            drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
+            Vector4 attitudeQ;
+            attitudeQ.w = msg.q[0];
+            attitudeQ.x = msg.q[1];
+            attitudeQ.y = msg.q[2];
+            attitudeQ.z = msg.q[3];
+            Vector3 attitudeEuler = attitudeQ.ToRHEuler();
+            //drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
+
+            drone.SetAttitude(attitudeEuler.y, yawrate, attitudeEuler.x, thrust);
         }
 
         /// <summary>
