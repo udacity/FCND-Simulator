@@ -103,6 +103,7 @@ namespace UdacityNetworking
 				else
 					remoteIP = host.Replace ( "####", remotePort.ToString () );
 			}
+			Debug.Log(string.Format("ip {0}, port {1}", remoteIP, remotePort));
 			connection.Connect ( remoteIP, remotePort );
 		}
 
