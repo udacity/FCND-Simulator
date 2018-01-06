@@ -12,7 +12,7 @@ public class Controls : MonoBehaviour
     private IDrone drone;
     public NetworkController networkController;
     public int heartbeatIntervalHz = 1;
-    public int telemetryIntervalHz = 500;//15;
+    public int telemetryIntervalHz = 50;//15;
     public int homePositionIntervalHz = 1;
 
     void Start()

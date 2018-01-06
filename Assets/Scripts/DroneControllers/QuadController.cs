@@ -343,7 +343,7 @@ namespace DroneControllers
 
         public void CmdThrust(float thrust)
         {
-            force.y = thrust + ForceNoise * Random.value;
+            force.y = thrust + ForceNoise * 2.0f*(Random.value-1.0f);
         }
 
         public void CmdTorque(Vector3 t)
@@ -585,6 +585,7 @@ namespace DroneControllers
             lat_noise = 0.9f * lat_noise + 0.04f * HDOP * fnNoise.GetSimplex(Time.time * 121.7856f, 0, 0);
             alt_noise = 0.9f * alt_noise + 0.04f * VDOP * fnNoise.GetSimplex(0, Time.time * 23.14141f, 0);
             lon_noise = 0.9f * lon_noise + 0.04f * HDOP * fnNoise.GetSimplex(0, 0, Time.time * 127.7334f);
+            
 
             //            lat_noise = 0.9f * lat_noise + 0.2f * HDOP * (Random.value - 0.5f);
             //            alt_noise = 0.9f * alt_noise + 0.2f * VDOP * (Random.value - 0.5f);

@@ -144,11 +144,12 @@ namespace DroneControllers
         {
 
             positionControl = false;
-            attitudeControl = true;
+            
             guidedCommand.x = roll;
             guidedCommand.y = pitch;
             guidedCommand.w = yawRate;
             guidedCommand.z = thrust;
+            attitudeControl = true;
         }
         public void ArmVehicle()
         {
