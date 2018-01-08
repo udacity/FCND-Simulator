@@ -422,7 +422,7 @@ namespace Messaging
             attitudeQ.z = msg.q[3];
             Vector3 attitudeEuler = attitudeQ.ToRHEuler();
             //drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
-
+            Debug.Log("Thrust Set:" + thrust);
             drone.SetAttitude(attitudeEuler.y, yawrate, attitudeEuler.x, thrust);
         }
 
