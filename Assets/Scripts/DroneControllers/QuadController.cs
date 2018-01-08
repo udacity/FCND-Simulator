@@ -343,7 +343,7 @@ namespace DroneControllers
 
         public void CmdThrust(float thrust)
         {
-            force.y = thrust + ForceNoise * 2.0f*(Random.value-1.0f);
+            force.y = Mathf.Max(thrust + ForceNoise * 2.0f*(Random.value-1.0f),0.0f);
         }
 
         public void CmdTorque(Vector3 t)

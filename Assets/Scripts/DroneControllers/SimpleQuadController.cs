@@ -12,6 +12,8 @@ namespace DroneControllers
         public bool positionControl = true;
         public bool remote = false;
 
+        public float hDotInt;
+
         ///
         /// Control Gains
         ///
@@ -74,8 +76,11 @@ namespace DroneControllers
         [System.NonSerialized]
         public bool yawSet = false;
         Vector3 lastVelocityErrorBody = Vector3.zero;
-        float hDotInt = 0.0f;
         public QuadMovementBehavior currentMovementBehavior;
+
+        public AttitudeControl attCtrl = new AttitudeControl();
+        public PositionControl posCtrl = new PositionControl();
+
 
         void Awake()
         {
