@@ -36,14 +36,16 @@ public class TerrainRasterizer : GameObjectModifier
 		return tex;
 	}
 
-	public override void Run (Mapbox.Unity.MeshGeneration.Components.FeatureBehaviour fb, Mapbox.Unity.MeshGeneration.Data.UnityTile tile)
+	public override void Run (VectorEntity ve, Mapbox.Unity.MeshGeneration.Data.UnityTile tile)
+//	public override void Run (Mapbox.Unity.MeshGeneration.Components.FeatureBehaviour fb, Mapbox.Unity.MeshGeneration.Data.UnityTile tile)
 	{
 		Texture2D tex = GetOrAddTileTexture ( tile.name );
 
 		// what we want here is to map the texture onto the appropriate tile's bounds
 
 		Bounds tileBounds = tile.GetComponent<Renderer> ().bounds;
-		Mesh featureMesh = fb.GetComponent<MeshFilter> ().mesh;
+		Mesh featureMesh = ve.Mesh; // ve.MeshFilter.mesh?
+//		Mesh featureMesh = fb.GetComponent<MeshFilter> ().mesh;
 
 		Vector3[] verts = featureMesh.vertices;
 		Color[] pixels = tex.GetPixels ();
@@ -58,7 +60,8 @@ public class TerrainRasterizer : GameObjectModifier
 			verts [ i ] += tileBounds.center;
 		}
 
-		Color sample = fb.GetComponent<Renderer> ().material.color;
+		Color sample = ve.MeshRenderer.material.color;
+//		Color sample = fb.GetComponent<Renderer> ().material.color;
 		for ( int y = 0; y < TexSize; y++ )
 		{
 			for ( int x = 0; x < TexSize; x++ )
@@ -79,6 +82,7 @@ public class TerrainRasterizer : GameObjectModifier
 		tex.Apply ();
 //		r.material.mainTexture = tex;
 
-		fb.gameObject.SetActive ( false );
+		ve.GameObject.SetActive ( false );
+//		fb.gameObject.SetActive ( false );
 	}
 }

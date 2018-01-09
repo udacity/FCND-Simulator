@@ -55,7 +55,7 @@ public class MotionPlanning : MonoBehaviour
     {
         // Send multiple messages for different orientations
         var msgs = new List<byte[]>();
-        print("Sensing distances ...");
+//        print("Sensing distances ...");
         var pos = drone.UnityCoords();
         var collisions = Sensors.Lidar.Sense(droneGO, mavSensorLookup.Keys.ToList(), sensorRange);
 
@@ -63,7 +63,7 @@ public class MotionPlanning : MonoBehaviour
         {
             var c = collisions[i];
 
-            print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", c.origin, c.rotation.eulerAngles, c.distance, c.target));
+//            print(string.Format("ray hit - drone loc {0}, rotation {1}, distance (meters) {2}, collision loc {3}", c.origin, c.rotation.eulerAngles, c.distance, c.target));
             var mo = mavSensorLookup[c.rotation];
             var dist = c.distance;
             var msg = new Msg_distance_sensor
