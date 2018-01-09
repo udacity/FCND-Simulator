@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PositionControl {
     public float Kp_pos = 2.0f;
-    public float Kp_pos2 = 0.4f;
+    public float Kp_pos2 = 0.2f;
     public float Kp_alt = 10.0f;
-    public float posHoldDeadband=1.0f;
+    public float posHoldDeadband=0.5f;
     public float maxSpeed=10.0f;
-    public float Kp_vel=0.1f;
+    public float Kp_vel=0.2f;
     public float Kp_yaw=0.5f;
 
     public PositionControl()
