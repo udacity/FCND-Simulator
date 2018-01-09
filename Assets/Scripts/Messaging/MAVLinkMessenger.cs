@@ -12,6 +12,9 @@ namespace Messaging
 {
     public class MAVLinkMessenger
     {
+        private double prev_time = 0.0;
+        private double total_commands = 0.0;
+
         /// <summary>
         /// enum to define the mode options
         /// this follows the PX4 mode option set
@@ -118,27 +121,39 @@ namespace Messaging
         }
 
         /// <summary>
-        /// http://mavlink.org/messages/common#ATTITUDE_TARGET
+        /// http://mavlink.org/messages/common#ATTITUDE_QUATERNION
         /// <summary>
-        public List<byte[]> AttitudeTarget()
+        public List<byte[]> AttitudeQuaternion()
         {
-            var gyro = drone.AngularVelocity().EUNToNED();
+            double curr_time = Time.time;
+            total_commands = total_commands + 1.0f;
+            if (curr_time - prev_time > 2.0)
+            {
+                Debug.Log("Attitude Message Freq: " + total_commands / (curr_time - prev_time));
+                prev_time = curr_time;
+                total_commands = 0.0f;
+            }
+
+            var rollrate = (float)drone.Rollrate();
+            var pitchrate = (float)drone.Pitchrate();
+            var yawrate = (float)drone.Yawrate();
             var pitch = (float)drone.Pitch();
             var yaw = (float)drone.Yaw();
             var roll = (float)drone.Roll();
             //var q = Quaternion.Euler(pitch, yaw, roll);
             var q = new Vector3(roll, pitch, yaw).ToRHQuaternion();
-            var msg = new Msg_attitude_target
+            var msg = new Msg_attitude_quaternion
             {
-                type_mask = 0x00,
                 // EUN to NED frame
                 //q = new float[4] { q.w, q.z, q.x, q.y },
-                q = new float[4] { q.w, q.x, q.y, q.z },
-                body_roll_rate = gyro.x,
-                body_pitch_rate = gyro.y,
-                body_yaw_rate = gyro.z,
-                // TODO: Get drone thrust
-                thrust = 0,
+                q1 =  q.w,
+                q2 = q.x,
+                q3 = q.y,
+                q4 = q.z,
+                rollspeed = rollrate,
+                pitchspeed = pitchrate,
+                yawspeed = yawrate,
+                time_boot_ms=(uint)(Time.time*1000.0f),
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
@@ -161,8 +176,8 @@ namespace Messaging
                 z = down,
                 vx = (float)drone.NorthVelocity(),
                 vy = (float)drone.EastVelocity(),
-                vz = (float)drone.VerticalVelocity(),
-                time_boot_ms=(uint)Mathf.Round(Time.time*1000.0f)
+                vz = (float)drone.DownVelocity(),
+                time_boot_ms=(uint)(Time.time*1000.0f)
             };
 
             var serializedPacket = mav.SendV2(msg);
@@ -200,7 +215,8 @@ namespace Messaging
                 system_status = 1,
                 base_mode = base_mode,
                 custom_mode = custom_mode,
-                mavlink_version = 3
+                mavlink_version = 3,
+
             };
 
             var serializedPacket = mav.SendV2(msg);
@@ -379,7 +395,7 @@ namespace Messaging
 
         void OnPacketReceived(object sender, MavlinkPacket packet)
         {
-            Debug.Log(string.Format("Received packet, message type = {0}", packet.Message));
+            //Debug.Log(string.Format("Received packet, message type = {0}", packet.Message));
             var msgstr = packet.Message.ToString();
             switch (msgstr)
             {
@@ -410,20 +426,36 @@ namespace Messaging
         /// </summary>
         void MsgSetAttitudeTarget(Msg_set_attitude_target msg)
         {
-
-            //var rollRate = msg.body_roll_rate;
-            //var pitchRate = msg.body_pitch_rate;
-            var yawrate = msg.body_yaw_rate;
-            var thrust = msg.thrust;
-            Vector4 attitudeQ;
-            attitudeQ.w = msg.q[0];
-            attitudeQ.x = msg.q[1];
-            attitudeQ.y = msg.q[2];
-            attitudeQ.z = msg.q[3];
-            Vector3 attitudeEuler = attitudeQ.ToRHEuler();
-            //drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
-            Debug.Log("Thrust Set:" + thrust);
-            drone.SetAttitude(attitudeEuler.y, yawrate, attitudeEuler.x, thrust);
+            bool attitudeCmd;
+            if((msg.type_mask & (byte)(128))>0)
+            {
+                attitudeCmd = false;
+            }
+            else
+            {
+                attitudeCmd = true;
+            }
+            
+            if (attitudeCmd)
+            {
+                var yawrate = msg.body_yaw_rate;
+                var thrust = msg.thrust;
+                Vector4 attitudeQ;
+                attitudeQ.w = msg.q[0];
+                attitudeQ.x = msg.q[1];
+                attitudeQ.y = msg.q[2];
+                attitudeQ.z = msg.q[3];
+                Vector3 attitudeEuler = attitudeQ.ToRHEuler();
+                //drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
+                Debug.Log("Thrust Set:" + thrust);
+                drone.SetAttitude(attitudeEuler.y, yawrate, attitudeEuler.x, thrust);
+            }
+            else
+            {
+                
+                
+                drone.SetMotors(msg.thrust, msg.body_pitch_rate, msg.body_yaw_rate, msg.body_roll_rate);
+            }
         }
 
         /// <summary>

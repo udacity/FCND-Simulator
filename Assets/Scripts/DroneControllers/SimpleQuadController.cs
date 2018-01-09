@@ -57,6 +57,7 @@ namespace DroneControllers
         public QuadMovementBehavior mb_ManualAttCtrl;
         public QuadMovementBehavior mb_GuidedPosCtrl;
         public QuadMovementBehavior mb_GuidedAttCtrl;
+        public QuadMovementBehavior mb_GuidedMotors;
         
 
         [System.NonSerialized]
@@ -104,7 +105,7 @@ namespace DroneControllers
             }
             SelectMovementBehavior();
 
-            if (armed && !remote)
+            if (armed)
             {
                 currentMovementBehavior.OnLateUpdate();
             }
@@ -156,6 +157,16 @@ namespace DroneControllers
             guidedCommand.z = thrust;
             attitudeControl = true;
         }
+
+        public void CommandMotors(float rollMoment, float pitchMoment, float yawMoment, float thrust)
+        {
+            positionControl = false;
+            attitudeControl = false;
+            guidedCommand.x = rollMoment;
+            guidedCommand.y = pitchMoment;
+            guidedCommand.w = yawMoment;
+            guidedCommand.z = thrust;
+        }
         public void ArmVehicle()
         {
             
@@ -177,6 +188,8 @@ namespace DroneControllers
             
             armed = true;
         }
+
+        
 
         public void DisarmVehicle()
         {
@@ -207,6 +220,10 @@ namespace DroneControllers
                 {
                     
                     currentMovementBehavior = mb_GuidedAttCtrl;
+                }
+                else
+                {
+                    currentMovementBehavior = mb_GuidedMotors;
                 }
                 
             }

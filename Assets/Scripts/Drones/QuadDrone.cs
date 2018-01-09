@@ -135,12 +135,13 @@ namespace Drones
 
         public void SetAttitudeRate(double pitchRate, double yawRate, double rollRate, double thrust)
         {
-            simpleQuadCtrl.currentMovementBehavior.RemoteUpdate((float)thrust, (float)pitchRate, (float)yawRate, (float)rollRate);
+            //simpleQuadCtrl.currentMovementBehavior.RemoteUpdate((float)thrust, (float)pitchRate, (float)yawRate, (float)rollRate);
+            throw new System.NotImplementedException();
         }
 
-        public void SetMotors(float throttle, float pitchRate, float yawRate, float rollRate)
+        public void SetMotors(float throttle, float pitchMoment, float yawMoment, float rollMoment)
         {
-            throw new System.NotImplementedException();
+            simpleQuadCtrl.CommandMotors(rollMoment, pitchMoment, yawMoment, throttle);
         }
 
         public void SetVelocity(double vx, double vy, double vz, double heading)
@@ -151,6 +152,11 @@ namespace Drones
         public void TakeControl(bool guided)
         {
             simpleQuadCtrl.SetGuidedMode(guided);
+        }
+
+        public double DownVelocity()
+        {
+            return quadCtrl.GetDownVelocity();
         }
 
         public double VerticalVelocity()
@@ -166,6 +172,21 @@ namespace Drones
         public Vector3 AngularVelocity()
         {
             return quadCtrl.AngularVelocityBody;
+        }
+
+        public double Rollrate()
+        {
+            return quadCtrl.GetRollrate();
+        }
+
+        public double Pitchrate()
+        {
+            return quadCtrl.GetPitchrate();
+        }
+
+        public double Yawrate()
+        {
+            return quadCtrl.GetYawrate();
         }
 
         public Vector3 AngularAcceleration()

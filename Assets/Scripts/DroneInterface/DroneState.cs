@@ -52,6 +52,11 @@ namespace DroneInterface
         double EastVelocity();
 
         /// <summary>
+        /// Correponds to the velocity in the downward direciton (+down)
+        /// </summary>
+        double DownVelocity();
+
+        /// <summary>
         /// Corresponds to velocity along the z axis.
         /// </summary>
         double VerticalVelocity();
@@ -75,6 +80,21 @@ namespace DroneInterface
         /// Returns angular velocity in Radians/sec
         /// </summary>
         Vector3 AngularVelocity();
+
+        /// <summary>
+        /// Returns the angular velocity around the body forward axis in Radians/sec (RH+)
+        /// </summary>
+        double Rollrate();
+
+        /// <summary>
+        /// Returns the angular velocity around the body right axis in Radians/sec (RH+)
+        /// </summary>
+        double Pitchrate();
+
+        /// <summary>
+        /// Returns the angular velocity around the body down axis in Radians/sec (RH+)
+        /// </summary>
+        double Yawrate();
 
         /// <summary>
         /// Returns angular acceleration in Radians/sec^2
