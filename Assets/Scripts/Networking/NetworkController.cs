@@ -11,10 +11,19 @@ using System.Threading.Tasks;
 
 namespace UdacityNetworking
 {
-	public enum ConnectionProtocol { TCP, UDP };
+	public enum ConnectionProtocol { TCP, UDP, WebSocket };
+	public enum ConnectionState { Connecting, Connected, Disconnecting, Disconnected };
 
 	public class NetworkController : MonoBehaviour
 	{
+		#if UNITY_WEBGL && !UNITY_EDITOR
+		[System.Runtime.InteropServices.DllImport ("__Internal")]
+		static extern string ObtainHost ();
+		#else
+		string ObtainHost () { return ""; }
+		#endif
+		public ConnectionState ConnectionState { get { return connection != null ? connection.ConnectionState : ConnectionState.Disconnected; } }
+
 		public static float Timeout = 30;
 
 		public bool autoStartServer;
@@ -28,23 +37,35 @@ namespace UdacityNetworking
 
 		NetworkConnection connection;
 		event Action<MessageInfo> messageHandler = delegate {};
+		event Action<ConnectionState> connectionEvent = delegate {};
 
-		void Awake ()
+		ConnectionState lastConnectionState;
+
+		void Start ()
 		{
 			if ( autoStartServer && autoStartClient )
 				Debug.LogWarning ( "AutoStartServer and AutoStartClient are both set. Server will override the client option" );
 			Timeout = timeout;
 			#if UNITY_WEBGL && !UNITY_EDITOR
+			protocol = ConnectionProtocol.WebSocket;
 			connection = new WebsocketConnection ();
 			#else
 			if ( protocol == ConnectionProtocol.TCP )
-			connection = new TCPConnection ();
+				connection = new TCPConnection ();
 			else
+			if ( protocol == ConnectionProtocol.UDP )
 				connection = new UDPConnection ();
+			else
+				connection = new WebsocketConnection ();
 			#endif
 
+			connection.Controller = this;
 			connection.AddMessageHandler ( MessageReceived );
+			lastConnectionState = ConnectionState.Disconnected;
 
+			if ( protocol == ConnectionProtocol.WebSocket && ( autoStartClient || autoStartServer ) )
+				StartClient ();
+			else
 			if ( autoStartServer )
 				StartServer ();
 			else
@@ -55,7 +76,15 @@ namespace UdacityNetworking
 		void Update ()
 		{
 			if ( connection != null )
+			{
 				connection.DoUpdate ();
+				ConnectionState newState = connection.ConnectionState;
+				if ( newState != lastConnectionState )
+				{
+					connectionEvent ( newState );
+					lastConnectionState = newState;
+				}
+			}
 		}
 		
 		public void StartServer ()
@@ -65,6 +94,16 @@ namespace UdacityNetworking
 
 		public void StartClient ()
 		{
+			if ( protocol == ConnectionProtocol.WebSocket )
+			{
+				string host = ObtainHost ();
+				Debug.Log ( "host is " + host );
+				if ( string.IsNullOrWhiteSpace ( host ) )
+					remoteIP = "ws://" + remoteIP + ":" + remotePort.ToString ();
+				else
+					remoteIP = host.Replace ( "####", remotePort.ToString () );
+			}
+			Debug.Log(string.Format("ip {0}, port {1}", remoteIP, remotePort));
 			connection.Connect ( remoteIP, remotePort );
 		}
 
@@ -76,6 +115,11 @@ namespace UdacityNetworking
 		public void RemoveMessageHandler (Action<MessageInfo> handler)
 		{
 			messageHandler -= handler;
+		}
+
+		public void AddConnectionEvent (Action<ConnectionState> handler)
+		{
+			connectionEvent += handler;
 		}
 
 		public void SendMessage (byte[] message)
@@ -106,12 +150,15 @@ namespace UdacityNetworking
 		IEnumerator RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
 		{
 			float delay = 1f * delayMS / 1000f;
-			while ( connection.IsServerStarted )
+			while ( true )
 			{
-				var msgs = msgFunc ();
-				foreach (var msg in msgs)
+				if ( connection != null && ( connection.IsServerStarted || connection.IsConnected ) )
 				{
-					connection.SendMessage ( msg );
+					var msgs = msgFunc ();
+					foreach (var msg in msgs)
+					{
+						connection.SendMessage ( msg );
+					}
 				}
 				yield return new WaitForSecondsRealtime ( delay );
 			}
@@ -119,12 +166,15 @@ namespace UdacityNetworking
 		#else
 		async Task RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
 		{
-			while ( connection.IsServerStarted )
+			while ( true )
 			{
-				var msgs = msgFunc ();
-				foreach (var msg in msgs)
+				if ( connection != null && ( connection.IsServerStarted || connection.IsConnected ) )
 				{
-					connection.SendMessage ( msg );
+					var msgs = msgFunc ();
+					foreach ( var msg in msgs )
+					{
+						connection.SendMessage ( msg );
+					}
 				}
 				await Task.Delay ( delayMS );
 			}
