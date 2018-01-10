@@ -144,7 +144,9 @@ namespace UdacityNetworking
 			#if UNITY_WEBGL && !UNITY_EDITOR
 			StartCoroutine ( RecurringMessage ( messageFunc, delayMilliseconds ) );
 			#else
-			RecurringMessage ( messageFunc, delayMilliseconds );
+//			Task.Factory.StartNew ( RecurringMessage ( messageFunc, delayMilliseconds ) );
+			Task.Run ( () => RecurringMessage ( messageFunc, delayMilliseconds ) );
+//			RecurringMessage ( messageFunc, delayMilliseconds );
 			#endif
 		}
 
