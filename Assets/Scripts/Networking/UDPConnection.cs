@@ -77,6 +77,8 @@ namespace UdacityNetworking
 
 	public class UDPConnection : NetworkConnection
 	{
+		public NetworkController Controller { get; set; }
+		public ConnectionState ConnectionState { get { return connectionState; } }
 		public bool IsServerStarted { get { return listener != null; } }
 		public bool IsConnected { get { return myClient != null && myClient.Client.Connected; } }
 
@@ -89,12 +91,14 @@ namespace UdacityNetworking
 		UdpClient myClient;
 		ConcurrentQueue<MessageInfo> messages = new ConcurrentQueue<MessageInfo> ();
 		float nextTimeoutCheck;
+		ConnectionState connectionState;
 
 		public void StartServer (string ip, int port)
 		{
 			running = true;
 			this.ip = ip;
 			this.port = port;
+			connectionState = ConnectionState.Connecting;
 			UdpListenAsync ();
 			DispatchMessages ();
 		}
@@ -116,11 +120,22 @@ namespace UdacityNetworking
 					}
 				nextTimeoutCheck = Time.unscaledTime + NetworkController.Timeout;
 			}
+			if ( connectionState == ConnectionState.Connected && myClient != null && !myClient.Client.Connected )
+				connectionState = ConnectionState.Disconnected;
 		}
 
 		public void Connect (string ip, int port)
 		{
+			connectionState = ConnectionState.Connecting;
 			myClient = new UdpClient ( ip, port );
+			WaitConnect ();
+
+		}
+		async Task WaitConnect ()
+		{
+			while ( !myClient.Client.Connected )
+				await Task.Delay ( 5 );
+			connectionState = ConnectionState.Connected;
 		}
 
 		public void AddMessageHandler (Action<MessageInfo> handler)
@@ -189,7 +204,8 @@ namespace UdacityNetworking
 				listener = new UdpListener ( addr, port );
 				// Start listening for client requests.
 //				listener.Start ();
-				Debug.Log ( "Starting UDP MAVLink server ..." );
+				Debug.Log ( "Starting UDP server ..." );
+				connectionState = ConnectionState.Connected;
 
 				while ( running )
 				{
@@ -224,10 +240,12 @@ namespace UdacityNetworking
 //				Debug.Log (string.Format("SocketException: {0}", e));
 //				listener.Stop ();
 				listener = null;
+				connectionState = ConnectionState.Disconnected;
 			}
 			finally
 			{
 				// this is to ensure the sever stops once a disconnection happens, or when done with everything
+				connectionState = ConnectionState.Disconnected;
 			}
 		}
 
