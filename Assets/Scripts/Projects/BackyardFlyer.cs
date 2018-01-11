@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Comment this one to remove changing physics step at runtime
+#define PHYSICS_TEST
+using UnityEngine;
 
 using FlightUtils;
 using Drones;
@@ -29,4 +31,20 @@ public class BackyardFlyer : MonoBehaviour
         networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
     }
+
+	#if PHYSICS_TEST
+	void LateUpdate ()
+	{
+		if ( Input.GetKeyDown ( KeyCode.Alpha1 ) )
+			Time.fixedDeltaTime = 0.02f;
+		if ( Input.GetKeyDown ( KeyCode.Alpha2 ) )
+			Time.fixedDeltaTime = 0.01f;
+		if ( Input.GetKeyDown ( KeyCode.Alpha3 ) )
+			Time.fixedDeltaTime = 0.005f;
+		if ( Input.GetKeyDown ( KeyCode.Alpha4 ) )
+			Time.fixedDeltaTime = 0.002f;
+		if ( Input.GetKeyDown ( KeyCode.Alpha5 ) )
+			Time.fixedDeltaTime = 0.001f;
+	}
+	#endif
 }

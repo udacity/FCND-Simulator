@@ -9,6 +9,33 @@ using System.Text;
 
 #if UNITY_EDITOR || !UNITY_WEBGL
 using System.Threading.Tasks;
+using Profiler = UnityEngine.Profiling.Profiler;
+#endif
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+class RepeatingMessage
+{
+	public Func<List<byte[]>> func;
+	public float delay;
+	public float nextInvokeTime;
+
+	public RepeatingMessage (Func<List<byte[]>> f, float callDelay)
+	{
+		func = f;
+		delay = callDelay;
+		nextInvokeTime = Time.unscaledTime + delay;
+	}
+
+	public bool ReadyToCall ()
+	{
+		return Time.unscaledTime >= nextInvokeTime;
+	}
+
+	public void OnCalled ()
+	{
+		nextInvokeTime = Time.unscaledTime + delay;
+	}
+}
 #endif
 
 namespace UdacityNetworking
@@ -42,6 +69,10 @@ namespace UdacityNetworking
 		event Action<ConnectionState> connectionEvent = delegate {};
 
 		ConnectionState lastConnectionState;
+
+		#if UNITY_WEBGL && !UNITY_EDITOR
+		List<RepeatingMessage> repeatingMessages = new List<RepeatingMessage> ();
+		#endif
 
 		void Start ()
 		{
@@ -88,6 +119,33 @@ namespace UdacityNetworking
 				}
 			}
 		}
+
+		#if UNITY_WEBGL && !UNITY_EDITOR
+		void FixedUpdate ()
+		{
+			if ( connection != null && ( connection.IsServerStarted || connection.IsConnected ) )
+			{
+				int count = repeatingMessages.Count;
+				for ( int i = 0; i < count; i++ )
+				{
+					if ( repeatingMessages [ i ].ReadyToCall () )
+					{
+//						Profiler.BeginSample ( "s1" );
+						var msgs = repeatingMessages [ i ].func ();
+//						Profiler.EndSample ();
+						
+//						Profiler.BeginSample ( "s2" );
+						foreach ( var msg in msgs )
+						{
+							connection.SendMessage ( msg );
+						}
+//						Profiler.EndSample ();
+						repeatingMessages [ i ].OnCalled ();
+					}
+				}
+			}
+		}
+		#endif
 		
 		public void StartServer ()
 		{
@@ -142,7 +200,9 @@ namespace UdacityNetworking
 		public void EnqueueRecurringMessage (Func<List<byte[]>> messageFunc, int delayMilliseconds)
 		{
 			#if UNITY_WEBGL && !UNITY_EDITOR
-			StartCoroutine ( RecurringMessage ( messageFunc, delayMilliseconds ) );
+			float delay = 1f * delayMilliseconds / 1000f;
+			repeatingMessages.Add ( new RepeatingMessage ( messageFunc, delay ) );
+//			StartCoroutine ( RecurringMessage ( messageFunc, delayMilliseconds ) );
 			#else
 //			Task.Factory.StartNew ( RecurringMessage ( messageFunc, delayMilliseconds ) );
 			Task.Run ( () => RecurringMessage ( messageFunc, delayMilliseconds ) );
@@ -151,7 +211,7 @@ namespace UdacityNetworking
 		}
 
 		#if UNITY_WEBGL && !UNITY_EDITOR
-		IEnumerator RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
+/*		IEnumerator RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
 		{
 			float delay = 1f * delayMS / 1000f;
 			while ( true )
@@ -164,9 +224,10 @@ namespace UdacityNetworking
 						connection.SendMessage ( msg );
 					}
 				}
-				yield return new WaitForSecondsRealtime ( delay );
+				yield return new WaitForFixedUpdate ();
+//				yield return new WaitForSecondsRealtime ( delay );
 			}
-		}
+		}*/
 		#else
 		async Task RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
 		{
