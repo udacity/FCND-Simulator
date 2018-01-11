@@ -104,6 +104,7 @@ namespace DroneControllers
 
             }
             SelectMovementBehavior();
+            // Debug.Log(currentMovementBehavior);
 
             if (armed)
             {
@@ -218,7 +219,6 @@ namespace DroneControllers
                     currentMovementBehavior = mb_GuidedPosCtrl;
                 }else if (attitudeControl)
                 {
-                    
                     currentMovementBehavior = mb_GuidedAttCtrl;
                 }
                 else
