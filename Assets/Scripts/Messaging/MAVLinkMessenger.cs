@@ -495,6 +495,7 @@ namespace Messaging
                 {
                     if (custom_mode == (byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD)
                     {
+                        Debug.Log("in here");
                         drone.TakeControl(true);
                         Debug.Log("VEHICLE IS BEING GUIDED !!!");
                     }
