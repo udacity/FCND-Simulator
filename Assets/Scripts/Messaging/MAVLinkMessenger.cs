@@ -12,6 +12,8 @@ namespace Messaging
 {
     public class MAVLinkMessenger
     {
+        private double prev_time = 0.0;
+        private double total_commands = 0.0;
 
         DateTime startTime;
 
@@ -134,6 +136,19 @@ namespace Messaging
         /// <summary>
         public List<byte[]> AttitudeQuaternion()
         {
+            double curr_time = TimeSinceSystemStart()/1000.0f;
+            total_commands = total_commands + 1.0f;
+            if (curr_time - prev_time > 2.0)
+            {
+                Debug.Log("Attitude Message Freq: " + total_commands / (curr_time - prev_time));
+                prev_time = curr_time;
+                total_commands = 0.0f;
+            }
+            else
+            {
+
+            }
+
             var rollrate = (float)drone.Rollrate();
             var pitchrate = (float)drone.Pitchrate();
             var yawrate = (float)drone.Yawrate();
@@ -451,9 +466,7 @@ namespace Messaging
                 drone.SetAttitude(attitudeEuler.y, yawrate, attitudeEuler.x, thrust);
             }
             else
-            {
-                
-                
+            {                
                 drone.SetMotors(msg.thrust, msg.body_pitch_rate, msg.body_yaw_rate, msg.body_roll_rate);
             }
         }
