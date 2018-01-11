@@ -13,7 +13,7 @@ public class Controls : MonoBehaviour
     public NetworkController networkController;
     public int heartbeatIntervalHz = 1;
     public int positionIntervalHz = 100;
-    public int attitudeIntervalHz = 500;//15;
+    public int attitudeIntervalHz = 500;
     public int homePositionIntervalHz = 1;
 
     void Start()

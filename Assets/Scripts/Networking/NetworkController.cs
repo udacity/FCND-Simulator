@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UdacityNetworking;
 using Debug = UnityEngine.Debug;
+using System.Threading;
+using System.Text;
 
 #if UNITY_EDITOR || !UNITY_WEBGL
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace UdacityNetworking
 
 	public class NetworkController : MonoBehaviour
 	{
+		static Encoding enc = Encoding.ASCII;
 		#if UNITY_WEBGL && !UNITY_EDITOR
 		[System.Runtime.InteropServices.DllImport ("__Internal")]
 		static extern string ObtainHost ();
@@ -34,7 +37,6 @@ namespace UdacityNetworking
 		public string remoteIP = "127.0.0.1";
 		public ConnectionProtocol protocol;
 		public float timeout = 30;
-
 		NetworkConnection connection;
 		event Action<MessageInfo> messageHandler = delegate {};
 		event Action<ConnectionState> connectionEvent = delegate {};
@@ -142,7 +144,9 @@ namespace UdacityNetworking
 			#if UNITY_WEBGL && !UNITY_EDITOR
 			StartCoroutine ( RecurringMessage ( messageFunc, delayMilliseconds ) );
 			#else
-			RecurringMessage ( messageFunc, delayMilliseconds );
+//			Task.Factory.StartNew ( RecurringMessage ( messageFunc, delayMilliseconds ) );
+			Task.Run ( () => RecurringMessage ( messageFunc, delayMilliseconds ) );
+//			RecurringMessage ( messageFunc, delayMilliseconds );
 			#endif
 		}
 

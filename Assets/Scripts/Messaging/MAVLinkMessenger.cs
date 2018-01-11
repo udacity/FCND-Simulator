@@ -12,8 +12,8 @@ namespace Messaging
 {
     public class MAVLinkMessenger
     {
-        private double prev_time = 0.0;
-        private double total_commands = 0.0;
+
+        DateTime startTime;
 
         /// <summary>
         /// enum to define the mode options
@@ -47,6 +47,7 @@ namespace Messaging
 
         public MAVLinkMessenger()
         {
+            startTime = DateTime.Now;
             mav = new Mavlink();
             drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
             // setup event listeners
@@ -57,6 +58,14 @@ namespace Messaging
         public void ParseMessageInfo(MessageInfo msgInfo)
         {
             mav.ParseBytesV2(msgInfo.message);
+        }
+
+        /// <summary>
+        /// </summary>
+        uint TimeSinceSystemStart() {
+            var now = DateTime.Now;
+            var span = now - startTime;
+            return (uint) span.TotalMilliseconds;
         }
 
         ///
@@ -125,15 +134,6 @@ namespace Messaging
         /// <summary>
         public List<byte[]> AttitudeQuaternion()
         {
-            double curr_time = Time.time;
-            total_commands = total_commands + 1.0f;
-            if (curr_time - prev_time > 2.0)
-            {
-                Debug.Log("Attitude Message Freq: " + total_commands / (curr_time - prev_time));
-                prev_time = curr_time;
-                total_commands = 0.0f;
-            }
-
             var rollrate = (float)drone.Rollrate();
             var pitchrate = (float)drone.Pitchrate();
             var yawrate = (float)drone.Yawrate();
@@ -153,7 +153,7 @@ namespace Messaging
                 rollspeed = rollrate,
                 pitchspeed = pitchrate,
                 yawspeed = yawrate,
-                time_boot_ms=(uint)(Time.time*1000.0f),
+                time_boot_ms=TimeSinceSystemStart(),
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
@@ -177,7 +177,7 @@ namespace Messaging
                 vx = (float)drone.NorthVelocity(),
                 vy = (float)drone.EastVelocity(),
                 vz = (float)drone.DownVelocity(),
-                time_boot_ms=(uint)(Time.time*1000.0f)
+                time_boot_ms=TimeSinceSystemStart()
             };
 
             var serializedPacket = mav.SendV2(msg);
