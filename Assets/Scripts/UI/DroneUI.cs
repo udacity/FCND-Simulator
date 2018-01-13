@@ -45,9 +45,9 @@ public class DroneUI : MonoBehaviour
 
 	void Start ()
 	{
-		var parameters = DroneParameters.Parameters;
+		var parameters = SimParameters.Parameters;
 //		Debug.Log ( "there are " + parameters.Length + " parameters" );
-		foreach ( DroneParameter p in parameters )
+		foreach ( SimParameter p in parameters )
 		{
 			UIParameter up = Instantiate ( parameterPrefab, parametersParent );
 //			up.transform.SetParent ( parametersParent );

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using ParameterAction = System.Action<DroneParameter>;
+using ParameterAction = System.Action<SimParameter>;
 
 [System.Serializable]
-public class DroneParameter : ISerializationCallbackReceiver
+public class SimParameter : ISerializationCallbackReceiver
 {
 	public string displayName = "New Parameter";
 	public float Value
@@ -28,14 +28,14 @@ public class DroneParameter : ISerializationCallbackReceiver
 	bool init;
 
 
-	public DroneParameter ()
+	public SimParameter ()
 	{
-//		DroneParameters.AddParameter ( this );
+//		SimParameters.AddParameter ( this );
 	}
 
-//	~DroneParameter ()
+//	~SimParameter ()
 //	{
-//		DroneParameters.RemoveParameter ( this );
+//		SimParameters.RemoveParameter ( this );
 //	}
 
 	public void Observe (ParameterAction changeObserver)
@@ -51,7 +51,7 @@ public class DroneParameter : ISerializationCallbackReceiver
 
 	public void OnBeforeSerialize ()
 	{
-		DroneParameters.RemoveParameter ( this );
+		SimParameters.RemoveParameter ( this );
 //		Debug.Log ( "param before ser on " + displayName + " " + GetHashCode () );
 	}
 
@@ -60,7 +60,7 @@ public class DroneParameter : ISerializationCallbackReceiver
 		if ( !init )
 		{
 			init = true;
-			DroneParameters.AddParameter ( this );
+			SimParameters.AddParameter ( this );
 		}
 //		Debug.Log ( "param after ser on " + displayName + " " + GetHashCode () );
 	}

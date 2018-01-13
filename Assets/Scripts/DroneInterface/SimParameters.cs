@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[System.NonSerialized]
-public class DroneParameters : ISerializationCallbackReceiver
+public class SimParameters : ISerializationCallbackReceiver
 {
-	static DroneParameters Instance
+	static SimParameters Instance
 	{
 		get
 		{
 			if ( instance == null )
-				instance = new DroneParameters ();
+				instance = new SimParameters ();
 			return instance;
 		}
 	}
-	static DroneParameters instance;
+	static SimParameters instance;
 
-	public static DroneParameter[] Parameters { get { return Instance.parameters.ToArray (); } }
+	public static SimParameter[] Parameters { get { return Instance.parameters.ToArray (); } }
 	[System.NonSerialized]
-	List<DroneParameter> parameters = new List<DroneParameter> ();
+	List<SimParameter> parameters = new List<SimParameter> ();
 	bool serialized;
 	
 	void Prune ()
 	{
 		bool hasNulls = false;
-		List<DroneParameter> newList = new List<DroneParameter> ();
-		foreach ( DroneParameter p in parameters )
+		List<SimParameter> newList = new List<SimParameter> ();
+		foreach ( SimParameter p in parameters )
 		{
 			if ( p == null )
 			{
@@ -56,7 +56,7 @@ public class DroneParameters : ISerializationCallbackReceiver
 //		Debug.Log ( "after ser" );
 	}
 
-	public static void AddParameter (DroneParameter p)
+	public static void AddParameter (SimParameter p)
 	{
 //		Debug.Log ( "adding parameter " + p.GetHashCode () + " " + p.displayName );
 		Instance.Prune ();
@@ -67,7 +67,7 @@ public class DroneParameters : ISerializationCallbackReceiver
 			list.Add ( p );
 	}
 
-	public static void RemoveParameter (DroneParameter p)
+	public static void RemoveParameter (SimParameter p)
 	{
 		Instance.Prune ();
 		var list = Instance.parameters;

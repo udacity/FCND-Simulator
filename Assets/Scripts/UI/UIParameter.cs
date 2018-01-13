@@ -12,9 +12,9 @@ public class UIParameter : MonoBehaviour
 	public input valueText;
 
 	[System.NonSerialized]
-	DroneParameter parameter;
+	SimParameter parameter;
 
-	public void Init (DroneParameter param, bool observe = false)
+	public void Init (SimParameter param, bool observe = false)
 	{
 		parameter = param;
 		title.text = name = param.displayName;
@@ -31,7 +31,7 @@ public class UIParameter : MonoBehaviour
 			parameter.Value = val;
 	}
 
-	void OnParamChanged (DroneParameter p)
+	void OnParamChanged (SimParameter p)
 	{
 //		Debug.Log ( "parameter value changed on " + name );
 		valueText.text = p.Value.ToString ();

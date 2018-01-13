@@ -18,10 +18,10 @@ public class BackyardFlyer : MonoBehaviour
     public int telemetryIntervalHz = 4;
     public int homePositionIntervalHz = 1;
 
-	public DroneParameter exampleParameter1;
-//	public DroneParameter exampleParameter2;
-	public DroneParameter exampleParameter3;
-	public DroneParameter altitudeParameter;
+	public SimParameter exampleParameter1;
+//	public SimParameter exampleParameter2;
+	public SimParameter exampleParameter3;
+	public SimParameter altitudeParameter;
 
 
     // Use this for initialization
