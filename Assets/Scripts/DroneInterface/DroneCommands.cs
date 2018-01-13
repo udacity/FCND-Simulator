@@ -33,7 +33,7 @@ namespace DroneInterface
         /// <summary>
         /// The drone will fly at the commanded orientation (pitch, yaw, roll) and a vertical velocity
         /// </summary>
-        void SetAttitude(double pitch, double yaw, double roll, double velocity);
+        void SetAttitude(double pitch, double yawRate, double roll, double velocity);
 
         /// <summary>
         /// The drone will fly with the following angular rates rollRate, pitchRate, yawRate (radians/second) and collective thrust (m/s^2)
