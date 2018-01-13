@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DroneInterface;
@@ -15,12 +16,16 @@ public class DroneUI : MonoBehaviour
     public Button guideButton;
     public ToggleGroup qualityGroup;
     Toggle[] toggles;
+	public UIParameter parameterPrefab;
+	public RectTransform parametersParent;
+	public GameObject pauseText;
 
     public bool localizeWind;
 
     private IDrone drone;
     ButtonStateWatcher armWatcher;
     ButtonStateWatcher guideWatcher;
+	List<UIParameter> uiParameters;
 
     void Awake()
     {
@@ -34,7 +39,23 @@ public class DroneUI : MonoBehaviour
         qualityGroup.NotifyToggleOn(toggles[quality]);
         armWatcher = armButton.GetComponent<ButtonStateWatcher>();
         guideWatcher = guideButton.GetComponent<ButtonStateWatcher>();
+		pauseText.gameObject.SetActive ( false );
+		Simulation.Observe ( OnSimulationPause );
     }
+
+	void Start ()
+	{
+		var parameters = DroneParameters.Parameters;
+//		Debug.Log ( "there are " + parameters.Length + " parameters" );
+		foreach ( DroneParameter p in parameters )
+		{
+			UIParameter up = Instantiate ( parameterPrefab, parametersParent );
+//			up.transform.SetParent ( parametersParent );
+			up.Init ( p, false );
+			up.gameObject.SetActive ( true );
+//			Debug.Log ( "parameter is " + p.displayName );
+		}
+	}
 
     // Might be able to move this over to LateUpdate.
     void Update()
@@ -124,4 +145,14 @@ public class DroneUI : MonoBehaviour
             QualitySettings.SetQualityLevel(toggle);
         }
     }
+
+	public void PauseSimulation (bool pause)
+	{
+		Simulation.Paused = pause;
+	}
+
+	void OnSimulationPause (bool paused)
+	{
+		pauseText.SetActive ( paused );
+	}
 }
