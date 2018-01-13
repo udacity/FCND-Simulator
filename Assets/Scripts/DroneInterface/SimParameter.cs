@@ -48,13 +48,18 @@ public class SimParameter : ISerializationCallbackReceiver
 		onChanged -= changeObserver;
 	}
 
-
+	/// <summary>
+	/// Unity methods. Do not use!
+	/// </summary>
 	public void OnBeforeSerialize ()
 	{
 		SimParameters.RemoveParameter ( this );
 //		Debug.Log ( "param before ser on " + displayName + " " + GetHashCode () );
 	}
 
+	/// <summary>
+	/// Unity methods. Do not use!
+	/// </summary>
 	public void OnAfterDeserialize ()
 	{
 		if ( !init )

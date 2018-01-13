@@ -36,6 +36,10 @@ public class BackyardFlyer : MonoBehaviour
         networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
+		/// <summary>
+		/// Example of observing parameter changes
+		/// </summary>
+		exampleParameter1.Observe ( OnParameterChanged );
     }
 
 	#if PHYSICS_TEST
@@ -53,4 +57,12 @@ public class BackyardFlyer : MonoBehaviour
 			Time.fixedDeltaTime = 0.001f;
 	}
 	#endif
+
+	/// <summary>
+	/// Example to observe parameter changes
+	/// </summary>
+	void OnParameterChanged (SimParameter p)
+	{
+		Debug.Log ( "Parameter changed: " + p.displayName + "! New value: " + p.Value );
+	}
 }
