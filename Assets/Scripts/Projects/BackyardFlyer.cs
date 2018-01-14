@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Comment this one to remove changing physics step at runtime
+#define PHYSICS_TEST
+using UnityEngine;
 
 using FlightUtils;
 using Drones;
@@ -16,6 +18,12 @@ public class BackyardFlyer : MonoBehaviour
     public int telemetryIntervalHz = 4;
     public int homePositionIntervalHz = 1;
 
+	public SimParameter exampleParameter1;
+//	public SimParameter exampleParameter2;
+	public SimParameter exampleParameter3;
+	public SimParameter altitudeParameter;
+
+
     // Use this for initialization
     void Start()
     {
@@ -28,5 +36,33 @@ public class BackyardFlyer : MonoBehaviour
         networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
+		/// <summary>
+		/// Example of observing parameter changes
+		/// </summary>
+		exampleParameter1.Observe ( OnParameterChanged );
     }
+
+	#if PHYSICS_TEST
+	void LateUpdate ()
+	{
+		if ( Input.GetKeyDown ( KeyCode.Alpha1 ) )
+			Time.fixedDeltaTime = 0.02f;
+		if ( Input.GetKeyDown ( KeyCode.Alpha2 ) )
+			Time.fixedDeltaTime = 0.01f;
+		if ( Input.GetKeyDown ( KeyCode.Alpha3 ) )
+			Time.fixedDeltaTime = 0.005f;
+		if ( Input.GetKeyDown ( KeyCode.Alpha4 ) )
+			Time.fixedDeltaTime = 0.002f;
+		if ( Input.GetKeyDown ( KeyCode.Alpha5 ) )
+			Time.fixedDeltaTime = 0.001f;
+	}
+	#endif
+
+	/// <summary>
+	/// Example to observe parameter changes
+	/// </summary>
+	void OnParameterChanged (SimParameter p)
+	{
+		Debug.Log ( "Parameter changed: " + p.displayName + "! New value: " + p.Value );
+	}
 }

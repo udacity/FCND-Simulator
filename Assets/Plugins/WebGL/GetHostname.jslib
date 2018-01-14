@@ -8,10 +8,15 @@ var LibraryGetHostname = {
 
     var parts = fullHost.split(".");
     var host = parts[0].split("-");
+<<<<<<< HEAD
+	var socketLoc = "wss://" + host[0] + "-####." + parts[1] + "." + parts[2];
+	var socketLoc = "ws://127.0.0.1:5760"
+=======
     var socketLoc = "wss://" + host[0] + "-3001." + parts[1] + "." + parts[2];
     // for local dev debugging
     // var socketLoc = "ws://127.0.0.1:5760"
     console.log("WebSocket location ", socketLoc);
+>>>>>>> websocket-patch
 
     var bufferSize = lengthBytesUTF8(socketLoc) + 1;
     var buffer = _malloc(bufferSize);

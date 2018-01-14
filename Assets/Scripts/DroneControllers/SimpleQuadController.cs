@@ -94,14 +94,6 @@ namespace DroneControllers
             SelectMovementBehavior();
         }
 
-        private void FixedUpdate()
-        {
-            if (armed)
-            {
-                currentMovementBehavior.OnLateUpdate();
-            }
-        }
-
         void LateUpdate()
         {
             if (Input.GetButtonDown("Position Control"))
@@ -112,6 +104,16 @@ namespace DroneControllers
 
             }
             SelectMovementBehavior();
+            // Debug.Log(currentMovementBehavior);
+
+            if (armed)
+            {
+                currentMovementBehavior.OnLateUpdate();
+            }
+            else
+            {
+                pos_set = false;
+            }
         }
 
         // Command the quad to a GPS location (latitude, relative_altitude, longitude)
@@ -161,16 +163,10 @@ namespace DroneControllers
         {
             positionControl = false;
             attitudeControl = false;
-
-            var nav = controller;
-            Vector3 totalMoment = new Vector3(rollMoment, pitchMoment, yawMoment);
-            float totalThrust = thrust;
-            nav.CmdTorque(totalMoment);
-            nav.CmdThrust(totalThrust);
-            /*
-            currentMovementBehavior = mb_GuidedMotors;
-            currentMovementBehavior.RemoteUpdate(rollMoment,pitchMoment,yawMoment,thrust);
-            */
+            guidedCommand.x = rollMoment;
+            guidedCommand.y = pitchMoment;
+            guidedCommand.w = yawMoment;
+            guidedCommand.z = thrust;
         }
         public void ArmVehicle()
         {
@@ -223,7 +219,6 @@ namespace DroneControllers
                     currentMovementBehavior = mb_GuidedPosCtrl;
                 }else if (attitudeControl)
                 {
-                    
                     currentMovementBehavior = mb_GuidedAttCtrl;
                 }
                 else
