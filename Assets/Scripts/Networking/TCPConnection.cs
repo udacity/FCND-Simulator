@@ -81,7 +81,8 @@ namespace UdacityNetworking
 			this.port = port;
 			connectionState = ConnectionState.Connecting;
 			TcpListenAsync ();
-			DispatchMessages ();
+			Task.Run ( DispatchMessages );
+//			DispatchMessages ();
 		}
 
 		public void DoUpdate ()
@@ -137,7 +138,9 @@ namespace UdacityNetworking
 			// make sure server is started
 			while ( !IsServerStarted )
 				await Task.Delay ( 10 );
-			
+
+//			SpinWait sw = new SpinWait ();
+//			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 			while ( IsServerStarted )
 			{
 //				Debug.Log ( "checking messages" );
@@ -172,7 +175,15 @@ namespace UdacityNetworking
 				{
 					Debug.LogException ( e );
 				}
-				await Task.Delay ( 10 );
+//				sw.Reset ();
+//				watch.Reset ();
+//				watch.Start ();
+//				while ( watch.ElapsedMilliseconds <= 2 )
+//					sw.SpinOnce ();
+//				watch.Stop ();
+//				Debug.Log ( "spun " + sw.Count + " times" );
+
+				await Task.Delay ( 2 );
 			}
 		}
 
