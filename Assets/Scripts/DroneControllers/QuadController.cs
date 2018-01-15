@@ -105,7 +105,7 @@ namespace DroneControllers
 
         public bool clampForce = true;
         public bool clampTorque = true;
-        public float maxForce = 100;
+        public float maxForce = 40;
         public float maxTorqueDegrees = 17;
         //	public bool clampMaxSpeed = true;
         //	public bool clampAngularVelocity = true;
