@@ -64,10 +64,11 @@ namespace Messaging
 
         /// <summary>
         /// </summary>
-        uint TimeSinceSystemStart() {
+        uint TimeSinceSystemStart()
+        {
             var now = DateTime.Now;
             var span = now - startTime;
-            return (uint) span.TotalMilliseconds;
+            return (uint)span.TotalMilliseconds;
         }
 
         ///
@@ -136,18 +137,6 @@ namespace Messaging
         /// <summary>
         public List<byte[]> AttitudeQuaternion()
         {
-            double curr_time = TimeSinceSystemStart()/1000.0f;
-            total_commands = total_commands + 1.0f;
-            if (curr_time - prev_time > 2.0)
-            {
-                Debug.Log("Attitude Message Freq: " + total_commands / (curr_time - prev_time));
-                prev_time = curr_time;
-                total_commands = 0.0f;
-            }
-            else
-            {
-
-            }
 
             var rollrate = (float)drone.Rollrate();
             var pitchrate = (float)drone.Pitchrate();
@@ -159,16 +148,14 @@ namespace Messaging
             var q = new Vector3(roll, pitch, yaw).ToRHQuaternion();
             var msg = new Msg_attitude_quaternion
             {
-                // EUN to NED frame
-                //q = new float[4] { q.w, q.z, q.x, q.y },
-                q1 =  q.w,
+                q1 = q.w,
                 q2 = q.x,
                 q3 = q.y,
                 q4 = q.z,
                 rollspeed = rollrate,
                 pitchspeed = pitchrate,
                 yawspeed = yawrate,
-                time_boot_ms=TimeSinceSystemStart(),
+                time_boot_ms = TimeSinceSystemStart(),
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
@@ -192,7 +179,7 @@ namespace Messaging
                 vx = (float)drone.NorthVelocity(),
                 vy = (float)drone.EastVelocity(),
                 vz = (float)drone.DownVelocity(),
-                time_boot_ms=TimeSinceSystemStart()
+                time_boot_ms = TimeSinceSystemStart()
             };
 
             var serializedPacket = mav.SendV2(msg);
@@ -441,8 +428,16 @@ namespace Messaging
         /// </summary>
         void MsgSetAttitudeTarget(Msg_set_attitude_target msg)
         {
+            double curr_time = TimeSinceSystemStart() / 1000.0f;
+            total_commands = total_commands + 1.0f;
+            if (curr_time - prev_time > 2.0)
+            {
+                Debug.Log("Message Freq: " + total_commands / (curr_time - prev_time));
+                prev_time = curr_time;
+                total_commands = 0.0f;
+            }
             bool attitudeCmd;
-            if((msg.type_mask & (byte)(128))>0)
+            if ((msg.type_mask & (byte)(128)) > 0)
             {
                 attitudeCmd = false;
             }
@@ -450,7 +445,8 @@ namespace Messaging
             {
                 attitudeCmd = true;
             }
-            
+
+            // Debug.Log(string.Format("ATTIDUE CMD {0}", attitudeCmd));
             if (attitudeCmd)
             {
                 var yawrate = msg.body_yaw_rate;
@@ -466,7 +462,8 @@ namespace Messaging
                 drone.SetAttitude(attitudeEuler.y, yawrate, attitudeEuler.x, thrust);
             }
             else
-            {                
+            {
+                // Debug.Log(string.Format("thrust {0}, pitch rate {1}, yaw rate {2}, roll rate {3}", msg.thrust, msg.body_pitch_rate, msg.body_yaw_rate, msg.body_roll_rate));
                 drone.SetMotors(msg.thrust, msg.body_pitch_rate, msg.body_yaw_rate, msg.body_roll_rate);
             }
         }
