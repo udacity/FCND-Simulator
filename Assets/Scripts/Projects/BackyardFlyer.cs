@@ -8,8 +8,7 @@ using DroneInterface;
 using UdacityNetworking;
 using Messaging;
 
-public class BackyardFlyer
- : MonoBehaviour
+public class BackyardFlyer : MonoBehaviour
 {
     private IDrone drone;
     private MAVLinkMessenger messenger;
