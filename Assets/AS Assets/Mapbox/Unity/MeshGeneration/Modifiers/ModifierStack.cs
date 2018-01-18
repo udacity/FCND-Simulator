@@ -184,8 +184,15 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			_tempVectorEntity.Mesh.subMeshCount = meshData.Triangles.Count;
 			_tempVectorEntity.Mesh.SetVertices(meshData.Vertices);
 			_tempVectorEntity.Mesh.SetNormals(meshData.Normals);
-			if (meshData.Tangents.Count > 0)
+
+			bool hasMatchingTangents = meshData.Tangents.Count > 0 && meshData.Tangents.Count == meshData.Vertices.Count;
+			if ( hasMatchingTangents )
 				_tempVectorEntity.Mesh.SetTangents(meshData.Tangents);
+			else
+				Debug.Log ( "Mesh on " + _tempVectorEntity.GameObject.name + " has mismatched tangents. Vert count: " + meshData.Vertices.Count + " tangent count: " + meshData.Tangents.Count );
+
+//			if (meshData.Tangents.Count > 0)
+//				_tempVectorEntity.Mesh.SetTangents(meshData.Tangents);
 
 
 			_counter = meshData.Triangles.Count;
@@ -198,6 +205,9 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			{
 				_tempVectorEntity.Mesh.SetUVs(i, meshData.UV[i]);
 			}
+			// after setting all other pieces, if we haven't already set the tangents, manually calculate them
+			if ( !hasMatchingTangents )
+				_tempVectorEntity.Mesh.RecalculateTangents ();
 
 			_tempVectorEntity.Transform.SetParent(parent.transform, false);
 
