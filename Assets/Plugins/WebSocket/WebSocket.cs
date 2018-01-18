@@ -147,7 +147,7 @@ public class WebSocket
 //			m_Socket.Send ( msg );
 		}
 		else
-			Debug.Log ("error connecting...");
+			Debug.Log ("error connecting..." + m_Error);
 	}
 
 	public void Send (byte[] buffer)

@@ -82,7 +82,7 @@ namespace MavLink
             for (var i = idx; i < idx + packetLen; i++) {
                 s += newlyReceived[i].ToString() + " ";
             }
-            Debug.Log(string.Format("start index = {0}, packet len = {1}, total len = {2}, byte contents - {3}", idx, packetLen, newlyReceived.Length, s));
+            //Debug.Log(string.Format("start index = {0}, packet len = {1}, total len = {2}, byte contents - {3}", idx, packetLen, newlyReceived.Length, s));
 
 
             // subtract 1 since we start from 1
