@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPText = TMPro.TextMeshProUGUI;
 
+public enum _State {On, Off}
+
 [System.Serializable]
 public class ButtonState
 {
@@ -13,22 +15,31 @@ public class ButtonState
 	public Color textColor;
 }
 
+
 [ExecuteInEditMode]
 public class ButtonStateWatcher : MonoBehaviour, ISerializationCallbackReceiver
 {
 	public bool resetOnEnable;
+
 	public ButtonState[] states;
-	public int CurrentState { get { return curState; } }
+	// public Dictionary<_State, ButtonState> statesMap;
+	// public int CurrentState { get { return curState; } }
+
+	/// <summary>
+	/// Whether the button is active or not
+	/// </summary>
+	public bool active = false;
 
 	Button button;
 	TMPText buttonTitle;
 	TMPText buttonStatus;
-	int curState;
 
 	void OnEnable ()
 	{
 		if ( resetOnEnable )
-			curState = 0;
+		{
+			active = false;
+		}
 		UpdateState ();
 	}
 
@@ -45,7 +56,7 @@ public class ButtonStateWatcher : MonoBehaviour, ISerializationCallbackReceiver
 	public void OnAfterDeserialize ()
 	{
 //		if ( resetOnEnable )
-//			curState = 0;
+//			active = false;
 //		UpdateState ();
 	}
 
@@ -59,6 +70,10 @@ public class ButtonStateWatcher : MonoBehaviour, ISerializationCallbackReceiver
 			buttonStatus = texts [ 1 ];
 		}
 
+		var curState = 0;
+		if (active) {
+			curState = 1;
+		}
 		button.targetGraphic.color = states [ curState ].color;
 		buttonTitle.text = states [ curState ].title;
 		buttonTitle.color = states [ curState ].textColor;
@@ -68,7 +83,7 @@ public class ButtonStateWatcher : MonoBehaviour, ISerializationCallbackReceiver
 
 	public void OnClick ()
 	{
-		curState = ++curState % states.Length;
+		active = !active;
 		UpdateState ();
 	}
 }

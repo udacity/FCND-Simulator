@@ -16,16 +16,16 @@ public class DroneUI : MonoBehaviour
     public Button guideButton;
     public ToggleGroup qualityGroup;
     Toggle[] toggles;
-	public UIParameter parameterPrefab;
-	public RectTransform parametersParent;
-	public GameObject pauseText;
+    public UIParameter parameterPrefab;
+    public RectTransform parametersParent;
+    public GameObject pauseText;
 
     public bool localizeWind;
 
     private IDrone drone;
     ButtonStateWatcher armWatcher;
     ButtonStateWatcher guideWatcher;
-	List<UIParameter> uiParameters;
+    List<UIParameter> uiParameters;
 
     void Awake()
     {
@@ -39,25 +39,24 @@ public class DroneUI : MonoBehaviour
         qualityGroup.NotifyToggleOn(toggles[quality]);
         armWatcher = armButton.GetComponent<ButtonStateWatcher>();
         guideWatcher = guideButton.GetComponent<ButtonStateWatcher>();
-		pauseText.gameObject.SetActive ( false );
-		Simulation.Observe ( OnSimulationPause );
+        pauseText.gameObject.SetActive(false);
+        Simulation.Observe(OnSimulationPause);
     }
 
-	void Start ()
-	{
-		var parameters = SimParameters.Parameters;
-//		Debug.Log ( "there are " + parameters.Length + " parameters" );
-		foreach ( SimParameter p in parameters )
-		{
-			UIParameter up = Instantiate ( parameterPrefab, parametersParent );
-//			up.transform.SetParent ( parametersParent );
-			up.Init ( p, false );
-			up.gameObject.SetActive ( true );
-//			Debug.Log ( "parameter is " + p.displayName );
-		}
-	}
+    void Start()
+    {
+        var parameters = SimParameters.Parameters;
+        //		Debug.Log ( "there are " + parameters.Length + " parameters" );
+        foreach (SimParameter p in parameters)
+        {
+            UIParameter up = Instantiate(parameterPrefab, parametersParent);
+            //			up.transform.SetParent ( parametersParent );
+            up.Init(p, false);
+            up.gameObject.SetActive(true);
+            //			Debug.Log ( "parameter is " + p.displayName );
+        }
+    }
 
-    // Might be able to move this over to LateUpdate.
     void Update()
     {
         UpdateArmedButton();
@@ -78,7 +77,7 @@ public class DroneUI : MonoBehaviour
         // East -> 90
         // South -> 180
         // West - 270
-		var hdg = -(float)drone.Yaw() * Mathf.Rad2Deg;
+        var hdg = -(float)drone.Yaw() * Mathf.Rad2Deg;
         //        var oldHdg = needleImage.rectTransform.rotation.eulerAngles.z;
         // rotate the needle by the yaw difference
         //        needleImage.rectTransform.Rotate(0, 0, -(-hdg - -oldHdg));
@@ -123,7 +122,11 @@ public class DroneUI : MonoBehaviour
     void UpdateArmedButton()
     {
         var v = drone.Armed();
-        if (v != (armWatcher.CurrentState == 1))
+        if (v && !armWatcher.active)
+        {
+            armWatcher.OnClick();
+        }
+        else if (!v && armWatcher.active)
         {
             armWatcher.OnClick();
         }
@@ -131,8 +134,13 @@ public class DroneUI : MonoBehaviour
 
     void UpdateGuidedButton()
     {
+
         var v = drone.Guided();
-        if (v != (guideWatcher.CurrentState == 1))
+        if (v && !guideWatcher.active)
+        {
+            guideWatcher.OnClick();
+        }
+        else if (!v && guideWatcher.active)
         {
             guideWatcher.OnClick();
         }
@@ -146,13 +154,13 @@ public class DroneUI : MonoBehaviour
         }
     }
 
-	public void PauseSimulation (bool pause)
-	{
-		Simulation.Paused = pause;
-	}
+    public void PauseSimulation(bool pause)
+    {
+        Simulation.Paused = pause;
+    }
 
-	void OnSimulationPause (bool paused)
-	{
-		pauseText.SetActive ( paused );
-	}
+    void OnSimulationPause(bool paused)
+    {
+        pauseText.SetActive(paused);
+    }
 }
