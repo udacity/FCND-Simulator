@@ -114,7 +114,7 @@ namespace Messaging
             var vx = drone.NorthVelocity() * 100;
             var vy = drone.EastVelocity() * 100;
             var vz = drone.DownVelocity() * 100;
-            var hdg = drone.Yaw() * 100;
+            var hdg = (drone.Yaw() * Mathf.Rad2Deg) * 100;
             var msg = new Msg_global_position_int
             {
                 lat = (int)lat,
