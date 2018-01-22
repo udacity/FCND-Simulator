@@ -11,28 +11,30 @@ public class AttitudeControl {
     public float Ki_hdot = 0.5f;
 
     public float Kp_p = 10.0f;
-    public float Ki_p = 0.0f;
-    public float Kd_p = 0.0f;
     public float Kp_roll = 6.5f;
 
     public float Kp_q = 10.0f;
-    public float Ki_q = 0.0f;
-    public float Kd_q = 0.0f;
     public float Kp_pitch = 6.5f;
 
     public float maxTilt = 0.5f;
     public float maxAscentRate = 5.0f;
     public float maxDescentRate = 2.0f;
 
+    SimParameter param_Kp_p = new SimParameter("rollrate_gain");
+    SimParameter param_Kp_q = new SimParameter("pitchrate_gain");
+    SimParameter param_Kp_r = new SimParameter("yawrate_gain");
+
+
     private float hDotInt;
-    private Vector2 lastError_pq = Vector2.zero;
-    private Vector2 pqInt = Vector2.zero;
-
-
 
 	// Use this for initialization
 	public AttitudeControl () {
         hDotInt = 0.0f;
+
+        param_Kp_p.Observe(rollrate_Kp_callback);
+        param_Kp_q.Observe(pitchrate_Kp_callback);
+        param_Kp_r.Observe(yawrate_Kp_callback);
+
 	}
 	
     /// <summary>
@@ -67,7 +69,6 @@ public class AttitudeControl {
     /// </summary>
     public Vector2 RollPitchLoop(Vector2 targetRollPitch, Vector3 attitude)
     {
-        /*
         //Enfoce a maximum tilt angle
         float angleMagnitude = Mathf.Sqrt(targetRollPitch.x * targetRollPitch.x + targetRollPitch.y * targetRollPitch.y);
         if (angleMagnitude > maxTilt)
@@ -103,60 +104,45 @@ public class AttitudeControl {
 
 
         return new Vector2(rollrateCmd, pitchrateCmd);
-        */
-        float angleMagnitude = Mathf.Sqrt(targetRollPitch.x * targetRollPitch.x + targetRollPitch.y * targetRollPitch.y);
-        if (angleMagnitude > maxTilt)
-        {
-            targetRollPitch = maxTilt * targetRollPitch / angleMagnitude;
-        }
-        attitude.z = 0.0f;
-        Vector3 R1 = euler2RM(attitude.x, attitude.y, attitude.z, 1);
-        Vector3 R2 = euler2RM(attitude.x, attitude.y, attitude.z, 2);
-        Vector3 R3 = euler2RM(attitude.x, attitude.y, attitude.z, 3);
-        Vector3 R3d = euler2RM(targetRollPitch.x, targetRollPitch.y, 0.0f, 3);
-        float target_p = (1 / R3.z) * (R1.y * Kp_roll * (R3.x - R3d.x) - R1.x * Kp_pitch * (R3.y - R3d.y));
-        float target_q = (1 / R3.z) * (R2.y * Kp_roll * (R3.x - R3d.x) - R2.x * Kp_pitch * (R3.y - R3d.y));
-
-        return new Vector2(target_p, target_q);
     }
 
     /// <summary>
-    /// Command a desired roll/pitch rate using PID control. Returns a desired roll/pitch moment
+    /// Command a desired roll/pitch rate. Returns a desired roll/pitch moment
     /// </summary>
-    public Vector2 RollPitchRateLoop(Vector2 targetRate,Vector3 angularRate,float dt=0.0f)
+    public Vector2 RollPitchRateLoop(Vector2 targetRate,Vector3 angularRate)
     {
-        Vector2 rateError = targetRate - new Vector2(angularRate.x, angularRate.y);
-        Vector2 rateErrorD = Vector2.zero;
-        if(dt > 0.0f)
-        {
-            rateErrorD = (rateError - lastError_pq) / dt;
-            pqInt = pqInt + rateError * dt;
-        }
-        
-        float rollMoment = Kp_p * rateError.x + Kd_p* rateErrorD.x + Ki_p*pqInt.x;
-        float pitchMoment = Kp_q * rateError.y + Kd_q * rateErrorD.y + Ki_q * pqInt.y;
+        float rollMoment = Kp_p * (targetRate.x - angularRate.x);
+        float pitchMoment = Kp_q * (targetRate.y - angularRate.y);
         return new Vector2(rollMoment, pitchMoment);   
     }
 
-    private Vector3 euler2RM(float roll, float pitch, float yaw, int column)
+
+
+
+
+
+    public void rollrate_Kp_callback(SimParameter p)
     {
-        Vector3 columnRM = Vector3.zero;
-        if (column == 1)
-        {
-            columnRM.x = Mathf.Cos(pitch) * Mathf.Cos(yaw);
-            columnRM.y = -Mathf.Cos(roll) * Mathf.Sin(yaw) + Mathf.Sin(roll) * Mathf.Sin(pitch) * Mathf.Cos(yaw);
-            columnRM.z = Mathf.Sin(roll) * Mathf.Sin(yaw) + Mathf.Cos(roll) * Mathf.Sin(pitch) * Mathf.Cos(yaw);
-        }else if (column == 2)
-        {
-            columnRM.x = Mathf.Cos(pitch) * Mathf.Sin(yaw);
-            columnRM.y = Mathf.Cos(roll) * Mathf.Cos(yaw) + Mathf.Sin(roll) * Mathf.Sin(pitch) * Mathf.Sin(yaw);
-            columnRM.z =- Mathf.Sin(roll) * Mathf.Cos(yaw) + Mathf.Cos(roll) * Mathf.Sin(pitch) * Mathf.Sin(yaw);
-        }else if (column == 3)
-        {
-            columnRM.x = -Mathf.Sin(pitch);
-            columnRM.y = Mathf.Sin(roll) * Mathf.Cos(pitch);
-            columnRM.z = Mathf.Cos(roll) * Mathf.Cos(pitch);
-        }
-        return columnRM;
+        Kp_p = p.Value;
+    }
+
+    public void pitchrate_Kp_callback(SimParameter p)
+    {
+        Kp_q = p.Value;
+    }
+
+    public void yawrate_Kp_callback(SimParameter p)
+    {
+        Kp_p = p.Value;
+    }
+
+    public void pitch_Kp_callback(SimParameter p)
+    {
+        Kp_pitch = p.Value;
+    }
+
+    public void roll_Kp_callback(SimParameter p)
+    {
+        Kp_roll = p.Value;
     }
 }

@@ -12,8 +12,9 @@ namespace DroneControllers
         public bool positionControl = true;
         public bool remote = false;
 
-        public float hDotInt;
 
+        public float hDotInt;
+        float lastCommandTime;
         ///
         /// Control Gains
         ///
@@ -103,6 +104,9 @@ namespace DroneControllers
                     posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
 
             }
+
+            
+
             SelectMovementBehavior();
             // Debug.Log(currentMovementBehavior);
 
@@ -136,7 +140,7 @@ namespace DroneControllers
                 guidedCommand.x = north;
                 guidedCommand.y = east;
                 guidedCommand.z = down;
-                
+                guidedCommand.w = 0.0f;
                 // print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
                 // print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
             }
@@ -167,6 +171,7 @@ namespace DroneControllers
             guidedCommand.y = pitchMoment;
             guidedCommand.w = yawMoment;
             guidedCommand.z = thrust;
+            lastCommandTime = Time.time;
         }
         public void ArmVehicle()
         {
@@ -214,6 +219,12 @@ namespace DroneControllers
         {
             if (guided)
             {
+                //Check to make sure you've received a recent control input
+                if(!positionControl && (Time.time - lastCommandTime) > 0.5)
+                {
+                    CommandLocal(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+                }
+
                 if (positionControl)
                 {
                     currentMovementBehavior = mb_GuidedPosCtrl;
