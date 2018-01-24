@@ -136,7 +136,7 @@ namespace DroneControllers
                 guidedCommand.x = north;
                 guidedCommand.y = east;
                 guidedCommand.z = down;
-                
+
                 // print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
                 // print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
             }
@@ -171,8 +171,8 @@ namespace DroneControllers
         public void ArmVehicle()
         {
             
-            // controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
-            controller.SetHomePosition(-121.995635d, 37.412939d, 0.0d);
+            controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
+            // controller.SetHomePosition(-121.995635d, 37.412939d, 0.0d);
 
             if (guided)
             {

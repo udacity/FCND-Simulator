@@ -80,7 +80,7 @@ namespace Messaging
         /// </summary>
         public List<byte[]> ScaledPressure()
         {
-            var msg = new Msg_raw_imu
+            var msg = new Msg_scaled_pressure
             {
             };
             var serializedPacket = mav.SendV2(msg);
@@ -144,7 +144,6 @@ namespace Messaging
             var pitch = (float)drone.Pitch();
             var yaw = (float)drone.Yaw();
             var roll = (float)drone.Roll();
-            //var q = Quaternion.Euler(pitch, yaw, roll);
             var q = new Vector3(roll, pitch, yaw).ToRHQuaternion();
             var msg = new Msg_attitude_quaternion
             {
@@ -249,7 +248,8 @@ namespace Messaging
                 q = new float[] { 0, 0, 0, 0 },
                 approach_x = 0,
                 approach_y = 0,
-                approach_z = 0
+                approach_z = 0,
+                time_usec = TimeSinceSystemStart()
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
@@ -569,7 +569,6 @@ namespace Messaging
                     var north = msg.x;
                     var east = msg.y;
                     var alt = msg.z;
-                    Debug.Log("Vehicle Command: " + msg.x + "," + msg.y + "," + msg.z);
                     Debug.Log("Vehicle Command: (" + north + "," + east + "," + alt + ")");
                     drone.Goto(north, east, alt);
                 }
