@@ -19,6 +19,8 @@ public class SimParameters : ISerializationCallbackReceiver
 	public static SimParameter[] Parameters { get { return Instance.parameters.ToArray (); } }
 	[System.NonSerialized]
 	List<SimParameter> parameters = new List<SimParameter> ();
+//	[System.NonSerialized]
+//	List<SimParameter> nonSerialized = new List<SimParameter> ();
 	bool serialized;
 	
 	void Prune ()
@@ -66,6 +68,17 @@ public class SimParameters : ISerializationCallbackReceiver
 		if ( !list.Contains ( p ) )
 			list.Add ( p );
 	}
+
+//	public static void AddNonSerializedParameter (SimParameter p)
+//	{
+//		instance.Prune ();
+//		var list = Instance.parameters;
+//		if ( !list.Contains ( p ) )
+//		{
+//			list.Add ( p );
+//			instance.nonSerialized.Add ( p );
+//		}
+//	}
 
 	public static void RemoveParameter (SimParameter p)
 	{

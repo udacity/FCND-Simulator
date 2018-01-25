@@ -72,13 +72,8 @@ Shader "Terrain/SurfaceBased" {
 			uv.y = 1 - key.b + 0.5 * key.r + 0.5 * key.g;
 			tiling = key.r * _LookupTiling.y + key.g * _LookupTiling.x + key.b * _LookupTiling.z + key.a * _LookupTiling.w;
 
-//			fixed2 repCount = fixed2 ( trunc ( IN.uv_KeyTex.x * tiling ) / tiling, trunc ( IN.uv_KeyTex.y * tiling ) / tiling );
-//			fixed2 uv2 = ( IN.uv_KeyTex - repCount ) * 0.5 + uv;
+//			fixed2 uv2 = frac (uv * tiling) * 0.5 + uv;
 			fixed2 uv2 = frac (IN.uv_KeyTex * tiling) * 0.5 + uv;
-//			fixed2 uv2 = IN.uv_KeyTex * 0.5 + uv;
-
-//			fixed val = IN.uv_KeyTex.y;
-//			o.Albedo = fixed3 ( val, val, val );
 
 			o.Albedo = tex2D ( _LookupTex, uv2 );
 			o.Normal = UnpackNormal ( tex2D ( _LookupNormal, uv2 ) );

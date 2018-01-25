@@ -31,21 +31,21 @@ public class TerrainRasterizer : GameObjectModifier
 			tex.filterMode = FilterMode.Point;
 			tex.Apply ();
 			terrainTextures.Add ( tileName, tex );
+//			Debug.Log ( "Adding terrain texture for " + tileName );
 		}
 
 		return tex;
 	}
 
 	public override void Run (VectorEntity ve, Mapbox.Unity.MeshGeneration.Data.UnityTile tile)
-//	public override void Run (Mapbox.Unity.MeshGeneration.Components.FeatureBehaviour fb, Mapbox.Unity.MeshGeneration.Data.UnityTile tile)
 	{
 		Texture2D tex = GetOrAddTileTexture ( tile.name );
 
 		// what we want here is to map the texture onto the appropriate tile's bounds
 
-		Bounds tileBounds = tile.GetComponent<Renderer> ().bounds;
+		Bounds tileBounds = tile.MeshRenderer.bounds;
+//		Bounds tileBounds = tile.GetComponent<Renderer> ().bounds;
 		Mesh featureMesh = ve.Mesh; // ve.MeshFilter.mesh?
-//		Mesh featureMesh = fb.GetComponent<MeshFilter> ().mesh;
 
 		Vector3[] verts = featureMesh.vertices;
 		Color[] pixels = tex.GetPixels ();
@@ -61,7 +61,6 @@ public class TerrainRasterizer : GameObjectModifier
 		}
 
 		Color sample = ve.MeshRenderer.material.color;
-//		Color sample = fb.GetComponent<Renderer> ().material.color;
 		for ( int y = 0; y < TexSize; y++ )
 		{
 			for ( int x = 0; x < TexSize; x++ )
@@ -73,16 +72,13 @@ public class TerrainRasterizer : GameObjectModifier
 				int idx = y * TexSize + x;
 				if ( PolyUtils.PointInPoly2D ( new Vector3 ( pos.x, 0, pos.y ), new List<Vector3> ( verts ) ) )// && pixels [ idx ] == Color.clear )
 					pixels [ idx ] = sample;
-//					pixels [ idx ] = Color.red;
 			}
 		}
-//		test = true;
 
 		tex.SetPixels ( pixels );
 		tex.Apply ();
-//		r.material.mainTexture = tex;
 
+//		Debug.Log ( ve.GameObject.name );
 		ve.GameObject.SetActive ( false );
-//		fb.gameObject.SetActive ( false );
 	}
 }

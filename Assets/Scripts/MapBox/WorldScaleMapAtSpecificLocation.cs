@@ -6,6 +6,9 @@ using Mapbox.Utils;
 using Mapbox.Unity.Utilities;
 using Mapbox.Map;
 
+// Combined version of MapAtWorldScale and MapAtSpecificLocation.
+// note: _unityTileSize is ignored because of world scale
+
 public class WorldScaleMapAtSpecificLocation : AbstractMap
 {
 	[SerializeField]
