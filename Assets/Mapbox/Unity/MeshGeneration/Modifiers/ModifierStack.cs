@@ -102,15 +102,13 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			_counter = MeshModifiers.Count;
 			for (int i = 0; i < _counter; i++)
 			{
-				if ( MeshModifiers [ i ] != null )
-					MeshModifiers [ i ].Initialize ();
+				MeshModifiers[i].Initialize();
 			}
 
 			_counter = GoModifiers.Count;
 			for (int i = 0; i < _counter; i++)
 			{
-				if ( GoModifiers [ i ] != null )
-					GoModifiers [ i ].Initialize ();
+				GoModifiers[i].Initialize();
 			}
 		}
 
@@ -186,19 +184,8 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			_tempVectorEntity.Mesh.subMeshCount = meshData.Triangles.Count;
 			_tempVectorEntity.Mesh.SetVertices(meshData.Vertices);
 			_tempVectorEntity.Mesh.SetNormals(meshData.Normals);
-			// test
-			if ( meshData.Colors.Count != meshData.Vertices.Count )
-				meshData.Colors = new List<Color> ( new Color[meshData.Vertices.Count] );
-			_tempVectorEntity.Mesh.SetColors ( meshData.Colors );
-
-			bool hasMatchingTangents = meshData.Tangents.Count > 0 && meshData.Tangents.Count == meshData.Vertices.Count;
-			if ( hasMatchingTangents )
+			if (meshData.Tangents.Count > 0)
 				_tempVectorEntity.Mesh.SetTangents(meshData.Tangents);
-//			else // disable this spam for now
-//				Debug.Log ( "Mesh on " + _tempVectorEntity.GameObject.name + " has mismatched tangents. Vert count: " + meshData.Vertices.Count + " tangent count: " + meshData.Tangents.Count );
-
-//			if (meshData.Tangents.Count > 0)
-//				_tempVectorEntity.Mesh.SetTangents(meshData.Tangents);
 
 
 			_counter = meshData.Triangles.Count;
@@ -207,15 +194,10 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				_tempVectorEntity.Mesh.SetTriangles(meshData.Triangles[i], i);
 			}
 			_counter = meshData.UV.Count;
-			if ( _counter > 1 )
-				Debug.Log ( tile.name + " uvcount " + _counter );
 			for (int i = 0; i < _counter; i++)
 			{
 				_tempVectorEntity.Mesh.SetUVs(i, meshData.UV[i]);
 			}
-			// after setting all other pieces, if we haven't already set the tangents, manually calculate them
-			if ( !hasMatchingTangents )
-				_tempVectorEntity.Mesh.RecalculateTangents ();
 
 			_tempVectorEntity.Transform.SetParent(parent.transform, false);
 
@@ -231,7 +213,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			_counter = GoModifiers.Count;
 			for (int i = 0; i < _counter; i++)
 			{
-				if (GoModifiers[i] != null && GoModifiers[i].Active)
+				if (GoModifiers[i].Active)
 				{
 					GoModifiers[i].Run(_tempVectorEntity, tile);
 				}

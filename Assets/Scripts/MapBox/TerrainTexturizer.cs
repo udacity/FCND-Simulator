@@ -47,7 +47,7 @@ public class TerrainTexturizer : MeshModifier
 
 		// i used uvCount here because the uv count _should_ match the vert count. and we're using .UV[0] because .UV is the list of uv *channels*, and each one the actual list of uvs
 		int uvCount = md.UV [ 0 ].Count;
-		md.Colors = new List<Color> ( new Color[uvCount] );
+//		md.Colors = new List<Color> ( new Color[uvCount] );
 		for ( int i = 0; i < uvCount; i++ )
 		{
 			Vector3 vert = md.Vertices [ i ];
@@ -68,7 +68,7 @@ public class TerrainTexturizer : MeshModifier
 
 			// for use with Terrain/TilingAtlas shader. try to use uv2
 			md.UV [ 0 ] [ i ] = currentTextureRect.position + Mult ( uv, currentTextureRect.size );
-			md.Colors [ i ] = new Color ( currentSectionTiling.x, currentSectionTiling.y, 0, 1 );
+//			md.Colors [ i ] = new Color ( currentSectionTiling.x, currentSectionTiling.y, 0, 1 );
 //			md.UV [ 1 ] [ i ] = new Vector2 ( 0.5f, 0.75f );
 //			md.UV [ 1 ] [ i ] = currentSectionTiling;
 			// we'll borrow this line from our shader to do the tiling

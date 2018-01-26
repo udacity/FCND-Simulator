@@ -28,11 +28,6 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 		public override void Run(VectorEntity ve, UnityTile tile)
 		{
 			int selpos = ve.Feature.Points[0].Count / 2;
-			if ( selpos == 0 )
-			{
-//				Debug.Log ( "0 point sets in " + ve.Feature.Data.Id.ToString () + "\n" + ve.Feature.Properties.DictionaryToString () );
-				return;
-			}
 			var met = ve.Feature.Points[0][selpos];
 
 			IFeaturePropertySettable settable = null;
