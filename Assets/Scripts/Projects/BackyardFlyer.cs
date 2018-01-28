@@ -5,6 +5,7 @@ using Drones;
 using DroneInterface;
 using UdacityNetworking;
 using Messaging;
+using DroneControllers;
 
 public class BackyardFlyer : MonoBehaviour
 {
@@ -16,18 +17,18 @@ public class BackyardFlyer : MonoBehaviour
     public int telemetryIntervalHz = 4;
     public int homePositionIntervalHz = 1;
 
-
     // Use this for initialization
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-        Debug.Log(drone.HomeLongitude() + " " + drone.HomeLatitude());
-        Debug.Log(drone.Longitude() + " " + drone.Latitude());
+        var qctrl = GameObject.Find("Quad Drone").GetComponent<QuadController>();
+
         drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
+        // Debug.Log(Conversions.GlobalToLocalCoords(drone.Longitude(), drone.Latitude(), drone.Altitude(), drone.HomeLongitude(), drone.HomeLatitude()));
+        // Debug.Log(qctrl.GetHomeLongitude() + " " + qctrl.GetHomeLatitude());
+
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
-        Debug.Log(drone.HomeLongitude() + " " + drone.HomeLatitude());
-        Debug.Log(drone.Longitude() + " " + drone.Latitude());
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);
         networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
