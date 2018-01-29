@@ -462,10 +462,11 @@ namespace DroneControllers
             SetHomeLongitude(longitude);
             SetHomeLatitude(latitude);
 
+            // NOTE: without this the target position isn't properly reset
+            // and the drone ends up repeating the previous local command
             inputCtrl.guidedCommand.x = GetLocalNorth();
             inputCtrl.guidedCommand.y = GetLocalEast();
             inputCtrl.guidedCommand.z = GetLocalDown();
-            // sime
         }
         public double GetLatitude()
         {

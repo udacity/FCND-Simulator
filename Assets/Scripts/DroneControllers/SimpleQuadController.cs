@@ -171,7 +171,7 @@ namespace DroneControllers
         }
         public void ArmVehicle()
         {
-            controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
+            // controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
             if (guided)
             {
                 guidedCommand.x = controller.GetLocalNorth();
