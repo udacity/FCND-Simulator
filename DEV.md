@@ -8,7 +8,7 @@ Download Unity, the recommended version is [2017.3.0p3](https://unity3d.com/unit
 
 In the options make sure you have Linux, MacOS, Windows and WebGL build support.
 
-![Install Components](./devguide/install.png)
+![Install Components](./DevGuide/install.png)
 
 ## Clone The Repo
 
