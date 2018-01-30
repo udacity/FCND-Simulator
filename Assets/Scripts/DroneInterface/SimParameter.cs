@@ -33,12 +33,29 @@ public class SimParameter : ISerializationCallbackReceiver
 //		SimParameters.AddParameter ( this );
 	}
 
-//	~SimParameter ()
-//	{
-//		SimParameters.RemoveParameter ( this );
-//	}
+    public SimParameter(string label, float value)
+    {
+        displayName = label;
+        thisValue = value;
+        init = true;
+        SimParameters.AddParameter(this);
+    }
 
-	public void Observe (ParameterAction changeObserver)
+    public SimParameter(string label, float value, ParameterAction changeObserver)
+    {
+        displayName = label;
+        thisValue = value;
+        init = true;
+        SimParameters.AddParameter(this);
+        Observe(changeObserver);
+    }
+
+    //	~SimParameter ()
+    //	{
+    //		SimParameters.RemoveParameter ( this );
+    //	}
+
+    public void Observe (ParameterAction changeObserver)
 	{
 		onChanged += changeObserver;
 	}

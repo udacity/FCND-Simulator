@@ -165,7 +165,7 @@ namespace DroneControllers
             rb = GetComponent<Rigidbody>();
             rotors = new Transform[4] { frontLeftRotor, frontRightRotor, rearLeftRotor, rearRightRotor };
             RotorsEnabled = true;
-            //		UseGravity = false;
+            UseGravity = true;
             Forward = forward.forward;
             Right = right.forward;
             Up = transform.up;

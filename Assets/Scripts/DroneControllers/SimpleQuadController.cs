@@ -59,7 +59,9 @@ namespace DroneControllers
         public QuadMovementBehavior mb_GuidedPosCtrl;
         public QuadMovementBehavior mb_GuidedAttCtrl;
         public QuadMovementBehavior mb_GuidedMotors;
-        
+
+        public AttitudeControl attCtrl = new AttitudeControl();
+        public PositionControl posCtrl = new PositionControl();
 
         [System.NonSerialized]
         public Rigidbody rb;
@@ -80,8 +82,7 @@ namespace DroneControllers
         Vector3 lastVelocityErrorBody = Vector3.zero;
         public QuadMovementBehavior currentMovementBehavior;
 
-        public AttitudeControl attCtrl = new AttitudeControl();
-        public PositionControl posCtrl = new PositionControl();
+        
 
 
         void Awake()

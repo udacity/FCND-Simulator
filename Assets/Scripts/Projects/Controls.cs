@@ -16,11 +16,13 @@ public class Controls : MonoBehaviour
     public int attitudeIntervalHz = 500;
     public int homePositionIntervalHz = 1;
 
+    /*
     public SimParameter exampleParameter1;
-    //	public SimParameter exampleParameter2;
+    public SimParameter exampleParameter2;
     public SimParameter exampleParameter3;
+    public SimParameter exampleParameter4;
     public SimParameter altitudeParameter;
-
+    */
 
     void Start()
     {
@@ -36,11 +38,15 @@ public class Controls : MonoBehaviour
         networkController.EnqueueRecurringMessage(messenger.AttitudeQuaternion, Conversions.HertzToMilliSeconds(attitudeIntervalHz));
 
         /// Example of observing parameter changes
-        exampleParameter1.Observe(OnParameterChanged);
+        //exampleParameter1 = new SimParameter("Param1");
+        //exampleParameter1.Observe(OnParameterChanged);
+        
     }
 
+    /*
     void OnParameterChanged(SimParameter p)
     {
         Debug.Log("Parameter changed: " + p.displayName + "! New value: " + p.Value);
     }
+    */
 }

@@ -20,20 +20,14 @@ public class AttitudeControl {
     public float maxAscentRate = 5.0f;
     public float maxDescentRate = 2.0f;
 
-    SimParameter param_Kp_p = new SimParameter("rollrate_gain");
-    SimParameter param_Kp_q = new SimParameter("pitchrate_gain");
-    SimParameter param_Kp_r = new SimParameter("yawrate_gain");
 
 
     private float hDotInt;
 
+
 	// Use this for initialization
 	public AttitudeControl () {
-        hDotInt = 0.0f;
-
-        param_Kp_p.Observe(rollrate_Kp_callback);
-        param_Kp_q.Observe(pitchrate_Kp_callback);
-        param_Kp_r.Observe(yawrate_Kp_callback);
+        hDotInt = 0.0f;       
 
 	}
 	
@@ -116,33 +110,4 @@ public class AttitudeControl {
         return new Vector2(rollMoment, pitchMoment);   
     }
 
-
-
-
-
-
-    public void rollrate_Kp_callback(SimParameter p)
-    {
-        Kp_p = p.Value;
-    }
-
-    public void pitchrate_Kp_callback(SimParameter p)
-    {
-        Kp_q = p.Value;
-    }
-
-    public void yawrate_Kp_callback(SimParameter p)
-    {
-        Kp_p = p.Value;
-    }
-
-    public void pitch_Kp_callback(SimParameter p)
-    {
-        Kp_pitch = p.Value;
-    }
-
-    public void roll_Kp_callback(SimParameter p)
-    {
-        Kp_roll = p.Value;
-    }
 }
