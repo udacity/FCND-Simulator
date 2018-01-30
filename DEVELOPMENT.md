@@ -24,7 +24,9 @@ This may take a while go grab a coffee :)
 
 Once it's done, open up Unity and open repo folder. Unity will load all the files everything should be good to go.
 
-## Scene
+## Scenes
+
+Scenes can be found and should be saved to the [Scenes](./Assets/Scenes/) directory.
 
 The base scene is Backyard Flyer, which has the Unity file name [`urban`](./Assets/Scenes/urban.unity). Other scenes build off the components of this scene. Exploring this scene and all the components will provide a solid grasp of the functionality.
 
