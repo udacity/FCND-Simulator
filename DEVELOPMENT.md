@@ -26,7 +26,7 @@ Once it's done, open up Unity and open repo folder. Unity will load all the file
 
 ## Scene
 
-The base scene is Backyard Flyer, whose file name is `urban`. Other scenes build off the components of this scene. Exploring this scene and all the components will provide a solid grasp of the functionality.
+The base scene is Backyard Flyer, which has the Unity file name [`urban`](./Assets/Scenes/urban.unity). Other scenes build off the components of this scene. Exploring this scene and all the components will provide a solid grasp of the functionality.
 
 ## Code
 
