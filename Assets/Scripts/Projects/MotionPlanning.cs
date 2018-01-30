@@ -1,13 +1,8 @@
 using UnityEngine;
 
-// usings needed for TCP/IP
 using System;
 using System.Linq;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
 using System.IO;
 
 using MavLink;
@@ -15,8 +10,8 @@ using FlightUtils;
 using Drones;
 using DroneInterface;
 using UdacityNetworking;
-using Sensors;
 using Messaging;
+using DroneControllers;
 
 
 public class MotionPlanning : MonoBehaviour
@@ -37,6 +32,10 @@ public class MotionPlanning : MonoBehaviour
     {
         droneGO = GameObject.Find("Quad Drone");
         drone = droneGO.GetComponent<QuadDrone>();
+        var qctrl = GameObject.Find("Quad Drone").GetComponent<QuadController>();
+        qctrl.NavigationUpdate();
+        // TODO: explain where these magic numbers come from
+        drone.SetHome(-121.995635d, 37.412939d, 0.0d);
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 

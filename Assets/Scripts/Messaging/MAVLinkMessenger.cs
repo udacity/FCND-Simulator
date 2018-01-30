@@ -80,7 +80,7 @@ namespace Messaging
         /// </summary>
         public List<byte[]> ScaledPressure()
         {
-            var msg = new Msg_raw_imu
+            var msg = new Msg_scaled_pressure
             {
             };
             var serializedPacket = mav.SendV2(msg);
@@ -114,7 +114,7 @@ namespace Messaging
             var vx = drone.NorthVelocity() * 100;
             var vy = drone.EastVelocity() * 100;
             var vz = drone.DownVelocity() * 100;
-            var hdg = drone.Yaw() * 100;
+            var hdg = (drone.Yaw() * Mathf.Rad2Deg) * 100;
             var msg = new Msg_global_position_int
             {
                 lat = (int)lat,
@@ -144,7 +144,6 @@ namespace Messaging
             var pitch = (float)drone.Pitch();
             var yaw = (float)drone.Yaw();
             var roll = (float)drone.Roll();
-            //var q = Quaternion.Euler(pitch, yaw, roll);
             var q = new Vector3(roll, pitch, yaw).ToRHQuaternion();
             var msg = new Msg_attitude_quaternion
             {
@@ -171,6 +170,7 @@ namespace Messaging
             var north = drone.LocalCoords().x;
             var east = drone.LocalCoords().y;
             var down = drone.LocalCoords().z;
+            // Debug.Log(drone.LocalCoords());
             var msg = new Msg_local_position_ned
             {
                 x = north,
@@ -235,7 +235,7 @@ namespace Messaging
             // TODO: figure out where these are saved for the drone
             var home_lat = drone.HomeLatitude() * 1e7;
             var home_lon = drone.HomeLongitude() * 1e7;
-            var home_alt = 0.0 * 1000;
+            var home_alt = 0 * 1000;
 
             // NOTE: needed to initialize all the data for this to send properly
             var msg = new Msg_home_position
@@ -249,7 +249,8 @@ namespace Messaging
                 q = new float[] { 0, 0, 0, 0 },
                 approach_x = 0,
                 approach_y = 0,
-                approach_z = 0
+                approach_z = 0,
+                time_usec = TimeSinceSystemStart()
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
@@ -505,7 +506,6 @@ namespace Messaging
                 {
                     if (custom_mode == (byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD)
                     {
-                        Debug.Log("in here");
                         drone.TakeControl(true);
                         Debug.Log("VEHICLE IS BEING GUIDED !!!");
                     }
@@ -520,7 +520,7 @@ namespace Messaging
             {
                 drone.SetHome(msg.param6, msg.param5, msg.param7);
                 Debug.Log("HOME POSITION PARAMS: " + msg.param1 + ", " + msg.param2 + ", " + msg.param3 + ", " + msg.param4 + ", " + msg.param5 + ", " + msg.param6 + ", " + msg.param7);
-                Debug.Log("Vehicle Home Position: " + msg.param6 + "," + msg.param5 + "," + msg.param7);
+                Debug.Log("Vehicle Home Position: " + msg.param6 + ", " + msg.param5 + ", " + msg.param7);
             }
             else
             {
@@ -569,7 +569,6 @@ namespace Messaging
                     var north = msg.x;
                     var east = msg.y;
                     var alt = msg.z;
-                    Debug.Log("Vehicle Command: " + msg.x + "," + msg.y + "," + msg.z);
                     Debug.Log("Vehicle Command: (" + north + "," + east + "," + alt + ")");
                     drone.Goto(north, east, alt);
                 }

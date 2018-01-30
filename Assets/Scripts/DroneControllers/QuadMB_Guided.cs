@@ -26,6 +26,7 @@ namespace MovementBehaviors
             targetPosition.x = controller.guidedCommand.x;
             targetPosition.y = controller.guidedCommand.y;
             targetPosition.z = controller.guidedCommand.z;
+            // Debug.Log(string.Format("local postiion {0}, target position {1}", localPosition, targetPosition));
 
             float targetYawrate = posCtrl.YawLoop(yawCmd, attitude.z);
             float yawMoment = attCtrl.YawRateLoop(yawCmd, angularVelocity.z);

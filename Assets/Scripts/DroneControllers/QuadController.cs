@@ -343,7 +343,7 @@ namespace DroneControllers
 
         public void CmdThrust(float thrust)
         {
-            force.y = Mathf.Max(thrust + ForceNoise * 2.0f*(Random.value-1.0f),0.0f);
+            force.y = Mathf.Max(thrust + ForceNoise * 2.0f * (Random.value - 1.0f), 0.0f);
         }
 
         public void CmdTorque(Vector3 t)
@@ -461,6 +461,12 @@ namespace DroneControllers
             // NOTE: Currently you can only set the home lat/lon, not altitude
             SetHomeLongitude(longitude);
             SetHomeLatitude(latitude);
+
+            // NOTE: without this the target position isn't properly reset
+            // and the drone ends up repeating the previous local command
+            inputCtrl.guidedCommand.x = GetLocalNorth();
+            inputCtrl.guidedCommand.y = GetLocalEast();
+            inputCtrl.guidedCommand.z = GetLocalDown();
         }
         public double GetLatitude()
         {
@@ -509,7 +515,10 @@ namespace DroneControllers
 
         public Vector3 GlobalToLocalPosition(double longitude, double latitude, double altitude)
         {
-            return FlightUtils.Conversions.GlobalToLocalCoords(longitude, latitude, altitude, GetHomeLongitude(), GetHomeLatitude());
+            // Debug.Log(string.Format("lon = {0}, lat = {1}, alt = {2}, hlon = {3}, hlat = {4}", longitude, latitude, altitude, GetHomeLongitude(), GetHomeLatitude()));
+            var v = FlightUtils.Conversions.GlobalToLocalCoords(longitude, latitude, altitude, GetHomeLongitude(), GetHomeLatitude());
+            // Debug.Log("here " + v);
+            return v;
         }
 
         public double GetAltitude()
@@ -585,7 +594,7 @@ namespace DroneControllers
             lat_noise = 0.9f * lat_noise + 0.04f * HDOP * fnNoise.GetSimplex(Time.time * 121.7856f, 0, 0);
             alt_noise = 0.9f * alt_noise + 0.04f * VDOP * fnNoise.GetSimplex(0, Time.time * 23.14141f, 0);
             lon_noise = 0.9f * lon_noise + 0.04f * HDOP * fnNoise.GetSimplex(0, 0, Time.time * 127.7334f);
-            
+
 
             //            lat_noise = 0.9f * lat_noise + 0.2f * HDOP * (Random.value - 0.5f);
             //            alt_noise = 0.9f * alt_noise + 0.2f * VDOP * (Random.value - 0.5f);
@@ -594,9 +603,9 @@ namespace DroneControllers
             // GPS only reported in local frame because float doesn't have precision required for full GPS coordinate
             var Meter2Latitude = FlightUtils.Conversions.Meter2Latitude;
             var Meter2Longitude = FlightUtils.Conversions.Meter2Longitude;
-            GPS.z = rb.position.z * Meter2Latitude + Meter2Latitude * lat_noise;
+            GPS.x = (float)(rb.position.x * Meter2Longitude + Meter2Longitude * lon_noise);
             GPS.y = rb.position.y + alt_noise;
-            GPS.x = rb.position.x * Meter2Longitude + Meter2Longitude * lon_noise;
+            GPS.z = (float)(rb.position.z * Meter2Latitude + Meter2Latitude * lat_noise);
 
             curSpeed = rb.velocity.magnitude;
         }

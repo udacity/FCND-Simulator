@@ -60,8 +60,6 @@ namespace DroneControllers
         public QuadMovementBehavior mb_GuidedAttCtrl;
         public QuadMovementBehavior mb_GuidedMotors;
 
-        public AttitudeControl attCtrl = new AttitudeControl();
-        public PositionControl posCtrl = new PositionControl();
 
         [System.NonSerialized]
         public Rigidbody rb;
@@ -101,15 +99,16 @@ namespace DroneControllers
             if (Input.GetButtonDown("Position Control"))
             {
                 positionControl = !positionControl;
-                if(positionControl)
+                if (positionControl)
+                {
                     posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+                }
 
             }
 
             
 
             SelectMovementBehavior();
-            // Debug.Log(currentMovementBehavior);
 
             if (armed)
             {
@@ -152,11 +151,11 @@ namespace DroneControllers
             guidedCommand.w = heading;
         }
 
-        public void CommandAttitude(float roll,float pitch,float yawRate,float thrust)
+        public void CommandAttitude(float roll, float pitch, float yawRate, float thrust)
         {
 
             positionControl = false;
-            
+
             guidedCommand.x = roll;
             guidedCommand.y = pitch;
             guidedCommand.w = yawRate;
@@ -176,10 +175,7 @@ namespace DroneControllers
         }
         public void ArmVehicle()
         {
-            
             // controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
-            controller.SetHomePosition(-121.995635d, 37.412939d, 0.0d);
-
             if (guided)
             {
                 guidedCommand.x = controller.GetLocalNorth();
@@ -192,11 +188,10 @@ namespace DroneControllers
             }
 
             //Set the hold position to the current position
-            
             armed = true;
         }
 
-        
+
 
         public void DisarmVehicle()
         {
@@ -211,7 +206,7 @@ namespace DroneControllers
             }
 
             guided = input_guided;
-            
+
             SelectMovementBehavior();
         }
 
@@ -229,7 +224,8 @@ namespace DroneControllers
                 if (positionControl)
                 {
                     currentMovementBehavior = mb_GuidedPosCtrl;
-                }else if (attitudeControl)
+                }
+                else if (attitudeControl)
                 {
                     currentMovementBehavior = mb_GuidedAttCtrl;
                 }
@@ -237,7 +233,7 @@ namespace DroneControllers
                 {
                     currentMovementBehavior = mb_GuidedMotors;
                 }
-                
+
             }
             else // manual
             {
@@ -248,7 +244,8 @@ namespace DroneControllers
                 else if (attitudeControl)
                 {
                     currentMovementBehavior = mb_ManualAttCtrl;
-                }else
+                }
+                else
                 {
                     currentMovementBehavior = mb_Manual;
                 }

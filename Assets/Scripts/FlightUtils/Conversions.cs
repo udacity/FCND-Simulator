@@ -9,12 +9,12 @@ namespace FlightUtils
         /// <summary>
         /// Meters to Latitude conversion constant.
         /// </summary>
-        public const float Meter2Latitude = 1.0f / 111111.0f;
+        public const double Meter2Latitude = 1.0 / 111111.0;
 
         /// <summary>
         /// Meters to Longitude conversion constant.
         /// </summary>
-        public const float Meter2Longitude = 1.0f / (0.8f * 111111.0f);
+        public const double Meter2Longitude = 1.0 / (0.8 * 111111.0);
 
         /// <summary>
         /// Converts Hertz to the number of milliseconds
@@ -34,8 +34,8 @@ namespace FlightUtils
         /// </summary>
         public static Vector3 GlobalToLocalCoords(double longitude, double latitude, double altitude, double homeLongitude, double homeLatitude) {
             var localPosition = Vector3.zero;
-            localPosition.x = (float)(latitude - homeLatitude) / Meter2Latitude;
-            localPosition.y = (float)(longitude - homeLongitude) / Meter2Longitude;
+            localPosition.x = (float)((latitude - homeLatitude) / Meter2Latitude);
+            localPosition.y = (float)((longitude - homeLongitude) / Meter2Longitude);
             localPosition.z = (float)(-altitude);
             return localPosition;
         }

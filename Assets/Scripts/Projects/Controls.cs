@@ -5,6 +5,7 @@ using Drones;
 using DroneInterface;
 using UdacityNetworking;
 using Messaging;
+using DroneControllers;
 
 public class Controls : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class Controls : MonoBehaviour
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
+        GameObject.Find("Quad Drone").GetComponent<QuadController>().NavigationUpdate();
+        drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
         drone.ControlRemotely(true);
         messenger = new MAVLinkMessenger();
 
