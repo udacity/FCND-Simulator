@@ -1,7 +1,7 @@
 # FCND Simulator
 
 ## Download and Launch the Simulator
-Download the simulator build that's appropriate for your operating system from the [releases tab](https://github.com/udacity/FCND-Simulator/releases).
+Download the simulator build that's appropriate for your operating system from the [releases tab](https://github.com/udacity/FCND-Simulator-Releases/releases).
 
 Unzip the compressed file and launch the simulator by double clicking on the app / executable file.
 
@@ -18,6 +18,8 @@ To manually control the drone, you need to first arm the motors.  You can do thi
 * **Shift-S**: Save colliders file. Only applicable in `3D Motion Planning` project.
 * **Shift-C**: Toggle controls menu overlay. Applicable in all projects.
 * **Esc**: Exit to main menu. Applicable in all projects.
+
+**The following may not be up to date.**
 
 ### Control Modes
 There are three control modes current setup for the simulated drone. Two of the modes are meant for manual control and one is only meant for autonomous control via MAVLink commands. You can switch between the two manual modes and notice a difference in how the vehicle flies:
