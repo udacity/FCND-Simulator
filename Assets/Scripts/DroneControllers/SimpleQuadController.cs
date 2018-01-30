@@ -60,6 +60,8 @@ namespace DroneControllers
         public QuadMovementBehavior mb_GuidedAttCtrl;
         public QuadMovementBehavior mb_GuidedMotors;
 
+        public AttitudeControl attCtrl = new AttitudeControl();
+        public PositionControl posCtrl = new PositionControl();
 
         [System.NonSerialized]
         public Rigidbody rb;
