@@ -19,6 +19,11 @@ public class DroneUI : MonoBehaviour
     public UIParameter parameterPrefab;
     public RectTransform parametersParent;
     public GameObject pauseText;
+	public RawImage graphImage;
+
+	public GameObject controlsOverlay;
+	public GameObject parametersOverlay;
+	public GameObject plotOverlay;
 
     public bool localizeWind;
 
@@ -153,6 +158,41 @@ public class DroneUI : MonoBehaviour
             QualitySettings.SetQualityLevel(toggle);
         }
     }
+
+	public void OpenControlsOverlay ()
+	{
+		controlsOverlay.SetActive ( true );
+		parametersOverlay.SetActive ( false );
+		plotOverlay.SetActive ( false );
+		PauseSimulation ( true );
+	}
+
+	public void OpenParametersOverlay ()
+	{
+		controlsOverlay.SetActive ( false );
+		parametersOverlay.SetActive ( true );
+		plotOverlay.SetActive ( false );
+		graphImage.enabled = false;
+		PauseSimulation ( true );
+	}
+
+	public void OpenPlotOverlay ()
+	{
+		controlsOverlay.SetActive ( false );
+		parametersOverlay.SetActive ( false );
+		plotOverlay.SetActive ( true );
+		graphImage.enabled = false;
+		PauseSimulation ( true );
+	}
+
+	public void CloseOverlay ()
+	{
+		controlsOverlay.SetActive ( false );
+		parametersOverlay.SetActive ( false );
+		plotOverlay.SetActive ( false );
+		graphImage.enabled = true;
+		PauseSimulation ( false );
+	}
 
     public void PauseSimulation(bool pause)
     {

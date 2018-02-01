@@ -23,7 +23,7 @@ public class LocationSelectUI : MonoBehaviour
 		if ( mapScript != null )
 		{
 			// set the drone position
-
+//			DroneControllers.SimpleQuadController droneCtrl = 
 			var location = Conversions.StringToLatLon ( info.latLongCoord );
 			mapScript.Initialize ( location, mapScript.AbsoluteZoom );
 			gameObject.SetActive ( false );
