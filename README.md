@@ -1,5 +1,7 @@
 # FCND Simulator
 
+If you're looking to work on the simulator itself see [DEVELOPMENT.md](./DEVELOPMENT.md)
+
 ## Download and Launch the Simulator
 Download the simulator build that's appropriate for your operating system from the [releases tab](https://github.com/udacity/FCND-Simulator-Releases/releases).
 
