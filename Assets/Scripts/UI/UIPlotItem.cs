@@ -7,12 +7,15 @@ using Ttext = TMPro.TextMeshProUGUI;
 
 public class UIPlotItem : MonoBehaviour
 {
+	public string Label { get { return label.text; } }
+	public bool IsOn { get { return toggle.isOn; } }
+	public Color Color { get { return label.color; } }
 	public Ttext label;
 	public Toggle toggle;
 
-	public Action<string, bool> callback;
+	public Action<UIPlotItem, bool> callback;
 
-	public void Init (string text, Action<string, bool> _callback)
+	public void Init (string text, Action<UIPlotItem, bool> _callback)
 	{
 		toggle.isOn = false;
 		label.text = text;
@@ -28,6 +31,6 @@ public class UIPlotItem : MonoBehaviour
 	public void OnToggle (bool on)
 	{
 		if ( callback != null )
-			callback ( label.text, on );
+			callback ( this, on );
 	}
 }

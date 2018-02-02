@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using MovementBehaviors;
+using UdaciPlot;
 
 namespace DroneControllers
 {
@@ -98,6 +99,15 @@ namespace DroneControllers
 			param2 = new SimParameter ( "Test", 0.1f );
         }
 
+		void Start ()
+		{
+			Plotting.AddPlottable1D ( "Altitude" );
+			Plotting.AddPlottable1D ( "Pitch" );
+			Plotting.AddPlottable1D ( "Velocity_x" );
+			Plotting.AddPlottable1D ( "Velocity_y" );
+			Plotting.AddPlottable1D ( "Velocity_z" );
+		}
+
         void LateUpdate()
         {
             if (Input.GetButtonDown("Position Control"))
@@ -118,6 +128,8 @@ namespace DroneControllers
             {
                 pos_set = false;
             }
+			Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), Time.time );
+			Plotting.AddSample ( "Pitch", controller.GetPitch (), Time.time );
         }
 
         // Command the quad to a GPS location (latitude, relative_altitude, longitude)

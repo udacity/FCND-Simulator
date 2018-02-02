@@ -30,17 +30,17 @@ namespace UdaciPlot
 
 		public static void AddPlottable1D (string title)
 		{
-			Instance.items1D.Add ( title, new Plottable<float> ( title ) );
+			Instance.items1D.Add ( title, new Plottable<float> ( title, _comparer:CompareFloats ) );
 		}
 
 		public static void AddPlottable2D (string title)
 		{
-			Instance.items2D.Add ( title, new Plottable<Vector2> ( title ) );
+			Instance.items2D.Add ( title, new Plottable<Vector2> ( title, _comparer:CompareVector2 ) );
 		}
 
 		public static void AddPlottable3D (string title)
 		{
-			Instance.items3D.Add ( title, new Plottable<Vector3> ( title ) );
+			Instance.items3D.Add ( title, new Plottable<Vector3> ( title, _comparer:CompareVector3 ) );
 		}
 
 		public static void AddSample (string title, float value, double timestamp) {
@@ -63,7 +63,7 @@ namespace UdaciPlot
 				p.AddSample ( value, timestamp );
 			} else
 			{
-				p = new Plottable<float> ( title );
+				p = new Plottable<float> ( title, _comparer:CompareFloats );
 				p.AddSample ( value, timestamp );
 				items1D.Add ( title, p );
 			}
@@ -77,7 +77,7 @@ namespace UdaciPlot
 				p.AddSample ( value, timestamp );
 			} else
 			{
-				p = new Plottable<Vector2> ( title );
+				p = new Plottable<Vector2> ( title, _comparer:CompareVector2 );
 				p.AddSample ( value, timestamp );
 				items2D.Add ( title, p );
 			}
@@ -91,7 +91,7 @@ namespace UdaciPlot
 				p.AddSample ( value, timestamp );
 			} else
 			{
-				p = new Plottable<Vector3> ( title );
+				p = new Plottable<Vector3> ( title, _comparer:CompareVector3 );
 				p.AddSample ( value, timestamp );
 				items3D.Add ( title, p );
 			}
@@ -125,6 +125,48 @@ namespace UdaciPlot
 		public static string[] ListPlottables3D ()
 		{
 			return new List<string> ( Instance.items3D.Keys ).ToArray ();
+		}
+
+		/// <summary>
+		/// Compares two float values. Returns 1 if a>b, -1 if b>a, 0 if equal
+		/// </summary>
+		public static int CompareFloats (float a, float b)
+		{
+			if ( a > b )
+				return 1;
+			else
+			if ( b > a )
+				return -1;
+			
+			return 0;
+		}
+
+		/// <summary>
+		/// Compares two Vector2's vertical component. Returns 1 if a>b, -1 if b>a, 0 if equal
+		/// </summary>
+		public static int CompareVector2 (Vector2 a, Vector2 b)
+		{
+			if ( a.y > b.y )
+				return 1;
+			else
+			if ( b.y > a.y )
+				return -1;
+
+			return 0;
+		}
+
+		/// <summary>
+		/// Compares two Vector3's vertical component. Returns 1 if a>b, -1 if b>a, 0 if equal
+		/// </summary>
+		public static int CompareVector3 (Vector3 a, Vector3 b)
+		{
+			if ( a.y > b.y )
+				return 1;
+			else
+				if ( b.y > a.y )
+					return -1;
+
+			return 0;
 		}
 	}
 }
