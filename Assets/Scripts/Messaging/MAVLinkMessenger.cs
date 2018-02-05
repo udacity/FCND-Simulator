@@ -44,6 +44,13 @@ namespace Messaging
             IS_LAND = 0x2000,
             IS_LOITER = 0x3000,
         }
+
+        public enum SET_ATTITUDE_MASK : byte
+        {
+            IGNORE_ATTITUDE = (byte)128,
+            IGNORE_RATES = (byte)7,
+        }
+
         public Mavlink mav { get; private set; }
         private IDrone drone;
 
@@ -409,13 +416,19 @@ namespace Messaging
                     MsgCommandLong((Msg_command_long)packet.Message);
                     break;
                 case "MavLink.Msg_set_position_target_local_ned":
-                    MsgLocalPositionTarget((Msg_set_position_target_local_ned)packet.Message);
+                    MsgSetLocalPositionTarget((Msg_set_position_target_local_ned)packet.Message);
                     break;
                 case "MavLink.Msg_set_attitude_target":
                     MsgSetAttitudeTarget((Msg_set_attitude_target)packet.Message);
                     break;
+                case "MavLink.Msg_position_target_local_ned":
+                    MsgLocalPositionTarget((Msg_position_target_local_ned)packet.Message);
+                    break;
+                case "MavLink.Msg_attitude_target":
+                    MsgAttitudeTarget((Msg_attitude_target)packet.Message);
+                    break;
                 default:
-                    Debug.Log("Unknown message type !!!");
+                    Debug.Log("Unknown message type !!!: " + msgstr);
                     break;
             }
         }
@@ -438,13 +451,13 @@ namespace Messaging
                 total_commands = 0.0f;
             }
             bool attitudeCmd;
-            if ((msg.type_mask & (byte)(128)) > 0)
+            if ((msg.type_mask & (byte) SET_ATTITUDE_MASK.IGNORE_ATTITUDE) == 0)
             {
-                attitudeCmd = false;
+                attitudeCmd = true;
             }
             else
             {
-                attitudeCmd = true;
+                attitudeCmd = false;
             }
 
             // Debug.Log(string.Format("ATTIDUE CMD {0}", attitudeCmd));
@@ -537,7 +550,7 @@ namespace Messaging
         ///      - position control (goto)
         ///      - velocity control
         /// </summary>
-        void MsgLocalPositionTarget(Msg_set_position_target_local_ned msg)
+        void MsgSetLocalPositionTarget(Msg_set_position_target_local_ned msg)
         {
             var mask = (UInt16)msg.type_mask;
 
@@ -581,6 +594,60 @@ namespace Messaging
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        void MsgLocalPositionTarget(Msg_position_target_local_ned msg)
+        {
+            var mask = (UInt16)msg.type_mask;
+
+            // split by the mask
+            // POSITION COMMAND
+            if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_POSITION) == 0)
+            {
+                // TODO: Set the target variables
+                //Debug.Log("Position target (t= " + msg.time_boot_ms + "): " + msg.x + ", " + msg.y + ", " + msg.z);
+            }
+            else if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_VELOCITY) == 0)
+            {
+                // TODO: set the target variable
+                //Debug.Log("Velocity target (t= " + msg.time_boot_ms + "): " + msg.vx + ", " + msg.vy + ", " + msg.vz);
+            }
+            else if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_ACCELERATION) == 0)
+            {
+                //Debug.Log("Acceleration target (t= " + msg.time_boot_ms + "): " + msg.afx + ", " + msg.afy + ", " + msg.afz);
+            }
+            
+        }
+
+        void MsgAttitudeTarget(Msg_attitude_target msg)
+        {
+            var mask = (byte)msg.type_mask;
+
+            // split by the mask
+
+            if ((mask & (byte)SET_ATTITUDE_MASK.IGNORE_ATTITUDE) == 0)
+            {
+                // TODO: Set the target variables
+                Vector4 attitudeQ;
+                attitudeQ.w = msg.q[0];
+                attitudeQ.x = msg.q[1];
+                attitudeQ.y = msg.q[2];
+                attitudeQ.z = msg.q[3];
+                Vector3 attitudeEuler = attitudeQ.ToRHEuler();
+                //Debug.Log("Attitude target (t= " + msg.time_boot_ms + "): " + attitudeEuler.x + ", " + attitudeEuler.y + ", " + attitudeEuler.z);
+            }
+            else if ((mask & (byte)SET_ATTITUDE_MASK.IGNORE_RATES) == 0)
+            {
+                // TODO: set the target variable
+                //Debug.Log("Body Rate target (t= " + msg.time_boot_ms + "): " + msg.body_roll_rate + ", " + msg.body_pitch_rate + ", " + msg.body_yaw_rate);
+            }
+            else
+            {
+                Debug.Log("Mask: " + mask);
+            }
+
+        }
 
         /// <summary>
         /// TODO: Potentially keep track of when last heartbeat was received and
