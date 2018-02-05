@@ -14,8 +14,8 @@ public class UIRoadName : MonoBehaviour, IFeaturePropertySettable
 	public Color bgColor;
 	public Sprite bgSprite;
 
-	Camera cam;
-	Transform camTransform;
+//	Camera cam;
+//	Transform camTransform;
 	Transform tr;
 	Vector3 screenPos;
 	float fadeStart;
@@ -25,8 +25,8 @@ public class UIRoadName : MonoBehaviour, IFeaturePropertySettable
 
 	void Awake ()
 	{
-		cam = Camera.main;
-		camTransform = cam.transform;
+//		cam = Camera.main;
+//		camTransform = cam.transform;
 		tr = transform;
 		transform.LookAt ( -Vector3.up );
 //		fadeEnd = fadeDistance * fadeDistance * 1.5f;

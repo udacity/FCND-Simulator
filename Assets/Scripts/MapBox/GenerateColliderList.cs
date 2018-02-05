@@ -59,6 +59,7 @@ public class GenerateColliderList : MonoBehaviour
 
     void OnMapInitialized()
     {
+		Debug.Log ( "Initialized!" );
         GameObject mapObject = mapScript.gameObject;
         Collider[] allColliders = mapObject.GetComponentsInChildren<Collider>(includeInactiveColliders);
         Vector3 size = Vector3.one * mapScript.UnityTileSize;

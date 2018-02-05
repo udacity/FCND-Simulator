@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DroneInterface;
 
 using Action = System.Action<bool>;
 
@@ -33,9 +34,16 @@ public class Simulation
 		}
 	}
 
+	public static IDrone ActiveDrone
+	{
+		get { return Instance.activeDrone; }
+		set { Instance.activeDrone = value; }
+	}
+
 	Action pauseEvent = delegate (bool pause) {};
 	bool paused;
 	float lastTimeScale = 1;
+	IDrone activeDrone;
 
 	void Pause ()
 	{

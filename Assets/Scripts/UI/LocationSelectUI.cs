@@ -7,6 +7,7 @@ using Mapbox.Unity.Utilities;
 public class LocationSelectUI : MonoBehaviour
 {
 	public AbstractMap mapScript;
+	public GameObject uiObject;
 
 	void OnEnable ()
 	{
@@ -14,8 +15,16 @@ public class LocationSelectUI : MonoBehaviour
 		{
 			GameObject mapObject = GameObject.Find ( "Map" );
 			if ( mapObject != null )
+			{
 				mapScript = mapObject.GetComponent <AbstractMap> ();
+			}
 		}
+		mapScript.OnInitialized += OnMapInitialized;
+		uiObject.SetActive ( false );
+	}
+
+	void Awake ()
+	{
 	}
 
 	public void LocationSelected (UILocationOption info)
@@ -28,5 +37,12 @@ public class LocationSelectUI : MonoBehaviour
 			mapScript.Initialize ( location, mapScript.AbsoluteZoom );
 			gameObject.SetActive ( false );
 		}
+	}
+
+	void OnMapInitialized ()
+	{
+		Debug.Log ( "Map initialized: spawning drone and cam" );
+		DroneSpawner.SpawnDrone ();
+		uiObject.SetActive ( true );
 	}
 }

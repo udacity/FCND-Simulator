@@ -170,6 +170,7 @@ namespace Messaging
             var north = drone.LocalCoords().x;
             var east = drone.LocalCoords().y;
             var down = drone.LocalCoords().z;
+            // Debug.Log(drone.LocalCoords());
             var msg = new Msg_local_position_ned
             {
                 x = north,
@@ -234,7 +235,7 @@ namespace Messaging
             // TODO: figure out where these are saved for the drone
             var home_lat = drone.HomeLatitude() * 1e7;
             var home_lon = drone.HomeLongitude() * 1e7;
-            var home_alt = 0.0 * 1000;
+            var home_alt = 0 * 1000;
 
             // NOTE: needed to initialize all the data for this to send properly
             var msg = new Msg_home_position
@@ -519,7 +520,7 @@ namespace Messaging
             {
                 drone.SetHome(msg.param6, msg.param5, msg.param7);
                 Debug.Log("HOME POSITION PARAMS: " + msg.param1 + ", " + msg.param2 + ", " + msg.param3 + ", " + msg.param4 + ", " + msg.param5 + ", " + msg.param6 + ", " + msg.param7);
-                Debug.Log("Vehicle Home Position: " + msg.param6 + "," + msg.param5 + "," + msg.param7);
+                Debug.Log("Vehicle Home Position: " + msg.param6 + ", " + msg.param5 + ", " + msg.param7);
             }
             else
             {

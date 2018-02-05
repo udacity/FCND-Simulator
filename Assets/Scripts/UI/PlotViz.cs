@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UdaciPlot;
-using Drones;
 
 public class PlotViz : MonoBehaviour
 {
@@ -21,6 +20,7 @@ public class PlotViz : MonoBehaviour
 	public Camera cam;
 	public float refreshRate = 20;
 	public float lineWidth = 0.06f;
+	public float lineWidthInUI = 0.03f;
 	public int sampleCount = 200;
 	public float timeSample = 5f;
 
@@ -33,11 +33,9 @@ public class PlotViz : MonoBehaviour
 	float refreshDelay;
 	float nextRefresh;
 	FastNoise fn;
-	QuadDrone drone;
-	float minSampleValue;
-	float maxSampleValue;
 	Rect cameraRect;
 	float lastLineWidth;
+	bool inUI;
 
 	void Awake ()
 	{
@@ -47,7 +45,6 @@ public class PlotViz : MonoBehaviour
 			return;
 		}
 		instance = this;
-		drone = GameObject.Find ( "Quad Drone" ).GetComponent<QuadDrone> ();
 		// get camera world bounds (if need to, use viewport to world point)
 		// size line renderer to bounds
 		// render camera to texture?
@@ -90,17 +87,21 @@ public class PlotViz : MonoBehaviour
 	{
 		if ( Time.time > nextRefresh )
 		{
-			RefreshPlots ();
+			StartCoroutine ( RefreshPlots () );
 		}
-//		plot.AddSample ( (float) drone.Altitude (), Time.time );
-//		Plotting.AddSample ( "Pitch", (float) drone.Pitch (), Time.time );
 	}
 
-	void RefreshPlots ()
+	IEnumerator RefreshPlots ()
 	{
+		nextRefresh = Mathf.Infinity;
+		yield return null;
+
 		float leftPos = cameraRect.x * 0.95f;
 		float rightPos = cameraRect.xMax * 0.95f;
 		float sampleInterval = timeSample / sampleCount;
+		float min = 0;
+		float max = 0;
+
 		for ( int p = 0; p < plots.Count; p++ )
 		{
 			var _plot = plots [ p ];
@@ -111,6 +112,9 @@ public class PlotViz : MonoBehaviour
 			float lastStamp = (float) samples [ samples.Length - 1 ].timestamp;
 			float curTime = 0;
 			samples = CullSamplesByTime ( samples, lastStamp - 5f, lastStamp );
+
+			min = Mathf.Min ( min, _plot.min );
+			max = Mathf.Max ( max, _plot.max );
 
 			// parse x samples only instead of thousands. but how to optimize that so it's not iterating 200x3000 for each plot 20 times a second?
 //			Vector3[] points = new Vector3[sampleCount];
@@ -124,21 +128,52 @@ public class PlotViz : MonoBehaviour
 			{
 				float x = Rescale ( lastStamp - 5f, lastStamp, leftPos, rightPos, (float) samples [ i ].timestamp );
 				points [ i ] = new Vector3 ( x, samples [ i ].value, 0 );
-//				if ( samples [ i ].value > maxSampleValue )
-//					maxSampleValue = samples [ i ].value;
-//				if ( samples [ i ].value < minSampleValue )
-//					minSampleValue = samples [ i ].value;
 			}
 			var _line = plotLines [ p ];
 			_line.positionCount = points.Length;
 			_line.SetPositions ( points );
+
+			// ensure we're not doing too much per frame. for now yield every 2 plots, but not if we only have 2 plots
+			if ( p > 0 && ( p % 0 == 0 ) && p < plots.Count - 1 )
+				yield return null;
 		}
 
-		if ( lineWidth != lastLineWidth )
+		// adjust scale all plots if necessary
+		max = Mathf.Max ( max, Mathf.Abs ( min ) );
+		max = Mathf.Ceil ( max / 5 ) * 2;
+		float scale = 1f / max;
+
+//		if ( max > 1000 )
+//			scale = 5000;
+//		else
+//		if ( max > 500 )
+//			scale = 1000;
+//		else
+//		if ( max > 100 )
+//			scale = 500;
+//		else
+//		if ( max > 50 )
+//			scale = 100;
+//		else
+//		if ( max > 10 )
+//			scale = 50;
+//		else
+//			scale = 10;
+
+//		Debug.Log ( "max is " + max + ", scale is " + scale );
+		foreach ( var p in plotLines )
+		{
+			Vector3 lScale = p.transform.localScale;
+			lScale.y = scale;
+			p.transform.localScale = lScale;
+		}
+
+		float curWidth = inUI ? lineWidthInUI : lineWidth;
+		if ( curWidth != lastLineWidth )
 		{
 			for ( int i = 0; i < plotLines.Count; i++ )
-				plotLines [ i ].startWidth = plotLines [ i ].endWidth = lineWidth;
-			lastLineWidth = lineWidth;
+				plotLines [ i ].startWidth = plotLines [ i ].endWidth = curWidth;
+			lastLineWidth = curWidth;
 		}
 
 		nextRefresh = Time.time + refreshDelay;
@@ -159,12 +194,6 @@ public class PlotViz : MonoBehaviour
 		{
 			float x = Rescale ( lastStamp - 5f, lastStamp, leftPos, rightPos, (float) samples [ i ].timestamp );
 			points [ i ] = new Vector3 ( x, samples [ i ].value, 0 );
-//			float delta = lastStamp - (float) samples [ i ].timestamp;
-//			points [ i ] = new Vector3 ( 5f - delta, samples [ i ].value, 0 );
-			if ( samples [ i ].value > maxSampleValue )
-				maxSampleValue = samples [ i ].value;
-			if ( samples [ i ].value < minSampleValue )
-				minSampleValue = samples [ i ].value;
 		}
 		itemLine.positionCount = points.Length;
 		itemLine.SetPositions ( points );
@@ -183,8 +212,7 @@ public class PlotViz : MonoBehaviour
 
 	public void AddPlottable (Plottable<float> p)
 	{
-		minSampleValue = 0;
-		maxSampleValue = 0;
+		p.CalcMinMax ();
 		if ( plots == null )
 			plots = new List<Plottable<float>> ();
 		plots.Add ( p );
@@ -192,7 +220,7 @@ public class PlotViz : MonoBehaviour
 			plotLines = new List<LineRenderer> ();
 		LineRenderer newLine = Instantiate<LineRenderer> ( line, transform );
 		newLine.gameObject.SetActive ( true );
-		newLine.startWidth = newLine.endWidth = lineWidth;
+		newLine.startWidth = newLine.endWidth = inUI ? lineWidthInUI : lineWidth;
 
 		plotLines.Add ( newLine );
 		RefreshItem ( p, newLine );
@@ -228,6 +256,15 @@ public class PlotViz : MonoBehaviour
 			if ( samples [ i ].value < min )
 				min = samples [ i ].value;
 		}
+	}
+
+	public void SetUIOpen (bool open)
+	{
+		inUI = open;
+		float curWidth = inUI ? lineWidthInUI : lineWidth;
+		for ( int i = 0; i < plotLines.Count; i++ )
+			plotLines [ i ].startWidth = plotLines [ i ].endWidth = curWidth;
+		lastLineWidth = curWidth;
 	}
 
 	float Rescale (float inMin, float inMax, float outMin, float outMax, float value)
