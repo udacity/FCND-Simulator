@@ -179,9 +179,10 @@ namespace DroneControllers
 
         void Start()
         {
-            rb.inertiaTensorRotation = Quaternion.identity;
+			// for now disable this inertia thing
+//            rb.inertiaTensorRotation = Quaternion.identity;
             // For whatever reason, setting inertiaTensorRotation stops the quad from accepting commands (mostly torque) until it's deactivated and activated.
-            QuadActivator.Activate(gameObject);
+//            QuadActivator.Activate(gameObject);
         }
 
         private void OnDestroy()

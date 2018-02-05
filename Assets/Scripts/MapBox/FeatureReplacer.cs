@@ -22,7 +22,8 @@ public class FeatureReplacer : GameObjectModifier
 	public GameObject[] defaultPrefabs;
 	public bool randomRotation = true;
 
-	public override void Run (Mapbox.Unity.MeshGeneration.Components.FeatureBehaviour fb, Mapbox.Unity.MeshGeneration.Data.UnityTile tile)
+	public override void Run (VectorEntity ve, Mapbox.Unity.MeshGeneration.Data.UnityTile tile)
+//	public override void Run (Mapbox.Unity.MeshGeneration.Components.FeatureBehaviour fb, Mapbox.Unity.MeshGeneration.Data.UnityTile tile)
 	{
 		if ( ( filters == null || filters.Length == 0 ) && ( defaultPrefabs == null || defaultPrefabs.Length == 0 ) )
 		{
@@ -32,7 +33,8 @@ public class FeatureReplacer : GameObjectModifier
 			return;
 		}
 
-		string props = fb.Data.Properties.DictionaryToString ();
+//		string props = ve.Feature.Properties.DictionaryToString ();
+//		string props = fb.Data.Properties.DictionaryToString ();
 //		if ( props.Contains ( "university" ) )
 //			Debug.Log ( "feture is \n" + props );
 
@@ -40,20 +42,25 @@ public class FeatureReplacer : GameObjectModifier
 		GameObject[] prefabs = defaultPrefabs;
 		foreach ( var filter in filters )
 		{
-			if ( filter.tag.IsMatch ( fb.Data.Properties ) )
+			if ( filter.tag.IsMatch ( ve.Feature.Properties ) )
+//			if ( filter.tag.IsMatch ( fb.Data.Properties ) )
 			{
 				prefabs = filter.prefabs;
 				break;
 			}
 		}
 
-		GameObject go = fb.gameObject;
-		Transform container = tile.transform.Find ( fb.transform.parent.name + "_Replacement" );
+		GameObject go = ve.GameObject;
+//		GameObject go = fb.gameObject;
+		Transform container = tile.transform.Find ( ve.Transform.parent.name + "_Replacement" );
+//		Transform container = tile.transform.Find ( fb.transform.parent.name + "_Replacement" );
 		if ( container == null )
 		{
-			container = new GameObject ( fb.transform.parent.name + "_Replacement" ).transform;
+			container = new GameObject ( ve.Transform.parent.name + "_Replacement" ).transform;
+//			container = new GameObject ( fb.transform.parent.name + "_Replacement" ).transform;
 			container.SetParent ( tile.transform );
-			container.localPosition = fb.transform.parent.localPosition;
+			container.localPosition = ve.Transform.parent.localPosition;
+//			container.localPosition = fb.transform.parent.localPosition;
 		}
 		MeshRenderer rend = go.GetComponent<MeshRenderer> ();
 		Vector3 origSize = rend.bounds.size;
