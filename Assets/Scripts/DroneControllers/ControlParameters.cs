@@ -1,0 +1,148 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+namespace DroneControllers
+{
+    public class ControlParameters : MonoBehaviour
+    {
+        SimpleQuadController ctrl;
+
+        public float maxTilt = 0.5f;
+        public float maxAscentRate = 5.0f;
+        public float maxDescentRate = 2.0f;
+
+        public float posHoldDeadband = 0.5f;
+        public float maxSpeed = 10.0f;
+
+        [System.NonSerialized]
+        public SimParameter paramKpRollrate;
+        [System.NonSerialized]
+        public SimParameter paramKpPitchrate;
+        [System.NonSerialized]
+        public SimParameter paramKpYawrate;
+
+        [System.NonSerialized]
+        public SimParameter paramKpRoll;
+        [System.NonSerialized]
+        public SimParameter paramKpPitch;
+
+        [System.NonSerialized]
+        public SimParameter paramKpHdot;
+        [System.NonSerialized]
+        public SimParameter paramKiHdot;
+
+        [System.NonSerialized]
+        public SimParameter paramKpPos;
+        [System.NonSerialized]
+        public SimParameter paramKpPos2;
+        [System.NonSerialized]
+        public SimParameter paramKpAlt;
+        [System.NonSerialized]
+        public SimParameter paramKpVel;
+        [System.NonSerialized]
+        public SimParameter paramKpYaw;
+
+        private float hDotInt;
+
+        void Awake()
+        {
+            ctrl = GetComponent<SimpleQuadController>();
+
+            paramKpRollrate = new SimParameter("rollrate_gain_P", ctrl.attCtrl.Kp_p,OnRollrateKpChanged);
+            paramKpPitchrate = new SimParameter("pitchrate_gain_P", ctrl.attCtrl.Kp_q, OnPitchrateKpChanged);
+            paramKpYawrate = new SimParameter("yawrate_gain_P", ctrl.attCtrl.Kp_r, OnYawrateKpChanged);
+
+            paramKpRoll = new SimParameter("roll_gain_P", ctrl.attCtrl.Kp_roll, OnRollKpChanged);
+            paramKpPitch = new SimParameter("pitch_gain_P", ctrl.attCtrl.Kp_pitch, OnPitchKpChanged);
+
+            paramKpHdot = new SimParameter("hdot_gain_P", ctrl.attCtrl.Kp_hdot, OnHdotKpChanged);
+            paramKiHdot = new SimParameter("hdot_gain_I", ctrl.attCtrl.Ki_hdot, OnHdotKiChanged);
+
+            paramKpPos = new SimParameter("position_gain_P", ctrl.posCtrl.Kp_pos, OnPosKpChanged);
+            paramKpPos2 = new SimParameter("position_gain_P2", ctrl.posCtrl.Kp_pos2, OnPosKp2Changed);
+
+            paramKpAlt = new SimParameter("altitude_gain_P", ctrl.posCtrl.Kp_alt, OnAltKpChanged);
+
+            paramKpVel = new SimParameter("velocity_gain_P", ctrl.posCtrl.Kp_vel, OnVelKpChanged);
+
+            paramKpYaw = new SimParameter("yaw_gain_P", ctrl.posCtrl.Kp_yaw, OnYawKpChanged);
+
+
+
+
+        }
+        
+
+        public void OnRollrateKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_p changed from: " + ctrl.attCtrl.Kp_p + " to: " + p.Value);
+            ctrl.attCtrl.Kp_p = p.Value;
+        }
+
+        public void OnPitchrateKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_q changed from: " + ctrl.attCtrl.Kp_q + " to: " + p.Value);
+            ctrl.attCtrl.Kp_q = p.Value;
+        }
+
+        public void OnYawrateKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_r changed from: " + ctrl.attCtrl.Kp_r + " to: " + p.Value);
+            ctrl.attCtrl.Kp_p = p.Value;
+        }
+
+        public void OnPitchKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_pitch changed from: " + ctrl.attCtrl.Kp_pitch + " to: " + p.Value);
+            ctrl.attCtrl.Kp_pitch = p.Value;
+        }
+
+        public void OnRollKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_roll changed from: " + ctrl.attCtrl.Kp_roll + " to: " + p.Value);
+            ctrl.attCtrl.Kp_roll = p.Value;
+        }
+
+        public void OnHdotKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_hdot changed from: " + ctrl.attCtrl.Kp_hdot + " to: " + p.Value);
+            ctrl.attCtrl.Kp_hdot = p.Value;
+        }
+
+        public void OnHdotKiChanged(SimParameter p)
+        {
+            Debug.Log("Ki_hdot changed from: " + ctrl.attCtrl.Ki_hdot + " to: " + p.Value);
+            ctrl.attCtrl.Ki_hdot = p.Value;
+        }
+
+        public void OnPosKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_pos changed from: " + ctrl.posCtrl.Kp_pos + " to: " + p.Value);
+            ctrl.posCtrl.Kp_pos = p.Value;
+        }
+
+        public void OnPosKp2Changed(SimParameter p)
+        {
+            Debug.Log("Kp_pos2 changed from: " + ctrl.posCtrl.Kp_pos2 + " to: " + p.Value);
+            ctrl.posCtrl.Kp_pos2 = p.Value;
+        }
+
+        public void OnAltKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_alt changed from: " + ctrl.posCtrl.Kp_alt + " to: " + p.Value);
+            ctrl.posCtrl.Kp_alt = p.Value;
+        }
+
+        public void OnVelKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_ve changed from: " + ctrl.posCtrl.Kp_vel + " to: " + p.Value);
+            ctrl.posCtrl.Kp_vel= p.Value;
+        }
+
+        public void OnYawKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_yaw changed from: " + ctrl.posCtrl.Kp_yaw + " to: " + p.Value);
+            ctrl.posCtrl.Kp_yaw = p.Value;
+        }
+    }
+}
