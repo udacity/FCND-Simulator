@@ -13,7 +13,8 @@ public class FlatTerrainMultiTex : FlatTerrainFactory
 		base.OnRegistered (tile);
 
 //		tile.GetComponent<Renderer> ().material.mainTexture = TerrainRasterizer.GetOrAddTileTexture ( tile.name );
-		Material mat = tile.GetComponent<Renderer> ().material;
+		Material mat = tile.MeshRenderer.material;
+//		Material mat = tile.GetComponent<Renderer> ().material;
 		if ( mat.HasProperty ( keyHash ) )
 			mat.SetTexture ( keyHash, TerrainRasterizer.GetOrAddTileTexture ( tile.name ) );
 //		tile.GetComponent<Renderer> ().material = mat;
