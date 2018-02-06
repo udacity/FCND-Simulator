@@ -25,6 +25,13 @@ public class MultiObjectCollider : MonoBehaviour
 
 		var bounds = new Bounds ();
 		var rends = GetComponentsInChildren<Renderer> ();
+		if ( rends == null || rends.Length == 0 )
+		{
+			bc.center = transform.position;
+			bc.size = Vector3.one;
+			return;
+		}
+
 		foreach ( var r in rends )
 			bounds.center += r.bounds.center;
 		bounds.center /= rends.Length;

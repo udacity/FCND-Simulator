@@ -48,17 +48,18 @@ public class GenerateColliderList : MonoBehaviour
 
     void Awake()
     {
-        //		mapScript.OnInitialized += OnMapInitialized;
+		mapScript.OnInitialized += OnMapInitialized;
 
         // invoking on a timer because apparently the map's OnCompleted is called the same frame as it starts but the "everything" is only instantiated on the next frame
         testCube = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
         Destroy(testCube.GetComponent<Collider>());
         testCube.transform.parent = transform;
-        Invoke("OnMapInitialized", 0.2f);
+//        Invoke("OnMapInitialized", 0.2f);
     }
 
     void OnMapInitialized()
     {
+		Debug.Log ( "Initialized!" );
         GameObject mapObject = mapScript.gameObject;
         Collider[] allColliders = mapObject.GetComponentsInChildren<Collider>(includeInactiveColliders);
         Vector3 size = Vector3.one * mapScript.UnityTileSize;
