@@ -34,6 +34,7 @@ public class LocationSelectUI : MonoBehaviour
 			// set the drone position
 //			DroneControllers.SimpleQuadController droneCtrl = 
 			var location = Conversions.StringToLatLon ( info.latLongCoord );
+			mapScript.SetCenterLatitudeLongitude ( location );
 			mapScript.Initialize ( location, mapScript.AbsoluteZoom );
 			gameObject.SetActive ( false );
 		}
@@ -43,6 +44,8 @@ public class LocationSelectUI : MonoBehaviour
 	{
 		Debug.Log ( "Map initialized: spawning drone and cam" );
 		DroneSpawner.SpawnDrone ();
+
+		Simulation.ActiveDrone.SetHome ( mapScript.CenterLatitudeLongitude.y, mapScript.CenterLatitudeLongitude.x, -1 );
 		uiObject.SetActive ( true );
 	}
 }

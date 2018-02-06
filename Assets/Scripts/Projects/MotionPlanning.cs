@@ -35,7 +35,7 @@ public class MotionPlanning : MonoBehaviour
         var qctrl = GameObject.Find("Quad Drone").GetComponent<QuadController>();
         qctrl.NavigationUpdate();
         // TODO: explain where these magic numbers come from
-        drone.SetHome(-121.995635d, 37.412939d, 0.0d);
+//        drone.SetHome(-121.995635d, 37.412939d, 0.0d);
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
