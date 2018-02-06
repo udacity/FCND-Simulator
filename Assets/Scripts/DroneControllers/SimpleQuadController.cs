@@ -62,6 +62,12 @@ namespace DroneControllers
 
         public AttitudeControl attCtrl = new AttitudeControl();
         public PositionControl posCtrl = new PositionControl();
+        Vector3 attitudeTarget; //roll, pitch, yaw target in radians
+        Vector3 positionTarget; //north, east, down target in meters
+        Vector3 bodyRateTarget; //p, q, r target in radians/second
+        Vector3 velocityTarget; //north, east, down, velocity targets in meters/second
+        Vector3 accelerationTarget; //north, east, down acceleration targets in meters/second^2
+        Vector4 momentThrustTarget; //body x, y, z moment target (in Newton*meters), thrust target in Newstons
 
         [System.NonSerialized]
         public Rigidbody rb;
@@ -139,6 +145,12 @@ namespace DroneControllers
                 positionControl = true;
                 attitudeControl = false;
 
+                positionTarget.x = north;
+                positionTarget.y = east;
+                positionTarget.z = down;
+
+                attitudeTarget.z = 0.0f;
+
                 guidedCommand.x = north;
                 guidedCommand.y = east;
                 guidedCommand.z = down;
@@ -150,6 +162,7 @@ namespace DroneControllers
 
         public void CommandHeading(float heading)
         {
+            attitudeTarget.z = heading;
             guidedCommand.w = heading;
         }
 
@@ -157,6 +170,12 @@ namespace DroneControllers
         {
 
             positionControl = false;
+
+
+            attitudeTarget.x = roll;
+            attitudeTarget.y = pitch;
+            bodyRateTarget.z = yawRate;
+            momentThrustTarget.w = thrust;
 
             guidedCommand.x = roll;
             guidedCommand.y = pitch;
@@ -169,6 +188,11 @@ namespace DroneControllers
         {
             positionControl = false;
             attitudeControl = false;
+
+            momentThrustTarget.x = rollMoment;
+            momentThrustTarget.y = pitchMoment;
+            momentThrustTarget.z = yawMoment;
+            momentThrustTarget.w = thrust;
             guidedCommand.x = rollMoment;
             guidedCommand.y = pitchMoment;
             guidedCommand.w = yawMoment;
@@ -183,6 +207,10 @@ namespace DroneControllers
                 guidedCommand.x = controller.GetLocalNorth();
                 guidedCommand.y = controller.GetLocalEast();
                 guidedCommand.z = controller.GetLocalDown();
+
+                positionTarget.x = guidedCommand.x;
+                positionTarget.y = guidedCommand.y;
+                positionTarget.z = guidedCommand.z;
             }
             else
             {
@@ -253,6 +281,42 @@ namespace DroneControllers
                 }
             }
             currentMovementBehavior.OnSelect(this);
+        }
+
+        public Vector3 GetPositionTarget()
+        {
+            return new Vector3(positionTarget.x, positionTarget.y, positionTarget.z);
+        }
+
+
+        public Vector3 GetVelocityTarget()
+        {
+            return new Vector3(velocityTarget.x, velocityTarget.y, velocityTarget.z);
+        }
+
+        public Vector3 GetAccelerationTarget()
+        {
+            return new Vector3(accelerationTarget.x, accelerationTarget.y, accelerationTarget.y);
+        }
+
+        public Vector3 GetAttitudeTarget()
+        {
+            return new Vector3(attitudeTarget.x, attitudeTarget.y, attitudeTarget.z);
+        }
+
+        public Vector3 GetBodyRateTarget()
+        {
+            return new Vector3(bodyRateTarget.x, bodyRateTarget.y, bodyRateTarget.z);
+        }
+
+        public Vector3 GetMomentTarget()
+        {
+            return new Vector3(momentThrustTarget.x, momentThrustTarget.y, momentThrustTarget.z);
+        }
+
+        public float GetThrustTarget()
+        {
+            return momentThrustTarget.w;
         }
     }
 }
