@@ -21,15 +21,15 @@ public class BuildScript : MonoBehaviour
 	[MenuItem ("Udacity/Build Linux", false, 22)]
 	static void BuildLinux ()
 	{
-		Build ( BuildTarget.StandaloneLinux );
+		Build ( BuildTarget.StandaloneLinuxUniversal );
 	}
 
 	[MenuItem ("Udacity/Build All", false, 23)]
 	static void BuildAll ()
 	{
 		Build ( BuildTarget.StandaloneWindows, false );
-		Build ( BuildTarget.StandaloneOSXIntel64, false );
-		Build ( BuildTarget.StandaloneLinux );
+		Build ( BuildTarget.StandaloneOSX, false );
+		Build ( BuildTarget.StandaloneLinuxUniversal, false );
 	}
 
 
@@ -52,7 +52,8 @@ public class BuildScript : MonoBehaviour
 			extension = "FCND-Sim_MacOS.app";
 			settingPath = extension + "/Contents";
 		} else
-			if ( target == BuildTarget.StandaloneLinux )
+		if ( target == BuildTarget.StandaloneLinuxUniversal )
+
 		{
 			extension = "FCND-Sim_Linux";
 			settingPath = "FCND-Sim_Linux_Data";
