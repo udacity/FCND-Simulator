@@ -160,12 +160,18 @@ public class DroneUI : MonoBehaviour
         }
     }
 
+	public void OnOpenResolution (bool open)
+	{
+		Simulation.UIIsOpen = open;
+	}
+
 	public void OpenControlsOverlay ()
 	{
 		controlsOverlay.SetActive ( true );
 		parametersOverlay.SetActive ( false );
 		plotOverlay.SetActive ( false );
 		PauseSimulation ( true );
+		Simulation.UIIsOpen = true;
 	}
 
 	public void OpenParametersOverlay ()
@@ -175,6 +181,7 @@ public class DroneUI : MonoBehaviour
 		plotOverlay.SetActive ( false );
 		graphImage.enabled = false;
 		PauseSimulation ( true );
+		Simulation.UIIsOpen = true;
 	}
 
 	public void OpenPlotOverlay ()
@@ -184,6 +191,7 @@ public class DroneUI : MonoBehaviour
 		plotOverlay.SetActive ( true );
 		graphImage.enabled = false;
 		PauseSimulation ( true );
+		Simulation.UIIsOpen = true;
 	}
 
 	public void CloseOverlay ()
@@ -193,6 +201,7 @@ public class DroneUI : MonoBehaviour
 		plotOverlay.SetActive ( false );
 		graphImage.enabled = PlotViz.Instance.Count > 0;
 		PauseSimulation ( false );
+		Simulation.UIIsOpen = false;
 	}
 
     public void PauseSimulation(bool pause)

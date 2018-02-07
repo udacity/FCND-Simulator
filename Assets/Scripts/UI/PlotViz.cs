@@ -105,6 +105,7 @@ public class PlotViz : MonoBehaviour
 		{
 			var _plot = plots [ p ];
 			var samples = _plot.GetSamples ();
+//			Debug.Log ( "plottable " + _plot.label + " has " + samples.Length + " samples" );
 			if ( samples == null || samples.Length == 0 )
 				continue;
 			

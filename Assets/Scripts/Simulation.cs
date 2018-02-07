@@ -33,6 +33,12 @@ public class Simulation
 		}
 	}
 
+	public static bool UIIsOpen
+	{
+		get;
+		set;
+	}
+
 	Action pauseEvent = delegate (bool pause) {};
 	bool paused;
 	float lastTimeScale = 1;
