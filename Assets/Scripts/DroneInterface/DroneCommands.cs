@@ -55,5 +55,10 @@ namespace DroneInterface
         /// Set the home position
         /// </summary>
         void SetHome(double longitude, double latitude, double altitude);
+
+		/// <summary>
+		/// Place the drone at a specific world position
+		/// </summary>
+		void Place (UnityEngine.Vector3 location);
     }
 }

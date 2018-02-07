@@ -34,14 +34,14 @@ public class DroneUI : MonoBehaviour
 
     void Awake()
     {
-        drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-        int quality = QualitySettings.GetQualityLevel();
-        toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
-        for (int i = 0; i < toggles.Length; i++)
-        {
-            toggles[i].isOn = (i == quality);
-        }
-        qualityGroup.NotifyToggleOn(toggles[quality]);
+//        drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
+//        int quality = QualitySettings.GetQualityLevel();
+//        toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
+//        for (int i = 0; i < toggles.Length; i++)
+//        {
+//            toggles[i].isOn = (i == quality);
+//        }
+//        qualityGroup.NotifyToggleOn(toggles[quality]);
         armWatcher = armButton.GetComponent<ButtonStateWatcher>();
         guideWatcher = guideButton.GetComponent<ButtonStateWatcher>();
         pauseText.gameObject.SetActive(false);
@@ -50,6 +50,14 @@ public class DroneUI : MonoBehaviour
 
     void Start()
     {
+		int quality = QualitySettings.GetQualityLevel();
+		toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
+		for (int i = 0; i < toggles.Length; i++)
+		{
+			toggles[i].isOn = (i == quality);
+		}
+		qualityGroup.NotifyToggleOn(toggles[quality]);
+		drone = Simulation.ActiveDrone;
         var parameters = SimParameters.Parameters;
         //		Debug.Log ( "there are " + parameters.Length + " parameters" );
         foreach (SimParameter p in parameters)
@@ -65,12 +73,20 @@ public class DroneUI : MonoBehaviour
 
     void Update()
     {
+		if ( drone == null )
+		{
+			drone = Simulation.ActiveDrone;
+			return;
+		}
         UpdateArmedButton();
         UpdateGuidedButton();
     }
 
     void LateUpdate()
     {
+		if ( drone == null )
+			return;
+		
         // Updates UI drone position
         var lat = drone.Latitude();
         var lon = drone.Longitude();
@@ -170,6 +186,7 @@ public class DroneUI : MonoBehaviour
 		controlsOverlay.SetActive ( true );
 		parametersOverlay.SetActive ( false );
 		plotOverlay.SetActive ( false );
+		plotOverlay.GetComponent<PlottingUI> ().OnClose ();
 		PauseSimulation ( true );
 		Simulation.UIIsOpen = true;
 	}
@@ -179,6 +196,7 @@ public class DroneUI : MonoBehaviour
 		controlsOverlay.SetActive ( false );
 		parametersOverlay.SetActive ( true );
 		plotOverlay.SetActive ( false );
+		plotOverlay.GetComponent<PlottingUI> ().OnClose ();
 		graphImage.enabled = false;
 		PauseSimulation ( true );
 		Simulation.UIIsOpen = true;
@@ -199,6 +217,7 @@ public class DroneUI : MonoBehaviour
 		controlsOverlay.SetActive ( false );
 		parametersOverlay.SetActive ( false );
 		plotOverlay.SetActive ( false );
+		plotOverlay.GetComponent<PlottingUI> ().OnClose ();
 		graphImage.enabled = PlotViz.Instance.Count > 0;
 		PauseSimulation ( false );
 		Simulation.UIIsOpen = false;

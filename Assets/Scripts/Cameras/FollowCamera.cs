@@ -45,11 +45,12 @@ public class FollowCamera : MonoBehaviour
         initialFollowDistance = followDistance;
         cam = GetComponent<Camera>();
         cam.depthTextureMode |= DepthTextureMode.MotionVectors;
-		target = targetTransform.GetComponent<IDrone> ();
+//		target = targetTransform.GetComponent<IDrone> ();
     }
 
     void Start()
     {
+		target = targetTransform.GetComponent<IDrone> ();
     }
 
     void LateUpdate()

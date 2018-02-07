@@ -123,11 +123,12 @@ namespace DroneControllers
             {
                 positionControl = !positionControl;
                 if (positionControl)
+                {
                     posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+                }
 
             }
             SelectMovementBehavior();
-            // Debug.Log(currentMovementBehavior);
 
             if (armed)
             {
@@ -214,10 +215,7 @@ namespace DroneControllers
         }
         public void ArmVehicle()
         {
-
-            // Debug.Log("before " + controller.GetHomeLongitude() + " " + controller.GetHomeLatitude());
-            controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
-            // Debug.Log("after " + controller.GetHomeLongitude() + " " + controller.GetHomeLatitude());
+            // controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
             if (guided)
             {
                 guidedCommand.x = controller.GetLocalNorth();
@@ -230,7 +228,6 @@ namespace DroneControllers
             }
 
             //Set the hold position to the current position
-
             armed = true;
         }
 

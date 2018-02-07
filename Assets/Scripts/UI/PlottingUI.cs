@@ -14,7 +14,16 @@ public class PlottingUI : MonoBehaviour
 
 	List<UIPlotItem> items = new List<UIPlotItem> ();
 	List<UIPlotItem> unusedItems = new List<UIPlotItem> ();
-	PlotViz plotViz;
+	PlotViz plotViz
+	{
+		get
+		{
+			if ( _plotViz == null )
+				_plotViz = PlotViz.Instance;
+			return _plotViz;
+		}
+	}
+	PlotViz _plotViz;
 
 	void Awake ()
 	{
@@ -23,7 +32,7 @@ public class PlottingUI : MonoBehaviour
 
 	void Start ()
 	{
-		plotViz = PlotViz.Instance;
+		_plotViz = PlotViz.Instance;
 	}
 
 	public void OnOpen ()
@@ -55,6 +64,12 @@ public class PlottingUI : MonoBehaviour
 			if ( items [ i ].IsOn )
 				plotViz.SetColor ( items [ i ].Label, c );
 		}
+		plotViz.SetUIOpen ( true );
+	}
+
+	public void OnClose ()
+	{
+		plotViz.SetUIOpen ( false );
 	}
 
 	UIPlotItem GetPlotItem ()
