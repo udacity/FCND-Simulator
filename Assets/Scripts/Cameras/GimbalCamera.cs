@@ -18,7 +18,7 @@ public class GimbalCamera : MonoBehaviour
 	Quaternion lastRotation;
 
 
-	Transform vizSphere;
+//	Transform vizSphere;
 
 	void Awake ()
 	{
@@ -29,9 +29,9 @@ public class GimbalCamera : MonoBehaviour
 		initialLocalRotation = gimbalParent.localRotation;
 		lastRotation = gimbalParent.rotation;
 		followType = FollowType.None;
-		vizSphere = GameObject.CreatePrimitive ( PrimitiveType.Sphere ).transform;
-		vizSphere.localScale = Vector3.one * 0.5f;
-		vizSphere.GetComponent<Renderer> ().material.color = Color.blue * 0.5f;
+//		vizSphere = GameObject.CreatePrimitive ( PrimitiveType.Sphere ).transform;
+//		vizSphere.localScale = Vector3.one * 0.5f;
+//		vizSphere.GetComponent<Renderer> ().material.color = Color.blue * 0.5f;
 	}
 
 	void LateUpdate ()
@@ -65,12 +65,12 @@ public class GimbalCamera : MonoBehaviour
 
 		case FollowType.Position:
 			gimbalParent.LookAt ( followPosition, Vector3.up );
-			vizSphere.position = followPosition;
+//			vizSphere.position = followPosition;
 			break;
 
 		case FollowType.Transform:
 			gimbalParent.LookAt ( followTarget.position, Vector3.up );
-			vizSphere.position = followTarget.position;
+//			vizSphere.position = followTarget.position;
 			break;
 		}
 	}
@@ -79,20 +79,20 @@ public class GimbalCamera : MonoBehaviour
 	{
 		followType = FollowType.Position;
 		followPosition = position;
-		vizSphere.gameObject.SetActive ( true );
+//		vizSphere.gameObject.SetActive ( true );
 	}
 
 	public void LookAt (Transform target)
 	{
 		followType = FollowType.Transform;
 		followTarget = target;
-		vizSphere.gameObject.SetActive ( true );
+//		vizSphere.gameObject.SetActive ( true );
 	}
 
 	public void StopLooking ()
 	{
 		followType = FollowType.None;
 		lastRotation = gimbalParent.rotation;
-		vizSphere.gameObject.SetActive ( false );
+//		vizSphere.gameObject.SetActive ( false );
 	}
 }
