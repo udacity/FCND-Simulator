@@ -16,9 +16,9 @@ public class SimpleRingBuf<T>
 	int start;
 	int count;
 
-	public SimpleRingBuf (int count = 500)
+	public SimpleRingBuf (int capacity = 500)
 	{
-		items = new T[count];
+		items = new T[capacity];
 	}
 
 	public void Add (T item)
@@ -55,7 +55,18 @@ public class SimpleRingBuf<T>
 		T[] values = new T[count];
 		for ( int i = 0; i < count; i++ )
 		{
-			values [ i ] = items [ ( start + i ) % items.Length ];
+			int index = ( start + i ) % items.Length;
+			if ( index < 0 || index >= items.Length )
+				Debug.LogError ( "index is " + index + ": start " + start + " i " + i + " count " + count );
+			try {
+			values [ i ] = items [ index ];
+			}
+			catch (System.Exception e )
+			{
+				Debug.LogException ( e );
+				Debug.LogError ( "index is " + index + ": start " + start + " i " + i + " count " + count );
+			}
+//			values [ i ] = items [ ( start + i ) % items.Length ];
 		}
 		return values;
 	}

@@ -85,6 +85,7 @@ namespace DroneControllers
 
         public AttitudeControl attCtrl = new AttitudeControl();
         public PositionControl posCtrl = new PositionControl();
+		bool alive;
 
 
         void Awake()
@@ -97,6 +98,7 @@ namespace DroneControllers
             }
             SelectMovementBehavior();
 			param2 = new SimParameter ( "Test", 0.1f );
+			alive = true;
         }
 
 		void Start ()
@@ -106,6 +108,13 @@ namespace DroneControllers
 			Plotting.AddPlottable1D ( "Velocity_x" );
 			Plotting.AddPlottable1D ( "Velocity_y" );
 			Plotting.AddPlottable1D ( "Velocity_z" );
+
+			System.Threading.Tasks.Task.Run ( () => Sample () );
+		}
+
+		void OnDestroy ()
+		{
+			alive = false;
 		}
 
         void LateUpdate()
@@ -129,9 +138,28 @@ namespace DroneControllers
             {
                 pos_set = false;
             }
-			Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), Time.time );
-			Plotting.AddSample ( "Pitch", controller.GetPitch (), Time.time );
+//			Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), Time.time );
+//			Plotting.AddSample ( "Pitch", controller.GetPitch (), Time.time );
         }
+
+		async System.Threading.Tasks.Task Sample ()
+		{
+			System.Random rand = new System.Random ( (int) GetTime () );
+			while ( alive )
+			{
+				Plotting.AddSample ( "Altitude", (float) System.Math.Sin ( rand.NextDouble () ), GetTime () );
+//				Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), GetTime () );
+//				Debug.Log ( "added sample" );
+				await System.Threading.Tasks.Task.Delay ( 10 );
+			}
+		}
+
+		double GetTime ()
+		{
+			var now = System.DateTime.UtcNow;
+			var origin = new System.DateTime ( 1970, 1, 1, 0, 0, 0 );
+			return ( now - origin ).TotalSeconds;
+		}
 
         // Command the quad to a GPS location (latitude, relative_altitude, longitude)
         public void CommandGPS(double latitude, double longitude, double altitude)

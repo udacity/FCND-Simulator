@@ -34,6 +34,12 @@ public class Simulation
 		}
 	}
 
+	public static bool UIIsOpen
+	{
+		get;
+		set;
+	}
+
 	public static IDrone ActiveDrone
 	{
 		get { return Instance.activeDrone; }
