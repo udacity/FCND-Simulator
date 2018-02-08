@@ -144,11 +144,13 @@ namespace DroneControllers
 
 		async System.Threading.Tasks.Task Sample ()
 		{
-			System.Random rand = new System.Random ( (int) GetTime () );
+//			System.Random rand = new System.Random ( (int) GetTime () );
+//			FastNoise fn = new FastNoise ( rand.Next () );
+//			double d2r = System.Math.PI / 180;
 			while ( alive )
 			{
-				Plotting.AddSample ( "Altitude", (float) System.Math.Sin ( rand.NextDouble () ), GetTime () );
-//				Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), GetTime () );
+//				Plotting.AddSample ( "Altitude", (float) System.Math.Sin ( GetTime () * d2r ) * 3, GetTime () );
+				Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), GetTime () );
 //				Debug.Log ( "added sample" );
 				await System.Threading.Tasks.Task.Delay ( 10 );
 			}
