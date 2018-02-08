@@ -236,6 +236,7 @@ namespace Messaging
             var home_lat = drone.HomeLatitude() * 1e7;
             var home_lon = drone.HomeLongitude() * 1e7;
             var home_alt = 0 * 1000;
+            // Debug.Log(string.Format("Home pos - lat {0}, lon {1}", drone.HomeLatitude(), drone.HomeLongitude()));
 
             // NOTE: needed to initialize all the data for this to send properly
             var msg = new Msg_home_position
