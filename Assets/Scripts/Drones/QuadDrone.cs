@@ -26,7 +26,8 @@ namespace Drones
         /// </summary>
         public Vector3 UnityCoords()
         {
-            return this.transform.position;
+			return quadCtrl.Position;
+//            return this.transform.position;
         }
 
         /// <summary>

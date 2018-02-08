@@ -32,10 +32,9 @@ public class MotionPlanning : MonoBehaviour
     {
         droneGO = GameObject.Find("Quad Drone");
         drone = droneGO.GetComponent<QuadDrone>();
-        var qctrl = GameObject.Find("Quad Drone").GetComponent<QuadController>();
-        qctrl.NavigationUpdate();
+        droneGO.GetComponent<QuadController>().NavigationUpdate();
         // TODO: explain where these magic numbers come from
-//        drone.SetHome(-121.995635d, 37.412939d, 0.0d);
+        // drone.SetHome(-121.995635d, 37.412939d, 0.0d);
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
@@ -46,7 +45,7 @@ public class MotionPlanning : MonoBehaviour
         networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
-        networkController.EnqueueRecurringMessage(SensorInfo, Conversions.HertzToMilliSeconds(sensorIntervalHz));
+//        networkController.EnqueueRecurringMessage(SensorInfo, Conversions.HertzToMilliSeconds(sensorIntervalHz));
 
     }
 
@@ -54,7 +53,7 @@ public class MotionPlanning : MonoBehaviour
     {
         // Send multiple messages for different orientations
         var msgs = new List<byte[]>();
-//        print("Sensing distances ...");
+        //        print("Sensing distances ...");
         var pos = drone.UnityCoords();
         var collisions = Sensors.Lidar.Sense(droneGO, mavSensorLookup.Keys.ToList(), sensorRange);
 
