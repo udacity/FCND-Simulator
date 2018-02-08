@@ -1,4 +1,4 @@
-﻿//#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -69,4 +69,4 @@ public class SimpleMeshCombineChildren : MonoBehaviour
 		rend.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.BlendProbes;
 	}
 }
-//#endif
+#endif
