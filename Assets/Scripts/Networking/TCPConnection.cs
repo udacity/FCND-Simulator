@@ -235,7 +235,12 @@ namespace UdacityNetworking
 			finally
 			{
 				// this is to ensure the sever stops once a disconnection happens, or when done with everything
-				connectionState = ConnectionState.Disconnected;
+				if ( listener != null )
+				{
+					listener.Stop ();
+					listener = null;
+				}
+					connectionState = ConnectionState.Disconnected;
 			}
 		}
 
@@ -276,11 +281,14 @@ namespace UdacityNetworking
 			}
 		}
 
-		void OnDestroy ()
+		public void Destroy ()
 		{
 			running = false;
-			listener.Stop ();
-			listener = null;
+			if ( listener != null )
+			{
+				listener.Stop ();
+				listener = null;
+			}
 			if ( myClient != null )
 			{
 				myClient.Close ();
