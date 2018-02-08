@@ -20,8 +20,8 @@ public class SimpleMeshCombineChildren : MonoBehaviour
 
 	void CombineChildren ()
 	{
-		var renderers = gameObject.GetComponentsInChildren<MeshRenderer> ();
-		var filters = gameObject.GetComponentsInChildren<MeshFilter> ();
+		var renderers = gameObject.GetComponentsInChildren<MeshRenderer> ( true );
+		var filters = gameObject.GetComponentsInChildren<MeshFilter> ( true );
 
 		CombineInstance[] combines = new CombineInstance[filters.Length];
 		Mesh mesh = new Mesh ();
@@ -33,32 +33,13 @@ public class SimpleMeshCombineChildren : MonoBehaviour
 		{
 			CombineInstance comb = new CombineInstance ();
 			comb.mesh = filters [ i ].sharedMesh;
-			comb.transform = filters [ i ].transform.localToWorldMatrix;
+			Transform parent = filters [ i ].transform.parent;
+			Matrix4x4 matrix = Matrix4x4.TRS ( parent.localPosition, parent.localRotation, parent.localScale );
+			comb.transform = matrix;
+//			comb.transform = filters [ i ].transform.localToWorldMatrix;
 			combines [ i ] = comb;
 			filters [ i ].gameObject.SetActive ( false );
 		}
-//		foreach ( MeshFilter mf in filters )
-//		{
-//			Mesh m = mf.sharedMesh;
-//			verts.AddRange ( m.vertices );
-//			normals.AddRange ( m.normals );
-//			uvs.AddRange ( m.uv );
-//			tris.AddRange ( m.triangles );
-//		}
-//
-//		if ( verts.Count < 60000 )
-//		{
-//			mesh.vertices = verts.ToArray ();
-//			mesh.triangles = tris.ToArray ();
-//			mesh.normals = normals.ToArray ();
-//			mesh.uv = uvs.ToArray ();
-//			mesh.RecalculateBounds ();
-//
-//		} else
-//		{
-//			Debug.LogError ( "too many verts!" );
-//			return;
-//		}
 
 		mesh.CombineMeshes ( combines );
 		Material mat = renderers [ 0 ].sharedMaterial;
