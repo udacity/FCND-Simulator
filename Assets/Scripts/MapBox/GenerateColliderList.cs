@@ -60,35 +60,41 @@ public class GenerateColliderList : MonoBehaviour
     void OnMapInitialized()
     {
 		Debug.Log ( "Initialized!" );
-        GameObject mapObject = mapScript.gameObject;
-        Collider[] allColliders = mapObject.GetComponentsInChildren<Collider>(includeInactiveColliders);
-        Vector3 size = Vector3.one * mapScript.UnityTileSize;
-        if (includeSurroundingTiles)
-            size *= 3;
-
-        colliders = new List<ColliderVolume>();
-        colliders.Add(new ColliderVolume(mapObject.transform.position, size));
-
-        allColliders.ForEach((x) =>
-      {
-          // skip the tile objects
-          if (x.GetComponent<UnityTile>() != null)
-              return;
-          colliders.Add(ColliderVolume.FromCollider(x));
-
-          //			if ( x is BoxCollider )
-          //				colliders.Add ( ColliderVolume.FromBoxCollider ( (BoxCollider) x ) );
-          //			else
-          //			if ( x is SphereCollider )
-          //				colliders.Add ( ColliderVolume.FromSphereCollider ( (SphereCollider) x ) );
-          //			else
-          //			if ( x is CapsuleCollider )
-          //				colliders.Add ( ColliderVolume.FromCapsuleCollider ( (CapsuleCollider) x ) );
-      });
-
-        if (OnCompleted != null)
-            OnCompleted();
+		transform.position = mapScript.transform.position;
+		GenerateColliders ();
     }
+
+	public void GenerateColliders ()
+	{
+		GameObject mapObject = mapScript.gameObject;
+		Collider[] allColliders = mapObject.GetComponentsInChildren<Collider> ( includeInactiveColliders );
+		Vector3 size = Vector3.one * mapScript.UnityTileSize;
+		if ( includeSurroundingTiles )
+			size *= 3;
+
+		colliders = new List<ColliderVolume> ();
+		colliders.Add ( new ColliderVolume ( mapObject.transform.position, size ) );
+
+		allColliders.ForEach ( (x) =>
+		{
+			// skip the tile objects
+			if ( x.GetComponent<UnityTile> () != null )
+				return;
+			colliders.Add ( ColliderVolume.FromCollider ( x ) );
+
+//			if ( x is BoxCollider )
+//				colliders.Add ( ColliderVolume.FromBoxCollider ( (BoxCollider) x ) );
+//			else
+//			if ( x is SphereCollider )
+//				colliders.Add ( ColliderVolume.FromSphereCollider ( (SphereCollider) x ) );
+//			else
+//			if ( x is CapsuleCollider )
+//				colliders.Add ( ColliderVolume.FromCapsuleCollider ( (CapsuleCollider) x ) );
+		} );
+
+		if ( OnCompleted != null )
+			OnCompleted ();
+	}
 
 #if UNITY_EDITOR
     void OnDrawGizmos()
