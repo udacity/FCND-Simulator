@@ -35,6 +35,7 @@ public class MotionPlanning : MonoBehaviour
         droneGO.GetComponent<QuadController>().NavigationUpdate();
         // TODO: explain where these magic numbers come from
         // drone.SetHome(-121.995635d, 37.412939d, 0.0d);
+        drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
@@ -83,7 +84,7 @@ public class MotionPlanning : MonoBehaviour
         return msgs;
     }
 
-    void CollidersToCSV()
+	void CollidersToCSV(bool regenerate = false)
     {
         var go = GameObject.Find("ColliderGatherer");
         if (go == null)
@@ -92,7 +93,9 @@ public class MotionPlanning : MonoBehaviour
             return;
         }
         var collidersGenerator = go.GetComponent<GenerateColliderList>();
-        var colliders = collidersGenerator.colliders;
+		if ( regenerate )
+			collidersGenerator.GenerateColliders ();
+		var colliders = collidersGenerator.colliders;
 
         SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
     }
@@ -175,7 +178,7 @@ public class MotionPlanning : MonoBehaviour
         // Save colliders file
         if (Input.GetButton("Shift Modifier") && Input.GetButtonDown("Save"))
         {
-            CollidersToCSV();
+			CollidersToCSV(true);
         }
     }
 }
