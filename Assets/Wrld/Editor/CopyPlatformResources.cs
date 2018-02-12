@@ -150,7 +150,7 @@ public class CopyPlatformResources : Editor
                     currentArch = "x86";
                     break;
                 }
-            case BuildTarget.StandaloneOSX:
+		case BuildTarget.StandaloneOSXIntel64:
                 {
                     currentArch = "Universal";
                     break;
@@ -172,7 +172,7 @@ public class CopyPlatformResources : Editor
                         break;
                     }
                 case BuildTarget.StandaloneOSXIntel:
-                case BuildTarget.StandaloneOSX:
+			case BuildTarget.StandaloneOSXIntel64:
                     {
                         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneOSXIntel64);
                         break;
@@ -217,7 +217,7 @@ public class CopyPlatformResources : Editor
                 PrepareForPlatform(RuntimePlatform.WindowsPlayer);
                 break;
             case BuildTarget.StandaloneOSXIntel:
-            case BuildTarget.StandaloneOSX:
+//		case BuildTarget.StandaloneOSXIntel64:
             case BuildTarget.StandaloneOSXIntel64:
                 PrepareForPlatform(RuntimePlatform.OSXPlayer);
                 break;

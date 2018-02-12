@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,8 @@ public class RaycastGenerateColliders : MonoBehaviour
 	public Transform testCube;
 	public float density = 50;
 
-	List<ColliderVolume> colliders;
+	[NonSerialized]
+	public List<ColliderVolume> colliders;
 
 	float nextTestViz;
 
@@ -21,11 +23,11 @@ public class RaycastGenerateColliders : MonoBehaviour
 	
 	void Update ()
 	{
-		if ( Input.GetButton ( "Shift Modifier" ) && Input.GetButtonDown ( "Save" ) )
-		{
-			GenerateColliders ();
+//		if ( Input.GetButton ( "Shift Modifier" ) && Input.GetButtonDown ( "Save" ) )
+//		{
+//			GenerateColliders ();
 //			CollidersToCSV ( true );
-		}
+//		}
 	}
 
 	#if UNITY_EDITOR
@@ -60,16 +62,16 @@ public class RaycastGenerateColliders : MonoBehaviour
 	}
 	#endif
 
-	void GenerateColliders ()
+	public void GenerateColliders (Action onComplete = null)
 	{
-		StartCoroutine ( DoGenerate () );
+		StartCoroutine ( DoGenerate ( onComplete ) );
 	}
 
-	IEnumerator DoGenerate ()
+	IEnumerator DoGenerate (Action onComplete = null)
 	{
 		Debug.Log ( "generating colliders..." );
 		yield return null;
-		System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch ();
+//		System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch ();
 		float distance = range * 2 / density;
 		float halfDistance = distance / 2;
 		Vector3 startPos = transform.position - Vector3.one * ( range - halfDistance );
@@ -86,7 +88,7 @@ public class RaycastGenerateColliders : MonoBehaviour
 			for ( int z = 0; z < density; z++ )
 			{
 				ray.origin = startPos + new Vector3 ( x * distance, 0, z * distance );
-				if ( Physics.Raycast ( ray, out hit, 1000, collisionMask ) )
+				if ( Physics.Raycast ( ray, out hit, 1000, collisionMask, QueryTriggerInteraction.Ignore ) )
 				{
 					if ( hit.point.y > 0 )
 					{
@@ -99,5 +101,7 @@ public class RaycastGenerateColliders : MonoBehaviour
 			}
 		}
 		Debug.Log ( colliders.Count + " generated" );
+		if ( onComplete != null )
+			onComplete ();
 	}
 }
