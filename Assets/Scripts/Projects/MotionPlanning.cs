@@ -92,13 +92,21 @@ public class MotionPlanning : MonoBehaviour
             Debug.Log("ColliderGatherer GameObject not found in scene ...");
             return;
         }
-        var collidersGenerator = go.GetComponent<GenerateColliderList>();
-		if ( regenerate )
-			collidersGenerator.GenerateColliders ();
-		var colliders = collidersGenerator.colliders;
 
-        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
+		var raycastColliderGen = go.GetComponent<RaycastGenerateColliders> ();
+		raycastColliderGen.GenerateColliders ( OnCollidersGenerated );
+//        var collidersGenerator = go.GetComponent<GenerateColliderList>();
+//		if ( regenerate )
+//			collidersGenerator.GenerateColliders ();
+//		var colliders = collidersGenerator.colliders;
+
+//        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
     }
+
+	void OnCollidersGenerated ()
+	{
+		SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
+	}
 
     void CreateFile(string path)
     {
@@ -109,19 +117,23 @@ public class MotionPlanning : MonoBehaviour
             Debug.Log("Overwriting previous file");
         }
 
-        var colliders = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>().colliders;
+		var colliders = GameObject.Find("ColliderGatherer").GetComponent<RaycastGenerateColliders>().colliders;
+//		var colliders = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>().colliders;
         var header = "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n";
 
         File.Create(filepath).Close();
         // for comparison
         File.AppendAllText(filepath, header);
+		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
         foreach (var c in colliders)
         {
             var pos = c.position;
             var hsize = c.halfSize;
             var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.x, pos.y, pos.z, hsize.x, hsize.y, hsize.z);
-            File.AppendAllText(filepath, row);
+			sb.Append ( row );
+//            File.AppendAllText(filepath, row);
         }
+		File.AppendAllText ( filepath, sb.ToString () );
     }
 
     void SetupLidarRays()
