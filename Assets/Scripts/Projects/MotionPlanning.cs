@@ -123,8 +123,10 @@ public class MotionPlanning : MonoBehaviour
 
         File.Create(filepath).Close();
         // for comparison
-        File.AppendAllText(filepath, header);
 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
+		sb.Append ( "lat0 " + Simulation.latitude0 + ", lon0 " + Simulation.longitude0 + "\n" );
+		sb.Append ( header );
+//        File.AppendAllText(filepath, header);
         foreach (var c in colliders)
         {
             var pos = c.position;

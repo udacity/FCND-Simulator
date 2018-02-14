@@ -9,9 +9,9 @@ namespace DroneControllers
     {
         public static QuadController ActiveController;
 
-        const double latitude0 = 37.412939d;
+//		public static double latitude0 = 37.792480d;
 
-        const double longitude0 = -121.995635d;
+//		public static double longitude0 = -122.397450d;
 
         // double homeLatitude = 37.412939d;
         double homeLatitude = 0;
@@ -473,7 +473,7 @@ namespace DroneControllers
         public double GetLatitude()
         {
             // return GPS.z + homeLatitude;
-            return GPS.z + latitude0;
+            return GPS.z + Simulation.latitude0;
         }
 
         public void SetHomeLatitude(double latitude)
@@ -499,7 +499,7 @@ namespace DroneControllers
         public double GetLongitude()
         {
             // return GPS.x + homeLongitude;
-            return GPS.x + longitude0;
+			return GPS.x + Simulation.longitude0;
         }
 
         public void SetHomeLongitude(double longitude)

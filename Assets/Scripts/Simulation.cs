@@ -46,6 +46,9 @@ public class Simulation
 		set { Instance.activeDrone = value; }
 	}
 
+	public static double latitude0 = 37.792480d;
+	public static double longitude0 = -122.397450d;
+
 	Action pauseEvent = delegate (bool pause) {};
 	bool paused;
 	float lastTimeScale = 1;
