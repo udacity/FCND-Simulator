@@ -26,6 +26,9 @@ public class SimParameter : ISerializationCallbackReceiver
 
 	ParameterAction onChanged = delegate {};
 	bool init;
+	[SerializeField]
+	[HideInInspector]
+	bool doNotSerialize;
 
 
 	public SimParameter ()
@@ -33,29 +36,22 @@ public class SimParameter : ISerializationCallbackReceiver
 //		SimParameters.AddParameter ( this );
 	}
 
-    public SimParameter(string label, float value)
-    {
-        displayName = label;
-        thisValue = value;
-        init = true;
-        SimParameters.AddParameter(this);
-    }
+	// to allow for declaring private variables at runtime
+	public SimParameter (string label, float value)
+	{
+		displayName = label;
+		thisValue = value;
+		init = true;
+		doNotSerialize = true;
+		SimParameters.AddParameter ( this );
+	}
 
-    public SimParameter(string label, float value, ParameterAction changeObserver)
-    {
-        displayName = label;
-        thisValue = value;
-        init = true;
-        SimParameters.AddParameter(this);
-        Observe(changeObserver);
-    }
+//	~SimParameter ()
+//	{
+//		SimParameters.RemoveParameter ( this );
+//	}
 
-    //	~SimParameter ()
-    //	{
-    //		SimParameters.RemoveParameter ( this );
-    //	}
-
-    public void Observe (ParameterAction changeObserver)
+	public void Observe (ParameterAction changeObserver)
 	{
 		onChanged += changeObserver;
 	}
@@ -79,7 +75,11 @@ public class SimParameter : ISerializationCallbackReceiver
 	/// </summary>
 	public void OnAfterDeserialize ()
 	{
-		if ( !init )
+		if ( doNotSerialize )
+		{
+			SimParameters.RemoveParameter ( this );
+		}
+		if ( !init && !doNotSerialize )
 		{
 			init = true;
 			SimParameters.AddParameter ( this );

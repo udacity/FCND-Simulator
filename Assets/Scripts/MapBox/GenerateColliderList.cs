@@ -48,46 +48,53 @@ public class GenerateColliderList : MonoBehaviour
 
     void Awake()
     {
-        //		mapScript.OnInitialized += OnMapInitialized;
+		mapScript.OnInitialized += OnMapInitialized;
 
         // invoking on a timer because apparently the map's OnCompleted is called the same frame as it starts but the "everything" is only instantiated on the next frame
         testCube = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
         Destroy(testCube.GetComponent<Collider>());
         testCube.transform.parent = transform;
-        Invoke("OnMapInitialized", 0.2f);
+//        Invoke("OnMapInitialized", 0.2f);
     }
 
     void OnMapInitialized()
     {
-        GameObject mapObject = mapScript.gameObject;
-        Collider[] allColliders = mapObject.GetComponentsInChildren<Collider>(includeInactiveColliders);
-        Vector3 size = Vector3.one * mapScript.UnityTileSize;
-        if (includeSurroundingTiles)
-            size *= 3;
-
-        colliders = new List<ColliderVolume>();
-        colliders.Add(new ColliderVolume(mapObject.transform.position, size));
-
-        allColliders.ForEach((x) =>
-      {
-          // skip the tile objects
-          if (x.GetComponent<UnityTile>() != null)
-              return;
-          colliders.Add(ColliderVolume.FromCollider(x));
-
-          //			if ( x is BoxCollider )
-          //				colliders.Add ( ColliderVolume.FromBoxCollider ( (BoxCollider) x ) );
-          //			else
-          //			if ( x is SphereCollider )
-          //				colliders.Add ( ColliderVolume.FromSphereCollider ( (SphereCollider) x ) );
-          //			else
-          //			if ( x is CapsuleCollider )
-          //				colliders.Add ( ColliderVolume.FromCapsuleCollider ( (CapsuleCollider) x ) );
-      });
-
-        if (OnCompleted != null)
-            OnCompleted();
+		Debug.Log ( "Initialized!" );
+		transform.position = mapScript.transform.position;
+		GenerateColliders ();
     }
+
+	public void GenerateColliders ()
+	{
+		GameObject mapObject = mapScript.gameObject;
+		Collider[] allColliders = mapObject.GetComponentsInChildren<Collider> ( includeInactiveColliders );
+		Vector3 size = Vector3.one * mapScript.UnityTileSize;
+		if ( includeSurroundingTiles )
+			size *= 3;
+
+		colliders = new List<ColliderVolume> ();
+		colliders.Add ( new ColliderVolume ( mapObject.transform.position, size ) );
+
+		allColliders.ForEach ( (x) =>
+		{
+			// skip the tile objects
+			if ( x.GetComponent<UnityTile> () != null )
+				return;
+			colliders.Add ( ColliderVolume.FromCollider ( x ) );
+
+//			if ( x is BoxCollider )
+//				colliders.Add ( ColliderVolume.FromBoxCollider ( (BoxCollider) x ) );
+//			else
+//			if ( x is SphereCollider )
+//				colliders.Add ( ColliderVolume.FromSphereCollider ( (SphereCollider) x ) );
+//			else
+//			if ( x is CapsuleCollider )
+//				colliders.Add ( ColliderVolume.FromCapsuleCollider ( (CapsuleCollider) x ) );
+		} );
+
+		if ( OnCompleted != null )
+			OnCompleted ();
+	}
 
 #if UNITY_EDITOR
     void OnDrawGizmos()

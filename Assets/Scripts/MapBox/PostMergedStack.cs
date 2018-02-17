@@ -37,6 +37,19 @@ public class PostMergedStack : ModifierStack
 	public override GameObject Execute (Mapbox.Unity.MeshGeneration.Data.UnityTile tile, Mapbox.Unity.MeshGeneration.Data.VectorFeatureUnity feature, Mapbox.Unity.MeshGeneration.Data.MeshData meshData, GameObject parent, string type = "")
 	{
 		GameObject parentGo = base.Execute (tile, feature, meshData, parent, type);
+//		Debug.Log ( parentGo.name );
+		// this stack is not meant to render anything on the parent object, only to contain objects inside
+		var filt = parentGo.GetComponent<MeshFilter> ();
+		if ( filt != null )
+			Destroy ( filt );
+		else
+			Debug.Log ( "filt null" );
+		var rend = parentGo.GetComponent<MeshRenderer> ();
+		if ( rend != null )
+			Destroy ( rend );
+		else
+			Debug.Log ( "rend null" );
+
 		MeshRenderer[] renderers = parent.GetComponentsInChildren<MeshRenderer> ();
 		MeshFilter[] filters = new MeshFilter[renderers.Length];
 		GameObject[] objects = new GameObject[renderers.Length];

@@ -16,6 +16,7 @@ namespace Drones
         {
             quadCtrl = GetComponent<QuadController>();
             simpleQuadCtrl = GetComponent<SimpleQuadController>();
+			Simulation.ActiveDrone = this;
         }
 
         public Vector3 Forward { get { return quadCtrl.Forward; } }
@@ -25,7 +26,8 @@ namespace Drones
         /// </summary>
         public Vector3 UnityCoords()
         {
-            return this.transform.position;
+			return quadCtrl.Position;
+//            return this.transform.position;
         }
 
         /// <summary>
@@ -208,6 +210,11 @@ namespace Drones
         {
             return this.simpleQuadCtrl.remote;
         }
+
+		public void Place (Vector3 location)
+		{
+			quadCtrl.SetPositionAndOrientation ( location, Quaternion.identity );
+		}
     }
 
 }

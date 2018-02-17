@@ -8,7 +8,7 @@ using TMPText = TMPro.TextMeshProUGUI;
 
 public class DroneUI : MonoBehaviour
 {
-
+	public Mapbox.Unity.Map.AbstractMap mapScript;
     public TMPText gpsText;
     public Image needleImage;
     public Image windArrow;
@@ -19,6 +19,11 @@ public class DroneUI : MonoBehaviour
     public UIParameter parameterPrefab;
     public RectTransform parametersParent;
     public GameObject pauseText;
+	public RawImage graphImage;
+
+	public GameObject controlsOverlay;
+	public GameObject parametersOverlay;
+	public GameObject plotOverlay;
 
     public bool localizeWind;
 
@@ -28,23 +33,34 @@ public class DroneUI : MonoBehaviour
     List<UIParameter> uiParameters;
 
     void Awake()
-    {
-        drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-        int quality = QualitySettings.GetQualityLevel();
-        toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
-        for (int i = 0; i < toggles.Length; i++)
-        {
-            toggles[i].isOn = (i == quality);
-        }
-        qualityGroup.NotifyToggleOn(toggles[quality]);
-        armWatcher = armButton.GetComponent<ButtonStateWatcher>();
-        guideWatcher = guideButton.GetComponent<ButtonStateWatcher>();
-        pauseText.gameObject.SetActive(false);
-        Simulation.Observe(OnSimulationPause);
-    }
+	{
+//        drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
+//        int quality = QualitySettings.GetQualityLevel();
+//        toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
+//        for (int i = 0; i < toggles.Length; i++)
+//        {
+//            toggles[i].isOn = (i == quality);
+//        }
+//        qualityGroup.NotifyToggleOn(toggles[quality]);
+		armWatcher = armButton.GetComponent<ButtonStateWatcher> ();
+		guideWatcher = guideButton.GetComponent<ButtonStateWatcher> ();
+		pauseText.gameObject.SetActive ( false );
+		Simulation.Observe ( OnSimulationPause );
+		// mapScript isn't available in every scene, so make sure to only try this if it's assigned
+		if ( mapScript != null )
+			mapScript.OnInitialized += OnMapInitialized;
+	}
 
     void Start()
     {
+		int quality = QualitySettings.GetQualityLevel();
+		toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
+		for (int i = 0; i < toggles.Length; i++)
+		{
+			toggles[i].isOn = (i == quality);
+		}
+		qualityGroup.NotifyToggleOn(toggles[quality]);
+		drone = Simulation.ActiveDrone;
         var parameters = SimParameters.Parameters;
         //		Debug.Log ( "there are " + parameters.Length + " parameters" );
         foreach (SimParameter p in parameters)
@@ -55,16 +71,25 @@ public class DroneUI : MonoBehaviour
             up.gameObject.SetActive(true);
             //			Debug.Log ( "parameter is " + p.displayName );
         }
+		graphImage.enabled = PlotViz.Instance.Count > 0;
     }
 
     void Update()
     {
+		if ( drone == null )
+		{
+			drone = Simulation.ActiveDrone;
+			return;
+		}
         UpdateArmedButton();
         UpdateGuidedButton();
     }
 
     void LateUpdate()
     {
+		if ( drone == null )
+			return;
+		
         // Updates UI drone position
         var lat = drone.Latitude();
         var lon = drone.Longitude();
@@ -106,6 +131,14 @@ public class DroneUI : MonoBehaviour
             windArrow.enabled = false;
         }
     }
+
+	void OnMapInitialized ()
+	{
+		var centerCoords = mapScript.CenterLatitudeLongitude;
+		Simulation.latitude0 = centerCoords.x;
+		Simulation.longitude0 = centerCoords.y;
+		drone.SetHome ( drone.Latitude (), drone.Longitude (), drone.Altitude () );
+	}
 
     // Toggles whether the drone is armed or disarmed.
     public void ArmButtonOnClick()
@@ -153,6 +186,53 @@ public class DroneUI : MonoBehaviour
             QualitySettings.SetQualityLevel(toggle);
         }
     }
+
+	public void OnOpenResolution (bool open)
+	{
+		Simulation.UIIsOpen = open;
+	}
+
+	public void OpenControlsOverlay ()
+	{
+		controlsOverlay.SetActive ( true );
+		parametersOverlay.SetActive ( false );
+		plotOverlay.SetActive ( false );
+		plotOverlay.GetComponent<PlottingUI> ().OnClose ();
+		PauseSimulation ( true );
+		Simulation.UIIsOpen = true;
+	}
+
+	public void OpenParametersOverlay ()
+	{
+		controlsOverlay.SetActive ( false );
+		parametersOverlay.SetActive ( true );
+		plotOverlay.SetActive ( false );
+		plotOverlay.GetComponent<PlottingUI> ().OnClose ();
+		graphImage.enabled = false;
+		PauseSimulation ( true );
+		Simulation.UIIsOpen = true;
+	}
+
+	public void OpenPlotOverlay ()
+	{
+		controlsOverlay.SetActive ( false );
+		parametersOverlay.SetActive ( false );
+		plotOverlay.SetActive ( true );
+		graphImage.enabled = false;
+		PauseSimulation ( true );
+		Simulation.UIIsOpen = true;
+	}
+
+	public void CloseOverlay ()
+	{
+		controlsOverlay.SetActive ( false );
+		parametersOverlay.SetActive ( false );
+		plotOverlay.SetActive ( false );
+		plotOverlay.GetComponent<PlottingUI> ().OnClose ();
+		graphImage.enabled = PlotViz.Instance.Count > 0;
+		PauseSimulation ( false );
+		Simulation.UIIsOpen = false;
+	}
 
     public void PauseSimulation(bool pause)
     {

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25f09effe9db3dd4e9e825475d698ca3, type: 3}
+  m_Name: Bld_S_Comm_Test
+  m_EditorClassIdentifier: 
+  _moveFeaturePositionTo: 0
+  MeshModifiers:
+  - {fileID: 11400000, guid: 2764c83df9c7e86489aed52e8cd278ae, type: 2}
+  - {fileID: 11400000, guid: 197bef1c2516cdf49be5fc58b2344f69, type: 2}
+  - {fileID: 11400000, guid: 78bb2aceeeba3574084c69193a695559, type: 2}
+  - {fileID: 11400000, guid: c60e9f7875be23c4e807de5fee5ab358, type: 2}
+  - {fileID: 11400000, guid: 2da614e561c25fc4da7fdcf5891fb4e3, type: 2}
+  GoModifiers:
+  - {fileID: 11400000, guid: a3b11f7e53f7fd4409cf329908016474, type: 2}
+  - {fileID: 11400000, guid: 8549d800ec1c5724584c95e603965939, type: 2}
+  - {fileID: 11400000, guid: b7b664c5d0b1dfd4ea8bf239a71912ef, type: 2}
+  - {fileID: 11400000, guid: 69c9fbc203d6e934ea944041d43ea709, type: 2}

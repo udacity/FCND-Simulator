@@ -69,6 +69,7 @@ namespace UdacityNetworking
 		event Action<ConnectionState> connectionEvent = delegate {};
 
 		ConnectionState lastConnectionState;
+		bool closing;
 
 		#if UNITY_WEBGL && !UNITY_EDITOR
 		List<RepeatingMessage> repeatingMessages = new List<RepeatingMessage> ();
@@ -76,6 +77,7 @@ namespace UdacityNetworking
 
 		void Start ()
 		{
+			closing = false;
 			if ( autoStartServer && autoStartClient )
 				Debug.LogWarning ( "AutoStartServer and AutoStartClient are both set. Server will override the client option" );
 			Timeout = timeout;
@@ -123,7 +125,7 @@ namespace UdacityNetworking
 		#if UNITY_WEBGL && !UNITY_EDITOR
 		void FixedUpdate ()
 		{
-			if ( connection != null && ( connection.IsServerStarted || connection.IsConnected ) )
+			if ( !closing && connection != null && ( connection.IsServerStarted || connection.IsConnected ) )
 			{
 				int count = repeatingMessages.Count;
 				for ( int i = 0; i < count; i++ )
@@ -146,6 +148,16 @@ namespace UdacityNetworking
 			}
 		}
 		#endif
+
+		void OnDestroy ()
+		{
+			if ( connection != null )
+			{
+				connection.Destroy ();
+				connection = null;
+			}
+			closing = true;
+		}
 		
 		public void StartServer ()
 		{
@@ -214,7 +226,7 @@ namespace UdacityNetworking
 /*		IEnumerator RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
 		{
 			float delay = 1f * delayMS / 1000f;
-			while ( true )
+			while ( !closing )
 			{
 				if ( connection != null && ( connection.IsServerStarted || connection.IsConnected ) )
 				{
@@ -231,7 +243,7 @@ namespace UdacityNetworking
 		#else
 		async Task RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
 		{
-			while ( true )
+			while ( !closing )
 			{
 				if ( connection != null && ( connection.IsServerStarted || connection.IsConnected ) )
 				{

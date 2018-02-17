@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DroneInterface;
 
 using Action = System.Action<bool>;
 
@@ -33,9 +34,25 @@ public class Simulation
 		}
 	}
 
+	public static bool UIIsOpen
+	{
+		get;
+		set;
+	}
+
+	public static IDrone ActiveDrone
+	{
+		get { return Instance.activeDrone; }
+		set { Instance.activeDrone = value; }
+	}
+
+	public static double latitude0 = 37.792480d;
+	public static double longitude0 = -122.397450d;
+
 	Action pauseEvent = delegate (bool pause) {};
 	bool paused;
 	float lastTimeScale = 1;
+	IDrone activeDrone;
 
 	void Pause ()
 	{
