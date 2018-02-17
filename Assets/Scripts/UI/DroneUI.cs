@@ -8,7 +8,7 @@ using TMPText = TMPro.TextMeshProUGUI;
 
 public class DroneUI : MonoBehaviour
 {
-
+	public Mapbox.Unity.Map.AbstractMap mapScript;
     public TMPText gpsText;
     public Image needleImage;
     public Image windArrow;
@@ -33,7 +33,7 @@ public class DroneUI : MonoBehaviour
     List<UIParameter> uiParameters;
 
     void Awake()
-    {
+	{
 //        drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
 //        int quality = QualitySettings.GetQualityLevel();
 //        toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
@@ -42,11 +42,14 @@ public class DroneUI : MonoBehaviour
 //            toggles[i].isOn = (i == quality);
 //        }
 //        qualityGroup.NotifyToggleOn(toggles[quality]);
-        armWatcher = armButton.GetComponent<ButtonStateWatcher>();
-        guideWatcher = guideButton.GetComponent<ButtonStateWatcher>();
-        pauseText.gameObject.SetActive(false);
-        Simulation.Observe(OnSimulationPause);
-    }
+		armWatcher = armButton.GetComponent<ButtonStateWatcher> ();
+		guideWatcher = guideButton.GetComponent<ButtonStateWatcher> ();
+		pauseText.gameObject.SetActive ( false );
+		Simulation.Observe ( OnSimulationPause );
+		// mapScript isn't available in every scene, so make sure to only try this if it's assigned
+		if ( mapScript != null )
+			mapScript.OnInitialized += OnMapInitialized;
+	}
 
     void Start()
     {
@@ -128,6 +131,14 @@ public class DroneUI : MonoBehaviour
             windArrow.enabled = false;
         }
     }
+
+	void OnMapInitialized ()
+	{
+		var centerCoords = mapScript.CenterLatitudeLongitude;
+		Simulation.latitude0 = centerCoords.x;
+		Simulation.longitude0 = centerCoords.y;
+		drone.SetHome ( drone.Latitude (), drone.Longitude (), drone.Altitude () );
+	}
 
     // Toggles whether the drone is armed or disarmed.
     public void ArmButtonOnClick()
