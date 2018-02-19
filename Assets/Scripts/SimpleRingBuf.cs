@@ -53,7 +53,7 @@ public class SimpleRingBuf<T>
 	public T[] Values ()
 	{
 		T[] values = new T[count];
-		for ( int i = 0; i < count; i++ )
+		for ( int i = 0; i < values.Length; i++ )
 		{
 			int index = ( start + i ) % items.Length;
 			if ( index < 0 || index >= items.Length )
@@ -64,7 +64,7 @@ public class SimpleRingBuf<T>
 			catch (System.Exception e )
 			{
 				Debug.LogException ( e );
-				Debug.LogError ( "index is " + index + ": start " + start + " i " + i + " count " + count );
+				Debug.LogError ( "values " + values.Length + " count " + count );
 			}
 //			values [ i ] = items [ ( start + i ) % items.Length ];
 		}
