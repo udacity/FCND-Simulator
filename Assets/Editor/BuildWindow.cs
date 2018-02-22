@@ -14,6 +14,7 @@ public class BuildWindow : EditorWindow
 	bool[] selectedBuildTargets;
 	string[] buildTargetNames;
 	BuildTarget[] buildTargets;
+	string baseBuildName;
 
 
 	[MenuItem ("Udacity/Build Window", false, 100)]
@@ -30,6 +31,7 @@ public class BuildWindow : EditorWindow
 	{
 		loaderSelected = false;
 		menuSelected = false;
+		baseBuildName = "FCND-Sim";
 	}
 
 	void Init ()
@@ -156,6 +158,11 @@ public class BuildWindow : EditorWindow
 		line.y += line.height;
 		line.y += line.height;
 
+
+		// select a name for the build
+		baseBuildName = EditorGUI.TextField ( new Rect ( 10, position.height - 100, 300, 20 ), "Build Name:", baseBuildName );
+
+
 		if ( GUI.Button ( new Rect ( 10, position.height - 40, 100, 25 ), "Clear" ) )
 		{
 			loaderSelected = false;
@@ -179,9 +186,17 @@ public class BuildWindow : EditorWindow
 				titleSize = GUI.skin.label.CalcSize ( content );
 				GUI.Label ( new Rect ( position.size.x / 2 - titleSize.x / 2, position.height - 40, 300, 25 ), content );
 			} else
-			if ( GUI.Button ( new Rect ( position.size.x / 2 - 75, position.height - 40, 150, 25 ), "Build Selected" ) )
 			{
-				Build ();
+				if ( string.IsNullOrWhiteSpace ( baseBuildName ) )
+				{
+					content = new GUIContent ( "Build name cannot be empty." );
+					titleSize = GUI.skin.label.CalcSize ( content );
+					GUI.Label ( new Rect ( position.size.x / 2 - titleSize.x / 2, position.height - 40, 300, 25 ), content );
+				} else
+				if ( GUI.Button ( new Rect ( position.size.x / 2 - 75, position.height - 40, 150, 25 ), "Build Selected" ) )
+				{
+					Build ();
+				}
 			}
 		} else
 		if ( buildTargetCount > 0 )
@@ -241,39 +256,31 @@ public class BuildWindow : EditorWindow
 
 	void Build (string[] scenes, BuildTarget target, string buildName, bool showBuilt)
 	{
-		string basePath = "Builds/FCND-Sim/";
-		string extension = "FCND-Sim_" + buildName + ".exe";
-		string settingPath = "FCND-Sim_" + buildName + "_Data";
-//		string settingPath = "FCND-Sim_Windows_Data";
-//		string extension = "FCND-Sim_Windows.exe";
+		string basePath = "Builds/" + baseBuildName + "/";
+		string extension = baseBuildName + "_" + buildName + ".exe";
+		string settingPath = baseBuildName + "_" + buildName + "_Data";
 
 		#if UNITY_2017_3_OR_NEWER
 		if ( target == BuildTarget.StandaloneOSX )
 		{
-			extension = "FCND-Sim_MacOS.app";
+			extension = baseBuildName + "_" + "MacOS.app";
 			settingPath = extension + "/Contents";
 		} else
 		if ( target == BuildTarget.StandaloneLinux || target == BuildTarget.StandaloneLinux64 || target == BuildTarget.StandaloneLinuxUniversal )
 		{
-			extension = "FCND-Sim_" + buildName;
-			settingPath = "FCND-Sim_" + buildName + "_Data";
-//			extension = "FCND-Sim_Linux";
-//			settingPath = "FCND-Sim_Linux_Data";
+			extension = baseBuildName + "_" + buildName;
+			settingPath = baseBuildName + "_" + buildName + "_Data";
 		}
 		#else
 		if ( target == BuildTarget.StandaloneOSXIntel || target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneOSXUniversal )
 		{
-			extension = "FCND-Sim_" + buildName + ".app";
+			extension = baseBuildName + "_" + buildName + ".app";
 			settingPath = extension + "/Contents";
-//			extension = "FCND-Sim_MacOS.app";
-//			settingPath = extension + "/Contents";
 		} else
 		if ( target == BuildTarget.StandaloneLinux || target == BuildTarget.StandaloneLinux64 || target == BuildTarget.StandaloneLinuxUniversal )
 		{
-			extension = "FCND_Sim_" + buildName;
-			settingPath = "FCND-Sim_" + buildName + "_Data";
-//			extension = "FCND-Sim_Linux";
-//			settingPath = "FCND-Sim_Linux_Data";
+			extension = baseBuildName + "_" + buildName;
+			settingPath = baseBuildName + "_" + buildName + "_Data";
 		}
 		#endif
 
