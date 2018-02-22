@@ -124,14 +124,22 @@ public class MotionPlanning : MonoBehaviour
         File.Create(filepath).Close();
         // for comparison
 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
-		sb.Append ( "lat0 " + Simulation.latitude0 + ", lon0 " + Simulation.longitude0 + "\n" );
+		string latString = Simulation.latitude0.ToString ();
+		string lonString = Simulation.longitude0.ToString ();
+		int length = latString.Split ( '.' ) [ 1 ].Length;
+		for ( int i = 0; i < ( 6 - length ); i++ )
+			latString += "0";
+		length = lonString.Split ( '.' ) [ 1 ].Length;
+		for ( int i = 0; i < ( 6 - length ); i++ )
+			lonString += "0";
+		sb.Append ( "lat0 " + latString + ", lon0 " + lonString + "\n" );
 		sb.Append ( header );
 //        File.AppendAllText(filepath, header);
         foreach (var c in colliders)
         {
             var pos = c.position;
             var hsize = c.halfSize;
-            var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.x, pos.y, pos.z, hsize.x, hsize.y, hsize.z);
+			var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.z, pos.x, pos.y, hsize.z, hsize.x, hsize.y);
 			sb.Append ( row );
 //            File.AppendAllText(filepath, row);
         }
