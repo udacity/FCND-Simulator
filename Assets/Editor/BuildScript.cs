@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -21,7 +21,7 @@ public class BuildScript : MonoBehaviour
 	[MenuItem ("Udacity/Build Linux", false, 22)]
 	static void BuildLinux ()
 	{
-		Build ( BuildTarget.StandaloneLinux );
+		Build ( BuildTarget.StandaloneLinuxUniversal );
 	}
 
 	[MenuItem ("Udacity/Build All", false, 23)]
@@ -29,7 +29,7 @@ public class BuildScript : MonoBehaviour
 	{
 		Build ( BuildTarget.StandaloneWindows, false );
 		Build ( BuildTarget.StandaloneOSXIntel64, false );
-		Build ( BuildTarget.StandaloneLinux );
+		Build ( BuildTarget.StandaloneLinuxUniversal, false );
 	}
 
 
@@ -52,7 +52,7 @@ public class BuildScript : MonoBehaviour
 			extension = "FCND-Sim_MacOS.app";
 			settingPath = extension + "/Contents";
 		} else
-			if ( target == BuildTarget.StandaloneLinux )
+		if ( target == BuildTarget.StandaloneLinuxUniversal )
 		{
 			extension = "FCND-Sim_Linux";
 			settingPath = "FCND-Sim_Linux_Data";
@@ -60,4 +60,4 @@ public class BuildScript : MonoBehaviour
 		
 		BuildPipeline.BuildPlayer ( scenes, basePath + extension, target, showBuilt ? BuildOptions.ShowBuiltPlayer : BuildOptions.None );
 	}
-}
+}*/

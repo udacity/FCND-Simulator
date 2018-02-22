@@ -16,9 +16,8 @@ namespace DroneControllers
         public bool positionControl = true;
         public bool remote = false;
 
-
         public float hDotInt;
-        float lastCommandTime;
+
         ///
         /// Control Gains
         ///
@@ -64,8 +63,6 @@ namespace DroneControllers
         public QuadMovementBehavior mb_GuidedAttCtrl;
         public QuadMovementBehavior mb_GuidedMotors;
 
-        public AttitudeControl attCtrl = new AttitudeControl();
-        public PositionControl posCtrl = new PositionControl();
         Vector3 attitudeTarget; //roll, pitch, yaw target in radians
         Vector3 positionTarget; //north, east, down target in meters
         Vector3 bodyRateTarget; //p, q, r target in radians/second
@@ -92,7 +89,9 @@ namespace DroneControllers
         Vector3 lastVelocityErrorBody = Vector3.zero;
         public QuadMovementBehavior currentMovementBehavior;
 
-        
+        public AttitudeControl attCtrl = new AttitudeControl();
+        public PositionControl posCtrl = new PositionControl();
+		bool alive;
 
 
         void Awake()
@@ -105,6 +104,7 @@ namespace DroneControllers
             }
             SelectMovementBehavior();
 			param2 = new SimParameter ( "Test", 0.1f );
+			alive = true;
         }
 
 		void Start ()
@@ -114,6 +114,13 @@ namespace DroneControllers
 			Plotting.AddPlottable1D ( "Velocity_x" );
 			Plotting.AddPlottable1D ( "Velocity_y" );
 			Plotting.AddPlottable1D ( "Velocity_z" );
+
+			System.Threading.Tasks.Task.Run ( () => Sample () );
+		}
+
+		void OnDestroy ()
+		{
+			alive = false;
 		}
 
         void LateUpdate()
@@ -127,9 +134,6 @@ namespace DroneControllers
                 }
 
             }
-
-            
-
             SelectMovementBehavior();
 
             if (armed)
@@ -140,9 +144,31 @@ namespace DroneControllers
             {
                 pos_set = false;
             }
-			Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), Time.time );
-			Plotting.AddSample ( "Pitch", controller.GetPitch (), Time.time );
+//			Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), Time.time );
+//			Plotting.AddSample ( "Pitch", controller.GetPitch (), Time.time );
         }
+
+		async System.Threading.Tasks.Task Sample ()
+		{
+//			System.Random rand = new System.Random ( (int) GetTime () );
+//			FastNoise fn = new FastNoise ( rand.Next () );
+//			double d2r = System.Math.PI / 180;
+			while ( alive )
+			{
+//				Plotting.AddSample ( "Altitude", (float) System.Math.Sin ( GetTime () * d2r ) * 3, GetTime () );
+				Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), GetTime () );
+                Plotting.AddSample("Pitch", (float)controller.GetPitch()*180.0f/Mathf.PI, GetTime());
+//				Debug.Log ( "added sample" );
+				await System.Threading.Tasks.Task.Delay ( 10 );
+			}
+		}
+
+		double GetTime ()
+		{
+			var now = System.DateTime.UtcNow;
+			var origin = new System.DateTime ( 1970, 1, 1, 0, 0, 0 );
+			return ( now - origin ).TotalSeconds;
+		}
 
         // Command the quad to a GPS location (latitude, relative_altitude, longitude)
         public void CommandGPS(double latitude, double longitude, double altitude)
@@ -170,7 +196,7 @@ namespace DroneControllers
                 guidedCommand.x = north;
                 guidedCommand.y = east;
                 guidedCommand.z = down;
-                guidedCommand.w = 0.0f;
+
                 // print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
                 // print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
             }
@@ -213,7 +239,6 @@ namespace DroneControllers
             guidedCommand.y = pitchMoment;
             guidedCommand.w = yawMoment;
             guidedCommand.z = thrust;
-            lastCommandTime = Time.time;
         }
         public void ArmVehicle()
         {
@@ -261,12 +286,6 @@ namespace DroneControllers
         {
             if (guided)
             {
-                //Check to make sure you've received a recent control input
-                if(!positionControl && (Time.time - lastCommandTime) > 0.5)
-                {
-                    CommandLocal(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
-                }
-
                 if (positionControl)
                 {
                     currentMovementBehavior = mb_GuidedPosCtrl;

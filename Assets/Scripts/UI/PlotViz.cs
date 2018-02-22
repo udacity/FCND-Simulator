@@ -37,6 +37,11 @@ public class PlotViz : MonoBehaviour
 	float lastLineWidth;
 	bool inUI;
 
+	void OnEnable ()
+	{
+		Plotting.Clear ();
+	}
+
 	void Awake ()
 	{
 		if ( instance != null && instance != this )
@@ -106,10 +111,11 @@ public class PlotViz : MonoBehaviour
 		{
 			var _plot = plots [ p ];
 			var samples = _plot.GetSamples ();
+//			Debug.Log ( "plottable " + _plot.label + " has " + samples.Length + " samples" );
 			if ( samples == null || samples.Length == 0 )
 				continue;
-			
-			float lastStamp = (float) samples [ samples.Length - 1 ].timestamp;
+
+			double lastStamp = samples [ samples.Length - 1 ].timestamp;
 			float curTime = 0;
 			samples = CullSamplesByTime ( samples, lastStamp - 5f, lastStamp );
 
@@ -126,7 +132,7 @@ public class PlotViz : MonoBehaviour
 			Vector3[] points = new Vector3[samples.Length];
 			for ( int i = 0; i < points.Length; i++ )
 			{
-				float x = Rescale ( lastStamp - 5f, lastStamp, leftPos, rightPos, (float) samples [ i ].timestamp );
+				float x = Rescale ( lastStamp - 5f, lastStamp, leftPos, rightPos, samples [ i ].timestamp );
 				points [ i ] = new Vector3 ( x, samples [ i ].value, 0 );
 			}
 			var _line = plotLines [ p ];
@@ -134,8 +140,8 @@ public class PlotViz : MonoBehaviour
 			_line.SetPositions ( points );
 
 			// ensure we're not doing too much per frame. for now yield every 2 plots, but not if we only have 2 plots
-			if ( p > 0 && ( p % 0 == 0 ) && p < plots.Count - 1 )
-				yield return null;
+			if ( p > 0 && ( p % 2 == 0 ) && p < plots.Count - 1 )
+				    yield return null;
 		}
 
 		// adjust scale all plots if necessary
@@ -199,10 +205,10 @@ public class PlotViz : MonoBehaviour
 		itemLine.SetPositions ( points );
 	}
 
-	TimedSample<float>[] CullSamplesByTime (TimedSample<float>[] samples, float start, float end)
+	TimedSample<float>[] CullSamplesByTime (TimedSample<float>[] samples, double start, double end)
 	{
-		double dst = Mathf.Min ( start, end );
-		double dend = Mathf.Max ( start, end );
+		double dst = System.Math.Min ( start, end );
+		double dend = System.Math.Max ( start, end );
 		Queue<TimedSample<float>> q = new Queue<TimedSample<float>> ();
 		for ( int i = samples.Length - 1; i >= 0; i-- )
 			if ( samples [ i ].timestamp >= start && samples [ i ].timestamp <= end )
@@ -267,9 +273,22 @@ public class PlotViz : MonoBehaviour
 		lastLineWidth = curWidth;
 	}
 
-	float Rescale (float inMin, float inMax, float outMin, float outMax, float value)
+	float Rescale (double inMin, double inMax, float outMin, float outMax, double value)
 	{
-		return Mathf.Lerp ( outMin, outMax, Mathf.InverseLerp ( inMin, inMax, value ) );
+		float lerp = 0;
+		double minMaxDelta = inMax - inMin;
+		double minValDelta = value - inMin;
+		if ( minMaxDelta != 0 )
+		{
+			lerp = (float) ( minValDelta / minMaxDelta );
+		}
+//		float lerp = (1 - t) * v0 + t * v1;
+//		float lerp = (1 - t) * inMin + t * inMax;
+//		float lerp = (inMin == value) ?
+//			0 :
+
+		return Mathf.Lerp ( outMin, outMax, lerp );
+//		return Mathf.Lerp ( outMin, outMax, Mathf.InverseLerp ( inMin, inMax, value ) );
 	}
 
 	void Scale ()

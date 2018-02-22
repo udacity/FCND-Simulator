@@ -59,7 +59,7 @@ public class FirstInstallActionsRunner : Editor
                 break;
             }
             case BuildTarget.StandaloneOSXIntel:
-            //case BuildTarget.StandaloneOSX:
+            case BuildTarget.StandaloneOSX:
             {
                 newTarget = BuildTarget.StandaloneOSXIntel64;
                 break;

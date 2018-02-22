@@ -79,11 +79,12 @@ namespace UdacityNetworking
 			}
 		}
 
-		void OnDestroy ()
+		public void Destroy ()
 		{
 			if ( socket.State == WebSocketState.Connecting || socket.State == WebSocketState.Open )
 			{
 				socket.Close ();
+				socket = null;
 			}
 		}
 	}

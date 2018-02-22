@@ -28,19 +28,29 @@ namespace UdaciPlot
 		Dictionary<string, Plottable<Vector2>> items2D = new Dictionary<string, Plottable<Vector2>> ();
 		Dictionary<string, Plottable<Vector3>> items3D = new Dictionary<string, Plottable<Vector3>> ();
 
+		public static void Clear ()
+		{
+			Instance.items1D.Clear ();
+			Instance.items2D.Clear ();
+			Instance.items3D.Clear ();
+		}
+
 		public static void AddPlottable1D (string title)
 		{
-			Instance.items1D.Add ( title, new Plottable<float> ( title, _comparer:CompareFloats ) );
+			if ( !Instance.items1D.ContainsKey ( title ) )
+				Instance.items1D.Add ( title, new Plottable<float> ( title, _comparer: CompareFloats ) );
 		}
 
 		public static void AddPlottable2D (string title)
 		{
-			Instance.items2D.Add ( title, new Plottable<Vector2> ( title, _comparer:CompareVector2 ) );
+			if ( !Instance.items2D.ContainsKey ( title ) )
+				Instance.items2D.Add ( title, new Plottable<Vector2> ( title, _comparer:CompareVector2 ) );
 		}
 
 		public static void AddPlottable3D (string title)
 		{
-			Instance.items3D.Add ( title, new Plottable<Vector3> ( title, _comparer:CompareVector3 ) );
+			if ( !Instance.items3D.ContainsKey ( title ) )
+				Instance.items3D.Add ( title, new Plottable<Vector3> ( title, _comparer:CompareVector3 ) );
 		}
 
 		public static void AddSample (string title, float value, double timestamp) {

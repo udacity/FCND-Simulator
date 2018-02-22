@@ -32,10 +32,10 @@ public class MotionPlanning : MonoBehaviour
     {
         droneGO = GameObject.Find("Quad Drone");
         drone = droneGO.GetComponent<QuadDrone>();
-        var qctrl = GameObject.Find("Quad Drone").GetComponent<QuadController>();
-        qctrl.NavigationUpdate();
+        droneGO.GetComponent<QuadController>().NavigationUpdate();
         // TODO: explain where these magic numbers come from
-        drone.SetHome(-121.995635d, 37.412939d, 0.0d);
+        // drone.SetHome(-121.995635d, 37.412939d, 0.0d);
+        drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
@@ -46,7 +46,7 @@ public class MotionPlanning : MonoBehaviour
         networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
         networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
-        networkController.EnqueueRecurringMessage(SensorInfo, Conversions.HertzToMilliSeconds(sensorIntervalHz));
+//        networkController.EnqueueRecurringMessage(SensorInfo, Conversions.HertzToMilliSeconds(sensorIntervalHz));
 
     }
 
@@ -54,7 +54,7 @@ public class MotionPlanning : MonoBehaviour
     {
         // Send multiple messages for different orientations
         var msgs = new List<byte[]>();
-//        print("Sensing distances ...");
+        //        print("Sensing distances ...");
         var pos = drone.UnityCoords();
         var collisions = Sensors.Lidar.Sense(droneGO, mavSensorLookup.Keys.ToList(), sensorRange);
 
@@ -84,7 +84,7 @@ public class MotionPlanning : MonoBehaviour
         return msgs;
     }
 
-    void CollidersToCSV()
+	void CollidersToCSV(bool regenerate = false)
     {
         var go = GameObject.Find("ColliderGatherer");
         if (go == null)
@@ -92,11 +92,21 @@ public class MotionPlanning : MonoBehaviour
             Debug.Log("ColliderGatherer GameObject not found in scene ...");
             return;
         }
-        var collidersGenerator = go.GetComponent<GenerateColliderList>();
-        var colliders = collidersGenerator.colliders;
 
-        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
+		var raycastColliderGen = go.GetComponent<RaycastGenerateColliders> ();
+		raycastColliderGen.GenerateColliders ( OnCollidersGenerated );
+//        var collidersGenerator = go.GetComponent<GenerateColliderList>();
+//		if ( regenerate )
+//			collidersGenerator.GenerateColliders ();
+//		var colliders = collidersGenerator.colliders;
+
+//        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
     }
+
+	void OnCollidersGenerated ()
+	{
+		SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
+	}
 
     void CreateFile(string path)
     {
@@ -107,19 +117,25 @@ public class MotionPlanning : MonoBehaviour
             Debug.Log("Overwriting previous file");
         }
 
-        var colliders = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>().colliders;
+		var colliders = GameObject.Find("ColliderGatherer").GetComponent<RaycastGenerateColliders>().colliders;
+//		var colliders = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>().colliders;
         var header = "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n";
 
         File.Create(filepath).Close();
         // for comparison
-        File.AppendAllText(filepath, header);
+		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
+		sb.Append ( "lat0 " + Simulation.latitude0 + ", lon0 " + Simulation.longitude0 + "\n" );
+		sb.Append ( header );
+//        File.AppendAllText(filepath, header);
         foreach (var c in colliders)
         {
             var pos = c.position;
             var hsize = c.halfSize;
             var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.x, pos.y, pos.z, hsize.x, hsize.y, hsize.z);
-            File.AppendAllText(filepath, row);
+			sb.Append ( row );
+//            File.AppendAllText(filepath, row);
         }
+		File.AppendAllText ( filepath, sb.ToString () );
     }
 
     void SetupLidarRays()
@@ -176,7 +192,7 @@ public class MotionPlanning : MonoBehaviour
         // Save colliders file
         if (Input.GetButton("Shift Modifier") && Input.GetButtonDown("Save"))
         {
-            CollidersToCSV();
+			CollidersToCSV(true);
         }
     }
 }

@@ -249,7 +249,7 @@ namespace UdacityNetworking
 			}
 		}
 
-		void OnDestroy ()
+		public void Destroy ()
 		{
 			running = false;
 //			listener.Stop ();

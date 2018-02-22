@@ -9,13 +9,14 @@ namespace DroneControllers
     {
         public static QuadController ActiveController;
 
-        const double latitude0 = 37.412939d;
+//		public static double latitude0 = 37.792480d;
 
-        const double longitude0 = -121.995635d;
+//		public static double longitude0 = -122.397450d;
 
-        double homeLatitude = 0.0d;
+        // double homeLatitude = 37.412939d;
+        double homeLatitude = 0;
 
-        double homeLongitude = 0.0d;
+        double homeLongitude = 0;
 
         public float ForceNoise = 2.0f;
 
@@ -179,10 +180,10 @@ namespace DroneControllers
 
         void Start()
         {
-			// for now disable this inertia thing
-//            rb.inertiaTensorRotation = Quaternion.identity;
+            // for now disable this inertia thing
+			rb.inertiaTensorRotation = Quaternion.identity;
             // For whatever reason, setting inertiaTensorRotation stops the quad from accepting commands (mostly torque) until it's deactivated and activated.
-//            QuadActivator.Activate(gameObject);
+			QuadActivator.Activate(gameObject);
         }
 
         private void OnDestroy()
@@ -471,7 +472,8 @@ namespace DroneControllers
         }
         public double GetLatitude()
         {
-            return GPS.z + latitude0;
+            // return GPS.z + homeLatitude;
+            return GPS.z + Simulation.latitude0;
         }
 
         public void SetHomeLatitude(double latitude)
@@ -496,7 +498,8 @@ namespace DroneControllers
 
         public double GetLongitude()
         {
-            return GPS.x + longitude0;
+            // return GPS.x + homeLongitude;
+			return GPS.x + Simulation.longitude0;
         }
 
         public void SetHomeLongitude(double longitude)
