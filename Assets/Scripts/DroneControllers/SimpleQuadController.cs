@@ -151,6 +151,7 @@ namespace DroneControllers
 			{
 //				Plotting.AddSample ( "Altitude", (float) System.Math.Sin ( GetTime () * d2r ) * 3, GetTime () );
 				Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), GetTime () );
+                Plotting.AddSample("Pitch", (float)controller.GetPitch()*180.0f/Mathf.PI, GetTime());
 //				Debug.Log ( "added sample" );
 				await System.Threading.Tasks.Task.Delay ( 10 );
 			}
