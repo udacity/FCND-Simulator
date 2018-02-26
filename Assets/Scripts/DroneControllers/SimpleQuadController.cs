@@ -7,8 +7,6 @@ namespace DroneControllers
     public class SimpleQuadController : MonoBehaviour
     {
 //		[System.NonSerialized]
-//		SimParameter param1;
-		SimParameter param2;
         public QuadController controller;
         public bool armed = false;
         public bool guided = false;
@@ -103,7 +101,6 @@ namespace DroneControllers
                 controller = GetComponent<QuadController>();
             }
             SelectMovementBehavior();
-			param2 = new SimParameter ( "Test", 0.1f );
 			alive = true;
         }
 

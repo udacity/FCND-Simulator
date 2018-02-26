@@ -7,13 +7,6 @@ namespace DroneControllers
     {
         SimpleQuadController ctrl;
 
-        public float maxTilt = 0.5f;
-        public float maxAscentRate = 5.0f;
-        public float maxDescentRate = 2.0f;
-
-        public float posHoldDeadband = 0.5f;
-        public float maxSpeed = 10.0f;
-
         [System.NonSerialized]
         public SimParameter paramKpRollrate;
         [System.NonSerialized]
@@ -42,7 +35,16 @@ namespace DroneControllers
         [System.NonSerialized]
         public SimParameter paramKpYaw;
 
-        private float hDotInt;
+        [System.NonSerialized]
+        public SimParameter paramMaxTilt;
+        [System.NonSerialized]
+        public SimParameter paramMaxAscentRate;
+        [System.NonSerialized]
+        public SimParameter paramMaxDescentRate;
+        [System.NonSerialized]
+        public SimParameter paramPosHoldDeadband;
+        [System.NonSerialized]
+        public SimParameter paramMaxSpeed;
 
         void Awake()
         {
@@ -67,9 +69,11 @@ namespace DroneControllers
 
             paramKpYaw = new SimParameter("yaw_gain_P", ctrl.posCtrl.Kp_yaw, OnYawKpChanged);
 
-
-
-
+            paramMaxTilt = new SimParameter("Max Tilt (rad)", ctrl.attCtrl.maxTilt, OnMaxTiltChanged);
+            paramMaxAscentRate = new SimParameter("Max Ascent Rate (m/s)", ctrl.attCtrl.maxAscentRate, OnMaxAscentRateChanged);
+            paramMaxDescentRate = new SimParameter("Max Descent Rate (m/s)", ctrl.attCtrl.maxDescentRate, OnMaxDescentRateChanged);
+            paramPosHoldDeadband = new SimParameter("Position Gain Radius (m)", ctrl.posCtrl.posHoldDeadband, OnPosHoldDeadbandChanged);
+            paramMaxSpeed = new SimParameter("Max Speed (m/s)", ctrl.posCtrl.maxSpeed, OnMaxSpeedChanged);
         }
         
 
@@ -135,7 +139,7 @@ namespace DroneControllers
 
         public void OnVelKpChanged(SimParameter p)
         {
-            Debug.Log("Kp_ve changed from: " + ctrl.posCtrl.Kp_vel + " to: " + p.Value);
+            Debug.Log("Kp_vel changed from: " + ctrl.posCtrl.Kp_vel + " to: " + p.Value);
             ctrl.posCtrl.Kp_vel= p.Value;
         }
 
@@ -143,6 +147,36 @@ namespace DroneControllers
         {
             Debug.Log("Kp_yaw changed from: " + ctrl.posCtrl.Kp_yaw + " to: " + p.Value);
             ctrl.posCtrl.Kp_yaw = p.Value;
+        }
+
+        public void OnMaxTiltChanged(SimParameter p)
+        {
+            Debug.Log("Max Tilt changed from: " + ctrl.attCtrl.maxTilt + "  to: " + p.Value);
+            ctrl.attCtrl.maxTilt= p.Value;
+        }
+
+        public void OnMaxAscentRateChanged(SimParameter p)
+        {
+            Debug.Log("Max Ascent Rate changed from: " + ctrl.attCtrl.maxAscentRate + " to: " + p.Value);
+            ctrl.attCtrl.maxAscentRate = p.Value;
+        }
+
+        public void OnMaxDescentRateChanged(SimParameter p)
+        {
+            Debug.Log("Max Descent Rate changed from: " + ctrl.attCtrl.maxDescentRate + " to: " + p.Value);
+            ctrl.attCtrl.maxDescentRate = p.Value;
+        }
+
+        public void OnPosHoldDeadbandChanged(SimParameter p)
+        {
+            Debug.Log("PosHoldDeadband changed from: " + ctrl.posCtrl.posHoldDeadband + " to: " + p.Value);
+            ctrl.posCtrl.posHoldDeadband = p.Value;
+        }
+
+        public void OnMaxSpeedChanged(SimParameter p)
+        {
+            Debug.Log("Max Speed changed from: " + ctrl.posCtrl.maxSpeed + " to: " + p.Value);
+            ctrl.posCtrl.maxSpeed = p.Value;
         }
     }
 }
