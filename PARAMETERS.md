@@ -1,7 +1,7 @@
 # Control Parameters
 The Unity simulator includes configurable parameters for control system (control gains and thresholds).
 To access them click the PARAMETERS buton the bottom of the simulator window. The following PARAMETERS window will pop up:
-![Image of PARAMETERWINDOW](parameterWindow.png)
+![Image of PARAMETERWINDOW](parameterWindow.PNG)
 ## Attitude Control 
 
 ### Control Gains
