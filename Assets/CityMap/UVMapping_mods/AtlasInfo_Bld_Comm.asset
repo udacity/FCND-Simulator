@@ -15,15 +15,71 @@ MonoBehaviour:
   - TextureRect:
       serializedVersion: 2
       x: 0
-      y: 0
+      y: 0.5
       width: 0.25
-      height: 1
+      height: 0.5
     MidFloorCount: 6
     ColumnCount: 3
-    TopSectionRatio: 0.25
-    BottomSectionRatio: 0.25
-    PreferredEdgeSectionLength: 10
+    TopSectionRatio: 0.125
+    BottomSectionRatio: 0.125
+    PreferredEdgeSectionLength: 20
     FloorHeight: 24
+    FirstFloorHeight: 3
+    TopFloorHeight: 3
+  - TextureRect:
+      serializedVersion: 2
+      x: 0.25
+      y: 0.5
+      width: 0.25
+      height: 0.5
+    MidFloorCount: 5
+    ColumnCount: 4
+    TopSectionRatio: 0.125
+    BottomSectionRatio: 0.125
+    PreferredEdgeSectionLength: 20
+    FloorHeight: 24
+    FirstFloorHeight: 3
+    TopFloorHeight: 3
+  - TextureRect:
+      serializedVersion: 2
+      x: 0.5
+      y: 0.5
+      width: 0.25
+      height: 0.5
+    MidFloorCount: 6
+    ColumnCount: 13
+    TopSectionRatio: 0.125
+    BottomSectionRatio: 0.125
+    PreferredEdgeSectionLength: 26
+    FloorHeight: 18
+    FirstFloorHeight: 3
+    TopFloorHeight: 3
+  - TextureRect:
+      serializedVersion: 2
+      x: 0.75
+      y: 0.5
+      width: 0.25
+      height: 0.5
+    MidFloorCount: 3
+    ColumnCount: 4
+    TopSectionRatio: 0.125
+    BottomSectionRatio: 0.125
+    PreferredEdgeSectionLength: 20
+    FloorHeight: 12
+    FirstFloorHeight: 3
+    TopFloorHeight: 3
+  - TextureRect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0.25
+      height: 0.5
+    MidFloorCount: 6
+    ColumnCount: 9
+    TopSectionRatio: 0.125
+    BottomSectionRatio: 0.125
+    PreferredEdgeSectionLength: 18
+    FloorHeight: 16
     FirstFloorHeight: 3
     TopFloorHeight: 3
   - TextureRect:
@@ -31,12 +87,40 @@ MonoBehaviour:
       x: 0.25
       y: 0
       width: 0.25
-      height: 1
-    MidFloorCount: 5
-    ColumnCount: 4
-    TopSectionRatio: 0.25
-    BottomSectionRatio: 0.25
-    PreferredEdgeSectionLength: 10
-    FloorHeight: 24
+      height: 0.5
+    MidFloorCount: 3
+    ColumnCount: 6
+    TopSectionRatio: 0.125
+    BottomSectionRatio: 0.125
+    PreferredEdgeSectionLength: 18
+    FloorHeight: 12
+    FirstFloorHeight: 3
+    TopFloorHeight: 3
+  - TextureRect:
+      serializedVersion: 2
+      x: 0.5
+      y: 0
+      width: 0.25
+      height: 0.5
+    MidFloorCount: 10
+    ColumnCount: 14
+    TopSectionRatio: 0.0625
+    BottomSectionRatio: 0.0625
+    PreferredEdgeSectionLength: 48
+    FloorHeight: 40
+    FirstFloorHeight: 3
+    TopFloorHeight: 3
+  - TextureRect:
+      serializedVersion: 2
+      x: 0.75
+      y: 0
+      width: 0.25
+      height: 0.5
+    MidFloorCount: 8
+    ColumnCount: 6
+    TopSectionRatio: 0.125
+    BottomSectionRatio: 0.125
+    PreferredEdgeSectionLength: 60
+    FloorHeight: 80
     FirstFloorHeight: 3
     TopFloorHeight: 3
