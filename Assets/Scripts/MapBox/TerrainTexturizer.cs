@@ -27,7 +27,16 @@ public class TerrainTexturizer : MeshModifier
 			return;
 
 		// start by finding the correct 'piece' (quadrant, etc) of the texture, by matching our feature type to one in the atlas
-		currentSection = FindTexture ( feature.Properties [ "type" ].ToString () );
+		object typeOrClassValue = null;
+		string typeOrClassString = "";
+		if ( feature.Properties.TryGetValue ( "type", out typeOrClassValue ) )
+			typeOrClassString = typeOrClassValue.ToString ();
+		else
+		if ( feature.Properties.TryGetValue ( "Class", out typeOrClassValue ) )
+			typeOrClassString = typeOrClassValue.ToString ();
+
+		currentSection = FindTexture ( typeOrClassString );
+//		currentSection = FindTexture ( feature.Properties [ "type" ].ToString () );
 		currentTextureRect = currentSection.textureRect;
 		currentSectionTiling = currentSection.tiling;
 
