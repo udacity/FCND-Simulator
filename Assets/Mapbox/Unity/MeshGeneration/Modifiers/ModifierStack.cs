@@ -184,8 +184,9 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			_tempVectorEntity.Mesh.subMeshCount = meshData.Triangles.Count;
 			_tempVectorEntity.Mesh.SetVertices(meshData.Vertices);
 			_tempVectorEntity.Mesh.SetNormals(meshData.Normals);
-			if (meshData.Tangents.Count > 0)
-				_tempVectorEntity.Mesh.SetTangents(meshData.Tangents);
+			bool tangentsMatch = meshData.Tangents.Count > 0 && meshData.Tangents.Count == meshData.Vertices.Count;
+			if ( tangentsMatch )
+				_tempVectorEntity.Mesh.SetTangents ( meshData.Tangents );
 
 
 			_counter = meshData.Triangles.Count;
@@ -199,6 +200,9 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				_tempVectorEntity.Mesh.SetUVs(i, meshData.UV[i]);
 			}
 
+			if ( !tangentsMatch )
+				_tempVectorEntity.Mesh.RecalculateTangents ();
+			
 			_tempVectorEntity.Transform.SetParent(parent.transform, false);
 
 			if (!_activeObjects.ContainsKey(tile))
