@@ -606,16 +606,20 @@ namespace Messaging
             // POSITION COMMAND
             if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_POSITION) == 0)
             {
+                drone.LocalPositionTarget(new Vector3(msg.x, msg.y, msg.z));
                 // TODO: Set the target variables
                 //Debug.Log("Position target (t= " + msg.time_boot_ms + "): " + msg.x + ", " + msg.y + ", " + msg.z);
+
             }
             else if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_VELOCITY) == 0)
             {
+                drone.LocalVelocityTarget(new Vector3(msg.vx, msg.vy, msg.vz));
                 // TODO: set the target variable
                 //Debug.Log("Velocity target (t= " + msg.time_boot_ms + "): " + msg.vx + ", " + msg.vy + ", " + msg.vz);
             }
             else if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_ACCELERATION) == 0)
             {
+                drone.LocalAccelerationTarget(new Vector3(msg.afx, msg.afy, msg.afz));
                 //Debug.Log("Acceleration target (t= " + msg.time_boot_ms + "): " + msg.afx + ", " + msg.afy + ", " + msg.afz);
             }
             
@@ -636,12 +640,14 @@ namespace Messaging
                 attitudeQ.y = msg.q[2];
                 attitudeQ.z = msg.q[3];
                 Vector3 attitudeEuler = attitudeQ.ToRHEuler();
+                drone.AttitudeTarget(attitudeEuler);
                 //Debug.Log("Attitude target (t= " + msg.time_boot_ms + "): " + attitudeEuler.x + ", " + attitudeEuler.y + ", " + attitudeEuler.z);
             }
             else if ((mask & (byte)SET_ATTITUDE_MASK.IGNORE_RATES) == 0)
             {
                 // TODO: set the target variable
                 //Debug.Log("Body Rate target (t= " + msg.time_boot_ms + "): " + msg.body_roll_rate + ", " + msg.body_pitch_rate + ", " + msg.body_yaw_rate);
+                drone.BodyRateTarget(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate));
             }
             else
             {

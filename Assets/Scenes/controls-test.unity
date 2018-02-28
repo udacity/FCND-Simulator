@@ -16713,11 +16713,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1881e074f3c2cbe418bff480235e2672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTilt: 0.5
-  maxAscentRate: 5
-  maxDescentRate: 2
-  posHoldDeadband: 0.5
-  maxSpeed: 10
+--- !u!114 &933914764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 933914757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a83ade300689764da8761d064b9bd38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &935634086
 Prefab:
   m_ObjectHideFlags: 0
@@ -25151,6 +25157,16 @@ Prefab:
     - target: {fileID: 4877410827521638, guid: e21ab0c8d4bc42b4583ac081a357a46a, type: 2}
       propertyPath: m_RootOrder
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 114157416754190350, guid: e21ab0c8d4bc42b4583ac081a357a46a,
+        type: 2}
+      propertyPath: lineWidthInUI
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 114157416754190350, guid: e21ab0c8d4bc42b4583ac081a357a46a,
+        type: 2}
+      propertyPath: lineWidth
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 64545272185492892, guid: e21ab0c8d4bc42b4583ac081a357a46a, type: 2}

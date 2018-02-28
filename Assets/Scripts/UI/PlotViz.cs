@@ -147,7 +147,9 @@ public class PlotViz : MonoBehaviour
 		// adjust scale all plots if necessary
 		max = Mathf.Max ( max, Mathf.Abs ( min ) );
 		max = Mathf.Ceil ( max / 5 ) * 2;
-		float scale = 1f / max;
+        float scale = 1f / max;
+        if (max == 0f)
+            scale = 1f;
 
 //		if ( max > 1000 )
 //			scale = 5000;
