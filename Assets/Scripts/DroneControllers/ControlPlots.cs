@@ -132,7 +132,7 @@ namespace DroneControllers
                 Plotting.AddSample(pTargetPitchRate, ctrl.bodyRateTarget.y * 180.0f / Mathf.PI, GetTime());
                 Plotting.AddSample(pTargetYawRate, ctrl.bodyRateTarget.z * 180.0f / Mathf.PI, GetTime());
 
-                await System.Threading.Tasks.Task.Delay(10);
+                await System.Threading.Tasks.Task.Delay(100);
             }
         }
 

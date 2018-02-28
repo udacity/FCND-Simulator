@@ -119,8 +119,7 @@ namespace DroneControllers
         {
             if (!attitudeControl&&!positionControl&&((Time.time - lastControlTime) > maxTimeBetweenControl))
             {
-                positionControl = true;
-                posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+                CommandLocal(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
             }
                 
             if (Input.GetButtonDown("Position Control"))
