@@ -58,8 +58,10 @@ public class PlottingUI : MonoBehaviour
 			Color c = Color.clear;
 			if ( i < presetColors.Length )
 				c = presetColors [ i ];
-			else
-				c = Random.ColorHSV ();
+            else
+                c = Random.ColorHSV();
+
+				
 			items [ i ].SetColor ( c );
 			if ( items [ i ].IsOn )
 				plotViz.SetColor ( items [ i ].Label, c );
