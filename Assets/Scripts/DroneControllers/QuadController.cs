@@ -7,6 +7,11 @@ namespace DroneControllers
 
     public class QuadController : MonoBehaviour
     {
+
+        public float vehicleMass = 2.0f;
+        public float Ixx = 1.0f;
+        public float Iyy = 1.0f;
+        public float Izz = 1.0f;
         public static QuadController ActiveController;
 
 //		public static double latitude0 = 37.792480d;
@@ -181,7 +186,10 @@ namespace DroneControllers
         void Start()
         {
             // for now disable this inertia thing
-			rb.inertiaTensorRotation = Quaternion.identity;
+            //rb.inertiaTensorRotation = Quaternion.identity;
+            rb.inertiaTensor = new Vector3(Izz, Iyy, Ixx);
+            rb.mass = vehicleMass;
+
             // For whatever reason, setting inertiaTensorRotation stops the quad from accepting commands (mostly torque) until it's deactivated and activated.
 			QuadActivator.Activate(gameObject);
         }
