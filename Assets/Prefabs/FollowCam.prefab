@@ -178,8 +178,18 @@ MonoBehaviour:
   height: 4
   zoomSpeed: 4
   rotateSpeed: 2
-  autoAlign: 0
-  poseType: 0
+  zoomLevels:
+  - {x: 1.5, y: Infinity}
+  - {x: 3.5, y: Infinity}
+  - {x: 8, y: Infinity}
+  - {x: 20, y: Infinity}
+  - {x: 50, y: Infinity}
+  - {x: 150, y: 70}
+  - {x: 300, y: 80}
+  - {x: 800, y: 90}
+  initialZoomLevel: 1
+  curZoomLevel: 1
+  transitionDuration: 0.3
   blurRotors: 1
   cam: {fileID: 0}
 --- !u!114 &114907463642095980

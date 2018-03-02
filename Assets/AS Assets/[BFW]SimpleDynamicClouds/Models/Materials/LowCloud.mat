@@ -106,7 +106,7 @@ Material:
     - _Sharpness: 0.712
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: -0.25
+    - _Speed: -0.05
     - _SrcBlend: 5
     - _UVSec: 0
     - _ZWrite: 0
