@@ -3,15 +3,6 @@ using UnityStandardAssets.ImageEffects;
 using DroneControllers;
 using DroneInterface;
 
-public enum CameraPoseType
-{
-    XNorm,
-    YNorm,
-    ZNorm,
-    Iso,
-    Free
-}
-
 public class FollowCamera : MonoBehaviour
 {
     public static FollowCamera activeCamera;
@@ -24,9 +15,10 @@ public class FollowCamera : MonoBehaviour
     public float zoomSpeed = 4;
     public float rotateSpeed = 2;
 
-    public bool autoAlign = false;
-    //	public Vector3 forward;
-    public CameraPoseType poseType;
+    public Vector2[] zoomLevels;
+	public int initialZoomLevel;
+	public int curZoomLevel;
+	public float transitionDuration = 0.5f;
 
     public bool blurRotors = true;
 
@@ -37,6 +29,10 @@ public class FollowCamera : MonoBehaviour
     float initialFollowDistance;
 
     float rmbTime;
+	bool isInTransition;
+	float transitionTime;
+	int lastZoomLevel;
+	float lastAngle;
 
     void Awake()
     {
@@ -45,12 +41,15 @@ public class FollowCamera : MonoBehaviour
         initialFollowDistance = followDistance;
         cam = GetComponent<Camera>();
         cam.depthTextureMode |= DepthTextureMode.MotionVectors;
+		curZoomLevel = initialZoomLevel;
 //		target = targetTransform.GetComponent<IDrone> ();
     }
 
     void Start()
     {
 		target = targetTransform.GetComponent<IDrone> ();
+		ResetRotation ();
+		lastAngle = transform.localEulerAngles.x;
     }
 
     void LateUpdate()
@@ -77,70 +76,118 @@ public class FollowCamera : MonoBehaviour
 
 		if ( !Simulation.UIIsOpen )
 		{
-			float scroll = Input.GetAxis ( "Mouse ScrollWheel" );
-			float zoom = -scroll * zoomSpeed;
-			followDistance += zoom;
-			followDistance = Mathf.Clamp ( followDistance, 1.5f, 20 );
+			if ( isInTransition )
+			{
+				Vector2 curZoom = zoomLevels [ curZoomLevel ];
+				Vector2 lastZoom = zoomLevels [ lastZoomLevel ];
+				transitionTime += Time.deltaTime;
+				Vector3 euler = transform.localEulerAngles;
+				float t = transitionTime / transitionDuration;
+				if ( transitionTime >= transitionDuration )
+				{
+					followDistance = curZoom.x;
+					if ( curZoom.y == Mathf.Infinity )
+						euler.x = lastAngle;
+					else
+						euler.x = curZoom.y;
+					isInTransition = false;
+					transform.position = target.UnityCoords () - transform.forward * followDistance;
+					return;
+
+				} else
+				{
+					followDistance = Mathf.SmoothStep ( lastZoom.x, curZoom.x, t );
+					if ( curZoom.y == Mathf.Infinity )
+					{
+						if ( lastZoom.y != Mathf.Infinity )
+							euler.x = Mathf.SmoothStep ( lastZoom.y, lastAngle, t );
+						
+					} else
+					{
+						if ( lastZoom.y == Mathf.Infinity )
+							euler.x = Mathf.SmoothStep ( lastAngle, curZoom.y, t );
+						else
+							euler.x = Mathf.SmoothStep ( lastZoom.y, curZoom.y, t );
+					}
+					transform.localEulerAngles = euler;
+				}
+			} else
+			{
+				float scroll = Input.GetAxis ( "Mouse ScrollWheel" );
+				if ( scroll == 0 )
+				{
+					scroll = Input.GetAxis ( "Camera Zoom" );
+				}
+				if ( scroll != 0 )
+				{
+					transitionTime = 0;
+					lastZoomLevel = curZoomLevel;
+					if ( scroll > 0 && curZoomLevel > 0 )
+						curZoomLevel--;
+					else
+					if ( scroll < 0 && curZoomLevel < zoomLevels.Length - 1 )
+						curZoomLevel++;
+
+					if ( curZoomLevel != lastZoomLevel )
+					{
+						isInTransition = true;
+						if ( zoomLevels [ lastZoomLevel ].y == Mathf.Infinity && zoomLevels [ curZoomLevel ].y != Mathf.Infinity )
+							lastAngle = transform.localEulerAngles.x;
+					}
+					
+//					float zoom = -scroll * zoomSpeed;
+//					followDistance += zoom;
+//					followDistance = Mathf.Clamp ( followDistance, zoomLevels [ 0 ].x, zoomLevels [ zoomLevels.Length - 1 ].x );
+				}
+			}
 			
 			if ( Input.GetMouseButtonDown ( 1 ) )
 				rmbTime = Time.time;
-			if ( Input.GetMouseButtonUp ( 1 ) && Time.time - rmbTime < 0.1f )
+			if ( Input.GetMouseButtonUp ( 1 ) && Time.time - rmbTime < 0.1f && zoomLevels [ curZoomLevel ].y == Mathf.Infinity )
 			{
-				Vector3 euler = transform.eulerAngles;
-				euler.x = 45;
-				euler.y = targetTransform.eulerAngles.y;
-				transform.eulerAngles = euler;
+				ResetRotation ();
 			}
-			
+
+			// check for mouse pan
 			bool isRMB = Input.GetMouseButton ( 1 );
 			if ( isRMB && Time.time - rmbTime > 0.2f )
 			{
 				float x = Input.GetAxis ( "Mouse X" );
 				transform.RotateAround ( target.UnityCoords (), Vector3.up, x * rotateSpeed );
-				// transform.Rotate ( Vector3.up * x * rotateSpeed, Space.World );
-				float y = Input.GetAxis ( "Mouse Y" );
-				transform.RotateAround ( target.UnityCoords (), transform.right, -y * rotateSpeed );
+				if ( zoomLevels[curZoomLevel].y == Mathf.Infinity )
+				{
+					float y = Input.GetAxis ( "Mouse Y" );
+					transform.RotateAround ( target.UnityCoords (), transform.right, -y * rotateSpeed );
+				}
 			}
+			// check for keyboard pan
+			float tilt = Input.GetAxis ( "Camera Tilt" );
+			float yaw = Input.GetAxis ( "Camera Yaw" );
+			if ( tilt != 0 && zoomLevels [ curZoomLevel ].y == Mathf.Infinity )
+				transform.RotateAround ( target.UnityCoords (), transform.right, tilt * 180 * Time.deltaTime );
+			if ( yaw != 0 )
+				transform.RotateAround ( target.UnityCoords (), Vector3.up, yaw * 180 * Time.deltaTime );
 			
-			if ( !isRMB )
-			{
-				Vector3 targetForward = Vector3.ProjectOnPlane ( target.Forward, Vector3.up ).normalized;
-				Vector3 myForward = Vector3.ProjectOnPlane ( transform.forward, Vector3.up ).normalized;
-				float angle = Vector3.Angle ( targetForward, myForward );
-				Quaternion q = Quaternion.FromToRotation ( myForward, targetForward ) * transform.rotation;
-				
-				angle = Mathf.Max ( angle, 5f );
-				transform.rotation = Quaternion.RotateTowards ( transform.rotation, q, angle * 3 * Time.deltaTime );
-			}
+//			if ( !isRMB )
+//			{
+//				Vector3 targetForward = Vector3.ProjectOnPlane ( target.Forward, Vector3.up ).normalized;
+//				Vector3 myForward = Vector3.ProjectOnPlane ( transform.forward, Vector3.up ).normalized;
+//				float angle = Vector3.Angle ( targetForward, myForward );
+//				Quaternion q = Quaternion.FromToRotation ( myForward, targetForward ) * transform.rotation;
+//				
+//				angle = Mathf.Max ( angle, 5f );
+//				transform.rotation = Quaternion.RotateTowards ( transform.rotation, q, angle * 3 * Time.deltaTime );
+//			}
 		}
 
 		transform.position = target.UnityCoords () - transform.forward * followDistance;
     }
 
-//    public void ChangePoseType(CameraPoseType newType)
-//    {
-//        poseType = newType;
-//
-//        switch (poseType)
-//        {
-//            case CameraPoseType.XNorm:
-//                targetRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
-//                break;
-//
-//            case CameraPoseType.YNorm:
-//                targetRotation = Quaternion.LookRotation(-Vector3.right, Vector3.up);
-//                break;
-//
-//            case CameraPoseType.ZNorm:
-//                targetRotation = Quaternion.LookRotation(-Vector3.up, (Vector3.forward - Vector3.right).normalized);
-//                break;
-//
-//            case CameraPoseType.Iso:
-//            case CameraPoseType.Free:
-//                targetRotation = Quaternion.LookRotation((Vector3.forward - Vector3.right - Vector3.up).normalized, (Vector3.forward - Vector3.right + Vector3.up).normalized);
-//                break;
-//        }
-//
-//        setRotationFlag = true;
-//    }
+	void ResetRotation ()
+	{
+		Vector3 euler = transform.eulerAngles;
+		euler.x = 45;
+		euler.y = targetTransform.eulerAngles.y;
+		transform.eulerAngles = euler;
+	}
 }
