@@ -140,14 +140,16 @@ public class PlotViz : MonoBehaviour
 			_line.SetPositions ( points );
 
 			// ensure we're not doing too much per frame. for now yield every 2 plots, but not if we only have 2 plots
-			if ( p > 0 && ( p % 0 == 0 ) && p < plots.Count - 1 )
-				yield return null;
+			if ( p > 0 && ( p % 2 == 0 ) && p < plots.Count - 1 )
+				    yield return null;
 		}
 
 		// adjust scale all plots if necessary
 		max = Mathf.Max ( max, Mathf.Abs ( min ) );
 		max = Mathf.Ceil ( max / 5 ) * 2;
-		float scale = 1f / max;
+        float scale = 1f / max;
+        if (max == 0f)
+            scale = 1f;
 
 //		if ( max > 1000 )
 //			scale = 5000;

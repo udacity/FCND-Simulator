@@ -7,8 +7,6 @@ namespace DroneControllers
     public class SimpleQuadController : MonoBehaviour
     {
 //		[System.NonSerialized]
-//		SimParameter param1;
-		SimParameter param2;
         public QuadController controller;
         public bool armed = false;
         public bool guided = false;
@@ -21,7 +19,7 @@ namespace DroneControllers
         ///
         /// Control Gains
         ///
-
+        /*
         public float Kp_hdot = 10.0f;
         public float Kp_yaw = 6.5f;
         public float Kp_r = 20.0f;
@@ -37,10 +35,11 @@ namespace DroneControllers
         public float Ki_hdot = 0.1f;
 
         // Vehicle control thresholds
-        public float posctl_band = 0.1f;
+        
         public float posHoldDeadband = 1.0f;
         public float velDeadband = 1.0f;
         public float moveSpeed = 10;
+        
         // in radians
         public float turnSpeed = 2.0f;
         public float thrustForce = 25.0f;
@@ -49,7 +48,10 @@ namespace DroneControllers
         public float maxTilt = 0.5f;
         public float maxAscentRate = 5.0f;
         public float maxDescentRate = 2.0f;
-
+        */
+        public float posctl_band = 0.1f;
+        private float lastControlTime = 0.0f;
+        public float maxTimeBetweenControl = 0.1f;
         // Movement behaviors are enabled based on the active control mode.
         // Movement behavior hierachy:
         // - Manual
@@ -63,6 +65,12 @@ namespace DroneControllers
         public QuadMovementBehavior mb_GuidedAttCtrl;
         public QuadMovementBehavior mb_GuidedMotors;
 
+        public Vector3 attitudeTarget = Vector3.zero; //roll, pitch, yaw target in radians
+        public Vector3 positionTarget = Vector3.zero; //north, east, down target in meters
+        public Vector3 bodyRateTarget = Vector3.zero; //p, q, r target in radians/second
+        public Vector3 velocityTarget = Vector3.zero; //north, east, down, velocity targets in meters/second
+        public Vector3 accelerationTarget = Vector3.zero; //north, east, down acceleration targets in meters/second^2
+        public Vector4 momentThrustTarget = Vector4.zero; //body x, y, z moment target (in Newton*meters), thrust target in Newstons
 
         [System.NonSerialized]
         public Rigidbody rb;
@@ -97,28 +105,23 @@ namespace DroneControllers
                 controller = GetComponent<QuadController>();
             }
             SelectMovementBehavior();
-			param2 = new SimParameter ( "Test", 0.1f );
 			alive = true;
         }
 
 		void Start ()
 		{
-			Plotting.AddPlottable1D ( "Altitude" );
-			Plotting.AddPlottable1D ( "Pitch" );
-			Plotting.AddPlottable1D ( "Velocity_x" );
-			Plotting.AddPlottable1D ( "Velocity_y" );
-			Plotting.AddPlottable1D ( "Velocity_z" );
 
-			System.Threading.Tasks.Task.Run ( () => Sample () );
 		}
 
-		void OnDestroy ()
-		{
-			alive = false;
-		}
+
 
         void LateUpdate()
         {
+            if (!attitudeControl&&!positionControl&&((Time.time - lastControlTime) > maxTimeBetweenControl))
+            {
+                CommandLocal(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+            }
+                
             if (Input.GetButtonDown("Position Control"))
             {
                 positionControl = !positionControl;
@@ -138,30 +141,9 @@ namespace DroneControllers
             {
                 pos_set = false;
             }
-//			Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), Time.time );
-//			Plotting.AddSample ( "Pitch", controller.GetPitch (), Time.time );
+//			
         }
 
-		async System.Threading.Tasks.Task Sample ()
-		{
-//			System.Random rand = new System.Random ( (int) GetTime () );
-//			FastNoise fn = new FastNoise ( rand.Next () );
-//			double d2r = System.Math.PI / 180;
-			while ( alive )
-			{
-//				Plotting.AddSample ( "Altitude", (float) System.Math.Sin ( GetTime () * d2r ) * 3, GetTime () );
-				Plotting.AddSample ( "Altitude", (float) controller.GetAltitude (), GetTime () );
-//				Debug.Log ( "added sample" );
-				await System.Threading.Tasks.Task.Delay ( 10 );
-			}
-		}
-
-		double GetTime ()
-		{
-			var now = System.DateTime.UtcNow;
-			var origin = new System.DateTime ( 1970, 1, 1, 0, 0, 0 );
-			return ( now - origin ).TotalSeconds;
-		}
 
         // Command the quad to a GPS location (latitude, relative_altitude, longitude)
         public void CommandGPS(double latitude, double longitude, double altitude)
@@ -180,6 +162,12 @@ namespace DroneControllers
                 positionControl = true;
                 attitudeControl = false;
 
+                positionTarget.x = north;
+                positionTarget.y = east;
+                positionTarget.z = down;
+
+                attitudeTarget.z = 0.0f;
+
                 guidedCommand.x = north;
                 guidedCommand.y = east;
                 guidedCommand.z = down;
@@ -191,6 +179,7 @@ namespace DroneControllers
 
         public void CommandHeading(float heading)
         {
+            attitudeTarget.z = heading;
             guidedCommand.w = heading;
         }
 
@@ -198,6 +187,12 @@ namespace DroneControllers
         {
 
             positionControl = false;
+
+
+            attitudeTarget.x = roll;
+            attitudeTarget.y = pitch;
+            bodyRateTarget.z = yawRate;
+            momentThrustTarget.w = thrust;
 
             guidedCommand.x = roll;
             guidedCommand.y = pitch;
@@ -210,10 +205,16 @@ namespace DroneControllers
         {
             positionControl = false;
             attitudeControl = false;
+
+            momentThrustTarget.x = rollMoment;
+            momentThrustTarget.y = pitchMoment;
+            momentThrustTarget.z = yawMoment;
+            momentThrustTarget.w = thrust;
             guidedCommand.x = rollMoment;
             guidedCommand.y = pitchMoment;
             guidedCommand.w = yawMoment;
             guidedCommand.z = thrust;
+            lastControlTime = Time.time;
         }
         public void ArmVehicle()
         {
@@ -223,6 +224,10 @@ namespace DroneControllers
                 guidedCommand.x = controller.GetLocalNorth();
                 guidedCommand.y = controller.GetLocalEast();
                 guidedCommand.z = controller.GetLocalDown();
+
+                positionTarget.x = guidedCommand.x;
+                positionTarget.y = guidedCommand.y;
+                positionTarget.z = guidedCommand.z;
             }
             else
             {
@@ -287,6 +292,42 @@ namespace DroneControllers
                 }
             }
             currentMovementBehavior.OnSelect(this);
+        }
+
+        public Vector3 GetPositionTarget()
+        {
+            return new Vector3(positionTarget.x, positionTarget.y, positionTarget.z);
+        }
+
+
+        public Vector3 GetVelocityTarget()
+        {
+            return new Vector3(velocityTarget.x, velocityTarget.y, velocityTarget.z);
+        }
+
+        public Vector3 GetAccelerationTarget()
+        {
+            return new Vector3(accelerationTarget.x, accelerationTarget.y, accelerationTarget.y);
+        }
+
+        public Vector3 GetAttitudeTarget()
+        {
+            return new Vector3(attitudeTarget.x, attitudeTarget.y, attitudeTarget.z);
+        }
+
+        public Vector3 GetBodyRateTarget()
+        {
+            return new Vector3(bodyRateTarget.x, bodyRateTarget.y, bodyRateTarget.z);
+        }
+
+        public Vector3 GetMomentTarget()
+        {
+            return new Vector3(momentThrustTarget.x, momentThrustTarget.y, momentThrustTarget.z);
+        }
+
+        public float GetThrustTarget()
+        {
+            return momentThrustTarget.w;
         }
     }
 }

@@ -47,13 +47,22 @@ namespace MovementBehaviors
             }
 
             Vector3 targetPosition = controller.posHoldLocal;
+            controller.positionTarget = targetPosition;
+            
 
             float yawMoment = attCtrl.YawRateLoop(yawCmd, angularVelocity.z);
             Vector3 targetVelocity = posCtrl.PositionLoop(targetPosition, localPosition);
+            controller.velocityTarget = targetVelocity;
 
             Vector2 targetRollPitch = posCtrl.VelocityLoop(targetVelocity, localVelocity, attitude.z);
+            controller.attitudeTarget.x = targetRollPitch.x;
+            controller.attitudeTarget.y = targetRollPitch.y;
+
 
             Vector2 targetRate = attCtrl.RollPitchLoop(targetRollPitch, attitude);
+            controller.bodyRateTarget.x = targetRate.x;
+            controller.bodyRateTarget.y = targetRate.y;
+            controller.bodyRateTarget.z = yawCmd;
             Vector2 rollPitchMoment = attCtrl.RollPitchRateLoop(targetRate, angularVelocity);
 
             float thrust = controller.attCtrl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z, Time.deltaTime, -1.0f * controller.rb.mass * Physics.gravity[1]);
