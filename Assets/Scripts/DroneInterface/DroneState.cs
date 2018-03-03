@@ -104,6 +104,36 @@ namespace DroneInterface
         Vector3 LinearAcceleration();
 
         /// <summary>
+        /// Sets the value of the position target for visualization in m
+        /// Note: Does not command the vehicle
+        /// </summary>
+        void LocalPositionTarget(Vector3 v);
+
+        /// <summary>
+        /// Sets the value of the velocity target for visualization in m
+        /// Note: Does not command the vehicle
+        /// </summary>
+        void LocalVelocityTarget(Vector3 v);
+
+        /// <summary>
+        /// Sets the value of the acceleration target for visualization in m
+        /// Note: Does not command the vehicle
+        /// </summary>
+        void LocalAccelerationTarget(Vector3 v);
+
+        /// <summary>
+        /// Sets the value of the attitude target for visualization in m
+        /// Note: Does not command the vehicle
+        /// </summary>
+        void AttitudeTarget(Vector3 v);
+
+        /// <summary>
+        /// Sets the value of the body rate target for visualization in m
+        /// Note: Does not command the vehicle
+        /// </summary>
+        void BodyRateTarget(Vector3 v);
+
+        /// <summary>
         /// TODO: flesh this out more, determine if it's necessary.
         /// Returns whether the drone is executing a command (we possibly return the info about the command being executed).
         /// I'm not sure this is a required method but it seems it could be useful.

@@ -190,4 +190,29 @@ public class DummyDrone : MonoBehaviour, IDrone
 	/// I'm not sure this is a required method but it seems it could be useful.
 	/// </summary>
 	public bool ExecutingCommand() {return false;}
+
+    public void LocalPositionTarget(Vector3 pos)
+    {
+        //simpleQuadCtrl.positionTarget = pos;
+    }
+
+    public void LocalVelocityTarget(Vector3 vel)
+    {
+        //simpleQuadCtrl.velocityTarget = vel;
+    }
+
+    public void LocalAccelerationTarget(Vector3 acc)
+    {
+        //simpleQuadCtrl.accelerationTarget = acc;
+    }
+
+    public void AttitudeTarget(Vector3 att)
+    {
+        //simpleQuadCtrl.attitudeTarget = att;
+    }
+
+    public void BodyRateTarget(Vector3 br)
+    {
+        //simpleQuadCtrl.bodyRateTarget = br;
+    }
 }

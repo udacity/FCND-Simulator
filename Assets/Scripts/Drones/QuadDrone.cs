@@ -74,6 +74,7 @@ namespace Drones
         public void Goto(double north, double east, double altitude)
         {
             simpleQuadCtrl.CommandLocal((float)north, (float)east, (float)-altitude);
+            simpleQuadCtrl.CommandHeading(0.0f);
         }
 
         public void SetHome(double longitude, double latitude, double altitude)
@@ -215,6 +216,31 @@ namespace Drones
 		{
 			quadCtrl.SetPositionAndOrientation ( location, Quaternion.identity );
 		}
+
+        public void LocalPositionTarget(Vector3 pos)
+        {
+            simpleQuadCtrl.positionTarget = pos;
+        }
+
+        public void LocalVelocityTarget(Vector3 vel)
+        {
+            simpleQuadCtrl.velocityTarget = vel;
+        }
+
+        public void LocalAccelerationTarget(Vector3 acc)
+        {
+            simpleQuadCtrl.accelerationTarget = acc;
+        }
+
+        public void AttitudeTarget(Vector3 att)
+        {
+            simpleQuadCtrl.attitudeTarget = att;
+        }
+
+        public void BodyRateTarget(Vector3 br)
+        {
+            simpleQuadCtrl.bodyRateTarget = br;
+        }
     }
 
 }
