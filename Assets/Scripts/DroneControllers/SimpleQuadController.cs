@@ -179,8 +179,10 @@ namespace DroneControllers
 
         public void CommandHeading(float heading)
         {
+            // positionControl = false;
             attitudeTarget.z = heading;
             guidedCommand.w = heading;
+            attitudeControl = true;
         }
 
         public void CommandAttitude(float roll, float pitch, float yawRate, float thrust)
@@ -218,7 +220,6 @@ namespace DroneControllers
         }
         public void ArmVehicle()
         {
-            // controller.SetHomePosition(controller.GetLongitude(), controller.GetLatitude(), controller.GetAltitude());
             if (guided)
             {
                 guidedCommand.x = controller.GetLocalNorth();

@@ -54,6 +54,11 @@ public class DummyDrone : MonoBehaviour, IDrone
 	{
 	}
 
+	public void SetHeading(double heading)
+	{
+
+	}
+
 	public void SetAttitude (double d, double dd, double ddd, double dddd)
 	{
 	}
