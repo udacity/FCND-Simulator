@@ -3,6 +3,7 @@ using System;
 using Drones;
 using DroneInterface;
 using MavLink;
+using MessagePack;
 using UnityEngine;
 using UdacityNetworking;
 using FlightUtils;
@@ -66,7 +67,27 @@ namespace Messaging
 
         public void ParseMessageInfo(MessageInfo msgInfo)
         {
-            mav.ParseBytesV2(msgInfo.message);
+            try
+            {
+                mav.ParseBytesV2(msgInfo.message);
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log(e);
+                // In some cases this will be a JSON message.
+                // 
+                // In the Motion Planning project
+                // this might be list of waypoints (north, east, down)
+                // to visualize.
+                
+                var waypoints = MessagePackSerializer.Deserialize<List<Vector3>>(msgInfo.message);
+                Debug.Log(string.Format("Number of waypoints {0}", waypoints.Count));
+
+                foreach (var wp in waypoints)
+                {
+                    PathPlanner.AddNode(wp.NEDToEUN(), Quaternion.identity);
+                }
+            }
         }
 
         /// <summary>
@@ -452,7 +473,7 @@ namespace Messaging
                 total_commands = 0.0f;
             }
             bool attitudeCmd;
-            if ((msg.type_mask & (byte) SET_ATTITUDE_MASK.IGNORE_ATTITUDE) == 0)
+            if ((msg.type_mask & (byte)SET_ATTITUDE_MASK.IGNORE_ATTITUDE) == 0)
             {
                 attitudeCmd = true;
             }
@@ -601,10 +622,12 @@ namespace Messaging
         void MsgLocalPositionTarget(Msg_position_target_local_ned msg)
         {
             var mask = (UInt16)msg.type_mask;
+            var hdg = msg.yaw;
+
+            drone.SetHeading(hdg);
 
             // split by the mask
             // POSITION COMMAND
-            // msg.yaw
             if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_POSITION) == 0)
             {
                 drone.LocalPositionTarget(new Vector3(msg.x, msg.y, msg.z));
@@ -623,7 +646,7 @@ namespace Messaging
                 drone.LocalAccelerationTarget(new Vector3(msg.afx, msg.afy, msg.afz));
                 //Debug.Log("Acceleration target (t= " + msg.time_boot_ms + "): " + msg.afx + ", " + msg.afy + ", " + msg.afz);
             }
-            
+
         }
 
         void MsgAttitudeTarget(Msg_attitude_target msg)

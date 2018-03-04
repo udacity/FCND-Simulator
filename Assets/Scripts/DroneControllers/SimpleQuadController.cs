@@ -179,8 +179,10 @@ namespace DroneControllers
 
         public void CommandHeading(float heading)
         {
+            // positionControl = false;
             attitudeTarget.z = heading;
             guidedCommand.w = heading;
+            attitudeControl = true;
         }
 
         public void CommandAttitude(float roll, float pitch, float yawRate, float thrust)

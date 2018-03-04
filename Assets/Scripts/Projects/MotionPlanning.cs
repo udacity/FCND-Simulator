@@ -6,7 +6,6 @@ using System.Collections.Generic;
 // using System.IO;
 
 using MavLink;
-using Pathing;
 using FlightUtils;
 using Drones;
 using DroneInterface;
@@ -38,9 +37,6 @@ public class MotionPlanning : MonoBehaviour
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
-        // PathPlanner.AddNode(new Vector3(5, 5, 5), Quaternion.identity);
-        // PathPlanner.AddNode(new Vector3(5, 5, 10), Quaternion.identity);
-        // PathPlanner.AddNode(new Vector3(5, 5, 20), Quaternion.identity);
         // Quaternion.identity
 
         // SetupLidarRays();
