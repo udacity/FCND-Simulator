@@ -122,6 +122,7 @@ namespace Messaging
             var vy = drone.EastVelocity() * 100;
             var vz = drone.DownVelocity() * 100;
             var hdg = (drone.Yaw() * Mathf.Rad2Deg) * 100;
+            // Debug.Log(string.Format("{0} {1}", lon, lat));
             var msg = new Msg_global_position_int
             {
                 lat = (int)lat,
@@ -177,7 +178,6 @@ namespace Messaging
             var north = drone.LocalCoords().x;
             var east = drone.LocalCoords().y;
             var down = drone.LocalCoords().z;
-            // Debug.Log(drone.LocalCoords());
             var msg = new Msg_local_position_ned
             {
                 x = north,
@@ -604,6 +604,7 @@ namespace Messaging
 
             // split by the mask
             // POSITION COMMAND
+            // msg.yaw
             if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_POSITION) == 0)
             {
                 drone.LocalPositionTarget(new Vector3(msg.x, msg.y, msg.z));

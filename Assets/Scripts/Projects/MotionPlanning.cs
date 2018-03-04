@@ -3,9 +3,10 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.IO;
+// using System.IO;
 
 using MavLink;
+using Pathing;
 using FlightUtils;
 using Drones;
 using DroneInterface;
@@ -32,14 +33,17 @@ public class MotionPlanning : MonoBehaviour
     {
         droneGO = GameObject.Find("Quad Drone");
         drone = droneGO.GetComponent<QuadDrone>();
-        droneGO.GetComponent<QuadController>().NavigationUpdate();
-        // TODO: explain where these magic numbers come from
-        // drone.SetHome(-121.995635d, 37.412939d, 0.0d);
-        drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
+        // droneGO.GetComponent<QuadController>().NavigationUpdate();
+        // drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
-        SetupLidarRays();
+        // PathPlanner.AddNode(new Vector3(5, 5, 5), Quaternion.identity);
+        // PathPlanner.AddNode(new Vector3(5, 5, 10), Quaternion.identity);
+        // PathPlanner.AddNode(new Vector3(5, 5, 20), Quaternion.identity);
+        // Quaternion.identity
+
+        // SetupLidarRays();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);
         networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
@@ -49,6 +53,10 @@ public class MotionPlanning : MonoBehaviour
 //        networkController.EnqueueRecurringMessage(SensorInfo, Conversions.HertzToMilliSeconds(sensorIntervalHz));
 
     }
+
+    //
+    // Sensor Misc
+    //
 
     List<byte[]> SensorInfo()
     {
@@ -105,46 +113,46 @@ public class MotionPlanning : MonoBehaviour
 
 	void OnCollidersGenerated ()
 	{
-		SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
+		// SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
 	}
 
-    void CreateFile(string path)
-    {
-        var filepath = Path.Combine(path, collidersFile);
-        Debug.Log(string.Format("Writing colliders to {0} ...", filepath));
-        if (File.Exists(filepath))
-        {
-            Debug.Log("Overwriting previous file");
-        }
+//     void CreateFile(string path)
+//     {
+//         var filepath = Path.Combine(path, collidersFile);
+//         Debug.Log(string.Format("Writing colliders to {0} ...", filepath));
+//         if (File.Exists(filepath))
+//         {
+//             Debug.Log("Overwriting previous file");
+//         }
 
-		var colliders = GameObject.Find("ColliderGatherer").GetComponent<RaycastGenerateColliders>().colliders;
-//		var colliders = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>().colliders;
-        var header = "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n";
+// 		var colliders = GameObject.Find("ColliderGatherer").GetComponent<RaycastGenerateColliders>().colliders;
+// //		var colliders = GameObject.Find("ColliderGatherer").GetComponent<GenerateColliderList>().colliders;
+//         var header = "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n";
 
-        File.Create(filepath).Close();
-        // for comparison
-		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
-		string latString = Simulation.latitude0.ToString ();
-		string lonString = Simulation.longitude0.ToString ();
-		int length = latString.Split ( '.' ) [ 1 ].Length;
-		for ( int i = 0; i < ( 6 - length ); i++ )
-			latString += "0";
-		length = lonString.Split ( '.' ) [ 1 ].Length;
-		for ( int i = 0; i < ( 6 - length ); i++ )
-			lonString += "0";
-		sb.Append ( "lat0 " + latString + ", lon0 " + lonString + "\n" );
-		sb.Append ( header );
-//        File.AppendAllText(filepath, header);
-        foreach (var c in colliders)
-        {
-            var pos = c.position;
-            var hsize = c.halfSize;
-			var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.z, pos.x, pos.y, hsize.z, hsize.x, hsize.y);
-			sb.Append ( row );
-//            File.AppendAllText(filepath, row);
-        }
-		File.AppendAllText ( filepath, sb.ToString () );
-    }
+//         File.Create(filepath).Close();
+//         // for comparison
+// 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
+// 		string latString = Simulation.latitude0.ToString ();
+// 		string lonString = Simulation.longitude0.ToString ();
+// 		int length = latString.Split ( '.' ) [ 1 ].Length;
+// 		for ( int i = 0; i < ( 6 - length ); i++ )
+// 			latString += "0";
+// 		length = lonString.Split ( '.' ) [ 1 ].Length;
+// 		for ( int i = 0; i < ( 6 - length ); i++ )
+// 			lonString += "0";
+// 		sb.Append ( "lat0 " + latString + ", lon0 " + lonString + "\n" );
+// 		sb.Append ( header );
+// //        File.AppendAllText(filepath, header);
+//         foreach (var c in colliders)
+//         {
+//             var pos = c.position;
+//             var hsize = c.halfSize;
+// 			var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.z, pos.x, pos.y, hsize.z, hsize.x, hsize.y);
+// 			sb.Append ( row );
+// //            File.AppendAllText(filepath, row);
+//         }
+// 		File.AppendAllText ( filepath, sb.ToString () );
+//     }
 
     void SetupLidarRays()
     {
