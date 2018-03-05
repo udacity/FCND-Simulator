@@ -82,6 +82,7 @@ public class RaycastGenerateColliders : MonoBehaviour
 		RaycastHit hit;
 
 		colliders = new List<ColliderVolume> ();
+		int count = 0;
 
 		for ( int x = 0; x < density; x++ )
 		{
@@ -98,9 +99,27 @@ public class RaycastGenerateColliders : MonoBehaviour
 						colliders.Add ( new ColliderVolume ( center, new Vector3 ( distance, hit.point.y, distance ) ) );
 					}
 				}
+
+				// limit to 1000 raycasts per frame
+				count++;
+				if ( count > 1000 )
+				{
+					count -= 1000;
+					yield return null;
+				}
 			}
 		}
-		Debug.Log ( colliders.Count + " generated" );
+
+		GameObject[] props = GameObject.FindGameObjectsWithTag ( "Prop" );
+		props.ForEach ( ( x ) =>
+		{
+			Collider c = x.GetComponent<Collider> ();
+			if ( c != null )
+				colliders.Add ( ColliderVolume.FromCollider ( c ) );
+		} );
+
+		Debug.Log ( colliders.Count + " generated from raycasts and props." );
+
 		if ( onComplete != null )
 			onComplete ();
 	}

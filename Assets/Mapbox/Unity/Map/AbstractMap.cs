@@ -141,6 +141,9 @@ namespace Mapbox.Unity.Map
 		}
 		public event Action OnInitialized = delegate { };
 
+		// added
+		public event Action OnFullyGenerated = delegate {};
+
 		protected virtual void Awake()
 		{
 			_worldHeightFixed = false;
@@ -221,6 +224,11 @@ namespace Mapbox.Unity.Map
 		protected void SendInitialized()
 		{
 			OnInitialized();
+		}
+
+		protected void SendFullyGenerated ()
+		{
+			OnFullyGenerated ();
 		}
 
 		public virtual Vector2d WorldToGeoPosition(Vector3 realworldPoint)

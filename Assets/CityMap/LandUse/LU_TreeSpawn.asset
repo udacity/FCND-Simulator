@@ -34,7 +34,7 @@ MonoBehaviour:
   - {fileID: 100006, guid: 342629ba158af634c8a4fbf9d0a7f8df, type: 2}
   _layerMask:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 66048
   _scaleDownWithWorld: 0
   _randomizeScale: 1
   _randomizeRotation: 1

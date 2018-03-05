@@ -59,6 +59,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 
 			var area = (int)(bounds.size.x * bounds.size.z);
 			int spawnCount = Mathf.Min(area / _spawnRateInSquareMeters, _maxSpawn);
+			int obstacleLayer = LayerMask.NameToLayer ( "Obstacles" );
 			while (_spawnedCount < spawnCount)
 			{
 				var x = UnityEngine.Random.Range(-bounds.extents.x, bounds.extents.x);
@@ -69,6 +70,13 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				//Debug.DrawRay(ray.origin, ray.direction * 1000, Color.yellow, 1000);
 				if (Physics.Raycast(ray, out hit, 150, _layerMask))
 				{
+					// if we hit a tree or similar, pass on this object
+					if ( hit.transform.gameObject.layer == obstacleLayer )
+					{
+//						spawnCount++;
+						continue;
+					}
+					
 					//Debug.DrawLine(ray.origin, hit.point, Color.red, 1000);
 					var index = UnityEngine.Random.Range(0, _prefabs.Length);
 					var transform = GetObject(index, ve.GameObject).transform;
