@@ -41,7 +41,7 @@ namespace FlightUtils
             var north = v.x;
             var east = v.y;
             var down = v.z;
-            return new Vector3(east, -down, north);
+            return new Vector3(east, Mathf.Abs(down), north);
         }
 
         /// <summary>

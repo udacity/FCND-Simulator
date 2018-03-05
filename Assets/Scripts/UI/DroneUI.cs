@@ -137,7 +137,7 @@ public class DroneUI : MonoBehaviour
 		var centerCoords = mapScript.CenterLatitudeLongitude;
 		Simulation.latitude0 = centerCoords.x;
 		Simulation.longitude0 = centerCoords.y;
-		drone.SetHome ( drone.Latitude (), drone.Longitude (), drone.Altitude () );
+		drone.SetHome ( drone.Longitude (), drone.Latitude (), drone.Altitude () );
 	}
 
     // Toggles whether the drone is armed or disarmed.

@@ -69,8 +69,8 @@ public class PlotViz : MonoBehaviour
 		refreshDelay = 1f / refreshRate;
 //		plot = new Plottable<float> ( "Test Plot" );
 		fn = new FastNoise ();
-		Vector2 min = cam.ViewportToWorldPoint ( Vector3.zero );
-		Vector2 max = cam.ViewportToWorldPoint ( Vector3.one );
+		Vector2 min = cam.ViewportToWorldPoint ( new Vector3 ( 0, 0, cam.nearClipPlane ) );
+		Vector2 max = cam.ViewportToWorldPoint ( new Vector3 ( 1, 1, cam.nearClipPlane ) );
 		cameraRect = new Rect ( min.x, Mathf.Min ( min.y, max.y ), max.x - min.x, Mathf.Abs ( max.y - min.y ) );
 		plots = new List<Plottable<float>> ();
 		plotLines = new List<LineRenderer> ();
