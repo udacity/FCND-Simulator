@@ -22960,6 +22960,16 @@ Prefab:
       propertyPath: m_AngularDrag
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: maxForce
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: maxTorque
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d5d211f5ceeb64001ba41a4c6ea9cebf, type: 2}
   m_IsPrefabParent: 0

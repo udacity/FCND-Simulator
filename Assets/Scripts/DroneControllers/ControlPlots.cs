@@ -10,6 +10,7 @@ namespace DroneControllers
         QuadController nav;
         private bool alive;
 
+        //Names of all the control variables to plot
         string pNorthPosition = "North Position (m)";
         string pEastPosition = "East Position (m)";
         string pDownPosition = "Down Position (m)";
@@ -25,6 +26,14 @@ namespace DroneControllers
         string pTargetNorthVelocity = "Target North Velocity (m/s)";
         string pTargetEastVelocity = "Target East Velocity (m/s)";
         string pTargetDownVelocity = "Target Down Velocity (m/s)";
+
+        string pNorthAcceleration = "North Acceleration (m^2/s)";
+        string pEastAcceleration = "East Acceleration (m^2/s)";
+        string pDownAcceleration = "Down Acceleration (m^2/s)";
+
+        string pTargetNorthAcceleration = "Target North Acceleration (m^2/s)";
+        string pTargetEastAcceleration = "Target East Acceleration (m^2/s)";
+        string pTargetDownAcceleration = "Target Down Acceleration (m^2/s)";
 
         string pRoll = "Roll (deg)";
         string pPitch = "Pitch (deg)";
@@ -42,12 +51,18 @@ namespace DroneControllers
         string pTargetPitchRate = "Target Pitch Rate (deg/s)";
         string pTargetYawRate = "Target Yaw Rate (deg/s)";
 
+        string pTotalThrust = "Total Thrust (Newton)";
+        string pTorqueMag = "Torque Magnitude (Newton*meter)";
+
  
 
         void Start()
         {
+
             ctrl = GetComponent<SimpleQuadController> ();
             nav = GetComponent<QuadController>();
+
+            //Add the plots to the list
             Plotting.AddPlottable1D(pNorthPosition);
             Plotting.AddPlottable1D(pEastPosition);
             Plotting.AddPlottable1D(pDownPosition);
@@ -61,6 +76,13 @@ namespace DroneControllers
             Plotting.AddPlottable1D(pTargetNorthVelocity);
             Plotting.AddPlottable1D(pTargetEastVelocity);
             Plotting.AddPlottable1D(pTargetDownVelocity);
+
+            Plotting.AddPlottable1D(pNorthAcceleration);
+            Plotting.AddPlottable1D(pEastAcceleration);
+            Plotting.AddPlottable1D(pDownAcceleration);
+            Plotting.AddPlottable1D(pTargetNorthAcceleration);
+            Plotting.AddPlottable1D(pTargetEastAcceleration);
+            Plotting.AddPlottable1D(pTargetDownAcceleration);
 
             Plotting.AddPlottable1D(pRoll);
             Plotting.AddPlottable1D(pPitch);
@@ -97,7 +119,6 @@ namespace DroneControllers
             //			double d2r = System.Math.PI / 180;
             while (alive)
             {
-                //				Plotting.AddSample ( "Altitude", (float) System.Math.Sin ( GetTime () * d2r ) * 3, GetTime () );
                 
                 Plotting.AddSample(pNorthPosition, nav.GetLocalNorth(), GetTime());
                 Plotting.AddSample(pEastPosition, nav.GetLocalEast(), GetTime());
@@ -116,6 +137,14 @@ namespace DroneControllers
                 Plotting.AddSample(pTargetEastVelocity, ctrl.velocityTarget.y, GetTime());
                 Plotting.AddSample(pTargetDownVelocity, ctrl.velocityTarget.z, GetTime());
 
+                Plotting.AddSample(pNorthAcceleration, nav.GetNorthAcceleration(), GetTime());
+                Plotting.AddSample(pEastAcceleration, nav.GetEastAcceleration(), GetTime());
+                Plotting.AddSample(pDownAcceleration, nav.GetDownAcceleration(), GetTime());
+
+                Plotting.AddSample(pTargetNorthAcceleration, ctrl.accelerationTarget.x, GetTime());
+                Plotting.AddSample(pTargetEastAcceleration, ctrl.accelerationTarget.y, GetTime());
+                Plotting.AddSample(pTargetDownAcceleration, ctrl.accelerationTarget.z, GetTime());
+
                 Plotting.AddSample(pRoll, nav.GetRoll() * 180.0f / Mathf.PI, GetTime());
                 Plotting.AddSample(pPitch, nav.GetPitch() * 180.0f / Mathf.PI, GetTime());
                 Plotting.AddSample(pYaw, nav.GetYaw() * 180.0f / Mathf.PI, GetTime());
@@ -131,6 +160,9 @@ namespace DroneControllers
                 Plotting.AddSample(pTargetRollRate, ctrl.bodyRateTarget.x * 180.0f / Mathf.PI, GetTime());
                 Plotting.AddSample(pTargetPitchRate, ctrl.bodyRateTarget.y * 180.0f / Mathf.PI, GetTime());
                 Plotting.AddSample(pTargetYawRate, ctrl.bodyRateTarget.z * 180.0f / Mathf.PI, GetTime());
+
+                Plotting.AddSample(pTotalThrust, nav.thrustOut, GetTime());
+                Plotting.AddSample(pTorqueMag, nav.TorqueOut, GetTime());
 
                 await System.Threading.Tasks.Task.Delay(100);
             }

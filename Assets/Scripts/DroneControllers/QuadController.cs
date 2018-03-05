@@ -8,53 +8,44 @@ namespace DroneControllers
     public class QuadController : MonoBehaviour
     {
 
-        public float vehicleMass = 2.0f;
-        public float Ixx = 1.0f;
-        public float Iyy = 1.0f;
-        public float Izz = 1.0f;
+        //Vehicle mass properties (based off https://scholar.google.com/scholar?cluster=8960065662684134743&hl=en&as_sdt=0,5)
+        public float vehicleMass = 0.5f; // kg
+        public float Ixx = 0.005f; // Momenet of inertia for quad forward axis in Newton*m
+        public float Iyy = 0.005f; // Moment of inertia for quad up axis in Newton*m
+        public float Izz = 0.01f; // Moment of inertial for quad right axis in Newton*m
         public static QuadController ActiveController;
 
-//		public static double latitude0 = 37.792480d;
+        //Motor properties
+        public float maxForce = 10.0f; // Max thrust force in Newtons. approximately 2-1 max thrust to weight ratio
+        public float maxTorque = 1.0f; // Max magnitude of the torque in Newton*m, assuming 2 motors and a distance of about 0.2
+        public float thrustOut = 0.0f; // For output/display
+        public float TorqueOut = 0.0f; // For output/display
 
-//		public static double longitude0 = -122.397450d;
+        //Sensor noise properties
+        public float ForceNoise = 0.5f; // Random noise added to thrust inputs in Newton
+        public float TorqueNoise = 0.005f; // Random noise added to torque inputs in Newton*meter
+        public float HDOP = 0.5f; // Random noise added to the horizontal GPS position
+        public float VDOP = 0.1f; // Random noise added to the vertical GPS position
 
-        // double homeLatitude = 37.412939d;
-        double homeLatitude = 0;
-
-        double homeLongitude = 0;
-
-        public float ForceNoise = 2.0f;
-
-        public float TorqueNoise = 1.0f;
-
-        public float HDOP = 0.5f;
-
-        public float VDOP = 0.1f;
+        double homeLatitude = 0; // Global latitude from which the local position is calculated. Note: can be changed mid flight
+        double homeLongitude = 0; // Global longitude from which the local position is calculated. Note: can be changed mid flight
 
         public bool RotorsEnabled { get; set; }
-
         public Vector3 Force { get { return force; } }
-
         public Vector3 Torque { get { return torque; } }
 
+        //Vehicle properties in Unity coordinates
         public Vector3 Position { get; protected set; }
-
         public Quaternion Rotation { get; protected set; }
-
         public Vector3 AngularVelocity { get; protected set; }
-
         public Vector3 AngularVelocityBody { get; protected set; }
-
         public Vector3 AngularAccelerationBody { get; protected set; }
-
         public Vector3 LinearVelocity { get; protected set; }
-
         public Vector3 BodyVelocity { get; protected set; }
-
         public Vector3 LinearAcceleration { get; protected set; }
 
         /// <summary>
-        /// Defined as longitude, altitude, latitude.
+        /// Simulated global coordinates Defined as longitude, altitude, latitude (Unity coordinates).
         /// </summary>
         public Vector3 GPS;
 
@@ -62,73 +53,47 @@ namespace DroneControllers
         /// x-axis -> pitch
         /// y-axis -> yaw
         /// z-axis -> roll
+        /// In Unity coordinates (Left-handed)
         /// </summary>
         public Vector3 eulerAngles;
 
+        //Drone axes and transforms (uncertain if any are still used)
         public Vector3 Forward { get; protected set; }
-
         public Vector3 Right { get; protected set; }
-
         public Vector3 Up { get; protected set; }
-
         public Vector3 YAxis { get; protected set; }
-
         public Vector3 XAxis { get; protected set; }
 
         public bool UseGravity { get; set; }
-
         public bool ConstrainForceX { get; set; }
-
         public bool ConstrainForceY { get; set; }
-
         public bool ConstrainForceZ { get; set; }
-
         public bool ConstrainTorqueX { get; set; }
-
         public bool ConstrainTorqueY { get; set; }
-
         public bool ConstrainTorqueZ { get; set; }
 
         public Transform navTransform;
-
         public Transform frontLeftRotor;
-
         public Transform frontRightRotor;
-
         public Transform rearLeftRotor;
-
         public Transform rearRightRotor;
-
         public Transform yAxis;
-
         public Transform xAxis;
-
         public Transform forward;
-
         public Transform right;
 
+        //The autopilot object
         public SimpleQuadController inputCtrl;
 
+        //Old clamp parameters Note: currently not used
         public bool clampForce = true;
         public bool clampTorque = true;
-        public float maxForce = 40;
         public float maxTorqueDegrees = 17;
-        //	public bool clampMaxSpeed = true;
-        //	public bool clampAngularVelocity = true;
-        //	public float maxSpeedMPH = 60;
-        //	public float maxSpeedMS;
-        //	public float maxAngularDegrees = 17;
-        //	public float maxAngularRadians;
-        //	public float thrustForce = 2000;
-        //	public float torqueForce = 500;
+
         public ForceMode forceMode = ForceMode.Force;
-
         public ForceMode torqueMode = ForceMode.Force;
-
         public bool rotateWithTorque;
-
         public bool spinRotors = true;
-
         public float maxRotorRPM = 150;
 
         [SerializeField]
@@ -185,11 +150,8 @@ namespace DroneControllers
 
         void Start()
         {
-            // for now disable this inertia thing
-            //rb.inertiaTensorRotation = Quaternion.identity;
             rb.inertiaTensor = new Vector3(Izz, Iyy, Ixx);
             rb.mass = vehicleMass;
-
             // For whatever reason, setting inertiaTensorRotation stops the quad from accepting commands (mostly torque) until it's deactivated and activated.
 			QuadActivator.Activate(gameObject);
         }
@@ -349,11 +311,22 @@ namespace DroneControllers
         {
             useTwist = false;
             force = v + ForceNoise * Random.insideUnitSphere;
+            
         }
 
         public void CmdThrust(float thrust)
         {
+            if(thrust > maxForce)
+            {
+                //Debug.Log("Max Thrust Commanded: " + thrust);
+                thrust = maxForce;
+            }
             force.y = Mathf.Max(thrust + ForceNoise * 2.0f * (Random.value - 1.0f), 0.0f);
+            if(force.y < 0.0f)
+            {
+                force.y = 0.0f;
+            }
+            thrustOut = force.y;
         }
 
         public void CmdTorque(Vector3 t)
@@ -362,6 +335,12 @@ namespace DroneControllers
             torque.y = t.z;
             torque.z = -t.x;
             torque = torque + TorqueNoise * Random.insideUnitSphere;
+            if(torque.magnitude > maxTorque)
+            {
+                //Debug.Log("Maximum Torque Commanded: " + t);
+                torque = torque * maxTorque / torque.magnitude;
+            }
+            TorqueOut = torque.magnitude;
         }
 
         public void ApplyMotorTorque(Vector3 v)
@@ -465,8 +444,7 @@ namespace DroneControllers
             ConstrainTorqueZ = (rb.constraints & RigidbodyConstraints.FreezeRotationY) != 0;
         }
 
-        /// Convenience retrieval functions. These probably should be set as properties
-        public void SetHomePosition(double longitude, double latitude, double altitude)
+                public void SetHomePosition(double longitude, double latitude, double altitude)
         {
             // NOTE: Currently you can only set the home lat/lon, not altitude
             SetHomeLongitude(longitude);
@@ -478,6 +456,10 @@ namespace DroneControllers
             inputCtrl.guidedCommand.y = GetLocalEast();
             inputCtrl.guidedCommand.z = GetLocalDown();
         }
+
+        /// Convenience retrieval functions. These probably should be set as properties
+        /// These functions convert all the local class variables, which are defined in Unity Left-Handed coordinate frames
+        /// to the appropriate right handed coordinate frame
         public double GetLatitude()
         {
             // return GPS.z + homeLatitude;
@@ -551,6 +533,21 @@ namespace DroneControllers
         public float GetDownVelocity()
         {
             return -LinearVelocity.y;
+        }
+
+        public float GetNorthAcceleration()
+        {
+            return LinearAcceleration.z;
+        }
+
+        public float GetEastAcceleration()
+        {
+            return LinearAcceleration.x;
+        }
+
+        public float GetDownAcceleration()
+        {
+            return -LinearAcceleration.y;
         }
 
         public float GetVerticalVelocity()

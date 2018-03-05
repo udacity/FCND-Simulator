@@ -17,53 +17,28 @@ namespace DroneControllers
         public float hDotInt;
 
         ///
-        /// Control Gains
+        /// Default control Gains are no found in PositionControl.cs and AttitudeControl.cs
         ///
-        /*
-        public float Kp_hdot = 10.0f;
-        public float Kp_yaw = 6.5f;
-        public float Kp_r = 20.0f;
-        public float Kp_roll = 6.5f;
-        public float Kp_p = 10.0f;
-        public float Kp_pitch = 6.5f;
-        public float Kp_q = 10.0f;
-        public float Kp_pos = 2.0f;
-        public float Kp_pos2 = 0.4f; //Different gain used for small error (within posHoldDeadband)
-        public float Kp_vel = 0.3f;
-        public float Kd_vel = 0.0f;
-        public float Kp_alt = 10.0f;
-        public float Ki_hdot = 0.1f;
 
-        // Vehicle control thresholds
-        
-        public float posHoldDeadband = 1.0f;
-        public float velDeadband = 1.0f;
-        public float moveSpeed = 10;
-        
-        // in radians
-        public float turnSpeed = 2.0f;
-        public float thrustForce = 25.0f;
-        public float thrustMoment = 2.0f;
-        // in radians
-        public float maxTilt = 0.5f;
-        public float maxAscentRate = 5.0f;
-        public float maxDescentRate = 2.0f;
-        */
         public float posctl_band = 0.1f;
         private float lastControlTime = 0.0f;
         public float maxTimeBetweenControl = 0.1f;
         // Movement behaviors are enabled based on the active control mode.
         // Movement behavior hierachy:
         // - Manual
-        //   - Stabilized
+        //   - Attitude Control
         //   - Position Control
         // - Guided
+        //   - Attitude Control
+        //   - Position Control
+        //   - Motor Control (Currently Moments)
         public QuadMovementBehavior mb_Manual;
         public QuadMovementBehavior mb_ManualPosCtrl;
         public QuadMovementBehavior mb_ManualAttCtrl;
         public QuadMovementBehavior mb_GuidedPosCtrl;
         public QuadMovementBehavior mb_GuidedAttCtrl;
         public QuadMovementBehavior mb_GuidedMotors;
+
 
         public Vector3 attitudeTarget = Vector3.zero; //roll, pitch, yaw target in radians
         public Vector3 positionTarget = Vector3.zero; //north, east, down target in meters
