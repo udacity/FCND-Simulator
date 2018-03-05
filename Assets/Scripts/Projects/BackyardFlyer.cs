@@ -17,14 +17,6 @@ public class BackyardFlyer : MonoBehaviour
     public int telemetryIntervalHz = 4;
     public int homePositionIntervalHz = 1;
 
-    void Awake()
-    {
-        drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-        GameObject.Find("Quad Drone").GetComponent<QuadController>().NavigationUpdate();
-        drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
-    }
-
-    // Use this for initialization
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();

@@ -3,6 +3,7 @@ using System;
 using Drones;
 using DroneInterface;
 using MavLink;
+using MessagePack;
 using UnityEngine;
 using UdacityNetworking;
 using FlightUtils;
@@ -66,7 +67,27 @@ namespace Messaging
 
         public void ParseMessageInfo(MessageInfo msgInfo)
         {
-            mav.ParseBytesV2(msgInfo.message);
+            try
+            {
+                mav.ParseBytesV2(msgInfo.message);
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log(e);
+                // In some cases this will be a JSON message.
+                // 
+                // In the Motion Planning project
+                // this might be list of waypoints (north, east, down)
+                // to visualize.
+                
+                var waypoints = MessagePackSerializer.Deserialize<List<Vector3>>(msgInfo.message);
+                Debug.Log(string.Format("Number of waypoints {0}", waypoints.Count));
+
+                foreach (var wp in waypoints)
+                {
+                    PathPlanner.AddNode(wp.NEDToEUN(), Quaternion.identity);
+                }
+            }
         }
 
         /// <summary>
@@ -122,6 +143,7 @@ namespace Messaging
             var vy = drone.EastVelocity() * 100;
             var vz = drone.DownVelocity() * 100;
             var hdg = (drone.Yaw() * Mathf.Rad2Deg) * 100;
+            // Debug.Log(string.Format("{0} {1}", lon, lat));
             var msg = new Msg_global_position_int
             {
                 lat = (int)lat,
@@ -177,7 +199,6 @@ namespace Messaging
             var north = drone.LocalCoords().x;
             var east = drone.LocalCoords().y;
             var down = drone.LocalCoords().z;
-            // Debug.Log(drone.LocalCoords());
             var msg = new Msg_local_position_ned
             {
                 x = north,
@@ -452,7 +473,7 @@ namespace Messaging
                 total_commands = 0.0f;
             }
             bool attitudeCmd;
-            if ((msg.type_mask & (byte) SET_ATTITUDE_MASK.IGNORE_ATTITUDE) == 0)
+            if ((msg.type_mask & (byte)SET_ATTITUDE_MASK.IGNORE_ATTITUDE) == 0)
             {
                 attitudeCmd = true;
             }
@@ -601,6 +622,9 @@ namespace Messaging
         void MsgLocalPositionTarget(Msg_position_target_local_ned msg)
         {
             var mask = (UInt16)msg.type_mask;
+            var hdg = msg.yaw;
+
+            drone.SetHeading(hdg);
 
             // split by the mask
             // POSITION COMMAND
@@ -622,7 +646,7 @@ namespace Messaging
                 drone.LocalAccelerationTarget(new Vector3(msg.afx, msg.afy, msg.afz));
                 //Debug.Log("Acceleration target (t= " + msg.time_boot_ms + "): " + msg.afx + ", " + msg.afy + ", " + msg.afz);
             }
-            
+
         }
 
         void MsgAttitudeTarget(Msg_attitude_target msg)

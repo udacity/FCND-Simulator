@@ -31,6 +31,11 @@ namespace DroneInterface
         void TakeControl(bool guided);
 
         /// <summary>
+        /// Set the drone heading.
+        /// </summary>
+        void SetHeading(double heading);
+
+        /// <summary>
         /// The drone will fly at the commanded orientation (pitch, yaw, roll) and a vertical velocity
         /// </summary>
         void SetAttitude(double pitch, double yawRate, double roll, double velocity);

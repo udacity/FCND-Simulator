@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.IO;
+// using System.IO;
 
 using MavLink;
 using FlightUtils;
@@ -32,14 +32,14 @@ public class MotionPlanning : MonoBehaviour
     {
         droneGO = GameObject.Find("Quad Drone");
         drone = droneGO.GetComponent<QuadDrone>();
-        droneGO.GetComponent<QuadController>().NavigationUpdate();
-        // TODO: explain where these magic numbers come from
-        // drone.SetHome(-121.995635d, 37.412939d, 0.0d);
-        drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
+        // droneGO.GetComponent<QuadController>().NavigationUpdate();
+        // drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
-        SetupLidarRays();
+        // Quaternion.identity
+
+        // SetupLidarRays();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);
         networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
@@ -49,6 +49,10 @@ public class MotionPlanning : MonoBehaviour
 //        networkController.EnqueueRecurringMessage(SensorInfo, Conversions.HertzToMilliSeconds(sensorIntervalHz));
 
     }
+
+    //
+    // Sensor Misc
+    //
 
     List<byte[]> SensorInfo()
     {
@@ -105,7 +109,7 @@ public class MotionPlanning : MonoBehaviour
 
 	void OnCollidersGenerated ()
 	{
-		SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
+		// SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
 	}
 
 	System.Text.StringBuilder GetCollidersString ()
@@ -141,17 +145,16 @@ public class MotionPlanning : MonoBehaviour
     {
 		System.Text.StringBuilder sb = GetCollidersString ();
 
-
-        var filepath = Path.Combine(path, collidersFile);
+		var filepath = System.IO.Path.Combine(path, collidersFile);
         Debug.Log(string.Format("Writing colliders to {0} ...", filepath));
-        if (File.Exists(filepath))
+		if (System.IO.File.Exists(filepath))
         {
             Debug.Log("Overwriting previous file");
         }
 
 
-        File.Create(filepath).Close();
-		File.AppendAllText ( filepath, sb.ToString () );
+		System.IO.File.Create(filepath).Close();
+		System.IO.File.AppendAllText ( filepath, sb.ToString () );
     }
 
     void SetupLidarRays()
