@@ -492,9 +492,20 @@ namespace MavLink
             // assumes the msg id the first byte, which is ok for now because 
             // most messages don't use the other 2 bytes.
             var packetNum = (int)bytes[offset + 0];
-            var packetGen = MavLinkSerializer.Lookup[packetNum].Deserializer;
-            // we add 3 to the offset because the message id takes up 3 bytes
-            return packetGen.Invoke(bytes, offset + 3);
+			MavPacketInfo packetInfo = null;
+			if ( MavLinkSerializer.Lookup.TryGetValue ( packetNum, out packetInfo ) )
+			{
+				// we add 3 to the offset because the message id takes up 3 bytes
+				if ( packetInfo.Deserializer != null )
+					return packetInfo.Deserializer ( bytes, offset + 3 );
+				Debug.LogWarning ( "deserializer func for packet " + packetNum + " is null" );
+				return null;
+//				var packetGen = MavLinkSerializer.Lookup[packetNum].Deserializer;
+//				return packetGen.Invoke(bytes, offset + 3);
+			}
+
+			Debug.LogWarning ( "no MavPacketInfo for packet " + packetNum );
+			return null;
         }
 
         public byte[] Serialize(MavlinkMessage message, int systemId, int componentId)
