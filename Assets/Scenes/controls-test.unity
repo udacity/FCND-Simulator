@@ -22920,6 +22920,56 @@ Prefab:
       value: 
       objectReference: {fileID: 11400000, guid: b67ccdc9551dd8d44a7a324303427b90,
         type: 2}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: vehicleMass
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: Ixx
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: Iyy
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: Izz
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: ForceNoise
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: TorqueNoise
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 54420376717307864, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: m_Drag
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 54420376717307864, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: m_AngularDrag
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: maxForce
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114538838698819072, guid: d5d211f5ceeb64001ba41a4c6ea9cebf,
+        type: 2}
+      propertyPath: maxTorque
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d5d211f5ceeb64001ba41a4c6ea9cebf, type: 2}
   m_IsPrefabParent: 0

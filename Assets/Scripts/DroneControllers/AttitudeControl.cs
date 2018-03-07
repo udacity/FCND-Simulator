@@ -5,16 +5,16 @@ using UnityEngine;
 public class AttitudeControl {
 
 
-    public float Kp_r = 20.0f;
-    
-    public float Kp_hdot = 5.0f;
-    public float Ki_hdot = 0.5f;
+    public float Kp_r = 0.04f;//20.0f;
 
-    public float Kp_p = 10.0f;
-    public float Kp_roll = 6.5f;
+    public float Kp_hdot = 2.5f;//5.0f;
+    public float Ki_hdot = 0.25f;//0.5f;
 
-    public float Kp_q = 10.0f;
-    public float Kp_pitch = 6.5f;
+    public float Kp_p = 0.1f;//10.0f;
+    public float Kp_roll = 8.0f;//6.5f;
+
+    public float Kp_q = 0.1f;//10.0f;
+    public float Kp_pitch = 8.0f;//6.5f;
 
     public float maxTilt = 0.5f;
     public float maxAscentRate = 5.0f;
