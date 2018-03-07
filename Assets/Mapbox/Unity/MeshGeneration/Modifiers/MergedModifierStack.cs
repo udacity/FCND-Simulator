@@ -115,7 +115,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			}
 		}
 
-		public override GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "")
+		public override GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "", Action onComplete = null)
 		{
 			base.Execute(tile, feature, meshData, parent, type);
 
@@ -149,12 +149,15 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				go = End(tile, parent, type);
 			}
 
+			if ( onComplete != null )
+				onComplete ();
 			return go;
 		}
 
 
 		public GameObject End(UnityTile tile, GameObject parent, string name = "")
 		{
+			Debug.Log ( "merging" );
 			var c2 = 0;
 			if (_cached.ContainsKey(tile))
 			{

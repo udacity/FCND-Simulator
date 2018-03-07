@@ -34,7 +34,7 @@ public class PostMergedStack : ModifierStack
 
 	protected static Dictionary<Mesh, List<MeshFilter>> objectGroups = new Dictionary<Mesh, List<MeshFilter>> ();
 
-	public override GameObject Execute (Mapbox.Unity.MeshGeneration.Data.UnityTile tile, Mapbox.Unity.MeshGeneration.Data.VectorFeatureUnity feature, Mapbox.Unity.MeshGeneration.Data.MeshData meshData, GameObject parent, string type = "")
+	public override GameObject Execute (Mapbox.Unity.MeshGeneration.Data.UnityTile tile, Mapbox.Unity.MeshGeneration.Data.VectorFeatureUnity feature, Mapbox.Unity.MeshGeneration.Data.MeshData meshData, GameObject parent, string type = "", System.Action onComplete = null)
 	{
 		GameObject parentGo = base.Execute (tile, feature, meshData, parent, type);
 //		Debug.Log ( parentGo.name );
@@ -86,7 +86,8 @@ public class PostMergedStack : ModifierStack
 
 		}
 
-
+		if ( onComplete != null )
+			onComplete ();
 		return parent;
 	}
 }

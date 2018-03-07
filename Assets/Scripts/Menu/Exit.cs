@@ -37,7 +37,17 @@ namespace Menu
 				if ( Input.GetButtonDown ( "Reload/Reset" ) )
 				{
 					Debug.Log ( "Resetting scene" );
-					SceneManager.LoadScene ( SceneManager.GetActiveScene ().name );
+//					string curName = SceneManager.GetActiveScene ().name;
+
+					SceneReloader.Reload ();
+
+//					SceneManager.sceneUnloaded += new UnityEngine.Events.UnityAction<Scene> ( (Scene arg0 ) =>
+//					{
+//						Debug.Log ("scene " + arg0.name + " unloaded!");
+//						SceneManager.LoadScene ( curName );
+//					} );
+
+//					SceneManager.LoadScene ( SceneManager.GetActiveScene ().name );
 				}
                 // NOTE: not the same as loading the menu, which is done via
                 // the main menu

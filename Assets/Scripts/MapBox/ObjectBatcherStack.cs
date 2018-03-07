@@ -10,7 +10,7 @@ using Mapbox.Unity.MeshGeneration.Modifiers;
 [CreateAssetMenu(menuName = "Mapbox/Udacity/Batching Modifier Stack")]
 public class ObjectBatcherStack : ModifierStack
 {
-	public override GameObject Execute (Mapbox.Unity.MeshGeneration.Data.UnityTile tile, Mapbox.Unity.MeshGeneration.Data.VectorFeatureUnity feature, Mapbox.Unity.MeshGeneration.Data.MeshData meshData, GameObject parent, string type = "")
+	public override GameObject Execute (Mapbox.Unity.MeshGeneration.Data.UnityTile tile, Mapbox.Unity.MeshGeneration.Data.VectorFeatureUnity feature, Mapbox.Unity.MeshGeneration.Data.MeshData meshData, GameObject parent, string type = "", System.Action onComplete = null)
 	{
 		GameObject parentGo = base.Execute (tile, feature, meshData, parent, type);
 		MeshRenderer[] renderers = parent.GetComponentsInChildren<MeshRenderer> ();
@@ -18,7 +18,9 @@ public class ObjectBatcherStack : ModifierStack
 		for ( int i = 0; i < renderers.Length; i++ )
 			objects [ i ] = renderers [ i ].gameObject;
 		StaticBatchingUtility.Combine ( objects, parentGo );
-		
+
+		if ( onComplete != null )
+			onComplete ();
 		return parent;
 	}
 }

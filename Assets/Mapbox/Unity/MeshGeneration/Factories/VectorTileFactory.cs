@@ -6,6 +6,7 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 	using Mapbox.Unity.MeshGeneration.Data;
 	using Mapbox.Unity.MeshGeneration.Interfaces;
 	using Mapbox.Map;
+	using Mapbox.Unity.Map;
 
 	/// <summary>
 	///	Vector Tile Factory
@@ -173,6 +174,9 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
 			tile.VectorDataState = TilePropertyState.Loading;
 
+			// use this to check if none of our visualizers actually ended up doing anything
+			int activeBuilders = 0;
+
 			// TODO: move unitytile state registrations to layer visualizers. Not everyone is interested in this data
 			// and we should not wait for it here!
 			foreach (var layerName in _cachedData[tile].Data.LayerNames())
@@ -183,11 +187,19 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 					{
 						if (builder.Active)
 						{
+							activeBuilders++;
 							Progress++;
 							builder.Create(_cachedData[tile].Data.GetLayer(layerName), tile, DecreaseProgressCounter);
 						}
 					}
 				}
+			}
+
+			if ( activeBuilders == 0 )
+			{
+				Debug.Log ( "Factory " + name + " has no active builders. Setting state to finished manually." );
+				Progress = 1;
+				Progress = 0;
 			}
 
 			tile.VectorDataState = TilePropertyState.Loaded;

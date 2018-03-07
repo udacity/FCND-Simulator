@@ -16,6 +16,7 @@ public class WorldScaleMapAtSpecificLocation : AbstractMap
 
 	public override void Initialize(Vector2d latLon, int zoom)
 	{
+//		MapboxUtility.Reset ();
 		_worldHeightFixed = false;
 		_centerLatitudeLongitude = latLon;
 		_zoom = zoom;
