@@ -114,7 +114,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 		}
 
 
-		public override GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "", Action onComplete = null)
+		public override GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "")
 		{
 			_counter = feature.Points.Count;
 			_secondCounter = 0;
@@ -172,8 +172,6 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			// Let's bail if we don't have our object.
 			if (_tempVectorEntity.GameObject == null)
 			{
-				if ( onComplete != null )
-					onComplete ();
 				return null;
 			}
 
@@ -226,8 +224,6 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				}
 			}
 
-			if ( onComplete != null )
-				onComplete ();
 			return _tempVectorEntity.GameObject;
 		}
 	}

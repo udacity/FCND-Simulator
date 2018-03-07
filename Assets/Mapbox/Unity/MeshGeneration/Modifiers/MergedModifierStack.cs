@@ -115,7 +115,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			}
 		}
 
-		public override GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "", Action onComplete = null)
+		public override GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "")
 		{
 			base.Execute(tile, feature, meshData, parent, type);
 
@@ -149,8 +149,6 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				go = End(tile, parent, type);
 			}
 
-			if ( onComplete != null )
-				onComplete ();
 			return go;
 		}
 

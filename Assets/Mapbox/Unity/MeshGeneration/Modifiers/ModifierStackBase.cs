@@ -9,7 +9,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 {
     public class ModifierStackBase : ScriptableObject
     {
-		public virtual GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "", Action onComplete = null)
+		public virtual GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "")
         {
             return null;
         }
