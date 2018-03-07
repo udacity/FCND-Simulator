@@ -58,6 +58,8 @@ GameObject:
   - component: {fileID: 114088604260184524}
   - component: {fileID: 75578908014040924}
   - component: {fileID: 114974807577468626}
+  - component: {fileID: 114366117967142766}
+  - component: {fileID: 114678453756623752}
   m_Layer: 14
   m_Name: Quad Drone 1
   m_TagString: Untagged
@@ -193,7 +195,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1411106008563072
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,7 +474,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1101260272468496}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -20}
+  m_LocalPosition: {x: 150.97626, y: 0.112640955, z: 89.0812}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4176548018620600}
@@ -1184,8 +1186,8 @@ Rigidbody:
   m_GameObject: {fileID: 1101260272468496}
   serializedVersion: 2
   m_Mass: 2
-  m_Drag: 0.5
-  m_AngularDrag: 0.2
+  m_Drag: 0.25
+  m_AngularDrag: 0.25
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -1232,35 +1234,20 @@ MonoBehaviour:
   positionControl: 1
   remote: 0
   hDotInt: 0
-  Kp_hdot: 10
-  Kp_yaw: 6.5
-  Kp_r: 20
-  Kp_roll: 6.5
-  Kp_p: 20
-  Kp_pitch: 6.5
-  Kp_q: 20
-  Kp_pos: 0.1
-  Kp_pos2: 0.4
-  Kp_vel: 0.3
-  Kd_vel: 0
-  Kp_alt: 0.1
-  Ki_hdot: 0.1
   posctl_band: 0.1
-  posHoldDeadband: 1
-  velDeadband: 1
-  moveSpeed: 10
-  turnSpeed: 2
-  thrustForce: 25
-  thrustMoment: 2
-  maxTilt: 0.5
-  maxAscentRate: 5
-  maxDescentRate: 2
+  maxTimeBetweenControl: 0.1
   mb_Manual: {fileID: 11400000, guid: 2e0fe5cf335962840a85eec5df0ce319, type: 2}
   mb_ManualPosCtrl: {fileID: 11400000, guid: 661be0a91b63e964bb9cc2a77504c244, type: 2}
   mb_ManualAttCtrl: {fileID: 11400000, guid: f9edf8f5b9348594184a08e8d7a1483c, type: 2}
   mb_GuidedPosCtrl: {fileID: 11400000, guid: b67ccdc9551dd8d44a7a324303427b90, type: 2}
   mb_GuidedAttCtrl: {fileID: 11400000, guid: 7c3e8b5e00af4b7448b004d21a558352, type: 2}
   mb_GuidedMotors: {fileID: 11400000, guid: ae9ee69ae0304334d8f8903430c2bf52, type: 2}
+  attitudeTarget: {x: 0, y: 0, z: 0}
+  positionTarget: {x: 0, y: 0, z: 0}
+  bodyRateTarget: {x: 0, y: 0, z: 0}
+  velocityTarget: {x: 0, y: 0, z: 0}
+  accelerationTarget: {x: 0, y: 0, z: 0}
+  momentThrustTarget: {x: 0, y: 0, z: 0, w: 0}
   currentMovementBehavior: {fileID: 0}
 --- !u!114 &114173730048102230
 MonoBehaviour:
@@ -1274,6 +1261,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gimbalParent: {fileID: 4700625402512812}
+--- !u!114 &114366117967142766
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1101260272468496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1881e074f3c2cbe418bff480235e2672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114387051239807834
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1312,8 +1310,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0240b524936b64a41a0e05437b9eeb6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForceNoise: 2
-  TorqueNoise: 1
+  vehicleMass: 0.5
+  Ixx: 0.005
+  Iyy: 0.005
+  Izz: 0.01
+  maxForce: 10
+  maxTorque: 1
+  thrustOut: 0
+  TorqueOut: 0
+  ForceNoise: 0.5
+  TorqueNoise: 0.005
   HDOP: 0.5
   VDOP: 0.5
   GPS: {x: 0, y: 0, z: 0}
@@ -1330,7 +1336,6 @@ MonoBehaviour:
   inputCtrl: {fileID: 0}
   clampForce: 0
   clampTorque: 0
-  maxForce: 40
   maxTorqueDegrees: 17
   forceMode: 0
   torqueMode: 0
@@ -1339,6 +1344,17 @@ MonoBehaviour:
   maxRotorRPM: 720
   curRotorSpeed: 0
   curSpeed: 0
+--- !u!114 &114678453756623752
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1101260272468496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f7e2bc4d5b1ddf49910d2ff9e1b1c9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114679011300244122
 MonoBehaviour:
   m_ObjectHideFlags: 1
