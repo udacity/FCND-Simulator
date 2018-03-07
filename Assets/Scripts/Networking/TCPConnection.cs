@@ -246,11 +246,11 @@ namespace UdacityNetworking
 
 		async Task HandleClient (TcpClient client)
 		{
+			var buf = new byte[16384];
 			NetworkStream stream = client.GetStream ();
 			while ( running && client != null && client.Connected && stream != null && stream.CanRead )
 			{
 //				Debug.Log ( "Reading from stream ... " );
-				var buf = new byte[1024];
 
 				var bytesRead = await stream.ReadAsync ( buf, 0, buf.Length );
 				if ( bytesRead > 0 )
