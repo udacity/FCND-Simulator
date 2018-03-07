@@ -1079,7 +1079,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: ed5d8589c8d8f8e42bd71d788a771bdb,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: ed5d8589c8d8f8e42bd71d788a771bdb,
         type: 2}
@@ -2232,6 +2232,7 @@ GameObject:
   - component: {fileID: 1963608266}
   - component: {fileID: 1963608265}
   - component: {fileID: 1963608264}
+  - component: {fileID: 1963608267}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -2287,6 +2288,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1963608267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1963608263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d6db4dc97a5c91479b31257080b59c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapScript: {fileID: 1963608265}
 --- !u!21 &2079043326
 Material:
   serializedVersion: 6
@@ -2419,7 +2432,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000012464943430, guid: fe69c79d384eb4f4f944d4ec253d357a, type: 2}
       propertyPath: m_LocalScale.y
-      value: 3
+      value: 8.7
       objectReference: {fileID: 0}
     - target: {fileID: 4000012464943430, guid: fe69c79d384eb4f4f944d4ec253d357a, type: 2}
       propertyPath: m_LocalScale.z
@@ -2514,6 +2527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa372de92177929488796a255a71f6e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapScript: {fileID: 1963608265}
   startingPoint: {x: 0, y: 0, z: 0}
   range: 500
   collisionMask:

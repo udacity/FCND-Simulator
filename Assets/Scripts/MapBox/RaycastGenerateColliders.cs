@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mapbox.Unity.Map;
 
 public class RaycastGenerateColliders : MonoBehaviour
 {
+	public AbstractMap mapScript;
 	public Vector3 startingPoint;
 	public float range = 100;
 	public LayerMask collisionMask;
@@ -18,7 +20,13 @@ public class RaycastGenerateColliders : MonoBehaviour
 
 	void Start ()
 	{
-		
+		mapScript.MapVisualizer.OnMapVisualizerStateChanged += MapScript_MapVisualizer_OnMapVisualizerStateChanged;
+	}
+
+	void MapScript_MapVisualizer_OnMapVisualizerStateChanged (ModuleState obj)
+	{
+		if ( obj == ModuleState.Finished )
+			GenerateColliders ();
 	}
 	
 	void Update ()
