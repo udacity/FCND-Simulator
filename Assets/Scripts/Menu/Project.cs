@@ -9,6 +9,10 @@ namespace Menu
         public string title;
         public Sprite image;
         public string description;
-    }
 
+		public void OnClicked ()
+		{
+			transform.root.GetComponent<MainMenu> ().LoadProject ( this );
+		}
+    }
 }

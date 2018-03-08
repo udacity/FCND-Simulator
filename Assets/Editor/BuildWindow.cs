@@ -30,7 +30,7 @@ public class BuildWindow : EditorWindow
 	void OnEnable ()
 	{
 		loaderSelected = false;
-		menuSelected = false;
+		menuSelected = true;
 		baseBuildName = "FCND-Sim";
 	}
 
@@ -89,8 +89,8 @@ public class BuildWindow : EditorWindow
 		// list the scenes to select
 
 		Rect line = new Rect ( 20, 50, 150, 22 );
-		loaderSelected = GUI.Toggle ( line, loaderSelected, "Loader Scene" );
-		line.y += line.height;
+//		loaderSelected = GUI.Toggle ( line, loaderSelected, "Loader Scene" );
+//		line.y += line.height;
 		menuSelected = GUI.Toggle ( line, menuSelected, "Menu Scene" );
 		line.y += line.height * 2;
 		GUI.Label ( line, "Project Scenes:" );
