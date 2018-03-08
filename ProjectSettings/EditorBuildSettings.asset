@@ -8,27 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/urban.unity
     guid: a28d6320642cf48bcab398f7a6a88bb2
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 39682f0d950284348ab908d4a59cc12b
-  - enabled: 0
-    path: Assets/Scenes/Launcher.unity
-    guid: 4213bae57c4e14742a1603a531d89e48
-  - enabled: 0
-    path: Assets/Scenes/ControlsMenu.unity
-    guid: f28fc8bed6e96402583ec2e3611e293f
-  - enabled: 0
-    path: Assets/CityMap/MapScene.unity
-    guid: c6224aa99c907e446bf5b12bdc44f07e
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MapScene2.unity
     guid: d142dc0f8a520484fbf531443bfe9e2e
-  - enabled: 0
-    path: Assets/Scenes/CoordTest.unity
-    guid: 6a3e59d0ec8e9dc4ab5cb913c271c7b0
-  - enabled: 0
-    path: Assets/Scenes/websocket-test.unity
-    guid: 094cbeda2ff7d994a89bf6a9fe65784a
-  - enabled: 0
-    path: Assets/Mapbox/Examples/4_VectorTileMaps/BasicUvMap/BasicUvMap.unity
-    guid: 1fa2b4c43fde33b46a32fb724f7e0543
+  - enabled: 1
+    path: Assets/Scenes/controls-test.unity
+    guid: b57b0c05302b24396ad8772167c311cf
