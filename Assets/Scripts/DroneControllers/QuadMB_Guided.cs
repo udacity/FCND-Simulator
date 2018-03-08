@@ -30,8 +30,8 @@ namespace MovementBehaviors
             targetPosition = controller.GetPositionTarget();
             // Debug.Log(string.Format("local postiion {0}, target position {1}", localPosition, targetPosition));
 
-            float targetYawrate = posCtrl.YawLoop(yawCmd, attitude.z);
-            float yawMoment = attCtrl.YawRateLoop(yawCmd, angularVelocity.z);
+            float yawMoment = posCtrl.YawLoop(controller.attitudeTarget.z, attitude.z);
+            // float yawMoment = attCtrl.YawRateLoop(yawCmd, angularVelocity.z);
             Vector3 targetVelocity = posCtrl.PositionLoop(targetPosition, localPosition);
 
             Vector2 targetRollPitch = posCtrl.VelocityLoop(targetVelocity, localVelocity, attitude.z);

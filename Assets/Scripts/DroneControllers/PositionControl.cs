@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PositionControl {
+public class PositionControl
+{
     public float Kp_pos = 2.0f;
     public float Kp_pos2 = 0.2f;
     public float Kp_alt = 10.0f;
-    public float posHoldDeadband=0.5f;
-    public float maxSpeed=10.0f;
-    public float Kp_vel=0.2f;
-    public float Kp_yaw=0.5f;
+    public float posHoldDeadband = 0.5f;
+    public float maxSpeed = 10.0f;
+    public float Kp_vel = 0.2f;
+    public float Kp_yaw = 0.01f;
 
     public PositionControl()
     {
@@ -86,8 +87,7 @@ public class PositionControl {
             yawError = yawError - 2.0f * Mathf.PI;
         else if (yawError < -Mathf.PI)
             yawError = yawError + 2.0f * Mathf.PI;
-
-        float yawrateCmd = Kp_yaw * yawError;
-        return yawrateCmd;
+        // float yawError = targetYaw - yaw;
+        return Kp_yaw * yawError;
     }
 }

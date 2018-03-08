@@ -141,7 +141,7 @@ namespace DroneControllers
                 positionTarget.y = east;
                 positionTarget.z = down;
 
-                attitudeTarget.z = 0.0f;
+                // attitudeTarget.z = 0.0f;
 
                 guidedCommand.x = north;
                 guidedCommand.y = east;
@@ -154,17 +154,14 @@ namespace DroneControllers
 
         public void CommandHeading(float heading)
         {
-            // positionControl = false;
             attitudeTarget.z = heading;
-            guidedCommand.w = heading;
-            attitudeControl = true;
+            // guidedCommand.w = heading;
+            // bodyRateTarget.z = heading;
         }
 
         public void CommandAttitude(float roll, float pitch, float yawRate, float thrust)
         {
-
             positionControl = false;
-
 
             attitudeTarget.x = roll;
             attitudeTarget.y = pitch;
@@ -175,6 +172,7 @@ namespace DroneControllers
             guidedCommand.y = pitch;
             guidedCommand.w = yawRate;
             guidedCommand.z = thrust;
+
             attitudeControl = true;
         }
 
@@ -195,22 +193,20 @@ namespace DroneControllers
         }
         public void ArmVehicle()
         {
-            if (guided)
-            {
-                guidedCommand.x = controller.GetLocalNorth();
-                guidedCommand.y = controller.GetLocalEast();
-                guidedCommand.z = controller.GetLocalDown();
+            // if (guided)
+            // {
+            //     guidedCommand.x = controller.GetLocalNorth();
+            //     guidedCommand.y = controller.GetLocalEast();
+            //     guidedCommand.z = controller.GetLocalDown();
 
-                positionTarget.x = guidedCommand.x;
-                positionTarget.y = guidedCommand.y;
-                positionTarget.z = guidedCommand.z;
-            }
-            else
-            {
-                posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
-            }
-
-            //Set the hold position to the current position
+            //     positionTarget.x = guidedCommand.x;
+            //     positionTarget.y = guidedCommand.y;
+            //     positionTarget.z = guidedCommand.z;
+            // }
+            // else
+            // {
+            //     posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+            // }
             armed = true;
         }
 
