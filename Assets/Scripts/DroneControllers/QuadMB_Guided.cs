@@ -21,7 +21,7 @@ namespace MovementBehaviors
             Vector3 targetPosition;
             AttitudeControl attCtrl = controller.attCtrl;
             PositionControl posCtrl = controller.posCtrl;
-            float yawCmd = controller.guidedCommand.w;
+            // float yawCmd = controller.guidedCommand.w;
             /*
             targetPosition.x = controller.guidedCommand.x;
             targetPosition.y = controller.guidedCommand.y;
@@ -30,7 +30,7 @@ namespace MovementBehaviors
             targetPosition = controller.GetPositionTarget();
             // Debug.Log(string.Format("local postiion {0}, target position {1}", localPosition, targetPosition));
 
-            float targetYawrate = posCtrl.YawLoop(yawCmd, attitude.z);
+            float yawCmd = posCtrl.YawLoop(controller.attitudeTarget.z, attitude.z);
             float yawMoment = attCtrl.YawRateLoop(yawCmd, angularVelocity.z);
             Vector3 targetVelocity = posCtrl.PositionLoop(targetPosition, localPosition);
 
