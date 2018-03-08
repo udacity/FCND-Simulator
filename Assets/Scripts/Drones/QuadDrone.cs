@@ -74,7 +74,6 @@ namespace Drones
         public void Goto(double north, double east, double altitude)
         {
             simpleQuadCtrl.CommandLocal((float)north, (float)east, (float)-altitude);
-            simpleQuadCtrl.CommandHeading(0.0f);
         }
 
         public void SetHome(double longitude, double latitude, double altitude)

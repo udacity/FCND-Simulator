@@ -576,7 +576,7 @@ namespace Messaging
         {
             var mask = (UInt16)msg.type_mask;
 
-            // split by the mask
+            drone.SetHeading(msg.yaw);
 
             // TAKEOFF
             if ((mask & (UInt16)SET_POSITION_MASK.IS_TAKEOFF) > 0)
@@ -622,9 +622,6 @@ namespace Messaging
         void MsgLocalPositionTarget(Msg_position_target_local_ned msg)
         {
             var mask = (UInt16)msg.type_mask;
-            var hdg = msg.yaw;
-
-            drone.SetHeading(hdg);
 
             // split by the mask
             // POSITION COMMAND
