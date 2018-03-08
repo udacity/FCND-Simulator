@@ -576,10 +576,7 @@ namespace Messaging
         {
             var mask = (UInt16)msg.type_mask;
 
-            // split by the mask
-            Debug.Log(string.Format("Command Yaw {0}", msg.yaw));
             drone.SetHeading(msg.yaw);
-            Debug.Log(string.Format("Current Yaw {0}", drone.Yaw()));
 
             // TAKEOFF
             if ((mask & (UInt16)SET_POSITION_MASK.IS_TAKEOFF) > 0)
