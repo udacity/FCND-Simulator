@@ -164,7 +164,7 @@ namespace DroneControllers
         {
             if (resetFlag)
             {
-                ResetOrientation();
+                // ResetOrientation();
                 resetFlag = false;
             }
             CheckSetPose();
@@ -182,7 +182,7 @@ namespace DroneControllers
         {
             if (resetFlag)
             {
-                ResetOrientation();
+                // ResetOrientation();
                 resetFlag = false;
             }
             CheckSetPose();
@@ -251,7 +251,7 @@ namespace DroneControllers
             RotorsEnabled = inputCtrl.armed;
             if (resetFlag)
             {
-                ResetOrientation();
+                // ResetOrientation();
                 resetFlag = false;
             }
             CheckSetPose();
