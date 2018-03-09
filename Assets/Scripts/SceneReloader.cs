@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class SceneReloader
 {
@@ -17,6 +18,17 @@ public class SceneReloader
 		tempScene = SceneManager.CreateScene ( "TempScene" );
 		SceneManager.UnloadSceneAsync ( sceneToReload );
 	}
+
+//	public static void Reload (int ms)
+//	{
+//		Task.Run ( () => DelayedReload ( ms ) );
+//	}
+//
+//	static async Task DelayedReload (int ms)
+//	{
+//		await Task.Delay ( ms );
+//		Reload ();
+//	}
 
 	static void Init ()
 	{
@@ -38,7 +50,10 @@ public class SceneReloader
 			SceneManager.UnloadSceneAsync ( sceneToReload );
 		} else
 		{
-			SceneManager.UnloadSceneAsync ( tempScene );
+//			var mapScript = GameObject.Find ( "Map" ).GetComponent<Mapbox.Unity.Map.AbstractMap> ();
+//			mapScript.Reset ();
+			// guess this temp scene doesn't need unloading
+//			SceneManager.UnloadSceneAsync ( tempScene );
 		}
 	}
 

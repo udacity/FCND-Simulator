@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace Menu
 {
@@ -39,13 +40,12 @@ namespace Menu
 					Debug.Log ( "Resetting scene" );
 //					string curName = SceneManager.GetActiveScene ().name;
 
-					SceneReloader.Reload ();
+					var mapScript = GameObject.Find ( "Map" ).GetComponent<Mapbox.Unity.Map.AbstractMap> ();
+//					Destroy ( mapScript.gameObject );
+					mapScript.Reset ();
+//					SceneReloader.Reload ();
+//					StartCoroutine ( DoReload () );
 
-//					SceneManager.sceneUnloaded += new UnityEngine.Events.UnityAction<Scene> ( (Scene arg0 ) =>
-//					{
-//						Debug.Log ("scene " + arg0.name + " unloaded!");
-//						SceneManager.LoadScene ( curName );
-//					} );
 
 //					SceneManager.LoadScene ( SceneManager.GetActiveScene ().name );
 				}
@@ -59,6 +59,12 @@ namespace Menu
                 }
             }
         }
+
+		IEnumerator DoReload ()
+		{
+			yield return new WaitForSeconds ( 0.5f );
+			SceneReloader.Reload ();
+		}
 
     }
 }
