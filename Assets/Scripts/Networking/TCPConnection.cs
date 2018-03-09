@@ -36,7 +36,7 @@ namespace UdacityNetworking
 
 		public bool IsTimeout ()
 		{
-			return Time.unscaledTime - lastRead >= 5f;
+			return Time.unscaledTime - lastRead >= NetworkController.Timeout;
 		}
 
 		public void CancelAndDispose ()
@@ -100,7 +100,8 @@ namespace UdacityNetworking
 						bool removed = clients.TryRemove ( key, out dummy );
 						Debug.LogWarning ( "timeout remove client " + key + " successful: " + removed );
 					}
-				nextTimeoutCheck = Time.unscaledTime + NetworkController.Timeout;
+				nextTimeoutCheck = Time.unscaledTime + 5f;
+//				nextTimeoutCheck = Time.unscaledTime + NetworkController.Timeout;
 			}
 			if ( connectionState == ConnectionState.Connected && myClient != null && !myClient.Connected )
 				connectionState = ConnectionState.Disconnected;
@@ -169,7 +170,7 @@ namespace UdacityNetworking
 							}
 						}
 					}
-					
+
 				}
 				catch (Exception e)
 				{
@@ -240,7 +241,7 @@ namespace UdacityNetworking
 					listener.Stop ();
 					listener = null;
 				}
-					connectionState = ConnectionState.Disconnected;
+				connectionState = ConnectionState.Disconnected;
 			}
 		}
 

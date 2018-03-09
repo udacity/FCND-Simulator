@@ -58,4 +58,4 @@ MonoBehaviour:
   remotePort: 3001
   remoteIP: 127.0.0.1
   protocol: 0
-  timeout: 30
+  timeout: 60
