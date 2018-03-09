@@ -41,8 +41,8 @@ namespace Menu
 //					string curName = SceneManager.GetActiveScene ().name;
 
 					var mapScript = GameObject.Find ( "Map" ).GetComponent<Mapbox.Unity.Map.AbstractMap> ();
-//					Destroy ( mapScript.gameObject );
-					mapScript.Reset ();
+					mapScript.Clear ();
+					Destroy ( mapScript.gameObject );
 //					SceneReloader.Reload ();
 //					StartCoroutine ( DoReload () );
 

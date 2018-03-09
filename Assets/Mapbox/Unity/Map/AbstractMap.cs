@@ -141,9 +141,6 @@ namespace Mapbox.Unity.Map
 		}
 		public event Action OnInitialized = delegate { };
 
-		// added
-		public event Action OnFullyGenerated = delegate {};
-
 		protected virtual void Awake()
 		{
 			_worldHeightFixed = false;
@@ -226,11 +223,6 @@ namespace Mapbox.Unity.Map
 			OnInitialized();
 		}
 
-		protected void SendFullyGenerated ()
-		{
-			OnFullyGenerated ();
-		}
-
 		public virtual Vector2d WorldToGeoPosition(Vector3 realworldPoint)
 		{
 			return (_root.InverseTransformPoint(realworldPoint)).GetGeoPosition(CenterMercator, WorldRelativeScale);
@@ -246,6 +238,12 @@ namespace Mapbox.Unity.Map
 		public void Reset()
 		{
 			Initialize(Conversions.StringToLatLon(_latitudeLongitudeString), (int)_zoom);
+		}
+
+		public void Clear ()
+		{
+			_mapVisualizer.Clear ();
+			_tileProvider.Clear ();
 		}
 	}
 }

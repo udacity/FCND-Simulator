@@ -242,5 +242,11 @@ namespace Mapbox.Unity.Map
 		}
 
 		protected abstract void PlaceTile(UnwrappedTileId tileId, UnityTile tile, IMapReadable map);
+
+		public void Clear ()
+		{
+			Destroy ();
+			State = ModuleState.Initialized;
+		}
 	}
 }
