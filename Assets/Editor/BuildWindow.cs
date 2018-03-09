@@ -58,24 +58,24 @@ public class BuildWindow : EditorWindow
 		#else
 		selectedBuildTargets = new bool[8];
 		buildTargetNames = new string[] {
-			"Windows 32-bit",
-			"Windows 64-bit",
-			"Mac 32-bit",
-			"Mac 64-bit",
-			"Mac Universal",
-			"Linux 32-bit",
-			"Linux 64-bit",
-			"Linux Universal"
+		"Windows 32-bit",
+		"Windows 64-bit",
+		"Mac 32-bit",
+		"Mac 64-bit",
+		"Mac Universal",
+		"Linux 32-bit",
+		"Linux 64-bit",
+		"Linux Universal"
 		};
 		buildTargets = new BuildTarget[] {
-			BuildTarget.StandaloneWindows,
-			BuildTarget.StandaloneWindows64,
-			BuildTarget.StandaloneOSXIntel,
-			BuildTarget.StandaloneOSXIntel64,
-			BuildTarget.StandaloneOSXUniversal,
-			BuildTarget.StandaloneLinux,
-			BuildTarget.StandaloneLinux64,
-			BuildTarget.StandaloneLinuxUniversal
+		BuildTarget.StandaloneWindows,
+		BuildTarget.StandaloneWindows64,
+		BuildTarget.StandaloneOSXIntel,
+		BuildTarget.StandaloneOSXIntel64,
+		BuildTarget.StandaloneOSXUniversal,
+		BuildTarget.StandaloneLinux,
+		BuildTarget.StandaloneLinux64,
+		BuildTarget.StandaloneLinuxUniversal
 		};
 		#endif
 	}
@@ -105,11 +105,11 @@ public class BuildWindow : EditorWindow
 		}
 
 		line.y += line.height;
-		bool allScenes = loaderSelected && menuSelected && selectedProjectScenes.TrueForAll ( x => x );
+		bool allScenes = menuSelected && selectedProjectScenes.TrueForAll ( x => x );
 		allScenes = GUI.Toggle ( line, allScenes, "Select All" );
 		if ( allScenes )
 		{
-			loaderSelected = true;
+//			loaderSelected = true;
 			menuSelected = true;
 			selectedProjectScenes.ForEach ( x => x = true );
 		}
@@ -131,17 +131,17 @@ public class BuildWindow : EditorWindow
 		bool allWindows = selectedBuildTargets [ 0 ] && selectedBuildTargets [ 1 ];
 		allWindows = GUI.Toggle ( line, allWindows, "All Windows" );
 		if ( allWindows )
-			selectedBuildTargets [ 0 ] = selectedBuildTargets [ 1 ] = true;
+		selectedBuildTargets [ 0 ] = selectedBuildTargets [ 1 ] = true;
 		line.y += line.height;
 		bool allMac = selectedBuildTargets [ 2 ] && selectedBuildTargets [ 3 ] && selectedBuildTargets [ 4 ];
 		allMac = GUI.Toggle ( line, allMac, "All Mac" );
 		if ( allMac )
-			selectedBuildTargets [ 2 ] = selectedBuildTargets [ 3 ] = selectedBuildTargets [ 4 ] = true;
+		selectedBuildTargets [ 2 ] = selectedBuildTargets [ 3 ] = selectedBuildTargets [ 4 ] = true;
 		line.y += line.height;
 		bool allLinux = selectedBuildTargets [ 6 ] && selectedBuildTargets [ 7 ] && selectedBuildTargets [ 8 ];
 		allLinux = GUI.Toggle ( line, allLinux, "All Linux" );
 		if ( allLinux )
-			selectedBuildTargets [ 5 ] = selectedBuildTargets [ 6 ] = selectedBuildTargets [ 7 ] = true;
+		selectedBuildTargets [ 5 ] = selectedBuildTargets [ 6 ] = selectedBuildTargets [ 7 ] = true;
 		#else
 		line.y += line.height;
 		bool allWindows = selectedBuildTargets[0] && selectedBuildTargets[1];
@@ -154,7 +154,7 @@ public class BuildWindow : EditorWindow
 		if ( allLinux )
 			selectedBuildTargets [ 3 ] = selectedBuildTargets [ 4 ] = selectedBuildTargets [ 5 ] = true;
 		#endif
-		
+
 		line.y += line.height;
 		line.y += line.height;
 
@@ -193,25 +193,25 @@ public class BuildWindow : EditorWindow
 					titleSize = GUI.skin.label.CalcSize ( content );
 					GUI.Label ( new Rect ( position.size.x / 2 - titleSize.x / 2, position.height - 40, 300, 25 ), content );
 				} else
-				if ( GUI.Button ( new Rect ( position.size.x / 2 - 75, position.height - 40, 150, 25 ), "Build Selected" ) )
-				{
-					Build ();
-				}
+					if ( GUI.Button ( new Rect ( position.size.x / 2 - 75, position.height - 40, 150, 25 ), "Build Selected" ) )
+					{
+						Build ();
+					}
 			}
 		} else
-		if ( buildTargetCount > 0 )
-		{
-			content = new GUIContent ( "Please select at least one scene to build." );
-			titleSize = GUI.skin.label.CalcSize ( content );
-			GUI.Label ( new Rect ( position.size.x / 2 - titleSize.x / 2, position.height - 40, 300, 25 ), content );
-		}
+			if ( buildTargetCount > 0 )
+			{
+				content = new GUIContent ( "Please select at least one scene to build." );
+				titleSize = GUI.skin.label.CalcSize ( content );
+				GUI.Label ( new Rect ( position.size.x / 2 - titleSize.x / 2, position.height - 40, 300, 25 ), content );
+			}
 	}
 
 	void Build ()
 	{
 		List<string> scenes = new List<string> ();
-		if ( loaderSelected )
-			scenes.Add ( AssetDatabase.GetAssetPath ( buildAssets.loaderScene ) );
+//		if ( loaderSelected )
+//			scenes.Add ( AssetDatabase.GetAssetPath ( buildAssets.loaderScene ) );
 		if ( menuSelected )
 			scenes.Add ( AssetDatabase.GetAssetPath ( buildAssets.menuScene ) );
 		for ( int i = 0; i < selectedProjectScenes.Length; i++ )
@@ -236,7 +236,7 @@ public class BuildWindow : EditorWindow
 			if ( !EditorUtility.DisplayDialog ( "Multiple Platforms Selected", "You selected to build for multiple platforms. This could take a while, are you sure?", "Confirmative", "Negatory" ) )
 				return;
 		}
-		
+
 //		int selectedCount = 0;
 //		selectedBuildTargets.ForEach ( x =>
 //		{
@@ -266,11 +266,11 @@ public class BuildWindow : EditorWindow
 			extension = baseBuildName + "_" + "MacOS.app";
 			settingPath = extension + "/Contents";
 		} else
-		if ( target == BuildTarget.StandaloneLinux || target == BuildTarget.StandaloneLinux64 || target == BuildTarget.StandaloneLinuxUniversal )
-		{
-			extension = baseBuildName + "_" + buildName;
-			settingPath = baseBuildName + "_" + buildName + "_Data";
-		}
+			if ( target == BuildTarget.StandaloneLinux || target == BuildTarget.StandaloneLinux64 || target == BuildTarget.StandaloneLinuxUniversal )
+			{
+				extension = baseBuildName + "_" + buildName;
+				settingPath = baseBuildName + "_" + buildName + "_Data";
+			}
 		#else
 		if ( target == BuildTarget.StandaloneOSXIntel || target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneOSXUniversal )
 		{
