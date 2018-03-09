@@ -10,7 +10,7 @@ public class PositionControl
     public float posHoldDeadband = 0.5f;
     public float maxSpeed = 10.0f;
     public float Kp_vel = 0.2f;
-    public float Kp_yaw = 0.50f;
+    public float Kp_yaw = 2.50f;
 
     public PositionControl()
     {

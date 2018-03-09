@@ -191,20 +191,20 @@ namespace DroneControllers
         }
         public void ArmVehicle()
         {
-            // if (guided)
-            // {
-            //     guidedCommand.x = controller.GetLocalNorth();
-            //     guidedCommand.y = controller.GetLocalEast();
-            //     guidedCommand.z = controller.GetLocalDown();
+            if (guided)
+            {
+                guidedCommand.x = controller.GetLocalNorth();
+                guidedCommand.y = controller.GetLocalEast();
+                guidedCommand.z = controller.GetLocalDown();
 
-            //     positionTarget.x = guidedCommand.x;
-            //     positionTarget.y = guidedCommand.y;
-            //     positionTarget.z = guidedCommand.z;
-            // }
-            // else
-            // {
-            //     posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
-            // }
+                positionTarget.x = guidedCommand.x;
+                positionTarget.y = guidedCommand.y;
+                positionTarget.z = guidedCommand.z;
+            }
+            else
+            {
+                posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
+            }
             armed = true;
         }
 
