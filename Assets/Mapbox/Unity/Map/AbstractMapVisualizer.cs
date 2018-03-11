@@ -246,6 +246,10 @@ namespace Mapbox.Unity.Map
 		public void Clear ()
 		{
 			Destroy ();
+			foreach ( var factory in Factories )
+			{
+				factory.Clear ();
+			}
 			State = ModuleState.Initialized;
 		}
 	}

@@ -172,6 +172,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			// Let's bail if we don't have our object.
 			if (_tempVectorEntity.GameObject == null)
 			{
+				Debug.Log ( "null tve" );
 				return null;
 			}
 
@@ -225,6 +226,29 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			}
 
 			return _tempVectorEntity.GameObject;
+		}
+
+		public override void OnClear ()
+		{
+			base.OnClear ();
+
+			_pool.Clear ();
+			_listPool.Clear ();
+			foreach ( var pair in _activeObjects )
+			{
+				if ( pair.Key != null )
+					Destroy ( pair.Key.gameObject );
+				if ( pair.Value != null && pair.Value.Count > 0 )
+				{
+					foreach ( var ve in pair.Value )
+					{
+						Destroy ( ve.Mesh );
+						Destroy ( ve.GameObject );
+						ve.Feature = null;
+					}
+				}
+			}
+			_activeObjects.Clear ();
 		}
 	}
 }

@@ -281,5 +281,12 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 					val.Stack.UnregisterTile(tile);
 			}
 		}
+
+		protected override void OnClear ()
+		{
+			base.OnClear ();
+
+
+		}
 	}
 }

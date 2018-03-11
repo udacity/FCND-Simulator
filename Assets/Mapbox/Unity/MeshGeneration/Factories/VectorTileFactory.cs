@@ -210,5 +210,18 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 		{
 			Progress--;
 		}
+
+		protected override void OnClear ()
+		{
+			base.OnClear ();
+			foreach ( var pair in _layerBuilder )
+			{
+				foreach ( var viz in pair.Value )
+				{
+					viz.Clear ();
+				}
+			}
+			_cachedData.Clear ();
+		}
 	}
 }

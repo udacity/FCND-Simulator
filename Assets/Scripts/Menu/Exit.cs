@@ -44,7 +44,7 @@ namespace Menu
 					mapScript.Clear ();
 					Destroy ( mapScript.gameObject );
 //					SceneReloader.Reload ();
-//					StartCoroutine ( DoReload () );
+					StartCoroutine ( DoReload () );
 
 
 //					SceneManager.LoadScene ( SceneManager.GetActiveScene ().name );
@@ -62,9 +62,11 @@ namespace Menu
 
 		IEnumerator DoReload ()
 		{
-			yield return new WaitForSeconds ( 0.5f );
+			float t = 30f;
+			Debug.Log ( "reloading in " + t );
+			yield return new WaitForSeconds ( t );
+			Debug.Log ( "reloading" );
 			SceneReloader.Reload ();
 		}
-
     }
 }

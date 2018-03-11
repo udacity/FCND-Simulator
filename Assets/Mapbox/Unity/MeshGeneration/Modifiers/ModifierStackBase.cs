@@ -28,5 +28,15 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 		{
 			
 		}
+
+		public void Clear ()
+		{
+			OnClear ();
+		}
+
+		public virtual void OnClear ()
+		{
+			
+		}
 	}
 }

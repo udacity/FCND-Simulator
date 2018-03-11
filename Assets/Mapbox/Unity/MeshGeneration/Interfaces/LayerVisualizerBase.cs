@@ -28,5 +28,15 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 		{
 
 		}
+
+		public void Clear ()
+		{
+			OnClear ();
+		}
+		
+		protected virtual void OnClear ()
+		{
+			
+		}
 	}
 }

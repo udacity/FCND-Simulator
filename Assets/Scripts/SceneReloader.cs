@@ -15,6 +15,7 @@ public class SceneReloader
 	{
 		Init ();
 
+		sceneToReload = SceneManager.GetActiveScene ();
 		tempScene = SceneManager.CreateScene ( "TempScene" );
 		SceneManager.UnloadSceneAsync ( sceneToReload );
 	}
@@ -34,7 +35,7 @@ public class SceneReloader
 	{
 		if ( !init )
 		{
-			sceneToReload = SceneManager.GetActiveScene ();
+//			sceneToReload = SceneManager.GetActiveScene ();
 //			tempScene = SceneManager.CreateScene ( "TempScene" );
 			SceneManager.sceneLoaded += OnSceneLoaded;
 			SceneManager.sceneUnloaded += OnSceneUnloaded;
