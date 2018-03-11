@@ -18,9 +18,19 @@ public class RaycastGenerateColliders : MonoBehaviour
 
 	float nextTestViz;
 
+	void Awake ()
+	{
+		mapScript.OnInitialized += OnMapInitialized;
+	}
+
 	void Start ()
 	{
 		mapScript.MapVisualizer.OnMapVisualizerStateChanged += MapScript_MapVisualizer_OnMapVisualizerStateChanged;
+	}
+
+	void OnMapInitialized ()
+	{
+		transform.position = mapScript.transform.position;
 	}
 
 	void MapScript_MapVisualizer_OnMapVisualizerStateChanged (ModuleState obj)
