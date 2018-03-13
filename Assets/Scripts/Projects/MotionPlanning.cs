@@ -104,7 +104,7 @@ public class MotionPlanning : MonoBehaviour
 //			collidersGenerator.GenerateColliders ();
 //		var colliders = collidersGenerator.colliders;
 
-//        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
+        SimpleFileBrowser.ShowSaveDialog(CreateFile, null, true, null, "Select Folder", "Save");
     }
 
 	void OnCollidersGenerated ()
