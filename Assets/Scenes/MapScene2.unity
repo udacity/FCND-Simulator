@@ -1079,7 +1079,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: ed5d8589c8d8f8e42bd71d788a771bdb,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: ed5d8589c8d8f8e42bd71d788a771bdb,
         type: 2}
@@ -2522,6 +2522,8 @@ MonoBehaviour:
     m_Bits: 513
   testCube: {fileID: 618256046}
   density: 100
+  stepDistance: 0.75
+  boxSize: 2
 --- !u!4 &2140191763 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4462549392285068, guid: df39e25154cb9c749973e48cfc67b890,

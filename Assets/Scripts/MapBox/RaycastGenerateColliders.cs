@@ -12,6 +12,8 @@ public class RaycastGenerateColliders : MonoBehaviour
 	public LayerMask collisionMask;
 	public Transform testCube;
 	public float density = 50;
+	public float stepDistance = 1;
+	public float boxSize = 2;
 
 	[NonSerialized]
 	public List<ColliderVolume> colliders;
@@ -89,11 +91,12 @@ public class RaycastGenerateColliders : MonoBehaviour
 	{
 		Debug.Log ( "generating colliders..." );
 		yield return null;
-//		System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch ();
+
+		float lineCount = range * 2 / stepDistance;
+		float halfSize = boxSize / 2;
 		float distance = range * 2 / density;
 		float halfDistance = distance / 2;
 		Vector3 startPos = transform.position - Vector3.one * ( range - halfDistance );
-//		Vector3 endPos = transform.position + Vector3.one * ( range - distance / 2 );
 
 		startPos.y = 500;
 		Ray ray = new Ray ( startPos, -Vector3.up );
@@ -102,11 +105,14 @@ public class RaycastGenerateColliders : MonoBehaviour
 		colliders = new List<ColliderVolume> ();
 		int count = 0;
 
-		for ( int x = 0; x < density; x++ )
+		for ( int x = 0; x < lineCount; x++ )
+//		for ( int x = 0; x < density; x++ )
 		{
-			for ( int z = 0; z < density; z++ )
+			for ( int z = 0; z < lineCount; z++ )
+//			for ( int z = 0; z < density; z++ )
 			{
-				ray.origin = startPos + new Vector3 ( x * distance, 0, z * distance );
+				ray.origin = startPos + new Vector3 ( x * stepDistance, 0, z * stepDistance );
+//				ray.origin = startPos + new Vector3 ( x * distance, 0, z * distance );
 				if ( Physics.Raycast ( ray, out hit, 1000, collisionMask, QueryTriggerInteraction.Ignore ) )
 				{
 					if ( hit.point.y > 0 )
@@ -114,7 +120,8 @@ public class RaycastGenerateColliders : MonoBehaviour
 						float halfHeight = hit.point.y / 2;
 						Vector3 center = hit.point;
 						center.y = halfHeight;
-						colliders.Add ( new ColliderVolume ( center, new Vector3 ( distance, hit.point.y, distance ) ) );
+						colliders.Add ( new ColliderVolume ( center, new Vector3 ( halfSize, hit.point.y, halfSize ) ) );
+//						colliders.Add ( new ColliderVolume ( center, new Vector3 ( distance, hit.point.y, distance ) ) );
 					}
 				}
 
