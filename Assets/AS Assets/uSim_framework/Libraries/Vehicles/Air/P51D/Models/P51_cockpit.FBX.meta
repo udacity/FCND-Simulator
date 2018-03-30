@@ -1,0 +1,176 @@
+fileFormatVersion: 2
+guid: 6741e72b58b0ca34190ffe3eac3bff7f
+timeCreated: 1496435670
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: aileronTrim
+    100002: canopyLock
+    100004: canopyWheel
+    100006: fuelCut
+    100008: fuelSelector
+    100010: glass
+    100012: interiour
+    100014: mixture
+    100016: Null001
+    100018: //RootNode
+    100020: propfade
+    100022: rudderPedalL
+    100024: rudderPeddalR
+    100026: rudderTrim
+    100028: stick
+    100030: throttle
+    100032: trimwheel
+    100034: window
+    100036: windowtop
+    100038: windowtopglass
+    400000: aileronTrim
+    400002: canopyLock
+    400004: canopyWheel
+    400006: fuelCut
+    400008: fuelSelector
+    400010: glass
+    400012: interiour
+    400014: mixture
+    400016: Null001
+    400018: //RootNode
+    400020: propfade
+    400022: rudderPedalL
+    400024: rudderPeddalR
+    400026: rudderTrim
+    400028: stick
+    400030: throttle
+    400032: trimwheel
+    400034: window
+    400036: windowtop
+    400038: windowtopglass
+    2300000: aileronTrim
+    2300002: canopyLock
+    2300004: canopyWheel
+    2300006: fuelCut
+    2300008: fuelSelector
+    2300010: glass
+    2300012: interiour
+    2300014: mixture
+    2300016: Null001
+    2300018: propfade
+    2300020: rudderPedalL
+    2300022: rudderPeddalR
+    2300024: rudderTrim
+    2300026: stick
+    2300028: throttle
+    2300030: trimwheel
+    2300032: window
+    2300034: windowtop
+    2300036: windowtopglass
+    3300000: aileronTrim
+    3300002: canopyLock
+    3300004: canopyWheel
+    3300006: fuelCut
+    3300008: fuelSelector
+    3300010: glass
+    3300012: interiour
+    3300014: mixture
+    3300016: Null001
+    3300018: propfade
+    3300020: rudderPedalL
+    3300022: rudderPeddalR
+    3300024: rudderTrim
+    3300026: stick
+    3300028: throttle
+    3300030: trimwheel
+    3300032: window
+    3300034: windowtop
+    3300036: windowtopglass
+    4300000: glass
+    4300002: interiour
+    4300004: window
+    4300006: windowtop
+    4300008: windowtopglass
+    4300010: stick
+    4300012: throttle
+    4300014: propfade
+    4300016: mixture
+    4300018: trimwheel
+    4300020: rudderTrim
+    4300022: aileronTrim
+    4300024: canopyWheel
+    4300026: fuelCut
+    4300028: fuelSelector
+    4300030: rudderPeddalR
+    4300032: rudderPedalL
+    4300034: canopyLock
+    4300036: Null001
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

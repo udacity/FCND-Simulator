@@ -1,0 +1,363 @@
+fileFormatVersion: 2
+guid: b5113a42158541443aa0f31442fb775c
+timeCreated: 1500126872
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Apac30ta
+    100002: ApacBgea
+    100004: ApacBrim
+    100006: 'ApacButt '
+    100008: ApacBwhe
+    100010: ApacCgl1
+    100012: ApacCgla
+    100014: ApacCock
+    100016: Apaccon1
+    100018: ApacCono
+    100020: Apacdet
+    100022: Apacdet2
+    100024: Apacfus1
+    100026: Apacfus2
+    100028: Apacfus3
+    100030: Apacfus4
+    100032: Apacfus5
+    100034: Apacfuse
+    100036: ApacFusT
+    100038: 'ApacfusW '
+    100040: ApacfuW1
+    100042: 'ApacGamm '
+    100044: Apacgea2
+    100046: Apacgear
+    100048: ApacGsup
+    100050: //RootNode
+    100052: ApacL70m
+    100054: Apacligh
+    100056: ApacLrim
+    100058: ApacLsu1
+    100060: ApacLsu2
+    100062: ApacLwhe
+    100064: ApacMgu1
+    100066: ApacMgun
+    100068: ApacR70m
+    100070: ApacRad1
+    100072: ApacRad2
+    100074: ApacRad3
+    100076: ApacRad4
+    100078: ApacRad5
+    100080: ApacRad6
+    100082: ApacRado
+    100084: ApacRaxi
+    100086: ApacRot2
+    100088: ApacRot3
+    100090: ApacRoto
+    100092: ApacRrim
+    100094: ApacRsu1
+    100096: ApacRsu2
+    100098: ApacRwhe
+    100100: ApacSeat
+    100102: ApacTap
+    100104: ApacTro2
+    100106: ApacTrot
+    100108: ApacTur2
+    100110: ApacTur3
+    100112: Dummy01
+    100114: lgeararm
+    400000: Apac30ta
+    400002: ApacBgea
+    400004: ApacBrim
+    400006: 'ApacButt '
+    400008: ApacBwhe
+    400010: ApacCgl1
+    400012: ApacCgla
+    400014: ApacCock
+    400016: Apaccon1
+    400018: ApacCono
+    400020: Apacdet
+    400022: Apacdet2
+    400024: Apacfus1
+    400026: Apacfus2
+    400028: Apacfus3
+    400030: Apacfus4
+    400032: Apacfus5
+    400034: Apacfuse
+    400036: ApacFusT
+    400038: 'ApacfusW '
+    400040: ApacfuW1
+    400042: 'ApacGamm '
+    400044: Apacgea2
+    400046: Apacgear
+    400048: ApacGsup
+    400050: //RootNode
+    400052: ApacL70m
+    400054: Apacligh
+    400056: ApacLrim
+    400058: ApacLsu1
+    400060: ApacLsu2
+    400062: ApacLwhe
+    400064: ApacMgu1
+    400066: ApacMgun
+    400068: ApacR70m
+    400070: ApacRad1
+    400072: ApacRad2
+    400074: ApacRad3
+    400076: ApacRad4
+    400078: ApacRad5
+    400080: ApacRad6
+    400082: ApacRado
+    400084: ApacRaxi
+    400086: ApacRot2
+    400088: ApacRot3
+    400090: ApacRoto
+    400092: ApacRrim
+    400094: ApacRsu1
+    400096: ApacRsu2
+    400098: ApacRwhe
+    400100: ApacSeat
+    400102: ApacTap
+    400104: ApacTro2
+    400106: ApacTrot
+    400108: ApacTur2
+    400110: ApacTur3
+    400112: Dummy01
+    400114: lgeararm
+    2300000: Apac30ta
+    2300002: ApacBgea
+    2300004: ApacBrim
+    2300006: 'ApacButt '
+    2300008: ApacBwhe
+    2300010: ApacCgl1
+    2300012: ApacCgla
+    2300014: ApacCock
+    2300016: Apaccon1
+    2300018: ApacCono
+    2300020: Apacdet
+    2300022: Apacdet2
+    2300024: Apacfus1
+    2300026: Apacfus2
+    2300028: Apacfus3
+    2300030: Apacfus4
+    2300032: Apacfus5
+    2300034: Apacfuse
+    2300036: ApacFusT
+    2300038: 'ApacfusW '
+    2300040: ApacfuW1
+    2300042: 'ApacGamm '
+    2300044: Apacgea2
+    2300046: Apacgear
+    2300048: ApacGsup
+    2300050: ApacL70m
+    2300052: Apacligh
+    2300054: ApacLrim
+    2300056: ApacLsu1
+    2300058: ApacLsu2
+    2300060: ApacLwhe
+    2300062: ApacMgu1
+    2300064: ApacMgun
+    2300066: ApacR70m
+    2300068: ApacRad1
+    2300070: ApacRad2
+    2300072: ApacRad3
+    2300074: ApacRad4
+    2300076: ApacRad5
+    2300078: ApacRad6
+    2300080: ApacRado
+    2300082: ApacRaxi
+    2300084: ApacRot2
+    2300086: ApacRot3
+    2300088: ApacRoto
+    2300090: ApacRrim
+    2300092: ApacRsu1
+    2300094: ApacRsu2
+    2300096: ApacRwhe
+    2300098: ApacSeat
+    2300100: ApacTap
+    2300102: ApacTro2
+    2300104: ApacTrot
+    2300106: ApacTur2
+    2300108: ApacTur3
+    2300110: lgeararm
+    3300000: Apac30ta
+    3300002: ApacBgea
+    3300004: ApacBrim
+    3300006: 'ApacButt '
+    3300008: ApacBwhe
+    3300010: ApacCgl1
+    3300012: ApacCgla
+    3300014: ApacCock
+    3300016: Apaccon1
+    3300018: ApacCono
+    3300020: Apacdet
+    3300022: Apacdet2
+    3300024: Apacfus1
+    3300026: Apacfus2
+    3300028: Apacfus3
+    3300030: Apacfus4
+    3300032: Apacfus5
+    3300034: Apacfuse
+    3300036: ApacFusT
+    3300038: 'ApacfusW '
+    3300040: ApacfuW1
+    3300042: 'ApacGamm '
+    3300044: Apacgea2
+    3300046: Apacgear
+    3300048: ApacGsup
+    3300050: ApacL70m
+    3300052: Apacligh
+    3300054: ApacLrim
+    3300056: ApacLsu1
+    3300058: ApacLsu2
+    3300060: ApacLwhe
+    3300062: ApacMgu1
+    3300064: ApacMgun
+    3300066: ApacR70m
+    3300068: ApacRad1
+    3300070: ApacRad2
+    3300072: ApacRad3
+    3300074: ApacRad4
+    3300076: ApacRad5
+    3300078: ApacRad6
+    3300080: ApacRado
+    3300082: ApacRaxi
+    3300084: ApacRot2
+    3300086: ApacRot3
+    3300088: ApacRoto
+    3300090: ApacRrim
+    3300092: ApacRsu1
+    3300094: ApacRsu2
+    3300096: ApacRwhe
+    3300098: ApacSeat
+    3300100: ApacTap
+    3300102: ApacTro2
+    3300104: ApacTrot
+    3300106: ApacTur2
+    3300108: ApacTur3
+    3300110: lgeararm
+    4300000: Apac30ta
+    4300002: ApacBgea
+    4300004: ApacBrim
+    4300006: 'ApacButt '
+    4300008: ApacBwhe
+    4300010: ApacCgl1
+    4300012: ApacCgla
+    4300014: ApacCock
+    4300016: Apaccon1
+    4300018: ApacCono
+    4300020: Apacdet
+    4300022: Apacdet2
+    4300024: Apacfus1
+    4300026: Apacfus2
+    4300028: Apacfus3
+    4300030: Apacfus4
+    4300032: Apacfus5
+    4300034: Apacfuse
+    4300036: ApacFusT
+    4300038: 'ApacfusW '
+    4300040: ApacfuW1
+    4300042: 'ApacGamm '
+    4300044: Apacgea2
+    4300046: Apacgear
+    4300048: ApacGsup
+    4300050: ApacL70m
+    4300052: Apacligh
+    4300054: ApacLrim
+    4300056: ApacLsu1
+    4300058: ApacLsu2
+    4300060: ApacLwhe
+    4300062: ApacMgu1
+    4300064: ApacMgun
+    4300066: ApacR70m
+    4300068: ApacRad1
+    4300070: ApacRad2
+    4300072: ApacRad3
+    4300074: ApacRad4
+    4300076: ApacRad5
+    4300078: ApacRad6
+    4300080: ApacRado
+    4300082: ApacRaxi
+    4300084: ApacRot2
+    4300086: ApacRot3
+    4300088: ApacRoto
+    4300090: ApacRrim
+    4300092: ApacRsu1
+    4300094: ApacRsu2
+    4300096: ApacRwhe
+    4300098: ApacSeat
+    4300100: ApacTap
+    4300102: ApacTro2
+    4300104: ApacTrot
+    4300106: ApacTur2
+    4300108: ApacTur3
+    4300110: lgeararm
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

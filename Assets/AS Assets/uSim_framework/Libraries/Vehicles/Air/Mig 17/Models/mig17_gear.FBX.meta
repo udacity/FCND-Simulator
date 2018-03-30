@@ -1,0 +1,197 @@
+fileFormatVersion: 2
+guid: 1919540859b12a341b48f5ecdd5fe59e
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Box04
+    100002: Box05
+    100004: Box06
+    100006: Cylinder03
+    100008: Cylinder04
+    100010: Cylinder05
+    100012: Cylinder07
+    100014: Cylinder11
+    100016: Line02
+    100018: Line06
+    100020: Line07
+    100022: Line08
+    100024: //RootNode
+    100026: Torus01
+    100028: Torus02
+    100030: Torus03
+    400000: Box04
+    400002: Box05
+    400004: Box06
+    400006: Cylinder03
+    400008: Cylinder04
+    400010: Cylinder05
+    400012: Cylinder07
+    400014: Cylinder11
+    400016: Line02
+    400018: Line06
+    400020: Line07
+    400022: Line08
+    400024: //RootNode
+    400026: Torus01
+    400028: Torus02
+    400030: Torus03
+    2300000: Box04
+    2300002: Box05
+    2300004: Box06
+    2300006: Cylinder03
+    2300008: Cylinder04
+    2300010: Cylinder05
+    2300012: Cylinder07
+    2300014: Cylinder11
+    2300016: Line02
+    2300018: Line06
+    2300020: Line07
+    2300022: Line08
+    2300024: Torus01
+    2300026: Torus02
+    2300028: Torus03
+    3300000: Box04
+    3300002: Box05
+    3300004: Box06
+    3300006: Cylinder03
+    3300008: Cylinder04
+    3300010: Cylinder05
+    3300012: Cylinder07
+    3300014: Cylinder11
+    3300016: Line02
+    3300018: Line06
+    3300020: Line07
+    3300022: Line08
+    3300024: Torus01
+    3300026: Torus02
+    3300028: Torus03
+    4300000: Line02
+    4300002: Line06
+    4300004: Box04
+    4300006: Box05
+    4300008: Box06
+    4300010: Cylinder07
+    4300012: Torus03
+    4300014: Line08
+    4300016: Line07
+    4300018: Torus02
+    4300020: Cylinder05
+    4300022: Torus01
+    4300024: Cylinder04
+    4300026: Cylinder03
+    4300028: Cylinder11
+    7400000: gear
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: gear
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 100
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Box04
+        weight: 1
+      - path: Box05
+        weight: 1
+      - path: Box06
+        weight: 1
+      - path: Cylinder03
+        weight: 1
+      - path: Cylinder04
+        weight: 1
+      - path: Cylinder05
+        weight: 1
+      - path: Cylinder07
+        weight: 1
+      - path: Cylinder07/Line07
+        weight: 1
+      - path: Cylinder07/Line08
+        weight: 1
+      - path: Cylinder07/Torus03
+        weight: 1
+      - path: Cylinder11
+        weight: 1
+      - path: Line02
+        weight: 1
+      - path: Line06
+        weight: 1
+      - path: Torus01
+        weight: 1
+      - path: Torus02
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .0199999996
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 

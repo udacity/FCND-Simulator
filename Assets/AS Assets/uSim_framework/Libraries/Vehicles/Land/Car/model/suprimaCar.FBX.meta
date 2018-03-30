@@ -1,0 +1,164 @@
+fileFormatVersion: 2
+guid: f69ff000d78267f46ba127986c08129c
+timeCreated: 1471979127
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Body
+    100002: Bonnet
+    100004: Front_Bumper
+    100006: Front_Left_Wheel
+    100008: Front_Right_Wheel
+    100010: Headlight
+    100012: Headlight_Glass
+    100014: Hood
+    100016: Interior
+    100018: Left_Front_Door
+    100020: Left_Rear_Door
+    100022: Rear_Bumper
+    100024: Rear_Left_Wheel
+    100026: Rear_Right_Wheel
+    100028: Right_Front_Door
+    100030: Right_Rear_Door
+    100032: Spoiler
+    100034: //RootNode
+    100036: Taillight
+    400000: Body
+    400002: Bonnet
+    400004: Front_Bumper
+    400006: Front_Left_Wheel
+    400008: Front_Right_Wheel
+    400010: Headlight
+    400012: Headlight_Glass
+    400014: Hood
+    400016: Interior
+    400018: Left_Front_Door
+    400020: Left_Rear_Door
+    400022: Rear_Bumper
+    400024: Rear_Left_Wheel
+    400026: Rear_Right_Wheel
+    400028: Right_Front_Door
+    400030: Right_Rear_Door
+    400032: Spoiler
+    400034: //RootNode
+    400036: Taillight
+    2300000: Body
+    2300002: Bonnet
+    2300004: Front_Bumper
+    2300006: Front_Left_Wheel
+    2300008: Front_Right_Wheel
+    2300010: Headlight
+    2300012: Headlight_Glass
+    2300014: Hood
+    2300016: Interior
+    2300018: Left_Front_Door
+    2300020: Left_Rear_Door
+    2300022: Rear_Bumper
+    2300024: Rear_Left_Wheel
+    2300026: Rear_Right_Wheel
+    2300028: Right_Front_Door
+    2300030: Right_Rear_Door
+    2300032: Spoiler
+    2300034: Taillight
+    3300000: Body
+    3300002: Bonnet
+    3300004: Front_Bumper
+    3300006: Front_Left_Wheel
+    3300008: Front_Right_Wheel
+    3300010: Headlight
+    3300012: Headlight_Glass
+    3300014: Hood
+    3300016: Interior
+    3300018: Left_Front_Door
+    3300020: Left_Rear_Door
+    3300022: Rear_Bumper
+    3300024: Rear_Left_Wheel
+    3300026: Rear_Right_Wheel
+    3300028: Right_Front_Door
+    3300030: Right_Rear_Door
+    3300032: Spoiler
+    3300034: Taillight
+    4300000: Headlight
+    4300002: Rear_Bumper
+    4300004: Hood
+    4300006: Headlight_Glass
+    4300008: Front_Bumper
+    4300010: Interior
+    4300012: Left_Rear_Door
+    4300014: Right_Rear_Door
+    4300016: Left_Front_Door
+    4300018: Right_Front_Door
+    4300020: Body
+    4300022: Spoiler
+    4300024: Taillight
+    4300026: Front_Right_Wheel
+    4300028: Front_Left_Wheel
+    4300030: Rear_Right_Wheel
+    4300032: Rear_Left_Wheel
+    4300034: Bonnet
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 10
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

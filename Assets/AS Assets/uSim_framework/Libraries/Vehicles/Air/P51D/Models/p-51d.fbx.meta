@@ -1,0 +1,201 @@
+fileFormatVersion: 2
+guid: 732e5a761766122439ef7a4844084092
+timeCreated: 1454935183
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: aileronleft
+    100002: aileronright
+    100004: backgearplateleft
+    100006: backgearplateright
+    100008: Cube.009
+    100010: elevator
+    100012: exhaust
+    100014: exhaustplate
+    100016: flapleft
+    100018: flapright
+    100020: gear
+    100022: gearboxleft
+    100024: gearboxleft.001
+    100026: glass
+    100028: interiour
+    100030: nose
+    100032: Null
+    100034: Null.001
+    100036: Null_2
+    100038: //RootNode
+    100040: radiator
+    100042: radiator2
+    100044: rudder
+    100046: screw.003
+    100048: window
+    100050: windowtop
+    100052: windowtopglass
+    400000: aileronleft
+    400002: aileronright
+    400004: backgearplateleft
+    400006: backgearplateright
+    400008: Cube.009
+    400010: elevator
+    400012: exhaust
+    400014: exhaustplate
+    400016: flapleft
+    400018: flapright
+    400020: gear
+    400022: gearboxleft
+    400024: gearboxleft.001
+    400026: glass
+    400028: interiour
+    400030: nose
+    400032: Null
+    400034: Null.001
+    400036: Null_2
+    400038: //RootNode
+    400040: radiator
+    400042: radiator2
+    400044: rudder
+    400046: screw.003
+    400048: window
+    400050: windowtop
+    400052: windowtopglass
+    2300000: aileronleft
+    2300002: aileronright
+    2300004: backgearplateleft
+    2300006: backgearplateright
+    2300008: Cube.009
+    2300010: elevator
+    2300012: exhaust
+    2300014: exhaustplate
+    2300016: flapleft
+    2300018: flapright
+    2300020: gear
+    2300022: gearboxleft
+    2300024: gearboxleft.001
+    2300026: glass
+    2300028: interiour
+    2300030: nose
+    2300032: Null
+    2300034: Null.001
+    2300036: Null_2
+    2300038: radiator
+    2300040: radiator2
+    2300042: rudder
+    2300044: screw.003
+    2300046: window
+    2300048: windowtop
+    2300050: windowtopglass
+    3300000: aileronleft
+    3300002: aileronright
+    3300004: backgearplateleft
+    3300006: backgearplateright
+    3300008: Cube.009
+    3300010: elevator
+    3300012: exhaust
+    3300014: exhaustplate
+    3300016: flapleft
+    3300018: flapright
+    3300020: gear
+    3300022: gearboxleft
+    3300024: gearboxleft.001
+    3300026: glass
+    3300028: interiour
+    3300030: nose
+    3300032: Null
+    3300034: Null.001
+    3300036: Null_2
+    3300038: radiator
+    3300040: radiator2
+    3300042: rudder
+    3300044: screw.003
+    3300046: window
+    3300048: windowtop
+    3300050: windowtopglass
+    4300000: Null_2
+    4300002: Null.001
+    4300004: Null
+    4300006: aileronleft
+    4300008: aileronright
+    4300010: backgearplateleft
+    4300012: backgearplateright
+    4300014: Cube.009
+    4300016: elevator
+    4300018: flapleft
+    4300020: flapright
+    4300022: exhaust
+    4300024: exhaustplate
+    4300026: gear
+    4300028: gearboxleft.001
+    4300030: gearboxleft
+    4300032: glass
+    4300034: interiour
+    4300036: nose
+    4300038: radiator
+    4300040: radiator2
+    4300042: rudder
+    4300044: screw.003
+    4300046: window
+    4300048: windowtop
+    4300050: windowtopglass
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

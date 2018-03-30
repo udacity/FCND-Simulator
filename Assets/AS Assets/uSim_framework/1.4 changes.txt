@@ -1,0 +1,15 @@
+NOTE: For installing porpuses the name of the folder remains as 1.3 but current version is 1.4
+
+changes on 1.4
+
+* Added optional ground  effect to airfoils. Adds extra lift and reduce drag based on near ground altitude. 
+It use requires to asign a raycasting source for the airfoil. raycasting is used to detect distance to ground
+or any other collider.
+* Added 3d cockpit implementations. rigged controls, 3d canvas
+* Added manouver thrusters for ships. Along with UI button support.
+* Added persistant position keeper. Can be modified with more parameters.
+* Improves to Land module.
+* Added vehicle station support for FPS use
+* Added AI module beta. Allows AI flights and formations. (no combat manouvers)
+* Reviewed template vehicles
+* Minor fixes

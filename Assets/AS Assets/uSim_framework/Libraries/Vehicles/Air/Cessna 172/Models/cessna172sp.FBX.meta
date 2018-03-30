@@ -1,0 +1,177 @@
+fileFormatVersion: 2
+guid: 2818e4b8195fee6438dca9ae921cf3df
+timeCreated: 1454763964
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: cessna172sp
+    100002: //RootNode
+    100004: exaust
+    100006: frontGear
+    100008: frontWindshield
+    100010: Fwheel
+    100012: Laileron
+    100014: leftGeararm
+    100016: leftWindshields
+    100018: Lelevator
+    100020: Lflap
+    100022: Lwheel
+    100024: prop
+    100026: propCone
+    100028: Raileron
+    100030: rearWindshield
+    100032: Relevator
+    100034: Rflap
+    100036: rightGeararm
+    100038: rightWindshields
+    100040: rudder
+    100042: Rwheel
+    400000: //RootNode
+    400002: cessna172sp
+    400004: exaust
+    400006: frontGear
+    400008: frontWindshield
+    400010: Fwheel
+    400012: Laileron
+    400014: leftGeararm
+    400016: leftWindshields
+    400018: Lelevator
+    400020: Lflap
+    400022: Lwheel
+    400024: prop
+    400026: propCone
+    400028: Raileron
+    400030: rearWindshield
+    400032: Relevator
+    400034: Rflap
+    400036: rightGeararm
+    400038: rightWindshields
+    400040: rudder
+    400042: Rwheel
+    2300000: cessna172sp
+    2300002: exaust
+    2300004: frontGear
+    2300006: frontWindshield
+    2300008: Fwheel
+    2300010: Laileron
+    2300012: leftGeararm
+    2300014: leftWindshields
+    2300016: Lelevator
+    2300018: Lflap
+    2300020: Lwheel
+    2300022: prop
+    2300024: propCone
+    2300026: Raileron
+    2300028: rearWindshield
+    2300030: Relevator
+    2300032: Rflap
+    2300034: rightGeararm
+    2300036: rightWindshields
+    2300038: rudder
+    2300040: Rwheel
+    3300000: cessna172sp
+    3300002: exaust
+    3300004: frontGear
+    3300006: frontWindshield
+    3300008: Fwheel
+    3300010: Laileron
+    3300012: leftGeararm
+    3300014: leftWindshields
+    3300016: Lelevator
+    3300018: Lflap
+    3300020: Lwheel
+    3300022: prop
+    3300024: propCone
+    3300026: Raileron
+    3300028: rearWindshield
+    3300030: Relevator
+    3300032: Rflap
+    3300034: rightGeararm
+    3300036: rightWindshields
+    3300038: rudder
+    3300040: Rwheel
+    4300000: cessna172sp
+    4300002: Rflap
+    4300004: Lflap
+    4300006: Laileron
+    4300008: Raileron
+    4300010: Lelevator
+    4300012: Relevator
+    4300014: rudder
+    4300016: Lwheel
+    4300018: Rwheel
+    4300020: Fwheel
+    4300022: propCone
+    4300024: prop
+    4300026: frontWindshield
+    4300028: rightWindshields
+    4300030: rearWindshield
+    4300032: leftWindshields
+    4300034: rightGeararm
+    4300036: leftGeararm
+    4300038: frontGear
+    4300040: exaust
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 2
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

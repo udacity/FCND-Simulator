@@ -1,0 +1,381 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1587908909114710}
+  m_IsPrefabParent: 1
+--- !u!1 &1241583234159958
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4342177279407898}
+  - component: {fileID: 114304353995409198}
+  m_Layer: 0
+  m_Name: StandBy_ApAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1423412548553808
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4783747975857166}
+  - component: {fileID: 114219235467703088}
+  m_Layer: 0
+  m_Name: TakeOff_ApAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1587908909114710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4418117426486608}
+  - component: {fileID: 114989478717922480}
+  m_Layer: 0
+  m_Name: Flight plan template
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1596198052237024
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4569764343410048}
+  m_Layer: 0
+  m_Name: WP0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1745928141067528
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4026980683528866}
+  - component: {fileID: 114677070076139302}
+  m_Layer: 0
+  m_Name: FlyToWp_ApAction 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1801601127336048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4262403874519520}
+  - component: {fileID: 114094891564198248}
+  m_Layer: 0
+  m_Name: FlightPlan 5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1946341233963544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4697898887737206}
+  m_Layer: 0
+  m_Name: WP1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4026980683528866
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1745928141067528}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 932.7169, y: 170.7425, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4262403874519520}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4262403874519520
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1801601127336048}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4026980683528866}
+  - {fileID: 4342177279407898}
+  - {fileID: 4783747975857166}
+  m_Father: {fileID: 4418117426486608}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4342177279407898
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1241583234159958}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 932.7169, y: 170.7425, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4262403874519520}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4418117426486608
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1587908909114710}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4262403874519520}
+  - {fileID: 4569764343410048}
+  - {fileID: 4697898887737206}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4569764343410048
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596198052237024}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3392, y: 800, z: -6549}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4418117426486608}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4697898887737206
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1946341233963544}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2576, y: 1000, z: -2212}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4418117426486608}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4783747975857166
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1423412548553808}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 932.7169, y: 170.7425, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4262403874519520}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114094891564198248
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1801601127336048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94036c493749dd74da6f1fde3e0565b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actions:
+  - {fileID: 114304353995409198}
+  - {fileID: 114219235467703088}
+  - {fileID: 114677070076139302}
+  waypoints:
+  - {fileID: 4569764343410048}
+  - {fileID: 4697898887737206}
+  fromRunway: {fileID: 0}
+  toRunway: {fileID: 0}
+  currentFlightState: 0
+  manager: {fileID: 0}
+  formationLeader: {fileID: 0}
+  allowFormation: 1
+  formationFlightPlan: {fileID: 0}
+--- !u!114 &114219235467703088
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1423412548553808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f60657267ec8c04aad1369fb5c524b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action:
+    actionName: Take off
+    flightState: 3
+    routineIndex: 0
+    routines:
+    - verticalFlightMode: 1
+      targetAlt: 0
+      targetAoa: 0
+      targetPitch: 10
+      targetVspd: 0
+      horizontalFlightMode: 1
+      useSteering: 0
+      useRoutineTarget: 0
+      targetBnk: 10
+      targetHdg: 322
+      targetCrs: 0
+      targetRdl: 0
+      targetWp: {fileID: 0}
+      longitudinalFlightMode: 2
+      targetSpd: 0
+      targetThr: 0
+      exitTrigger: 1
+      exitValue: 150
+      exitMode: 2
+    actionExitTrigger: 0
+    actionExitMode: 0
+    exitAction: Fly to waypoint
+--- !u!114 &114304353995409198
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1241583234159958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f60657267ec8c04aad1369fb5c524b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action:
+    actionName: Stand by
+    flightState: 0
+    routineIndex: 0
+    routines:
+    - verticalFlightMode: 0
+      targetAlt: 0
+      targetAoa: 0
+      targetPitch: 12
+      targetVspd: 0
+      horizontalFlightMode: 0
+      useSteering: 0
+      useRoutineTarget: 0
+      targetBnk: 10
+      targetHdg: 0
+      targetCrs: 0
+      targetRdl: 0
+      targetWp: {fileID: 0}
+      longitudinalFlightMode: 3
+      targetSpd: 0
+      targetThr: 0
+      exitTrigger: 0
+      exitValue: 0
+      exitMode: 0
+    actionExitTrigger: 0
+    actionExitMode: 0
+    exitAction: 
+--- !u!114 &114677070076139302
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1745928141067528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f60657267ec8c04aad1369fb5c524b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action:
+    actionName: Fly to waypoint
+    flightState: 4
+    routineIndex: 0
+    routines:
+    - verticalFlightMode: 3
+      targetAlt: 500
+      targetAoa: 0
+      targetPitch: 0
+      targetVspd: 2.14151
+      horizontalFlightMode: 3
+      useSteering: 0
+      useRoutineTarget: 0
+      targetBnk: 40
+      targetHdg: 356.75018
+      targetCrs: 0
+      targetRdl: 0
+      targetWp: {fileID: 0}
+      longitudinalFlightMode: 1
+      targetSpd: 100
+      targetThr: 0.7752991
+      exitTrigger: 5
+      exitValue: 1000
+      exitMode: 4
+    actionExitTrigger: 0
+    actionExitMode: 0
+    exitAction: 
+--- !u!114 &114989478717922480
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1587908909114710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fb30f8669e7f4645846fbadaaf396c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoStart: 1
+  startFlying: 0
+  waitTime: 0
+  initialFlightPlan: {fileID: 114094891564198248}
+  flightAircraft: {fileID: 0}
+  flightSize: 3
+  originAirfield: {fileID: 0}
+  parkingSpot: {fileID: 0}
+  waypoints:
+  - {fileID: 4569764343410048}
+  - {fileID: 4697898887737206}

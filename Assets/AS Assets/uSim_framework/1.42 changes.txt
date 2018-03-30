@@ -1,0 +1,14 @@
+version 1.42b
+
+- Minor adjustments to demo scene atmospheric value
+- Minor adjustments in demo template vehicles
+- fixed camera parenting issue in changing views
+- Added up command to head pilot. (keypad 5) 
+- Added tow line simulation
+- Added thrust direction input value. 
+(-1 to 1, simulates direction and magnitude of proppeller flow)
+- Added UI based ship controls, see example ships.
+- First implementation of UNet services into the project. 
+Located at UNet folder, use scenes incuded in folder to setup project.
+You will have to setup your service configuration to have acces
+ to Unity multiplayer services.

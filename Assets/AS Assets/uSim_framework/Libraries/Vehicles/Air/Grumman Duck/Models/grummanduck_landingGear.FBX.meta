@@ -1,0 +1,162 @@
+fileFormatVersion: 2
+guid: 051e637f81cb3c34d86219c54e58c640
+timeCreated: 1468150684
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: left gear arm
+    100004: left gear aux arm
+    100006: left gear struct
+    100008: left wheel
+    100010: right aux arm
+    100012: right gear
+    100014: right struct
+    100016: right wheel
+    400000: //RootNode
+    400002: left gear arm
+    400004: left gear aux arm
+    400006: left gear struct
+    400008: left wheel
+    400010: right aux arm
+    400012: right gear
+    400014: right struct
+    400016: right wheel
+    2300000: left gear arm
+    2300002: left gear aux arm
+    2300004: left gear struct
+    2300006: left wheel
+    2300008: right aux arm
+    2300010: right gear
+    2300012: right struct
+    2300014: right wheel
+    3300000: left gear arm
+    3300002: left gear aux arm
+    3300004: left gear struct
+    3300006: left wheel
+    3300008: right aux arm
+    3300010: right gear
+    3300012: right struct
+    3300014: right wheel
+    4300000: right struct
+    4300002: right gear
+    4300004: right wheel
+    4300006: right aux arm
+    4300008: left gear struct
+    4300010: left gear arm
+    4300012: left wheel
+    4300014: left gear aux arm
+    7400000: gear
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: gear
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 100
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: left gear struct
+        weight: 1
+      - path: left gear struct/left gear arm
+        weight: 1
+      - path: left gear struct/left gear arm/left gear aux arm
+        weight: 1
+      - path: left gear struct/left gear arm/left wheel
+        weight: 1
+      - path: right struct
+        weight: 1
+      - path: right struct/right aux arm
+        weight: 1
+      - path: right struct/right gear
+        weight: 1
+      - path: right struct/right gear/right wheel
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 25
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

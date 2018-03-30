@@ -1,0 +1,7 @@
+version 1.41b
+* Added helicopters support (beta) and example Apache helicopter
+* colective pitch added. by default W and S
+* Added amphibious land vehicle example
+* Some improvements to inputs based AI flare routine.
+* Added minimal range to 3d throttle animation.
+* Fixed an issue in suspension directionality.

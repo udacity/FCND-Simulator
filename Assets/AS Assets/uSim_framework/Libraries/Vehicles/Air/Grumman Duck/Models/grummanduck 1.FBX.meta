@@ -1,0 +1,153 @@
+fileFormatVersion: 2
+guid: 7ba125e229737884dba96e924654c461
+timeCreated: 1468150687
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Ali
+    100002: Cavi
+    100004: Cruscotto
+    100006: fusoliera
+    100008: //RootNode
+    100010: hook
+    100012: left elevator
+    100014: leftdown aileron
+    100016: lefttop aileron
+    100018: prop
+    100020: right elevator
+    100022: rightlow aileron
+    100024: righttop aileron
+    100026: rudder
+    100028: tail wheel
+    100030: tail wheel wheel
+    100032: Vetro
+    400000: Ali
+    400002: Cavi
+    400004: Cruscotto
+    400006: fusoliera
+    400008: //RootNode
+    400010: hook
+    400012: left elevator
+    400014: leftdown aileron
+    400016: lefttop aileron
+    400018: prop
+    400020: right elevator
+    400022: rightlow aileron
+    400024: righttop aileron
+    400026: rudder
+    400028: tail wheel
+    400030: tail wheel wheel
+    400032: Vetro
+    2300000: Ali
+    2300002: Cavi
+    2300004: Cruscotto
+    2300006: fusoliera
+    2300008: hook
+    2300010: left elevator
+    2300012: leftdown aileron
+    2300014: lefttop aileron
+    2300016: prop
+    2300018: right elevator
+    2300020: rightlow aileron
+    2300022: righttop aileron
+    2300024: rudder
+    2300026: tail wheel
+    2300028: tail wheel wheel
+    2300030: Vetro
+    3300000: Ali
+    3300002: Cavi
+    3300004: Cruscotto
+    3300006: fusoliera
+    3300008: hook
+    3300010: left elevator
+    3300012: leftdown aileron
+    3300014: lefttop aileron
+    3300016: prop
+    3300018: right elevator
+    3300020: rightlow aileron
+    3300022: righttop aileron
+    3300024: rudder
+    3300026: tail wheel
+    3300028: tail wheel wheel
+    3300030: Vetro
+    4300000: Cruscotto
+    4300002: Vetro
+    4300004: Ali
+    4300006: Cavi
+    4300008: fusoliera
+    4300010: rudder
+    4300012: hook
+    4300014: tail wheel
+    4300016: prop
+    4300018: right elevator
+    4300020: left elevator
+    4300022: rightlow aileron
+    4300024: righttop aileron
+    4300026: leftdown aileron
+    4300028: lefttop aileron
+    4300030: tail wheel wheel
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 25
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

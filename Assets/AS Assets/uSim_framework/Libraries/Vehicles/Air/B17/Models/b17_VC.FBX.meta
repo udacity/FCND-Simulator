@@ -1,0 +1,325 @@
+fileFormatVersion: 2
+guid: 6477f6cee23ddd349869907eecc55345
+timeCreated: 1467542761
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Box003
+    100004: Box004
+    100006: Box005
+    100008: Box006
+    100010: Box007
+    100012: Box009
+    100014: Box010
+    100016: Box011
+    100018: Box012
+    100020: Box013
+    100022: ChamferBox001
+    100024: copilot chair
+    100026: copilot rudder L
+    100028: copilot rudder R
+    100030: Cylinder021
+    100032: Cylinder022
+    100034: Cylinder030
+    100036: Cylinder032
+    100038: Cylinder034
+    100040: flight column copilot
+    100042: flight column pilot
+    100044: joke copilot
+    100046: joke pilot
+    100048: Lock 2
+    100050: lock 3
+    100052: lock1
+    100054: M1
+    100056: M2
+    100058: M3
+    100060: M4
+    100062: main console
+    100064: Null_Objec
+    100066: panel
+    100068: pedestal
+    100070: pilot chair
+    100072: pilot rudder L
+    100074: pilot rudder R
+    100076: Plane02
+    100078: switch console
+    100080: T1
+    100082: T2
+    100084: T3
+    100086: T4
+    100088: TC1
+    100090: TC2
+    100092: TC3
+    100094: TC4
+    100096: topbody01
+    100098: trim wheel
+    100100: Tube003
+    100102: Tube004
+    400000: //RootNode
+    400002: Box003
+    400004: Box004
+    400006: Box005
+    400008: Box006
+    400010: Box007
+    400012: Box009
+    400014: Box010
+    400016: Box011
+    400018: Box012
+    400020: Box013
+    400022: ChamferBox001
+    400024: copilot chair
+    400026: copilot rudder L
+    400028: copilot rudder R
+    400030: Cylinder021
+    400032: Cylinder022
+    400034: Cylinder030
+    400036: Cylinder032
+    400038: Cylinder034
+    400040: flight column copilot
+    400042: flight column pilot
+    400044: joke copilot
+    400046: joke pilot
+    400048: Lock 2
+    400050: lock 3
+    400052: lock1
+    400054: M1
+    400056: M2
+    400058: M3
+    400060: M4
+    400062: main console
+    400064: Null_Objec
+    400066: panel
+    400068: pedestal
+    400070: pilot chair
+    400072: pilot rudder L
+    400074: pilot rudder R
+    400076: Plane02
+    400078: switch console
+    400080: T1
+    400082: T2
+    400084: T3
+    400086: T4
+    400088: TC1
+    400090: TC2
+    400092: TC3
+    400094: TC4
+    400096: topbody01
+    400098: trim wheel
+    400100: Tube003
+    400102: Tube004
+    2300000: Box003
+    2300002: Box004
+    2300004: Box005
+    2300006: Box006
+    2300008: Box007
+    2300010: Box009
+    2300012: Box010
+    2300014: Box011
+    2300016: Box012
+    2300018: Box013
+    2300020: ChamferBox001
+    2300022: copilot chair
+    2300024: copilot rudder L
+    2300026: copilot rudder R
+    2300028: Cylinder021
+    2300030: Cylinder022
+    2300032: Cylinder030
+    2300034: Cylinder032
+    2300036: Cylinder034
+    2300038: flight column copilot
+    2300040: flight column pilot
+    2300042: joke copilot
+    2300044: joke pilot
+    2300046: Lock 2
+    2300048: lock 3
+    2300050: lock1
+    2300052: M1
+    2300054: M2
+    2300056: M3
+    2300058: M4
+    2300060: main console
+    2300062: panel
+    2300064: pedestal
+    2300066: pilot chair
+    2300068: pilot rudder L
+    2300070: pilot rudder R
+    2300072: Plane02
+    2300074: switch console
+    2300076: T1
+    2300078: T2
+    2300080: T3
+    2300082: T4
+    2300084: TC1
+    2300086: TC2
+    2300088: TC3
+    2300090: TC4
+    2300092: topbody01
+    2300094: trim wheel
+    2300096: Tube003
+    2300098: Tube004
+    3300000: Box003
+    3300002: Box004
+    3300004: Box005
+    3300006: Box006
+    3300008: Box007
+    3300010: Box009
+    3300012: Box010
+    3300014: Box011
+    3300016: Box012
+    3300018: Box013
+    3300020: ChamferBox001
+    3300022: copilot chair
+    3300024: copilot rudder L
+    3300026: copilot rudder R
+    3300028: Cylinder021
+    3300030: Cylinder022
+    3300032: Cylinder030
+    3300034: Cylinder032
+    3300036: Cylinder034
+    3300038: flight column copilot
+    3300040: flight column pilot
+    3300042: joke copilot
+    3300044: joke pilot
+    3300046: Lock 2
+    3300048: lock 3
+    3300050: lock1
+    3300052: M1
+    3300054: M2
+    3300056: M3
+    3300058: M4
+    3300060: main console
+    3300062: panel
+    3300064: pedestal
+    3300066: pilot chair
+    3300068: pilot rudder L
+    3300070: pilot rudder R
+    3300072: Plane02
+    3300074: switch console
+    3300076: T1
+    3300078: T2
+    3300080: T3
+    3300082: T4
+    3300084: TC1
+    3300086: TC2
+    3300088: TC3
+    3300090: TC4
+    3300092: topbody01
+    3300094: trim wheel
+    3300096: Tube003
+    3300098: Tube004
+    4300000: topbody01
+    4300002: Plane02
+    4300004: Box003
+    4300006: Box004
+    4300008: Box005
+    4300010: Box006
+    4300012: Box007
+    4300014: pedestal
+    4300016: main console
+    4300018: switch console
+    4300020: ChamferBox001
+    4300022: T1
+    4300024: T2
+    4300026: T3
+    4300028: T4
+    4300030: M1
+    4300032: M2
+    4300034: M3
+    4300036: M4
+    4300038: Box009
+    4300040: lock1
+    4300042: Cylinder021
+    4300044: Cylinder022
+    4300046: lock 3
+    4300048: Tube003
+    4300050: Box010
+    4300052: Box011
+    4300054: TC1
+    4300056: TC2
+    4300058: TC3
+    4300060: TC4
+    4300062: flight column pilot
+    4300064: Cylinder030
+    4300066: Lock 2
+    4300068: Cylinder032
+    4300070: flight column copilot
+    4300072: panel
+    4300074: Tube004
+    4300076: joke pilot
+    4300078: joke copilot
+    4300080: Cylinder034
+    4300082: Box012
+    4300084: Box013
+    4300086: copilot rudder R
+    4300088: copilot rudder L
+    4300090: pilot rudder R
+    4300092: pilot rudder L
+    4300094: pilot chair
+    4300096: copilot chair
+    4300098: trim wheel
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

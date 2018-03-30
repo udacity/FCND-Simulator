@@ -1,0 +1,270 @@
+fileFormatVersion: 2
+guid: 4d32fdadae225ae41b350f55378aa870
+timeCreated: 1499607692
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: BRDMBODC
+    100004: BRDMBODY
+    100006: BRDMCRIS
+    100008: BRDMCRJD
+    100010: BRDMCRJI
+    100012: BRDMDORD
+    100014: BRDMDORI
+    100016: BRDMFARO
+    100018: BRDMGMCR
+    100020: BRDMLLN1
+    100022: BRDMLLN2
+    100024: BRDMLLN3
+    100026: BRDMLLN4
+    100028: BRDMNOIR
+    100030: BRDMOJOD
+    100032: BRDMOJOD 1
+    100034: BRDMOJOI
+    100036: BRDMOJOI 1
+    100038: BRDMOOOD
+    100040: BRDMOOOI
+    100042: BRDMPALA
+    100044: BRDMPALG
+    100046: BRDMRUE1
+    100048: BRDMRUE2
+    100050: BRDMRUE3
+    100052: BRDMRUE4
+    100054: BRDMSLDC
+    100056: BRDMSLDO
+    100058: BRDMTPT1
+    100060: BRDMTPT2
+    100062: BRDMTPT3
+    100064: BRDMTPT4
+    100066: BRDMTPT5
+    100068: BRDMTPT6
+    100070: BRDMTPT7
+    100072: BRDMTPT8
+    100074: BRDMWHE1
+    100076: BRDMWHE2
+    100078: BRDMWHE3
+    100080: BRDMWHE4
+    100082: BRMDTAP
+    100084: Dummy01
+    400000: //RootNode
+    400002: BRDMBODC
+    400004: BRDMBODY
+    400006: BRDMCRIS
+    400008: BRDMCRJD
+    400010: BRDMCRJI
+    400012: BRDMDORD
+    400014: BRDMDORI
+    400016: BRDMFARO
+    400018: BRDMGMCR
+    400020: BRDMLLN1
+    400022: BRDMLLN2
+    400024: BRDMLLN3
+    400026: BRDMLLN4
+    400028: BRDMNOIR
+    400030: BRDMOJOD
+    400032: BRDMOJOD 1
+    400034: BRDMOJOI
+    400036: BRDMOJOI 1
+    400038: BRDMOOOD
+    400040: BRDMOOOI
+    400042: BRDMPALA
+    400044: BRDMPALG
+    400046: BRDMRUE1
+    400048: BRDMRUE2
+    400050: BRDMRUE3
+    400052: BRDMRUE4
+    400054: BRDMSLDC
+    400056: BRDMSLDO
+    400058: BRDMTPT1
+    400060: BRDMTPT2
+    400062: BRDMTPT3
+    400064: BRDMTPT4
+    400066: BRDMTPT5
+    400068: BRDMTPT6
+    400070: BRDMTPT7
+    400072: BRDMTPT8
+    400074: BRDMWHE1
+    400076: BRDMWHE2
+    400078: BRDMWHE3
+    400080: BRDMWHE4
+    400082: BRMDTAP
+    400084: Dummy01
+    2300000: BRDMBODC
+    2300002: BRDMBODY
+    2300004: BRDMCRIS
+    2300006: BRDMCRJD
+    2300008: BRDMCRJI
+    2300010: BRDMDORD
+    2300012: BRDMDORI
+    2300014: BRDMFARO
+    2300016: BRDMGMCR
+    2300018: BRDMLLN1
+    2300020: BRDMLLN2
+    2300022: BRDMLLN3
+    2300024: BRDMLLN4
+    2300026: BRDMNOIR
+    2300028: BRDMOJOD 1
+    2300030: BRDMOJOI 1
+    2300032: BRDMOOOD
+    2300034: BRDMOOOI
+    2300036: BRDMPALA
+    2300038: BRDMPALG
+    2300040: BRDMSLDC
+    2300042: BRDMSLDO
+    2300044: BRDMTPT1
+    2300046: BRDMTPT2
+    2300048: BRDMTPT3
+    2300050: BRDMTPT4
+    2300052: BRDMTPT5
+    2300054: BRDMTPT6
+    2300056: BRDMTPT7
+    2300058: BRDMTPT8
+    2300060: BRDMWHE1
+    2300062: BRDMWHE2
+    2300064: BRDMWHE3
+    2300066: BRDMWHE4
+    2300068: BRMDTAP
+    3300000: BRDMBODC
+    3300002: BRDMBODY
+    3300004: BRDMCRIS
+    3300006: BRDMCRJD
+    3300008: BRDMCRJI
+    3300010: BRDMDORD
+    3300012: BRDMDORI
+    3300014: BRDMFARO
+    3300016: BRDMGMCR
+    3300018: BRDMLLN1
+    3300020: BRDMLLN2
+    3300022: BRDMLLN3
+    3300024: BRDMLLN4
+    3300026: BRDMNOIR
+    3300028: BRDMOJOD 1
+    3300030: BRDMOJOI 1
+    3300032: BRDMOOOD
+    3300034: BRDMOOOI
+    3300036: BRDMPALA
+    3300038: BRDMPALG
+    3300040: BRDMSLDC
+    3300042: BRDMSLDO
+    3300044: BRDMTPT1
+    3300046: BRDMTPT2
+    3300048: BRDMTPT3
+    3300050: BRDMTPT4
+    3300052: BRDMTPT5
+    3300054: BRDMTPT6
+    3300056: BRDMTPT7
+    3300058: BRDMTPT8
+    3300060: BRDMWHE1
+    3300062: BRDMWHE2
+    3300064: BRDMWHE3
+    3300066: BRDMWHE4
+    3300068: BRMDTAP
+    4300000: BRDMBODC
+    4300002: BRDMBODY
+    4300004: BRDMPALG
+    4300006: BRDMPALA
+    4300008: BRDMFARO
+    4300010: BRDMNOIR
+    4300012: BRDMSLDC
+    4300014: BRDMSLDO
+    4300016: BRMDTAP
+    4300018: BRDMGMCR
+    4300020: BRDMCRIS
+    4300022: BRDMCRJD
+    4300024: BRDMOJOD
+    4300026: BRDMCRJI
+    4300028: BRDMOJOI
+    4300030: BRDMOOOI
+    4300032: BRDMOOOD
+    4300034: BRDMDORD
+    4300036: BRDMDORI
+    4300038: BRDMTPT4
+    4300040: BRDMTPT5
+    4300042: BRDMTPT6
+    4300044: BRDMTPT3
+    4300046: BRDMTPT2
+    4300048: BRDMTPT8
+    4300050: BRDMTPT1
+    4300052: BRDMTPT7
+    4300054: BRDMLLN1
+    4300056: BRDMWHE1
+    4300058: BRDMLLN4
+    4300060: BRDMWHE4
+    4300062: BRDMLLN2
+    4300064: BRDMWHE2
+    4300066: BRDMLLN3
+    4300068: BRDMWHE3
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

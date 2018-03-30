@@ -1,0 +1,355 @@
+# 3ds Max Wavefront OBJ Exporter v0.94b - (c)2007 guruware
+# File Created: 10.07.2008 17:37:45
+
+newmtl Greenbas
+	Ns 17.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0000 0.0000 0.0000
+	Ks 0.2300 0.2300 0.2300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Textura.jpg
+	map_Kd maps\Textura.jpg
+
+newmtl Flatblack
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0471 0.0471 0.0471
+	Ks 0.1900 0.1900 0.1900
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Black_tire
+	Ns 29.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.1255 0.1255 0.1255
+	Ks 0.3500 0.3500 0.3500
+	Ke 0.0000 0.0000 0.0000
+
+newmtl glass
+	Ns 49.0000
+	Ni 1.5000
+	d 0.3300
+	Tr 0.3300
+	Tf 0.3300 0.3300 0.3300 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0863 0.2000 0.0902
+	Ks 0.8460 0.8460 0.8460
+	Ke 0.0000 0.0000 0.0000
+	map_refl maps\Map__12_Raytrace.tga
+
+newmtl Conopi
+	Ns 17.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2300 0.2300 0.2300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Textura.jpg
+	map_Kd maps\Textura.jpg
+	map_bump maps\Conopi.jpg
+	bump maps\Conopi.jpg
+
+newmtl Material__83
+	Ns 17.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2300 0.2300 0.2300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Textura.jpg
+	map_Kd maps\Textura.jpg
+	map_bump maps\Conopit.jpg
+	bump maps\Conopit.jpg
+
+newmtl Rotor
+	Ns 32.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0588 0.0510 0.0000
+	Ks 0.9200 0.9200 0.9200
+	Ke 0.0000 0.0000 0.0000
+	map_bump maps\Rotor.jpg
+	bump maps\Rotor.jpg
+
+newmtl Silver_Deep
+	Ns 70.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.4980 0.4471 0.4039
+	Ks 0.9000 0.9000 0.9000
+	Ke 0.0000 0.0000 0.0000
+	map_refl maps\CHROMIC.jpg
+
+newmtl Side
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2070 0.2070 0.2070
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Tex__2_Mask.tga
+	map_Kd maps\Tex__2_Mask.tga
+	map_bump maps\Sidebump.jpg
+	bump maps\Sidebump.jpg
+	map_refl maps\Tex__8_Mask.tga
+
+newmtl Red
+	Ns 20.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0000 0.0000 0.0000
+	Ks 0.9300 0.9300 0.9300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Light.jpg
+	map_Kd maps\Light.jpg
+	map_bump maps\Light.jpg
+	bump maps\Light.jpg
+
+newmtl Yellow
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.9804 0.8078 0.0000
+	Ks 0.5700 0.5700 0.5700
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Fuselage
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2300 0.2300 0.2300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Tex__2_Mask.tga
+	map_Kd maps\Tex__2_Mask.tga
+	map_bump maps\Leftbump.jpg
+	bump maps\Leftbump.jpg
+	map_refl maps\Tex__8_Mask.tga
+
+newmtl Fuselage2
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2282 0.2282 0.2282
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Tex__8_Mask.tga
+	map_Kd maps\Tex__8_Mask.tga
+	map_bump maps\Leftbump.jpg
+	bump maps\Leftbump.jpg
+	map_refl maps\Tex__12_Mask.tga
+
+newmtl T1
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2300 0.2300 0.2300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Tex__2_Mask.tga
+	map_Kd maps\Tex__2_Mask.tga
+	map_bump maps\Tur1bump.jpg
+	bump maps\Tur1bump.jpg
+	map_refl maps\Tex__8_Mask.tga
+
+newmtl T2
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2300 0.2300 0.2300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Tex__1_Mask.tga
+	map_Kd maps\Tex__1_Mask.tga
+	map_bump maps\Tur2Bump.jpg
+	bump maps\Tur2Bump.jpg
+	map_refl maps\Tex__6_Mask.tga
+
+newmtl Wing
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2070 0.2070 0.2070
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Tex__2_Mask.tga
+	map_Kd maps\Tex__2_Mask.tga
+	map_bump maps\Wingbum.jpg
+	bump maps\Wingbum.jpg
+	map_refl maps\Tex__8_Mask.tga
+
+newmtl Wing2
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2300 0.2300 0.2300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Tex__2_Mask.tga
+	map_Kd maps\Tex__2_Mask.tga
+	map_bump maps\Wing2bum.jpg
+	bump maps\Wing2bum.jpg
+	map_refl maps\Tex__8_Mask.tga
+
+newmtl Ammo
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.2157 0.1922 0.1765
+	Ks 0.9000 0.9000 0.9000
+	Ke 0.0000 0.0000 0.0000
+	map_bump maps\Ammo.jpg
+	bump maps\Ammo.jpg
+	map_refl maps\CHROMIC.jpg
+
+newmtl 70mm
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0353 0.0980 0.0000
+	Ks 0.2070 0.2070 0.2070
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Tex__2_Mask.tga
+	map_Kd maps\Tex__2_Mask.tga
+	map_bump maps\70mm.jpg
+	bump maps\70mm.jpg
+	map_refl maps\Tex__8_Mask.tga
+
+newmtl Gun_metal
+	Ns 82.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.2157 0.1922 0.1765
+	Ks 0.9000 0.9000 0.9000
+	Ke 0.0000 0.0000 0.0000
+	map_refl maps\CHROMIC.jpg
+
+newmtl Clear_blue
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.1333 0.9137 0.4431
+	Ks 0.3600 0.3600 0.3600
+	Ke 0.0200 0.1371 0.0665
+
+newmtl Darkgreen
+	Ns 17.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0000 0.0000 0.0000
+	Ks 0.2300 0.2300 0.2300
+	Ke 0.0000 0.0000 0.0000
+	map_Ka maps\Textura.jpg
+	map_Kd maps\Textura.jpg
+
+newmtl Metalic
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.2353 0.2118 0.1922
+	Ks 0.9200 0.9200 0.9200
+	Ke 0.0000 0.0000 0.0000
+	map_bump maps\Tur3bump.jpg
+	bump maps\Tur3bump.jpg
+	map_refl maps\CHROMIC.jpg
+
+newmtl wire_165165165
+	Ns 32
+	d 1
+	Tr 1
+	Tf 1 1 1
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.6471 0.6471 0.6471
+	Ks 0.3500 0.3500 0.3500
