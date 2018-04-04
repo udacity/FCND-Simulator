@@ -608,11 +608,12 @@ namespace DroneControllers
         public void NavigationUpdate()
         {
             // Differentiate to get acceleration, filter at tau equal twice the sampling frequency
-            LinearAcceleration = 0.6f*LinearAcceleration + (rb.velocity - lastVelocity) - new Vector3(0.0f, 9.81f, 0.0f)*0.4f;
-
+            //LinearAcceleration = 0.6f*LinearAcceleration + (rb.velocity - lastVelocity) + new Vector3(0.0f, 9.81f, 0.0f)*0.4f;
+            LinearAcceleration = 0.6f*LinearAcceleration + 0.4f*((rb.velocity - lastVelocity) / Time.deltaTime + new Vector3(0.0f, 9.81f, 0.0f));
             LinearAccelerationBody = rb.transform.InverseTransformDirection(LinearAcceleration);
+
             AngularVelocityBody = rb.transform.InverseTransformDirection(rb.angularVelocity);
-            AngularAccelerationBody = 0.6f*AngularVelocity + (AngularVelocityBody - lastAngularVelocity);
+            AngularAccelerationBody = 0.6f*AngularVelocity + 0.4f*(AngularVelocityBody - lastAngularVelocity)/Time.deltaTime;
             lastVelocity = rb.velocity;
             LinearVelocity = rb.velocity;
             BodyVelocity = rb.transform.InverseTransformDirection(rb.velocity);
