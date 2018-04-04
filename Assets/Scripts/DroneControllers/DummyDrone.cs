@@ -189,6 +189,12 @@ public class DummyDrone : MonoBehaviour, IDrone
 
 	public Vector3 LinearAcceleration() {return Vector3.zero;}
 
+    public Vector3 LocalVelocity() { return Vector3.zero; }
+
+    public Vector3 EulerAngles() { return Vector3.zero; }
+
+    public Vector4 QuaternionAttitude() { return Vector4.zero; }
+
 	/// <summary>
 	/// TODO: flesh this out more, determine if it's necessary.
 	/// Returns whether the drone is executing a command (we possibly return the info about the command being executed).

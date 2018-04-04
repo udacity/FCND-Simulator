@@ -166,6 +166,11 @@ namespace Drones
             return quadCtrl.GetDownVelocity();
         }
 
+        public Vector3 LocalVelocity()
+        {
+            return new Vector3(quadCtrl.GetNorthVelocity(), quadCtrl.GetEastVelocity(), quadCtrl.GetDownVelocity());
+        }
+
         public double VerticalVelocity()
         {
             return quadCtrl.GetVerticalVelocity();
@@ -176,9 +181,21 @@ namespace Drones
             return quadCtrl.GetYaw();
         }
 
+        public Vector3 EulerAngles()
+        {
+            return new Vector3(quadCtrl.GetRoll(), quadCtrl.GetPitch(), quadCtrl.GetYaw());
+        }
+
+        public Vector4 QuaternionAttitude()
+        {
+            return quadCtrl.QuaternionAttitude();
+        }
+
         public Vector3 AngularVelocity()
         {
-            return quadCtrl.AngularVelocityBody;
+            return new Vector3(quadCtrl.GetRollrate(),
+                quadCtrl.GetPitchrate(),
+                quadCtrl.GetYawrate());
         }
 
         public double Rollrate()
@@ -203,7 +220,9 @@ namespace Drones
 
         public Vector3 LinearAcceleration()
         {
-            return quadCtrl.LinearAcceleration;
+            return new Vector3(this.quadCtrl.GetFrontAcceleration(),
+                this.quadCtrl.GetRightAcceleration(),
+                this.quadCtrl.GetBottomAcceleration());
         }
 
         public void ControlRemotely(bool remote)

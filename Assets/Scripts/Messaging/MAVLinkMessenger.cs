@@ -118,13 +118,37 @@ namespace Messaging
         }
 
         /// <summary>
-        /// http://mavlink.org/messages/common#RAW_IMU
+        /// http://mavlink.org/messages/common#SCALED_IMU
         /// </summary>
-        public List<byte[]> RawIMU()
+        public List<byte[]> ScaledIMU()
         {
-            var msg = new Msg_raw_imu
+            Vector3 acceleration = drone.LinearAcceleration();
+            Vector3 angularRates = drone.AngularVelocity();
+            float heading = (float)drone.Yaw();
+
+            Int16 xAcc = (Int16)Mathf.Round(acceleration.x * 1000f);
+            Int16 yAcc = (Int16)Mathf.Round(acceleration.y * 1000f);
+            Int16 zAcc = (Int16)Mathf.Round(acceleration.z * 1000f);
+            Int16 xGyro = (Int16)Mathf.Round(angularRates.x * 1000f);
+            Int16 yGyro = (Int16)Mathf.Round(angularRates.y * 1000f);
+            Int16 zGyro = (Int16)Mathf.Round(angularRates.z * 1000f);
+            Int16 xMag = (Int16)Mathf.Round(Mathf.Cos(heading) * 1000f);
+            Int16 yMag = (Int16)Mathf.Round(Mathf.Sin(heading) * 1000f);
+
+            var msg = new Msg_scaled_imu
             {
+                xacc = xAcc,
+                yacc = yAcc,
+                zacc = zAcc,
+                xgyro = xGyro,
+                ygyro = yGyro,
+                zgyro = zGyro,
+                xmag = xMag,
+                ymag = yMag,
+                time_boot_ms = TimeSinceSystemStart(),
             };
+
+            //Debug.Log("Sent IMU message");
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
             msgs.Add(serializedPacket);
