@@ -16692,13 +16692,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2b42112356b1841aa7ef7c694b948c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkController: {fileID: 1807842540}
-  heartbeatIntervalHz: 1
-  telemetryIntervalHz: 4
-  gpsIntervalHz: 10
-  attitudeIntervalHz: 50
-  imuIntervalHz: 100
-  homePositionIntervalHz: 1
 --- !u!1001 &928568251
 Prefab:
   m_ObjectHideFlags: 0

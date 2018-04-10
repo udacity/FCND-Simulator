@@ -9,7 +9,7 @@ namespace DroneInterface
     /// </summary>
     public interface IDroneState
     {
-        Vector3 Forward { get; }
+        //Vector3 Forward { get; }
         // local coordinates (x, y, z) in Unity.
         Vector3 UnityCoords();
 
@@ -158,5 +158,6 @@ namespace DroneInterface
         /// I'm not sure this is a required method but it seems it could be useful.
         /// </summary>
         bool ExecutingCommand();
+        
     }
 }
