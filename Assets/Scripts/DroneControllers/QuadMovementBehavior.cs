@@ -6,5 +6,7 @@ using MovementBehaviors;
 
 namespace MovementBehaviors
 {
-	public abstract class QuadMovementBehavior : MovementBehaviorBase<SimpleQuadController> {}
+    public abstract class QuadMovementBehavior : MovementBehaviorBase<SimpleQuadController> { }
+    public abstract class QuadSystemMovementBehavior : MovementBehaviorBase<QuadAutopilot> { }
+
 }
