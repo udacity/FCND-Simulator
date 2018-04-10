@@ -97,7 +97,10 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 
 		public override void Initialize()
 		{
-//			MapboxUtility.AddStack ();
+			_pool.Clear ();
+			_listPool.Clear ();
+			_activeObjects.Clear ();
+
 			base.Initialize();
 
 			_counter = MeshModifiers.Count;

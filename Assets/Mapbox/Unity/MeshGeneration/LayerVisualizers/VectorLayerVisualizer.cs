@@ -77,6 +77,17 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 
 		public override void Initialize()
 		{
+			if ( _activeCoroutines != null )
+			{
+				foreach ( var pair in _activeCoroutines )
+				{
+					foreach ( int cor in pair.Value )
+					{
+						Runnable.Stop ( cor );
+					}
+				}
+			}
+
 			base.Initialize();
 			_entityInCurrentCoroutine = 0;
 			_activeCoroutines = new Dictionary<UnityTile, List<int>>();
