@@ -23,6 +23,14 @@
 			OnInitialized();
 		}
 
+		public virtual void Clear ()
+		{
+			_activeTiles.Clear ();
+			OnTileAdded = delegate {};
+			OnTileRemoved = delegate { };
+			OnTileRepositioned = delegate { };
+		}
+
 		protected virtual void AddTile(UnwrappedTileId tile)
 		{
 			if (_activeTiles.ContainsKey(tile))

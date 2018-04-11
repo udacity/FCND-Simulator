@@ -81,15 +81,6 @@ public class GenerateColliderList : MonoBehaviour
 			if ( x.GetComponent<UnityTile> () != null )
 				return;
 			colliders.Add ( ColliderVolume.FromCollider ( x ) );
-
-//			if ( x is BoxCollider )
-//				colliders.Add ( ColliderVolume.FromBoxCollider ( (BoxCollider) x ) );
-//			else
-//			if ( x is SphereCollider )
-//				colliders.Add ( ColliderVolume.FromSphereCollider ( (SphereCollider) x ) );
-//			else
-//			if ( x is CapsuleCollider )
-//				colliders.Add ( ColliderVolume.FromCapsuleCollider ( (CapsuleCollider) x ) );
 		} );
 
 		if ( OnCompleted != null )

@@ -45,6 +45,7 @@ namespace Mapbox.Unity.Map
 				{
 					_state = value;
 					OnMapVisualizerStateChanged(_state);
+					Debug.Log ( "map viz state changed: " + value );
 				}
 			}
 		}
@@ -147,15 +148,21 @@ namespace Mapbox.Unity.Map
 			{
 				var allFinished = true;
 				_counter = Factories.Count;
+				float t = Time.time;
 				for (int i = 0; i < _counter; i++)
 				{
 					if (Factories[i] != null)
 					{
 						allFinished &= Factories[i].State == ModuleState.Finished;
+//						if ( Factories [ i ].State == ModuleState.Finished )
+//							Debug.Log ( "factory " + Factories [ i ].name + " finished " + t );
+//						else
+//							Debug.Log ( "factory " + Factories [ i ].name + " " + Factories[i].State + " " + t );
 					}
 				}
 				if (allFinished)
 				{
+					Debug.Log ( "all finished!" );
 					State = ModuleState.Finished;
 				}
 			}
@@ -235,5 +242,15 @@ namespace Mapbox.Unity.Map
 		}
 
 		protected abstract void PlaceTile(UnwrappedTileId tileId, UnityTile tile, IMapReadable map);
+
+		public void Clear ()
+		{
+			Destroy ();
+			foreach ( var factory in Factories )
+			{
+				factory.Clear ();
+			}
+			State = ModuleState.Initialized;
+		}
 	}
 }

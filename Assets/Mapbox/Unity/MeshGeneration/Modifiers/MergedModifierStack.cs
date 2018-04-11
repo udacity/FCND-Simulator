@@ -155,6 +155,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 
 		public GameObject End(UnityTile tile, GameObject parent, string name = "")
 		{
+			Debug.Log ( "merging" );
 			var c2 = 0;
 			if (_cached.ContainsKey(tile))
 			{

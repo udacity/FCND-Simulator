@@ -98,6 +98,11 @@ public class WindDisturbance : MonoBehaviour
 		}
 	}
 
+	void OnDestroy ()
+	{
+		instance = null;
+	}
+
 	#if DebugWind
 	void OnGUI ()
 	{
