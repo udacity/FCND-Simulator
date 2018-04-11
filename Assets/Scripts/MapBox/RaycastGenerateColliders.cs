@@ -31,6 +31,13 @@ public class RaycastGenerateColliders : MonoBehaviour
 		mapScript.MapVisualizer.OnMapVisualizerStateChanged += MapScript_MapVisualizer_OnMapVisualizerStateChanged;
 	}
 
+	void OnDestroy ()
+	{
+		mapScript.OnInitialized -= OnMapInitialized;
+		mapScript.MapVisualizer.OnMapVisualizerStateChanged -= MapScript_MapVisualizer_OnMapVisualizerStateChanged;
+//		Debug.Log ( "why am i being destroyed?" );
+	}
+
 	void OnMapInitialized ()
 	{
 		transform.position = mapScript.transform.position;

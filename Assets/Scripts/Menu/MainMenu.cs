@@ -26,7 +26,6 @@ namespace Menu
 
 		public void LoadProject (Project project)
         {
-            Debug.Log("here");
 			Debug.Log ( "Loading project: " + project.title );
 			SceneManager.LoadScene ( project.sceneName );
         }

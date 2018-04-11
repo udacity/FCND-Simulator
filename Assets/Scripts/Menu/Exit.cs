@@ -30,6 +30,9 @@ namespace Menu
 			if ( Input.GetButtonDown ( "Back/Exit" ) )
 			{
 				Debug.Log ( "Loading main menu" );
+				// we need to destroy the map's parent now because all that is on a DontDestroyOnLoad
+				GameObject mapParent = GameObject.FindWithTag ( "MapParent" );
+				Destroy ( mapParent );
 				SceneManager.LoadScene ( "MainMenu" );
 			}
 			else if ( Input.GetButton ( "Shift Modifier" ) )
@@ -40,14 +43,14 @@ namespace Menu
 					Debug.Log ( "Resetting scene" );
 //					string curName = SceneManager.GetActiveScene ().name;
 
-					var mapScript = GameObject.Find ( "Map" ).GetComponent<Mapbox.Unity.Map.AbstractMap> ();
-					mapScript.Clear ();
-					Destroy ( mapScript.gameObject );
+//					var mapScript = GameObject.Find ( "Map" ).GetComponent<Mapbox.Unity.Map.AbstractMap> ();
+//					mapScript.Clear ();
+//					Destroy ( mapScript.gameObject );
 //					SceneReloader.Reload ();
-					StartCoroutine ( DoReload () );
+//					StartCoroutine ( DoReload () );
 
 
-//					SceneManager.LoadScene ( SceneManager.GetActiveScene ().name );
+					SceneManager.LoadScene ( SceneManager.GetActiveScene ().name );
 				}
                 // NOTE: not the same as loading the menu, which is done via
                 // the main menu

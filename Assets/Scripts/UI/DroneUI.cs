@@ -51,7 +51,7 @@ public class DroneUI : MonoBehaviour
 			mapScript.OnInitialized += OnMapInitialized;
 	}
 
-    void Start()
+    void Start ()
     {
 		int quality = QualitySettings.GetQualityLevel();
 		toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
@@ -74,7 +74,7 @@ public class DroneUI : MonoBehaviour
 		graphImage.enabled = PlotViz.Instance.Count > 0;
     }
 
-    void Update()
+    void Update ()
     {
 		if ( drone == null )
 		{
@@ -85,7 +85,7 @@ public class DroneUI : MonoBehaviour
         UpdateGuidedButton();
     }
 
-    void LateUpdate()
+    void LateUpdate ()
     {
 		if ( drone == null )
 			return;
@@ -137,6 +137,8 @@ public class DroneUI : MonoBehaviour
 		var centerCoords = mapScript.CenterLatitudeLongitude;
 		Simulation.latitude0 = centerCoords.x;
 		Simulation.longitude0 = centerCoords.y;
+		if ( drone == null )
+			drone = Simulation.ActiveDrone;
 		drone.SetHome ( drone.Longitude (), drone.Latitude (), drone.Altitude () );
 	}
 
