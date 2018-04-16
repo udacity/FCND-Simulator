@@ -44,6 +44,11 @@ namespace UdacityNetworking
 			messageHandler -= handler;
 		}
 
+		public void SendMessage (MessageInfo message)
+		{
+			socket.Send ( message.prepacked ? message.message : message.Encode () );
+		}
+
 		public void SendMessage (byte[] message, string destIP = "", int destPort = -1)
 		{
 			socket.Send ( message );

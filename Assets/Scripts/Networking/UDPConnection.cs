@@ -149,9 +149,14 @@ namespace UdacityNetworking
 			messageHandler -= handler;
 		}
 
+		public void SendMessage (MessageInfo message)
+		{
+			messages.Enqueue ( message );
+		}
+
 		public void SendMessage (byte[] message, string destIP = "", int destPort = -1)
 		{
-			messages.Enqueue ( new MessageInfo ( message, destIP, destPort ) );
+			messages.Enqueue ( new MessageInfo ( (MessageType) message [ 0 ], message, destIP, destPort, true ) );
 		}
 
 		public async Task DispatchMessages ()
@@ -176,7 +181,9 @@ namespace UdacityNetworking
 							{
 								if ( ci != null && !ci.IsTimeout () )
 								{
-									await listener.SendMessage ( msg.message, ci.client );
+									var bytes = msg.prepacked ? msg.message : msg.Encode ();
+									await listener.SendMessage ( bytes, ci.client );
+//									await listener.SendMessage ( msg.message, ci.client );
 								}
 							}
 						}

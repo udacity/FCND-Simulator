@@ -65,7 +65,10 @@ namespace UdacityNetworking
 		public ConnectionProtocol protocol;
 		public float timeout = 30;
 		NetworkConnection connection;
-		event Action<MessageInfo> messageHandler = delegate {};
+
+
+		Dictionary<MessageType, Action<MessageInfo>> handlers = new Dictionary<MessageType, Action<MessageInfo>> ();
+//		event Action<MessageInfo> messageHandler = delegate {};
 		event Action<ConnectionState> connectionEvent = delegate {};
 
 		ConnectionState lastConnectionState;
@@ -74,6 +77,15 @@ namespace UdacityNetworking
 		#if UNITY_WEBGL && !UNITY_EDITOR
 		List<RepeatingMessage> repeatingMessages = new List<RepeatingMessage> ();
 		#endif
+
+		void Awake ()
+		{
+			byte[] values = (byte[]) Enum.GetValues ( typeof (MessageType) );
+			for ( int i = 0; i < values.Length; i++ )
+				handlers.Add ( (MessageType) values [ i ], delegate {} );
+//			handlers.Add ( MessageType.Mavlink, delegate {} );
+//			handlers.Add ( MessageType.Colliders, delegate {} );
+		}
 
 		void Start ()
 		{
@@ -179,14 +191,16 @@ namespace UdacityNetworking
 			connection.Connect ( remoteIP, remotePort );
 		}
 
-		public void AddMessageHandler (Action<MessageInfo> handler)
+		public void AddMessageHandler (MessageType messageType, Action<MessageInfo> handler)
 		{
-			messageHandler += handler;
+			handlers [ messageType ] += handler;
+//			messageHandler += handler;
 		}
 
-		public void RemoveMessageHandler (Action<MessageInfo> handler)
+		public void RemoveMessageHandler (MessageType messageType, Action<MessageInfo> handler)
 		{
-			messageHandler -= handler;
+			handlers [ messageType ] -= handler;
+//			messageHandler -= handler;
 		}
 
 		public void AddConnectionEvent (Action<ConnectionState> handler)
@@ -194,22 +208,28 @@ namespace UdacityNetworking
 			connectionEvent += handler;
 		}
 
-		public void SendMessage (byte[] message)
+		public void SendMessage (MessageInfo message)
 		{
 			connection.SendMessage ( message );
 		}
 
-		public void SendMessage (byte[] message, string ip, int port)
+		public void SendMessage (MessageType type, byte[] message)
 		{
-			connection.SendMessage ( message, ip, port );
+			connection.SendMessage ( MessageInfo.Prepack ( type, message ) );
+		}
+
+		public void SendMessage (MessageType type, byte[] message, string ip, int port)
+		{
+			connection.SendMessage ( MessageInfo.Prepack ( type, message, ip, port ) );
 		}
 
 		void MessageReceived (MessageInfo message)
 		{
-			messageHandler ( message );
+			handlers [ message.type ] ( message );
+//			messageHandler ( message );
 		}
 
-		public void EnqueueRecurringMessage (Func<List<byte[]>> messageFunc, int delayMilliseconds)
+		public void EnqueueRecurringMessage (MessageType messageType, Func<List<byte[]>> messageFunc, int delayMilliseconds)
 		{
 			#if UNITY_WEBGL && !UNITY_EDITOR
 			float delay = 1f * delayMilliseconds / 1000f;
@@ -217,13 +237,13 @@ namespace UdacityNetworking
 //			StartCoroutine ( RecurringMessage ( messageFunc, delayMilliseconds ) );
 			#else
 //			Task.Factory.StartNew ( RecurringMessage ( messageFunc, delayMilliseconds ) );
-			Task.Run ( () => RecurringMessage ( messageFunc, delayMilliseconds ) );
+			Task.Run ( () => RecurringMessage ( messageType, messageFunc, delayMilliseconds ) );
 //			RecurringMessage ( messageFunc, delayMilliseconds );
 			#endif
 		}
 
 		#if UNITY_WEBGL && !UNITY_EDITOR
-/*		IEnumerator RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
+/*		IEnumerator RecurringMessage (MessageType messageType, Func<List<byte[]>> msgFunc, int delayMS)
 		{
 			float delay = 1f * delayMS / 1000f;
 			while ( !closing )
@@ -233,6 +253,7 @@ namespace UdacityNetworking
 					var msgs = msgFunc ();
 					foreach (var msg in msgs)
 					{
+						connection.SendMessage ( MessageInfo.Encode ( messageType, msg ) );
 						connection.SendMessage ( msg );
 					}
 				}
@@ -241,8 +262,9 @@ namespace UdacityNetworking
 			}
 		}*/
 		#else
-		async Task RecurringMessage (Func<List<byte[]>> msgFunc, int delayMS)
+		async Task RecurringMessage (MessageType messageType, Func<List<byte[]>> msgFunc, int delayMS)
 		{
+			
 			while ( !closing )
 			{
 				if ( connection != null && ( connection.IsServerStarted || connection.IsConnected ) )
@@ -250,7 +272,8 @@ namespace UdacityNetworking
 					var msgs = msgFunc ();
 					foreach ( var msg in msgs )
 					{
-						connection.SendMessage ( msg );
+						connection.SendMessage ( MessageInfo.Encode ( messageType, msg ) );
+//						connection.SendMessage ( msg );
 					}
 				}
 				await Task.Delay ( delayMS );

@@ -67,6 +67,7 @@ namespace UdacityNetworking
 		string ip;
 		int port;
 		bool running;
+
 		event Action<MessageInfo> messageHandler = delegate { };
 		TcpListener listener;
 		TcpClient myClient;
@@ -129,9 +130,14 @@ namespace UdacityNetworking
 			messageHandler -= handler;
 		}
 
+		public void SendMessage (MessageInfo message)
+		{
+			messages.Enqueue ( message );
+		}
+
 		public void SendMessage (byte[] message, string destIP = "", int destPort = -1)
 		{
-			messages.Enqueue ( new MessageInfo ( message, destIP, destPort ) );
+			messages.Enqueue ( new MessageInfo ( (MessageType) message [ 0 ], message, destIP, destPort, true ) );
 		}
 
 		public async Task DispatchMessages ()
@@ -157,15 +163,15 @@ namespace UdacityNetworking
 						if ( messages.TryDequeue ( out msg ) && msg != null )
 						{
 							foreach ( var ci in clientArr )
-//							foreach ( var client in clientArr )
 							{
 								TcpClient c = ci.client;
 								if ( c != null && c.Connected )
 								{
 									var stream = c.GetStream ();
-									if ( running && stream != null && stream.CanWrite ) //&& stream.CanRead )
-										await stream.WriteAsync ( msg.message, 0, msg.message.Length );
-//										stream.Write ( msg.message, 0, msg.message.Length );
+									var bytes = msg.prepacked ? msg.message : msg.Encode ();
+									if ( running && stream != null && stream.CanWrite )
+										await stream.WriteAsync ( bytes, 0, bytes.Length );
+//										await stream.WriteAsync ( msg.message, 0, msg.message.Length );
 								}
 							}
 						}
@@ -256,10 +262,12 @@ namespace UdacityNetworking
 				var bytesRead = await stream.ReadAsync ( buf, 0, buf.Length );
 				if ( bytesRead > 0 )
 				{
-					var dest = new byte[bytesRead];
-					Array.Copy ( buf, dest, bytesRead );
+					// changed: now the first byte in the stream will be the message type, and n-1 bytes will be the message
+					var dest = new byte[bytesRead - 1];
+					Array.Copy ( buf, 1, dest, 0, dest.Length );
+//					Array.Copy ( buf, dest, bytesRead );
 					clients [ client.GetHashCode () ].OnRead (); // update the last read time from this client
-					messageHandler ( new MessageInfo ( dest ) );
+					messageHandler ( new MessageInfo ( (MessageType) buf[0], dest ) );
 				} else
 				{
 					Debug.Log ( "stream ended" );

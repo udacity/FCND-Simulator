@@ -26,12 +26,12 @@ public class Controls : MonoBehaviour
         drone.ControlRemotely(true);
         messenger = new MAVLinkMessenger();
 
-        networkController.AddMessageHandler(messenger.ParseMessageInfo);
-        networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Conversions.HertzToMilliSeconds(positionIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(positionIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.AttitudeQuaternion, Conversions.HertzToMilliSeconds(attitudeIntervalHz));
+		networkController.AddMessageHandler ( MessageType.Mavlink, messenger.ParseMessageInfo );
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.GlobalPosition, Conversions.HertzToMilliSeconds(positionIntervalHz));
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(positionIntervalHz));
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.AttitudeQuaternion, Conversions.HertzToMilliSeconds(attitudeIntervalHz));
 
     }
 

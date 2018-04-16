@@ -26,10 +26,10 @@ public class BackyardFlyer : MonoBehaviour
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
-        networkController.AddMessageHandler(messenger.ParseMessageInfo);
-        networkController.EnqueueRecurringMessage(messenger.GlobalPosition, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
-        networkController.EnqueueRecurringMessage(messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
+		networkController.AddMessageHandler ( MessageType.Mavlink, messenger.ParseMessageInfo );
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.GlobalPosition, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.LocalPositionNED, Conversions.HertzToMilliSeconds(telemetryIntervalHz));
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.Heartbeat, Conversions.HertzToMilliSeconds(heartbeatIntervalHz));
+		networkController.EnqueueRecurringMessage(MessageType.Mavlink, messenger.HomePosition, Conversions.HertzToMilliSeconds(homePositionIntervalHz));
     }
 }
