@@ -11,13 +11,19 @@ namespace DroneInterface
         /// <summary>
         /// Returns true if the vehicle is being controlled from outside the simulator
         /// </summary>
-        bool OffboardMode();
+        bool Guided();
 
         /// <summary>
         /// Enables/disables offboard control
         /// </summary>
         /// <param name="offboard">true=enable offboard, false=disable offboard</param>
-        void SetOffboard(bool offboard);
+        void SetGuided(bool offboard);
+
+        /// <summary>
+        /// Arms/disarms the vehicle motors
+        /// </summary>
+        /// <param name="arm">true=arm, false=disarm</param>
+        void ArmDisarm(bool arm);
 
         /// <summary>
         /// Command the vehicle to hover at the current position and altitude

@@ -89,11 +89,11 @@ public class DroneUI : MonoBehaviour
     {
 		if ( drone == null )
 			return;
-		
+
         // Updates UI drone position
-        var lat = drone.Latitude();
-        var lon = drone.Longitude();
-        var alt = drone.Altitude();
+        var lat = drone.GPSLatitude();
+        var lon = drone.GPSLongitude();
+        var alt = drone.GPSAltitude();
         gpsText.text = string.Format("Latitude = {0:0.000000}\nLongitude = {1:0.000000}\nAltitude = {2:0.000} (meters)", lat, lon, alt);
         // _gpsText.color = new Color(255, 255, 255, 0);
 
@@ -102,7 +102,7 @@ public class DroneUI : MonoBehaviour
         // East -> 90
         // South -> 180
         // West - 270
-        var hdg = -(float)drone.Yaw() * Mathf.Rad2Deg;
+        var hdg = -(float)drone.AttitudeEuler().z * Mathf.Rad2Deg;
         //        var oldHdg = needleImage.rectTransform.rotation.eulerAngles.z;
         // rotate the needle by the yaw difference
         //        needleImage.rectTransform.Rotate(0, 0, -(-hdg - -oldHdg));
@@ -137,24 +137,24 @@ public class DroneUI : MonoBehaviour
 		var centerCoords = mapScript.CenterLatitudeLongitude;
 		Simulation.latitude0 = centerCoords.x;
 		Simulation.longitude0 = centerCoords.y;
-		drone.SetHome ( drone.Longitude (), drone.Latitude (), drone.Altitude () );
+		drone.SetHomePosition ( drone.GPSLongitude (), drone.GPSLatitude (), drone.GPSAltitude () );
 	}
 
     // Toggles whether the drone is armed or disarmed.
     public void ArmButtonOnClick()
     {
-        drone.Arm(!drone.Armed());
+        drone.ArmDisarm(!drone.MotorsArmed());
     }
 
     // Toggles whether the drone is guided (autonomously controlled) or unguided (manually controlled).
     public void GuideButtonOnClick()
     {
-        drone.TakeControl(!drone.Guided());
+        drone.SetGuided(!drone.Guided());
     }
 
     void UpdateArmedButton()
     {
-        var v = drone.Armed();
+        var v = drone.MotorsArmed();
         if (v && !armWatcher.active)
         {
             armWatcher.OnClick();

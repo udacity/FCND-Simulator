@@ -12,12 +12,12 @@ namespace DroneInterface
         /// <summary>
         /// The local coordinates relative to the Unity map in the Unity frame
         /// </summary>
-        Vector3 UnityCoords();
+        Vector3 CoordsUnity();
 
         /// <summary>
         /// The local coordinates relative to the Unity map in a NED frame
         /// </summary>
-        Vector3 LocalCoords();
+        Vector3 CoordsLocal();
 
         /// <summary>
         /// Vehicle attitude (roll, pitch, yaw) in radians (RH 3-2-1 transform from world to body)
@@ -74,12 +74,6 @@ namespace DroneInterface
         /// </summary>
         /// <returns></returns>
         bool MotorsArmed();
-
-        /// <summary>
-        /// Arms/disarms the vehicle motors
-        /// </summary>
-        /// <param name="arm">true=arm, false=disarm</param>
-        void ArmDisarm(bool arm);
 
         /// <summary>
 		/// Place the drone at a specific world position

@@ -6,6 +6,8 @@ using DroneInterface;
 using UdacityNetworking;
 using Messaging;
 using DroneControllers;
+using DroneVehicles;
+using DroneSensors;
 
 public class Estimation : MonoBehaviour
 {
@@ -24,10 +26,11 @@ public class Estimation : MonoBehaviour
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-        GameObject.Find("Quad Drone").GetComponent<QuadController>().NavigationUpdate();
-        drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
+        //GameObject.Find("Quad Drone").GetComponent<QuadVehicle>().StateUpdate();
+        //GameObject.Find("Quad Drone").GetComponent<QuadSensors>()
+        drone.SetHomePosition();// drone.GPSLongitude(), drone.GPSLatitude(), drone.GPSAltitude());
 
-        drone.ControlRemotely(false);
+        //drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);

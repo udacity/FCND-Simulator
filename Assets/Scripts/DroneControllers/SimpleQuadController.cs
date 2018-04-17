@@ -261,7 +261,7 @@ namespace DroneControllers
                     currentMovementBehavior = mb_Manual;
                 }
             }
-            currentMovementBehavior.OnSelect(this);
+            //currentMovementBehavior.OnSelect(this);
         }
 
         public Vector3 GetPositionTarget()

@@ -60,7 +60,7 @@ public class FollowCamera : MonoBehaviour
 //			transform.rotation = targetRotation;
 //		}
 
-//		transform.position = target.UnityCoords () - transform.forward * followDistance;
+//		transform.position = target.CoordsUnity () - transform.forward * followDistance;
 //        if (blurRotors)
 //        {
 //            float forcePercent = Mathf.Abs(target.Force.y / target.maxForce);
@@ -91,7 +91,7 @@ public class FollowCamera : MonoBehaviour
 					else
 						euler.x = curZoom.y;
 					isInTransition = false;
-					transform.position = target.UnityCoords () - transform.forward * followDistance;
+					transform.position = target.CoordsUnity () - transform.forward * followDistance;
 					return;
 
 				} else
@@ -153,20 +153,20 @@ public class FollowCamera : MonoBehaviour
 			if ( isRMB && Time.time - rmbTime > 0.2f )
 			{
 				float x = Input.GetAxis ( "Mouse X" );
-				transform.RotateAround ( target.UnityCoords (), Vector3.up, x * rotateSpeed );
+				transform.RotateAround ( target.CoordsUnity (), Vector3.up, x * rotateSpeed );
 				if ( zoomLevels[curZoomLevel].y == Mathf.Infinity )
 				{
 					float y = Input.GetAxis ( "Mouse Y" );
-					transform.RotateAround ( target.UnityCoords (), transform.right, -y * rotateSpeed );
+					transform.RotateAround ( target.CoordsUnity (), transform.right, -y * rotateSpeed );
 				}
 			}
 			// check for keyboard pan
 			float tilt = Input.GetAxis ( "Camera Tilt" );
 			float yaw = Input.GetAxis ( "Camera Yaw" );
 			if ( tilt != 0 && zoomLevels [ curZoomLevel ].y == Mathf.Infinity )
-				transform.RotateAround ( target.UnityCoords (), transform.right, tilt * 180 * Time.deltaTime );
+				transform.RotateAround ( target.CoordsUnity (), transform.right, tilt * 180 * Time.deltaTime );
 			if ( yaw != 0 )
-				transform.RotateAround ( target.UnityCoords (), Vector3.up, yaw * 180 * Time.deltaTime );
+				transform.RotateAround ( target.CoordsUnity (), Vector3.up, yaw * 180 * Time.deltaTime );
 			
 //			if ( !isRMB )
 //			{
@@ -180,7 +180,7 @@ public class FollowCamera : MonoBehaviour
 //			}
 		}
 
-		transform.position = target.UnityCoords () - transform.forward * followDistance;
+		transform.position = target.CoordsUnity () - transform.forward * followDistance;
     }
 
 	void ResetRotation ()

@@ -12,21 +12,16 @@ namespace MovementBehaviors
         float totalThrust=100.0f;
         
 
-        public override void OnSelect(SimpleQuadController _controller)
-        {
-            base.OnSelect(_controller);
-        }
-
         public override void OnLateUpdate()
         {
-            var nav = controller.controller;
+            //var nav = controller.controller;
             float rollMoment = Input.GetAxis("Horizontal");
             float pitchMoment = -Input.GetAxis("Vertical");
             float yawMoment = Input.GetAxis("Yaw");
             float thrust = totalThrust * Input.GetAxis("Thrust");
             Vector3 totalMoment = new Vector3(rollMoment, pitchMoment, yawMoment);
-            nav.CmdTorque(totalMoment);
-            nav.CmdThrust(thrust);
+            controller.CommandTorque(totalMoment);
+            controller.CommandThrust(thrust);
             
             
         }

@@ -87,6 +87,11 @@ namespace DroneInterface
         Vector3 GPSVelocity();
 
         /// <summary>
+        /// Sets the home position to the current GPS position
+        /// </summary>
+        void SetHomePosition();
+
+        /// <summary>
         /// Sets the home position used in the local position calculation
         /// </summary>
         /// <param name="longitude">longitude in degrees</param>

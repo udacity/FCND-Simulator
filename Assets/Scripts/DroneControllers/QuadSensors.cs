@@ -7,28 +7,28 @@ namespace DroneSensors
 {
     public class QuadSensors : MonoBehaviour, IDroneSensors
     {
-        public IDroneSystem drone;
+        public IDrone drone;
 
-        public float imuRateHz = 50;
+        public float imuRateHz = 500;
         float timeSinceImuS;
         Vector3 imuAcceleration;
-        Vector3 imuNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f);
+        public Vector3 imuNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f);
 
-        public float gyroRateHz = 50;
+        public float gyroRateHz = 500;
         float timeSinceGyroS;
         Vector3 gyroRates;
-        Vector3 gyroNoiseSigma = new Vector3(1.0f, 1.0f, 1.0f);
+        public Vector3 gyroNoiseSigma = (new Vector3(0.01f, 0.01f, 0.01f))*0.0f;
         
         public float compassRateHz = 1;
         float timeSinceCompassS;
         float compassHeading;
         Vector3 compassMagnetometer;
-        Vector3 compassNoiseSigma = new Vector3(0.01f, 0.01f, 0.01f);
+        public Vector3 compassNoiseSigma = new Vector3(0.01f, 0.01f, 0.01f);
 
         public float barometerRateHz = 1;
         float timeSinceBarometerS;
         float barometerAltitude;
-        float barometerNoiseSigma = 0.1f;
+        public float barometerNoiseSigma = 0.1f;
         
         public float gpsRateHz = 10;
         float timeSinceGpsS;
@@ -40,16 +40,16 @@ namespace DroneSensors
         double homeAltitude;
         Vector3 localPosition;
         Vector3 gpsVelocity;
-        Vector3 gpsPositionNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f);
-        Vector3 gpsVelocityNoiseSigma = new Vector3(0.1f, 0.1f, 0.3f);
+        public Vector3 gpsPositionNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f);
+        public Vector3 gpsVelocityNoiseSigma = new Vector3(0.1f, 0.1f, 0.3f);
 
-        public float estimateRateHz = 20;
+        public float estimateRateHz = 500;
         float timeSinceEstimateS;
         Vector3 attitudeEstimate;
 
         void Awake()
         {
-            drone = GetComponent<IDroneSystem>();
+            drone = GetComponent<IDrone>();
             //Reset all the time counters
             timeSinceBarometerS = 0.0f;
             timeSinceCompassS = 0.0f;
@@ -65,33 +65,40 @@ namespace DroneSensors
             timeSinceCompassS = timeSinceCompassS + deltaTime;
             timeSinceEstimateS = timeSinceEstimateS + deltaTime;
             timeSinceGpsS = timeSinceGpsS + deltaTime;
+            timeSinceGyroS = timeSinceGyroS + deltaTime;
             timeSinceImuS = timeSinceImuS + deltaTime;
 
-            if(timeSinceBarometerS >= 1.0f / barometerRateHz)
+            if(timeSinceBarometerS >= (1.0f / barometerRateHz))
                 UpdateBarometer();                
 
-            if(timeSinceCompassS >= 1.0f / compassRateHz)
+            if(timeSinceCompassS >= (1.0f / compassRateHz))
                 UpdateCompass();
 
-            if(timeSinceEstimateS >= 1.0f / estimateRateHz)
+            if(timeSinceEstimateS >= (1.0f / estimateRateHz))
                 UpdateEstimate();
 
-            if(timeSinceGpsS >= 1.0f / gpsRateHz)
+            if(timeSinceGpsS >= (1.0f / gpsRateHz))
             {
                 UpdateGps();
                 timeSinceGpsS = 0.0f;
             }
 
-            if(timeSinceGyroS >= 1.0f / gyroRateHz)
+            if(timeSinceGyroS >= (1.0f / gyroRateHz))
             {
                 UpdateGyro();
                 timeSinceGyroS = 0.0f;
+            }
+
+            if(timeSinceImuS >= (1.0f / imuRateHz))
+            {
+                UpdateImu();
+                timeSinceImuS = 0.0f;
             }
         }
 
         void UpdateBarometer()
         {
-            barometerAltitude = -drone.LocalCoords().z + barometerNoiseSigma * UnifSigma();
+            barometerAltitude = -drone.CoordsLocal().z + barometerNoiseSigma * UnifSigma();
             timeSinceBarometerS = 0.0f;
         }
 
@@ -110,9 +117,11 @@ namespace DroneSensors
 
         void UpdateGps()
         {
-            gpsLatitude = Simulation.latitude0 + drone.LocalCoords().x + gpsPositionNoiseSigma.y * UnifSigma();
-            gpsLongitude = Simulation.longitude0 + drone.LocalCoords().y + gpsPositionNoiseSigma.x * UnifSigma();
-            gpsAltitude = drone.LocalCoords().z + gpsPositionNoiseSigma.z * UnifSigma();
+            var Meter2Latitude = FlightUtils.Conversions.Meter2Latitude;
+            var Meter2Longitude = FlightUtils.Conversions.Meter2Longitude;
+            gpsLatitude = Simulation.latitude0 + Meter2Latitude*(drone.CoordsLocal().x + gpsPositionNoiseSigma.y * UnifSigma());
+            gpsLongitude = Simulation.longitude0 + Meter2Longitude*(drone.CoordsLocal().y + gpsPositionNoiseSigma.x * UnifSigma());
+            gpsAltitude = drone.CoordsLocal().z + gpsPositionNoiseSigma.z * UnifSigma();
             gpsVelocity = drone.VelocityLocal();
             gpsVelocity.x = gpsVelocity.x + gpsVelocityNoiseSigma.x * UnifSigma();
             gpsVelocity.y = gpsVelocity.y + gpsVelocityNoiseSigma.y * UnifSigma();
@@ -128,6 +137,14 @@ namespace DroneSensors
             gyroRates.x = gyroRates.x + gyroNoiseSigma.x * UnifSigma();
             gyroRates.y = gyroRates.y + gyroNoiseSigma.y * UnifSigma();
             gyroRates.z = gyroRates.z + gyroNoiseSigma.z * UnifSigma();
+        }
+
+        void UpdateImu()
+        {
+            imuAcceleration = drone.AccelerationBody();
+            imuAcceleration.x = imuAcceleration.x + imuNoiseSigma.x * UnifSigma();
+            imuAcceleration.y = imuAcceleration.y + imuNoiseSigma.y * UnifSigma();
+            imuAcceleration.z = imuAcceleration.z + imuNoiseSigma.z * UnifSigma();
         }
 
         float UnifSigma()
@@ -207,11 +224,21 @@ namespace DroneSensors
             return gpsVelocity;
         }
 
+        public void SetHomePosition()
+        {
+            UpdateGps();
+            homeLatitude = gpsLongitude;
+            homeLatitude = gpsLatitude;
+            homeAltitude = 0.0;
+            localPosition = FlightUtils.Conversions.GlobalToLocalCoords(gpsLongitude, gpsLatitude, gpsAltitude, homeLongitude, homeLatitude);
+        }
+
         public void SetHomePosition(double longitude, double latitude, double altitude)
         {
             homeLongitude = longitude;
             homeLatitude = latitude;
             homeAltitude = altitude;
+            localPosition = FlightUtils.Conversions.GlobalToLocalCoords(gpsLongitude, gpsLatitude, gpsAltitude, homeLongitude, homeLatitude);
         }
 
 

@@ -275,6 +275,7 @@ namespace DroneVehicles
                 }
                 //				rb.AddRelativeTorque ( newTorque, torqueMode );
                 rb.AddRelativeTorque(torque, torqueMode);
+                
             }
             StateUpdate();
         }
@@ -340,6 +341,7 @@ namespace DroneVehicles
                 torque = torque * maxTorque / torque.magnitude;
             }
             TorqueOut = torque.magnitude;
+            
         }
 
         /*
@@ -463,12 +465,12 @@ namespace DroneVehicles
         /// to the appropriate right handed coordinate frame
         /// 
 
-        public Vector3 UnityCoords()
+        public Vector3 CoordsUnity()
         {
             return Position;
         }
 
-        public Vector3 LocalCoords()
+        public Vector3 CoordsLocal()
         {
             return Position.UnityToENUDirection().ENUToNED();
         }
@@ -476,7 +478,7 @@ namespace DroneVehicles
 
         public Vector3 AttitudeEuler()
         {
-            return Mathf.Deg2Rad * eulerAngles.UnityToENURotation().ENUToNED();
+            return Mathf.Deg2Rad * eulerAngles.UnityToNEDRotation();
         }
 
         public Vector4 AttitudeQuaternion()
@@ -506,12 +508,12 @@ namespace DroneVehicles
 
         public Vector3 AngularRatesBody()
         {
-            return AngularVelocity.UnityToENURotation().ENUToNED();
+            return AngularVelocityBody.UnityToNEDRotation();
         }
 
         public Vector3 MomentBody()
         {
-            return torque.UnityToENURotation().ENUToNED();
+            return torque.UnityToNEDRotation();
         }
 
         public Vector3 ForceBody()

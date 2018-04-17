@@ -12,18 +12,16 @@ namespace DroneControllers
 //		[System.NonSerialized]
         public QuadVehicle quadVehicle;
         public QuadSensors quadSensor;
-        public bool armed = false;
         public bool guided = false;
+        public bool onGround = false;
+        public bool simpleMode = true;
         public bool attitudeControl = true;
         public bool positionControl = true;
-        public bool remote = false;
 
-        public float hDotInt;
 
         ///
         /// Default control Gains are no found in PositionControl.cs and AttitudeControl.cs
         ///
-
         public float posctl_band = 0.1f;
         private float lastControlTime = 0.0f;
         public float maxTimeBetweenControl = 0.1f;
@@ -53,8 +51,8 @@ namespace DroneControllers
 
         [System.NonSerialized]
         public Rigidbody rb;
-        float tiltX;
-        float tiltZ;
+        //float tiltX;
+        //float tiltZ;
 
         private float h_des = 0.0f;
         [System.NonSerialized]
@@ -72,19 +70,16 @@ namespace DroneControllers
 
         public AttitudeControl attCtrl = new AttitudeControl();
         public PositionControl posCtrl = new PositionControl();
-		bool alive;
 
 
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
             if (quadVehicle == null)
             {
                 quadVehicle = GetComponent<QuadVehicle>();
             }
             SelectMovementBehavior();
-			alive = true;
         }
 
 		void Start ()
@@ -99,7 +94,7 @@ namespace DroneControllers
 
             if (!attitudeControl&&!positionControl&&((Time.time - lastControlTime) > maxTimeBetweenControl))
             {
-                CommandPosition(quadVehicle.LocalCoords()); 
+                CommandPosition(PositionLocal()); 
             }
                 
             if (Input.GetButtonDown("Position Control"))
@@ -110,7 +105,7 @@ namespace DroneControllers
                     positionControl = !positionControl;
                     if (positionControl)
                     {
-                        Vector3 LocalPosition = quadVehicle.LocalCoords();
+                        Vector3 LocalPosition = PositionLocal();
                         posHoldLocal = new Vector3(LocalPosition.x, LocalPosition.y, LocalPosition.z);
                     }
                 }
@@ -129,118 +124,6 @@ namespace DroneControllers
 //			
         }
 
-        /*
-        // Command the quad to a GPS location (latitude, relative_altitude, longitude)
-        public void CommandGPS(double latitude, double longitude, double altitude)
-        {
-            Vector3 localPosition;
-            localPosition = FlightUtils.Conversions.GlobalToLocalCoords(longitude, latitude, altitude, quadSensor.HomeLongitude(), quadSensor.HomeLatitude());
-            CommandLocal(localPosition.x, localPosition.y, localPosition.z);
-        }
-
-        // Command the quad to a local position (north, east, down)
-        public void CommandLocal(float north, float east, float down)
-        {
-            // The hold position is defined in the Unity reference frame, where (x,y,z)=>(north,up, east) #TODO
-            if (guided)
-            {
-                positionControl = true;
-                attitudeControl = false;
-
-                positionTarget.x = north;
-                positionTarget.y = east;
-                positionTarget.z = down;
-
-                // attitudeTarget.z = 0.0f;
-
-                guidedCommand.x = north;
-                guidedCommand.y = east;
-                guidedCommand.z = down;
-
-                // print("LOCAL POSITION COMMAND: " + north + ", " + east + ", " + down);
-                // print("LOCAL POSITION: " + controller.GetLocalNorth() + ", " + controller.GetLocalEast());
-            }
-        }
-
-        d
-        public void CommandHeading(float heading)
-        {
-            attitudeTarget.z = heading;
-        }
-        
-
-        public void CommandAttitude(float roll, float pitch, float yawRate, float thrust)
-        {
-            positionControl = false;
-
-            attitudeTarget.x = roll;
-            attitudeTarget.y = pitch;
-            bodyRateTarget.z = yawRate;
-            momentThrustTarget.w = thrust;
-
-            guidedCommand.x = roll;
-            guidedCommand.y = pitch;
-            guidedCommand.w = yawRate;
-            guidedCommand.z = thrust;
-
-            attitudeControl = true;
-        }
-
-        public void CommandMotors(float rollMoment, float pitchMoment, float yawMoment, float thrust)
-        {
-            positionControl = false;
-            attitudeControl = false;
-
-            momentThrustTarget.x = rollMoment;
-            momentThrustTarget.y = pitchMoment;
-            momentThrustTarget.z = yawMoment;
-            momentThrustTarget.w = thrust;
-            guidedCommand.x = rollMoment;
-            guidedCommand.y = pitchMoment;
-            guidedCommand.w = yawMoment;
-            guidedCommand.z = thrust;
-            lastControlTime = Time.time;
-        }
-        public void ArmVehicle()
-        {
-            if (guided)
-            {
-                guidedCommand = quadVehicle.LocalCoords();
-                //guidedCommand.x = controller.GetLocalNorth();
-                //guidedCommand.y = controller.GetLocalEast();
-                //guidedCommand.z = controller.GetLocalDown();
-
-                positionTarget.x = guidedCommand.x;
-                positionTarget.y = guidedCommand.y;
-                positionTarget.z = guidedCommand.z;
-            }
-            else
-            {
-                posHoldLocal = quadVehicle.LocalCoords();
-                //posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
-            }
-            armed = true;
-        }
-
-
-
-        public void DisarmVehicle()
-        {
-            armed = false;
-        }
-
-        public void SetGuidedMode(bool input_guided)
-        {
-            if (!input_guided)
-            {
-                //posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
-                posHoldLocal = quadVehicle.LocalCoords();
-            }
-
-            guided = input_guided;
-
-            SelectMovementBehavior();
-        }*/
 
         // Use this when any control variables change
         void SelectMovementBehavior()
@@ -276,10 +159,54 @@ namespace DroneControllers
                     currentMovementBehavior = mb_Manual;
                 }
             }
-            //currentMovementBehavior.OnSelect(this);
+            currentMovementBehavior.OnSelect(this);
         }
 
-        //Helper functions used
+        // Functions to pass along state information to the different controllers (simpleMode = perfect state information)
+
+        public Vector3 AttitudeEuler()
+        {
+            if (simpleMode)
+                return quadVehicle.AttitudeEuler();
+            else
+                return quadSensor.AttitudeEstimate();
+        }
+
+        public Vector3 AngularRatesBody()
+        {
+            if (simpleMode)
+                return quadVehicle.AngularRatesBody();
+            else
+                return quadSensor.GyroRates();
+        }
+
+        public Vector3 VelocityLocal()
+        {
+            if (simpleMode)
+                return quadVehicle.VelocityLocal();
+            else
+                return quadSensor.GPSVelocity();
+        }
+
+        public Vector3 PositionLocal()
+        {
+            if (simpleMode)
+                return quadVehicle.CoordsLocal();
+            else
+                return new Vector3(quadSensor.LocalPosition().x, quadSensor.LocalPosition().y, -quadSensor.BarometerAltitude());
+        }
+
+        public void CommandTorque(Vector3 torque)
+        {
+            quadVehicle.CmdTorque(torque);
+        }
+
+        public void CommandThrust(float thrust)
+        {
+            quadVehicle.CmdThrust(thrust);
+        }
+
+        // Helper functions used for plotting
         public Vector3 GetPositionTarget()
         {
             return new Vector3(positionTarget.x, positionTarget.y, positionTarget.z);
@@ -319,26 +246,46 @@ namespace DroneControllers
         /// <summary>
         /// Returns true if the vehicle is being controlled from outside the simulator
         /// </summary>
-        public bool OffboardMode()
+        public bool Guided()
         {
-            return guided;
+            return quadVehicle.MotorsArmed();
         }
 
         /// <summary>
-        /// Enables/disables offboard control
+        /// Enables/disables guided control from outside Unity
         /// </summary>
-        /// <param name="offboard">true=enable offboard, false=disable offboard</param>
-        public void SetOffboard(bool offboard)
+        /// <param name="offboard">true=enable guided, false=disable guided</param>
+        public void SetGuided(bool guided_in)
         {
-            if (!offboard)
+            if (!guided_in)
             {
                 //posHoldLocal = new Vector3(controller.GetLocalNorth(), controller.GetLocalEast(), controller.GetLocalDown());
-                posHoldLocal = quadVehicle.LocalCoords();
+                posHoldLocal = PositionLocal();
             }
 
-            guided = offboard;
+            guided = guided_in;
 
             SelectMovementBehavior();
+        }
+
+        /// <summary>
+        /// Arms/disarms the vehicle motors
+        /// </summary>
+        /// <param name="arm">true=arm, false=disarm</param>
+        public void ArmDisarm(bool arm)
+        {
+            if (arm)
+            {
+                quadSensor.SetHomePosition();
+
+                //Reset the controllers (dumps the integrators)
+                attCtrl = new AttitudeControl();
+                posCtrl = new PositionControl();
+                posHoldLocal = PositionLocal();
+                posHoldLocal.z = 0.0f;
+            }
+
+            quadVehicle.ArmDisarm(arm);
         }
 
         /// <summary>
@@ -346,10 +293,7 @@ namespace DroneControllers
         /// </summary>
         public void CommandHover()
         {
-            if (!guided)
-                return;
-
-            CommandPosition(quadVehicle.LocalCoords());
+            CommandPosition(PositionLocal());
         }
 
         /// <summary>
@@ -369,7 +313,7 @@ namespace DroneControllers
         }
 
         /// <summary>
-        /// Command the vehicle position. If in Offboard, changes the vehicle control to PositionControl
+        /// Command the vehicle position. If in guided, changes the vehicle control to PositionControl
         /// </summary>
         /// <param name="localPosition">Target local NED position</param>
         public void CommandPosition(Vector3 localPosition)
@@ -384,7 +328,7 @@ namespace DroneControllers
             guidedCommand.y = positionTarget.y = localPosition.y;
             guidedCommand.z = positionTarget.z = localPosition.z;
 
-            guidedCommand.w = attitudeTarget.z = quadVehicle.AttitudeEuler().z;
+            guidedCommand.w = attitudeTarget.z = AttitudeEuler().z;
         }
 
         /// <summary>
@@ -516,7 +460,6 @@ namespace DroneControllers
             bodyRateTarget.y = v.y;
             bodyRateTarget.z = v.z;
         }
-
 
     }
 }

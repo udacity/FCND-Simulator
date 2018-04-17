@@ -97,9 +97,9 @@ public class DummyDrone : MonoBehaviour, IDrone
 
 	public Vector3 Forward { get { return Vector3.ProjectOnPlane ( tr.forward, Vector3.up ).normalized; } }
 	// local coordinates (x, y, z) in Unity.
-	public Vector3 UnityCoords() { return tr.position; }
+	public Vector3 CoordsUnity() { return tr.position; }
 
-	public Vector3 LocalCoords(){ return tr.position; }
+	public Vector3 CoordsLocal(){ return tr.position; }
 
 	public double Latitude(){ return lat; }
 
@@ -225,5 +225,313 @@ public class DummyDrone : MonoBehaviour, IDrone
     public void BodyRateTarget(Vector3 br)
     {
         //simpleQuadCtrl.bodyRateTarget = br;
+    }
+
+    /// <summary>
+    /// Vehicle attitude (roll, pitch, yaw) in radians (RH 3-2-1 transform from world to body)
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 AttitudeEuler()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// Vehicle attitude in quaternions (RH from world to body)
+    /// </summary>
+    /// <returns></returns>
+    public Vector4 AttitudeQuaternion()
+    {
+        return Vector4.zero;
+    }
+
+    /// <summary>
+    /// The vehicle NED linear velocity in m/s
+    /// </summary>
+    public Vector3 VelocityLocal()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The linear velocity in the vehicle frame (front, right, down) in m/s
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 VelocityBody()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The vehicle NED linear acceleration in m/s^2
+    /// </summary>
+    public Vector3 AccelerationLocal()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The linear acceleration in the vehicle frame (front, right, down) in m/s^2
+    /// </summary>
+    public Vector3 AccelerationBody()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The angular velocity around the vehicle frame axes (front, right, down) in rad/s
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 AngularRatesBody()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The current body frame control moments being applied to the vehicle in kg*m^2/s^2
+    /// </summary>
+    public Vector3 MomentBody()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The current body frame control forces being applied to the vehicle in kg*m/s^2
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 ForceBody()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The state of the motors
+    /// </summary>
+    /// <returns></returns>
+    public bool MotorsArmed()
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// Arms/disarms the vehicle motors
+    /// </summary>
+    /// <param name="arm">true=arm, false=disarm</param>
+    public void ArmDisarm(bool arm)
+    {
+
+    }
+
+
+
+    /// IDroneController Methods
+
+    /// <summary>
+    /// Enables/disables offboard control
+    /// </summary>
+    /// <param name="offboard">true=enable offboard, false=disable offboard</param>
+    public void SetGuided(bool offboard)
+    {
+
+    }
+
+    /// <summary>
+    /// Command the vehicle to hover at the current position and altitude
+    /// </summary>
+    public void CommandHover()
+    {
+
+    }
+
+    /// <summary>
+    /// Command the vehicle to the altitude, the position/attitude target does nto change
+    /// </summary>
+    /// <param name="altitude">Altitude in m</param>
+    public void CommandAltitude(float altitude)
+    {
+
+    }
+
+    /// <summary>
+    /// Command the vehicle position. If in Offboard, changes the vehicle control to PositionControl
+    /// </summary>
+    /// <param name="localPosition">Target local NED position</param>
+    public void CommandPosition(Vector3 localPosition)
+    {
+
+    }
+
+    /// <summary>
+    /// If in PositionControl or VelocityControl mode, command the vehicle heading to the specified
+    /// </summary>
+    /// <param name="heading">Target vehicle heading in radians</param>
+    public void CommandHeading(float heading)
+    {
+
+    }
+
+    /// <summary>
+    /// Command the vehicle local velocity. If in Offboard, changes the vehicle control VelocityControl
+    /// </summary>
+    /// <param name="localVelocity">Target local NED velocity in m/s</param>
+    public void CommandVelocity(Vector3 localVelocity)
+    {
+
+    }
+
+    /// <summary>
+    /// Command the vehicle's attitude and thrust
+    /// </summary>
+    /// <param name="attitude">Euler angles (roll, pitch, yaw) in radians (RH 3-2-1 from world to body)</param>
+    /// <param name="thrust">The total commanded thrust from all motors</param>
+    public void CommandAttitude(Vector3 attitude, float thrust)
+    {
+
+    }
+
+    /// <summary>
+    /// Command the vehicle's body rates and thrust
+    /// </summary>
+    /// <param name="bodyrates">Body frame angular rates (p, q, r) in radians/s</param>
+    /// <param name="thrust">The total commanded thrust from all motors</param>
+    public void CommandAttitudeRate(Vector3 bodyrates, float thrust)
+    {
+
+    }
+
+    /// <summary>
+    /// Command the vehicle's body moment and thrust
+    /// </summary>
+    /// <param name="bodyMoment">Body frame moments in kg*m^2/s^2</param>
+    /// <param name="thrust"></param>
+    public void CommandMoment(Vector3 bodyMoment, float thrust)
+    {
+
+    }
+
+
+    /// IDroneSensors Methods
+
+    /// <summary>
+    /// The body angular rate measurements from the gyro in radians/s
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GyroRates()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The linear acceleration measurements from the IMU in m/s^2
+    /// </summary>
+    public Vector3 IMUAcceleration()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The compass heading in radians
+    /// </summary>
+    /// <returns></returns>
+    public float CompassHeading()
+    {
+        return 0.0f;
+    }
+
+    /// <summary>
+    /// The body 3-axis magnetometer measurement in Gauss.
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 CompassMagnetometer()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The barometeric pressure altitude in m (positive up)
+    /// </summary>
+    /// <returns></returns>
+    public float BarometerAltitude()
+    {
+        return 0.0f;
+    }
+
+    /// <summary>
+    /// The vehicle's attitude estimated from the compass, IMU and gyro
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 AttitudeEstimate()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// The vehicle latitude in degrees
+    /// </summary>
+    /// <returns></returns>
+    public double GPSLatitude()
+    {
+        return 0.0d;
+    }
+
+    /// <summary>
+    /// The vehicle longitude in degrees
+    /// </summary>
+    /// <returns></returns>
+    public double GPSLongitude()
+    {
+        return 0.0d;
+    }
+
+    /// <summary>
+    /// The vehicle altitude in m, relative to sea level (positive up)
+    /// </summary>
+    /// <returns></returns>
+    public double GPSAltitude()
+    {
+        return 0.0d;
+    }
+
+
+    /// <summary>
+    /// The home altitude in m, from sea level  (positive up)
+    /// </summary>
+    /// <returns></returns>
+    public double HomeAltitude()
+    {
+        return 0.0d;
+    }
+
+    /// <summary>
+    /// Local NED position in m, relative to the home position
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 LocalPosition()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// Local NED velocity in m/s
+    /// </summary>
+    public Vector3 GPSVelocity()
+    {
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// Sets the home position used in the local position calculation
+    /// </summary>
+    /// <param name="longitude">longitude in degrees</param>
+    /// <param name="latitude">latitude</param>
+    /// <param name="altitude">altitude in m, relative to seal level</param>
+    public void SetHomePosition(double longitude, double latitude, double altitude)
+    {
+        
+    }
+
+    public void SetHomePosition()
+    {
+
     }
 }
