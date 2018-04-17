@@ -28,7 +28,7 @@ public class RaycastGenerateColliders : MonoBehaviour
 	[NonSerialized]
 	public List<ColliderVolume> colliders;
 
-	float nextTestViz;
+	bool mapIsLoaded;
 
 	void Awake ()
 	{
@@ -56,17 +56,18 @@ public class RaycastGenerateColliders : MonoBehaviour
 	void MapScript_MapVisualizer_OnMapVisualizerStateChanged (ModuleState obj)
 	{
 		if ( obj == ModuleState.Finished )
-			GenerateColliders ();
+			mapIsLoaded = true;
+//			GenerateColliders ();
 	}
 	
-	void Update ()
-	{
+//	void Update ()
+//	{
 //		if ( Input.GetButton ( "Shift Modifier" ) && Input.GetButtonDown ( "Save" ) )
 //		{
 //			GenerateColliders ();
 //			CollidersToCSV ( true );
 //		}
-	}
+//	}
 
 	#if UNITY_EDITOR
 	void OnDrawGizmos ()
@@ -82,18 +83,6 @@ public class RaycastGenerateColliders : MonoBehaviour
 		Gizmos.color = Color.yellow;
 		for ( int i = colliders.Count - 1; i >= 1; i-- )
 			Gizmos.DrawWireCube ( colliders [ i ].position, colliders [ i ].size );
-
-//		if (Time.time > nextTestViz)
-//		{
-//			testVolumes = GetNearbyColliders(testCube.position, testRange);
-//			nextTestViz = Time.time + 1f;
-//		}
-//		if (testVolumes != null && testVolumes.Length > 0)
-//		{
-//			Gizmos.color = Color.blue;
-//			for (int i = testVolumes.Length - 1; i >= 0; i--)
-//				Gizmos.DrawWireCube(testVolumes[i].position, testVolumes[i].size);
-//		}
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireCube ( testCube.position, Vector3.one * range * 2 );
@@ -140,6 +129,9 @@ public class RaycastGenerateColliders : MonoBehaviour
 	{
 		Debug.Log ( "generating colliders..." );
 		yield return null;
+
+		while ( !mapIsLoaded )
+			yield return null;
 
 		float lineCount = range * 2 / stepDistance;
 		float halfSize = boxSize / 2;
@@ -200,11 +192,14 @@ public class RaycastGenerateColliders : MonoBehaviour
 	{
 		Debug.Log ( "generating colliders..." );
 		yield return null;
-		//		System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch ();
+
+		while ( !mapIsLoaded )
+			yield return null;
+
 		float distance = range * 2 / density;
 		float halfDistance = distance / 2;
 		Vector3 startPos = transform.position - Vector3.one * ( range - halfDistance );
-		//		Vector3 endPos = transform.position + Vector3.one * ( range - distance / 2 );
+//		Vector3 endPos = transform.position + Vector3.one * ( range - distance / 2 );
 
 		startPos.y = 500;
 		Ray ray = new Ray ( startPos, -Vector3.up );
