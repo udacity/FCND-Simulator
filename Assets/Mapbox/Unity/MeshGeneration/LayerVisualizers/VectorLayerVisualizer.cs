@@ -77,6 +77,17 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 
 		public override void Initialize()
 		{
+			if ( _activeCoroutines != null )
+			{
+				foreach ( var pair in _activeCoroutines )
+				{
+					foreach ( int cor in pair.Value )
+					{
+						Runnable.Stop ( cor );
+					}
+				}
+			}
+
 			base.Initialize();
 			_entityInCurrentCoroutine = 0;
 			_activeCoroutines = new Dictionary<UnityTile, List<int>>();
@@ -113,6 +124,7 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 
 		private IEnumerator ProcessLayer(VectorTileLayer layer, UnityTile tile, Action callback = null)
 		{
+//			Debug.Log ( "<color=yellow>processing layer on </color>" + name );
 			//HACK to prevent request finishing on same frame which breaks modules started/finished events 
 			yield return null;
 
@@ -170,8 +182,9 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 				}
 			}
 
-			if (callback != null)
-				callback();
+//			Debug.Log ( "<color=blue>layer </color>" + name + " finished" );
+			if ( callback != null )
+				callback ();
 		}
 
 		/// <summary>
@@ -278,6 +291,13 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 				if (val != null && val.Stack != null)
 					val.Stack.UnregisterTile(tile);
 			}
+		}
+
+		protected override void OnClear ()
+		{
+			base.OnClear ();
+
+
 		}
 	}
 }

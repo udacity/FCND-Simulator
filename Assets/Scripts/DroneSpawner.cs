@@ -24,6 +24,11 @@ public class DroneSpawner : MonoBehaviour
 			Spawn ();
 	}
 
+	void OnDestroy ()
+	{
+		Instance = null;
+	}
+
 	void Spawn ()
 	{
 		if ( !spawned )

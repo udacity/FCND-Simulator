@@ -12,6 +12,9 @@ public class RaycastGenerateColliders : MonoBehaviour
 	public LayerMask collisionMask;
 	public Transform testCube;
 	public float density = 50;
+	public float stepDistance = 1;
+	public float boxSize = 2;
+	public bool useNewVersion = true;
 
 	[NonSerialized]
 	public List<ColliderVolume> colliders;
@@ -26,6 +29,13 @@ public class RaycastGenerateColliders : MonoBehaviour
 	void Start ()
 	{
 		mapScript.MapVisualizer.OnMapVisualizerStateChanged += MapScript_MapVisualizer_OnMapVisualizerStateChanged;
+	}
+
+	void OnDestroy ()
+	{
+		mapScript.OnInitialized -= OnMapInitialized;
+		mapScript.MapVisualizer.OnMapVisualizerStateChanged -= MapScript_MapVisualizer_OnMapVisualizerStateChanged;
+//		Debug.Log ( "why am i being destroyed?" );
 	}
 
 	void OnMapInitialized ()
@@ -82,18 +92,80 @@ public class RaycastGenerateColliders : MonoBehaviour
 
 	public void GenerateColliders (Action onComplete = null)
 	{
-		StartCoroutine ( DoGenerate ( onComplete ) );
+		if ( useNewVersion )
+			StartCoroutine ( DoGenerate ( onComplete ) );
+		else
+			StartCoroutine ( DoGenerateOld ( onComplete ) );
 	}
 
 	IEnumerator DoGenerate (Action onComplete = null)
 	{
 		Debug.Log ( "generating colliders..." );
 		yield return null;
-//		System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch ();
+
+		float lineCount = range * 2 / stepDistance;
+		float halfSize = boxSize / 2;
+//		float distance = range * 2 / density2;
+//		float halfDistance = distance / 2;
+		Vector3 startPos = transform.position - Vector3.one * ( range - stepDistance );
+//		Vector3 startPos = transform.position - Vector3.one * ( range - halfDistance );
+
+		startPos.y = 500;
+		Ray ray = new Ray ( startPos, -Vector3.up );
+		RaycastHit hit;
+
+		colliders = new List<ColliderVolume> ();
+		int count = 0;
+
+		for ( int x = 0; x < lineCount; x++ )
+		{
+			for ( int z = 0; z < lineCount; z++ )
+			{
+				ray.origin = startPos + new Vector3 ( x * stepDistance, 0, z * stepDistance );
+				if ( Physics.Raycast ( ray, out hit, 1000, collisionMask, QueryTriggerInteraction.Ignore ) )
+				{
+					if ( hit.point.y > 0 )
+					{
+						float halfHeight = hit.point.y / 2;
+						Vector3 center = hit.point;
+						center.y = halfHeight;
+						colliders.Add ( new ColliderVolume ( center, new Vector3 ( halfSize, hit.point.y, halfSize ) ) );
+					}
+				}
+
+				// limit to 1000 raycasts per frame
+				count++;
+				if ( count > 5000 )
+				{
+					count -= 5000;
+					yield return null;
+				}
+			}
+		}
+
+		GameObject[] props = GameObject.FindGameObjectsWithTag ( "Prop" );
+		props.ForEach ( ( x ) =>
+		{
+			Collider c = x.GetComponent<Collider> ();
+			if ( c != null )
+				colliders.Add ( ColliderVolume.FromCollider ( c ) );
+		} );
+
+		Debug.Log ( colliders.Count + " generated from raycasts and props." );
+
+		if ( onComplete != null )
+			onComplete ();
+	}
+
+	IEnumerator DoGenerateOld (Action onComplete = null)
+	{
+		Debug.Log ( "generating colliders..." );
+		yield return null;
+		//		System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch ();
 		float distance = range * 2 / density;
 		float halfDistance = distance / 2;
 		Vector3 startPos = transform.position - Vector3.one * ( range - halfDistance );
-//		Vector3 endPos = transform.position + Vector3.one * ( range - distance / 2 );
+		//		Vector3 endPos = transform.position + Vector3.one * ( range - distance / 2 );
 
 		startPos.y = 500;
 		Ray ray = new Ray ( startPos, -Vector3.up );

@@ -9,7 +9,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 {
     public class ModifierStackBase : ScriptableObject
     {
-        public virtual GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "")
+		public virtual GameObject Execute(UnityTile tile, VectorFeatureUnity feature, MeshData meshData, GameObject parent = null, string type = "")
         {
             return null;
         }
@@ -25,6 +25,16 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 		}
 
 		public virtual void OnUnregisterTile(UnityTile tile)
+		{
+			
+		}
+
+		public void Clear ()
+		{
+			OnClear ();
+		}
+
+		public virtual void OnClear ()
 		{
 			
 		}
