@@ -220,9 +220,9 @@ namespace Messaging
         /// <summary>
         public List<byte[]> LocalPositionNED()
         {
-            var north = drone.CoordsLocal().x;
-            var east = drone.CoordsLocal().y;
-            var down = drone.CoordsLocal().z;
+            var north = drone.LocalPosition().x;
+            var east = drone.LocalPosition().y;
+            var down = -drone.BarometerAltitude();
             var msg = new Msg_local_position_ned
             {
                 x = north,
@@ -606,14 +606,14 @@ namespace Messaging
             {
                 // TODO: z is being sent as negative, check to see if a sign change needs to occur
                 //drone.Goto(drone.GPSLatitude(), drone.GPSLongitude(), msg.z);
-                drone.CommandPosition(new Vector3(drone.CoordsLocal().x, drone.CoordsLocal().y, msg.z));
+                drone.CommandPosition(new Vector3(drone.LocalPosition().x, drone.LocalPosition().y, -msg.z));
                 Debug.Log(string.Format("TAKING OFF to {0} altitude", msg.z));
             }
             // LAND
             else if ((mask & (UInt16)SET_POSITION_MASK.IS_LAND) > 0)
             {
                 // TODO: z is being sent as 0 here, make sure that is ok
-                drone.CommandPosition(new Vector3(drone.CoordsLocal().x, drone.CoordsLocal().y, msg.z));
+                drone.CommandPosition(new Vector3(drone.LocalPosition().x, drone.LocalPosition().y, -msg.z));
                 Debug.Log("LANDING !!!");
             }
             // NEED TO REVIEW MASK
@@ -628,7 +628,7 @@ namespace Messaging
                     var east = msg.y;
                     var alt = msg.z;
                     Debug.Log("Vehicle Command: (" + north + "," + east + "," + alt + ")");
-                    drone.CommandPosition(new Vector3(north, east, alt));
+                    drone.CommandPosition(new Vector3(north, east, -alt));
                 }
                 else if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_VELOCITY) == 0)
                 {

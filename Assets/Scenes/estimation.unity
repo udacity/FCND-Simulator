@@ -14037,7 +14037,7 @@ MonoBehaviour:
   quadSensor: {fileID: 773082666}
   guided: 0
   onGround: 0
-  simpleMode: 1
+  simpleMode: 0
   attitudeControl: 1
   positionControl: 1
   posctl_band: 0.1
@@ -14140,16 +14140,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imuRateHz: 500
-  imuNoiseSigma: {x: 1, y: 1, z: 3}
+  imuNoiseSigma: {x: 0, y: 0, z: 0}
   gyroRateHz: 500
   gyroNoiseSigma: {x: 0, y: 0, z: 0}
   compassRateHz: 1
-  compassNoiseSigma: {x: 0.01, y: 0.01, z: 0.01}
-  barometerRateHz: 1
-  barometerNoiseSigma: 0.1
-  gpsRateHz: 10
-  gpsPositionNoiseSigma: {x: 1, y: 1, z: 3}
-  gpsVelocityNoiseSigma: {x: 0.1, y: 0.1, z: 0.3}
+  compassNoiseSigma: {x: 0, y: 0, z: 0}
+  barometerRateHz: 100
+  barometerNoiseSigma: 0
+  gpsRateHz: 500
+  gpsPositionNoiseSigma: {x: 0, y: 0, z: 0}
+  gpsVelocityNoiseSigma: {x: 0, y: 0, z: 0}
   estimateRateHz: 500
 --- !u!114 &773082667
 MonoBehaviour:
@@ -17708,9 +17708,9 @@ MonoBehaviour:
   networkController: {fileID: 1807842540}
   heartbeatIntervalHz: 1
   telemetryIntervalHz: 4
-  gpsIntervalHz: 10
-  attitudeIntervalHz: 50
-  imuIntervalHz: 100
+  gpsIntervalHz: 40
+  attitudeIntervalHz: 40
+  imuIntervalHz: 1
   homePositionIntervalHz: 1
 --- !u!4 &928297423
 Transform:

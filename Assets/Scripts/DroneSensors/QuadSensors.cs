@@ -131,7 +131,11 @@ namespace DroneSensors
             lat_noise = 0.9f * lat_noise + 0.04f * HDOP * fnNoise.GetSimplex(Time.time * 121.7856f, 0, 0);
             alt_noise = 0.9f * alt_noise + 0.04f * VDOP * fnNoise.GetSimplex(0, Time.time * 23.14141f, 0);
             lon_noise = 0.9f * lon_noise + 0.04f * HDOP * fnNoise.GetSimplex(0, 0, Time.time * 127.7334f);
-            positionEstimate = drone.CoordsLocal();
+            var Meter2Latitude = FlightUtils.Conversions.Meter2Latitude;
+            var Meter2Longitude = FlightUtils.Conversions.Meter2Longitude;
+            double latitude = Simulation.latitude0 + Meter2Latitude * drone.CoordsLocal().x;
+            double longitude = Simulation.longitude0 + Meter2Longitude * drone.CoordsLocal().y;
+            positionEstimate = FlightUtils.Conversions.GlobalToLocalCoords(longitude, latitude, -drone.CoordsLocal().z, homeLongitude, homeLatitude);
             positionEstimate.x = positionEstimate.x + lat_noise;
             positionEstimate.y = positionEstimate.y + lon_noise;
             positionEstimate.z = positionEstimate.z + alt_noise;
@@ -147,7 +151,7 @@ namespace DroneSensors
             var Meter2Longitude = FlightUtils.Conversions.Meter2Longitude;
             gpsLatitude = Simulation.latitude0 + Meter2Latitude*(drone.CoordsLocal().x + gpsPositionNoiseSigma.y * UnifSigma());
             gpsLongitude = Simulation.longitude0 + Meter2Longitude*(drone.CoordsLocal().y + gpsPositionNoiseSigma.x * UnifSigma());
-            gpsAltitude = drone.CoordsLocal().z + gpsPositionNoiseSigma.z * UnifSigma();
+            gpsAltitude = -drone.CoordsLocal().z + gpsPositionNoiseSigma.z * UnifSigma();
             gpsVelocity = drone.VelocityLocal();
             gpsVelocity.x = gpsVelocity.x + gpsVelocityNoiseSigma.x * UnifSigma();
             gpsVelocity.y = gpsVelocity.y + gpsVelocityNoiseSigma.y * UnifSigma();

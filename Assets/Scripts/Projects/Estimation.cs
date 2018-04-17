@@ -18,8 +18,8 @@ public class Estimation : MonoBehaviour
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 4;
 
-    public int gpsIntervalHz = 10;
-    public int attitudeIntervalHz = 50;
+    public int gpsIntervalHz = 100;
+    public int attitudeIntervalHz = 500;
     public int imuIntervalHz = 100;
     public int homePositionIntervalHz = 1;
 
