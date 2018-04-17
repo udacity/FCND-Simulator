@@ -14037,7 +14037,7 @@ MonoBehaviour:
   quadSensor: {fileID: 773082666}
   guided: 0
   onGround: 0
-  simpleMode: 0
+  simpleMode: 1
   attitudeControl: 1
   positionControl: 1
   posctl_band: 0.1
@@ -14064,7 +14064,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 773082661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80a7ae5f472aff54381c6fc2bfcdbdfd, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d5bd92669eba47489c4d7970fa2cfb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   vehicleMass: 0.5
@@ -14084,11 +14084,11 @@ MonoBehaviour:
   frontRightRotor: {fileID: 433225882}
   rearLeftRotor: {fileID: 1230878867}
   rearRightRotor: {fileID: 725746252}
-  yAxis: {fileID: 265655587}
-  xAxis: {fileID: 950869583}
+  yAxis: {fileID: 812972205}
+  xAxis: {fileID: 448497543}
   forward: {fileID: 1264736837}
   right: {fileID: 2030849783}
-  clampForce: 1
+  clampForce: 0
   clampTorque: 1
   maxTorqueDegrees: 17
   forceMode: 0
@@ -14136,19 +14136,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 773082661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b0f1de5fea675d49936b49385e2df0b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5105182958590414ea0219f34ba32f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   imuRateHz: 500
-  imuNoiseSigma: {x: 1, y: 1, z: 1}
+  imuNoiseSigma: {x: 1, y: 1, z: 3}
   gyroRateHz: 500
-  gyroNoiseSigma: {x: 0.1, y: 0.1, z: 0.1}
-  compassRateHz: 500
-  compassNoiseSigma: {x: 0.1, y: 0.1, z: 0.1}
-  barometerRateHz: 100
+  gyroNoiseSigma: {x: 0, y: 0, z: 0}
+  compassRateHz: 1
+  compassNoiseSigma: {x: 0.01, y: 0.01, z: 0.01}
+  barometerRateHz: 1
   barometerNoiseSigma: 0.1
   gpsRateHz: 10
-  gpsPositionNoiseSigma: {x: 0.1, y: 0.1, z: 0.3}
+  gpsPositionNoiseSigma: {x: 1, y: 1, z: 3}
   gpsVelocityNoiseSigma: {x: 0.1, y: 0.1, z: 0.3}
   estimateRateHz: 500
 --- !u!114 &773082667

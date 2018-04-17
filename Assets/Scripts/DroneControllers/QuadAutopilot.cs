@@ -177,7 +177,7 @@ namespace DroneControllers
             if (simpleMode)
                 return quadVehicle.AngularRatesBody();
             else
-                return quadSensor.GyroRates();
+                return quadSensor.AngularRateEstimate();
         }
 
         public Vector3 VelocityLocal()
@@ -185,7 +185,7 @@ namespace DroneControllers
             if (simpleMode)
                 return quadVehicle.VelocityLocal();
             else
-                return quadSensor.GPSVelocity();
+                return quadSensor.VelocityEstimate();
         }
 
         public Vector3 PositionLocal()
@@ -193,7 +193,7 @@ namespace DroneControllers
             if (simpleMode)
                 return quadVehicle.CoordsLocal();
             else
-                return new Vector3(quadSensor.LocalPosition().x, quadSensor.LocalPosition().y, -quadSensor.BarometerAltitude());
+                return quadSensor.PositionEstimate();
         }
 
         public void CommandTorque(Vector3 torque)
@@ -248,7 +248,7 @@ namespace DroneControllers
         /// </summary>
         public bool Guided()
         {
-            return quadVehicle.MotorsArmed();
+            return guided;
         }
 
         /// <summary>
