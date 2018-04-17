@@ -216,9 +216,10 @@ public class CopyPlatformResources : Editor
             case BuildTarget.StandaloneWindows64:
                 PrepareForPlatform(RuntimePlatform.WindowsPlayer);
                 break;
-            case BuildTarget.StandaloneOSXIntel:
+//            case BuildTarget.StandaloneOSXIntel:
+		case BuildTarget.StandaloneOSX:
 //		case BuildTarget.StandaloneOSXIntel64:
-            case BuildTarget.StandaloneOSXIntel64:
+//            case BuildTarget.StandaloneOSXIntel64:
                 PrepareForPlatform(RuntimePlatform.OSXPlayer);
                 break;
             case BuildTarget.Android:
@@ -227,6 +228,10 @@ public class CopyPlatformResources : Editor
             case BuildTarget.iOS:
                 PrepareForPlatform(RuntimePlatform.IPhonePlayer);
                 break;
+		case BuildTarget.StandaloneLinux:
+		case BuildTarget.StandaloneLinux64:
+		case BuildTarget.StandaloneLinuxUniversal:
+			break;
             default:
                 Debug.LogErrorFormat("Unsupported platform {0:G}", target);
                 break;

@@ -80,7 +80,7 @@ namespace UdacityNetworking
 
 		void Awake ()
 		{
-			byte[] values = (byte[]) Enum.GetValues ( typeof (MessageType) );
+			int[] values = (int[]) Enum.GetValues ( typeof (MessageType) );
 			for ( int i = 0; i < values.Length; i++ )
 				handlers.Add ( (MessageType) values [ i ], delegate {} );
 //			handlers.Add ( MessageType.Mavlink, delegate {} );

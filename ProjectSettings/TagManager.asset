@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Prop
   - MapParent
+  - NetworkController
   layers:
   - Default
   - TransparentFX

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Compression;
 using UnityEngine;
+using UnityEngine.UI;
 using Mapbox.Unity.Map;
+using UdacityNetworking;
+using ttext = TMPro.TextMeshProUGUI;
 
 public class RaycastGenerateColliders : MonoBehaviour
 {
@@ -16,6 +20,11 @@ public class RaycastGenerateColliders : MonoBehaviour
 	public float boxSize = 2;
 	public bool useNewVersion = true;
 
+	public Canvas canvas;
+	public ttext messageText;
+	public Button sendButton;
+	public Button cancelButton;
+
 	[NonSerialized]
 	public List<ColliderVolume> colliders;
 
@@ -24,6 +33,7 @@ public class RaycastGenerateColliders : MonoBehaviour
 	void Awake ()
 	{
 		mapScript.OnInitialized += OnMapInitialized;
+		canvas.enabled = false;
 	}
 
 	void Start ()
@@ -92,10 +102,38 @@ public class RaycastGenerateColliders : MonoBehaviour
 
 	public void GenerateColliders (Action onComplete = null)
 	{
+		messageText.text = "Generating colliders, please wait...";
+		sendButton.gameObject.SetActive ( false );
+		cancelButton.gameObject.SetActive ( false );
+		canvas.enabled = true;
+
 		if ( useNewVersion )
 			StartCoroutine ( DoGenerate ( onComplete ) );
 		else
 			StartCoroutine ( DoGenerateOld ( onComplete ) );
+	}
+
+	void ShowCompleteUI ()
+	{
+		messageText.text = "Finished generating colliders!";
+		sendButton.gameObject.SetActive ( true );
+		cancelButton.gameObject.SetActive ( true );
+	}
+
+	public void OnSendButtonClicked ()
+	{
+		canvas.enabled = false;
+		GameObject networkGO = GameObject.FindWithTag ( "NetworkController" );
+		NetworkController controller = networkGO.GetComponent<NetworkController> ();
+		byte[] message = ZipString ( GetCollidersString ().ToString () );
+
+		controller.SendMessage ( MessageType.Colliders, message );
+	}
+
+	public void OnCancelButtonClicked ()
+	{
+		canvas.enabled = false;
+		Debug.Log ( "Cancelled sending colliders" );
 	}
 
 	IEnumerator DoGenerate (Action onComplete = null)
@@ -152,6 +190,7 @@ public class RaycastGenerateColliders : MonoBehaviour
 		} );
 
 		Debug.Log ( colliders.Count + " generated from raycasts and props." );
+		ShowCompleteUI ();
 
 		if ( onComplete != null )
 			onComplete ();
@@ -209,8 +248,55 @@ public class RaycastGenerateColliders : MonoBehaviour
 		} );
 
 		Debug.Log ( colliders.Count + " generated from raycasts and props." );
+		ShowCompleteUI ();
 
 		if ( onComplete != null )
 			onComplete ();
+	}
+
+	System.Text.StringBuilder GetCollidersString ()
+	{
+		var header = "posX,posY,posZ,halfSizeX,halfSizeY,halfSizeZ\n";
+		string latString = Simulation.latitude0.ToString ();
+		string lonString = Simulation.longitude0.ToString ();
+		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
+
+		int length = latString.Split ( '.' ) [ 1 ].Length;
+		for ( int i = 0; i < ( 6 - length ); i++ )
+			latString += "0";
+
+		length = lonString.Split ( '.' ) [ 1 ].Length;
+		for ( int i = 0; i < ( 6 - length ); i++ )
+			lonString += "0";
+		sb.Append ( "lat0 " + latString + ", lon0 " + lonString + "\n" );
+		sb.Append ( header );
+
+		foreach (var c in colliders)
+		{
+			var pos = c.position;
+			var hsize = c.halfSize;
+			var row = string.Format("{0},{1},{2},{3},{4},{5}\n", pos.z, pos.x, pos.y, hsize.z, hsize.x, hsize.y);
+			sb.Append ( row );
+		}
+
+		return sb;
+	}
+
+	byte[] ZipString (string s)
+	{
+		byte[] bytes = s.GetBytes ();
+		Debug.Log ( "there are " + bytes.Length + " bytes before zipping!" );
+
+		using ( System.IO.MemoryStream ms = new System.IO.MemoryStream () )
+		using ( GZipStream gzip = new GZipStream ( ms, CompressionMode.Compress ) )
+		{
+			gzip.Write ( bytes, 0, bytes.Length );
+			gzip.Close ();
+			bytes = ms.ToArray ();
+		}
+
+		Debug.Log ( "there are " + bytes.Length + " bytes after zipping!" );
+
+		return bytes;
 	}
 }
