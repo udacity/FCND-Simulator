@@ -6973,7 +6973,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 18ff566a551ada542a580efa5a97ed0e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4218878
+  m_Volume: 0.0000004776756
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -7133,7 +7133,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 218b39ccbcf444c49bd8b40970864348, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.38
+  m_Volume: -0
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -7391,7 +7391,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 18ff566a551ada542a580efa5a97ed0e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4218878
+  m_Volume: 0.000003905804
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -7711,8 +7711,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: afd8526a16fc31a40ac719dd93cef68b, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
+  m_Volume: 0.49930555
+  m_Pitch: 0.32894737
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -7797,7 +7797,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b3990d3441a2cbf498432f060d62d23e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.50064003
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -7963,7 +7963,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 18ff566a551ada542a580efa5a97ed0e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4218878
+  m_Volume: 0.00003556857
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -8102,18 +8102,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volumeCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 0
       inSlope: 0.0025035064
       outSlope: 0.0025035064
       tangentMode: 0
-    - time: 13.552411
+    - serializedVersion: 2
+      time: 13.552411
       value: 0.3508798
       inSlope: 0.08935126
       outSlope: 0.08935126
       tangentMode: 0
-    - time: 16.07424
+    - serializedVersion: 2
+      time: 16.07424
       value: 0.9900583
       inSlope: 0.25345835
       outSlope: 0.25345835
@@ -8139,13 +8143,16 @@ MonoBehaviour:
   wheelAnchor: {fileID: 4650030287544800}
   attachedWheel: {fileID: 114506297637248120}
   compressionCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0.0008990094
+    - serializedVersion: 2
+      time: 0.0008990094
       value: 0.34968472
       inSlope: 0.7105849
       outSlope: 0.7105849
       tangentMode: 0
-    - time: 1
+    - serializedVersion: 2
+      time: 1
       value: 0.9863133
       inSlope: 0
       outSlope: 0
@@ -8175,6 +8182,7 @@ MonoBehaviour:
   engine: {fileID: 114698175873451998}
   starting: 1
   torque: 15
+  inputs: {fileID: 0}
   starterSound: {fileID: 82765680115383866}
 --- !u!114 &114140441212785622
 MonoBehaviour:
@@ -8227,6 +8235,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -8238,6 +8247,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002377
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114174443457068672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8262,6 +8273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
+    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -8283,11 +8295,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 145a236381a8f8c4b8ebc4cf2a37bedd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  throttleInputType: 0
   allEngines: 0
   engines:
   - {fileID: 114698175873451998}
   throttleInput: 0
+  thrustDir: 1
   throttle: 0
+  engineSelectorOn: 0
 --- !u!114 &114234288149929250
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8300,6 +8315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
+    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -8345,6 +8361,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -8356,6 +8373,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002992
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114285165113815758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8383,6 +8402,8 @@ MonoBehaviour:
   airBrakes: 0
   slats: 0
   swept: 0
+  colectivePitch: 0
+  thrustDir: 0
   trim: 0
   trimauto: 0
   wheelBrake: 0
@@ -8394,6 +8415,7 @@ MonoBehaviour:
   gearDwn: 0
   autoTrim: 0
   trimCurve:
+    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -8413,6 +8435,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
+    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -8439,38 +8462,46 @@ MonoBehaviour:
   attachedTo: {fileID: 54683267590316286}
   attachedSuspenssion: {fileID: 114772730845274180}
   latitudinalGripCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -40.26693
+    - serializedVersion: 2
+      time: -40.26693
       value: -3.1897078
       inSlope: -0.0023383803
       outSlope: -0.0023383803
       tangentMode: 0
-    - time: -27.78709
+    - serializedVersion: 2
+      time: -27.78709
       value: -3.8532305
       inSlope: -0.04612701
       outSlope: -0.04612701
       tangentMode: 0
-    - time: -22.450024
+    - serializedVersion: 2
+      time: -22.450024
       value: -3.8830795
       inSlope: 0.027217258
       outSlope: 0.027217258
       tangentMode: 0
-    - time: 0.008080823
+    - serializedVersion: 2
+      time: 0.008080823
       value: -0.00021521654
       inSlope: 0.28241438
       outSlope: 0.28241438
       tangentMode: 0
-    - time: 24.652641
+    - serializedVersion: 2
+      time: 24.652641
       value: 3.9776082
       inSlope: 0.007999809
       outSlope: 0.007999809
       tangentMode: 0
-    - time: 28.632885
+    - serializedVersion: 2
+      time: 28.632885
       value: 3.917316
       inSlope: -0.03549396
       outSlope: -0.03549396
       tangentMode: 0
-    - time: 40.05258
+    - serializedVersion: 2
+      time: 40.05258
       value: 3.271347
       inSlope: -0.011063896
       outSlope: -0.011063896
@@ -8479,18 +8510,22 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   longitudinalGripCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -0.81861484
+    - serializedVersion: 2
+      time: -0.81861484
       value: -2.648346
       inSlope: 0.58725476
       outSlope: 0.58725476
       tangentMode: 0
-    - time: 0.00034632022
+    - serializedVersion: 2
+      time: 0.00034632022
       value: -0.00031010993
       inSlope: 4.37462
       outSlope: 4.37462
       tangentMode: 0
-    - time: 0.8974011
+    - serializedVersion: 2
+      time: 0.8974011
       value: 3.0936596
       inSlope: 0.21636486
       outSlope: 0.21636486
@@ -8499,13 +8534,16 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   loadFactorCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 1
+    - serializedVersion: 2
+      time: 1
       value: 1
       inSlope: 0
       outSlope: 0
@@ -8553,6 +8591,8 @@ MonoBehaviour:
   currentGearRatio: 0
   diferentialRatio: 0
   controller: {fileID: 0}
+  wheelClutch: 0
+  wheelBrakeInput: 0
   transformSpeed: 0
 --- !u!114 &114314964743253016
 MonoBehaviour:
@@ -8566,6 +8606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
+    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -8623,6 +8664,7 @@ MonoBehaviour:
   headLeanAngle: 0
   pilotHead: {fileID: 4586115215069640}
   pilotHeadPivot: {fileID: 4030072835445034}
+  headPanning: {fileID: 0}
 --- !u!114 &114389296439743916
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8677,6 +8719,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
+    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -8727,33 +8770,40 @@ MonoBehaviour:
   curves:
   - name: main
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: -65.43327
+      - serializedVersion: 2
+        time: -65.43327
         value: -0.12504247
         inSlope: -0.014008474
         outSlope: -0.014008474
         tangentMode: 0
-      - time: -30.096825
+      - serializedVersion: 2
+        time: -30.096825
         value: -0.66148835
         inSlope: -0.017018449
         outSlope: -0.017018449
         tangentMode: 0
-      - time: 7.5122595
+      - serializedVersion: 2
+        time: 7.5122595
         value: 0.6226922
         inSlope: 0.097343445
         outSlope: 0.097343445
         tangentMode: 0
-      - time: 17.965744
+      - serializedVersion: 2
+        time: 17.965744
         value: 1.1167811
         inSlope: 0.008505662
         outSlope: 0.008505662
         tangentMode: 0
-      - time: 25.233356
+      - serializedVersion: 2
+        time: 25.233356
         value: 0.803708
         inSlope: -0.043644205
         outSlope: -0.043644205
         tangentMode: 0
-      - time: 78.79165
+      - serializedVersion: 2
+        time: 78.79165
         value: 0.036619395
         inSlope: -0.0020559293
         outSlope: -0.0020559293
@@ -8763,38 +8813,46 @@ MonoBehaviour:
       m_RotationOrder: 0
   - name: main_drag
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: -106.66656
+      - serializedVersion: 2
+        time: -106.66656
         value: 0.8015108
         inSlope: -0.00008014342
         outSlope: -0.00008014342
         tangentMode: 0
-      - time: -23.657223
+      - serializedVersion: 2
+        time: -23.657223
         value: 0.7033811
         inSlope: -0.014529756
         outSlope: -0.014529756
         tangentMode: 0
-      - time: -16.079086
+      - serializedVersion: 2
+        time: -16.079086
         value: 0.56641126
         inSlope: -0.017846104
         outSlope: -0.017846104
         tangentMode: 0
-      - time: 0.53644264
+      - serializedVersion: 2
+        time: 0.53644264
         value: 0.32937354
         inSlope: 0.0000075481676
         outSlope: 0.0000075481676
         tangentMode: 0
-      - time: 14.885729
+      - serializedVersion: 2
+        time: 14.885729
         value: 0.65881974
         inSlope: 0.029376257
         outSlope: 0.029376257
         tangentMode: 0
-      - time: 31.75706
+      - serializedVersion: 2
+        time: 31.75706
         value: 0.8488099
         inSlope: 0.0048397263
         outSlope: 0.0048397263
         tangentMode: 0
-      - time: 47.767864
+      - serializedVersion: 2
+        time: 47.767864
         value: 0.88829523
         inSlope: 0.0011408431
         outSlope: 0.0011408431
@@ -8804,18 +8862,22 @@ MonoBehaviour:
       m_RotationOrder: 0
   - name: aileron
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: -40.21515
+      - serializedVersion: 2
+        time: -40.21515
         value: -0.9106581
         inSlope: 0.036814943
         outSlope: 0.036814943
         tangentMode: 0
-      - time: 0.0021696985
+      - serializedVersion: 2
+        time: 0.0021696985
         value: -0.000023538349
         inSlope: 0.026568508
         outSlope: 0.026568508
         tangentMode: 0
-      - time: 30.723694
+      - serializedVersion: 2
+        time: 30.723694
         value: 0.8937843
         inSlope: 0.04509835
         outSlope: 0.04509835
@@ -8825,18 +8887,22 @@ MonoBehaviour:
       m_RotationOrder: 0
   - name: elevator
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: -39.941395
+      - serializedVersion: 2
+        time: -39.941395
         value: -0.9986336
         inSlope: 0.045761883
         outSlope: 0.045761883
         tangentMode: 0
-      - time: 0.21829776
+      - serializedVersion: 2
+        time: 0.21829776
         value: -0.00021521654
         inSlope: 0.008107393
         outSlope: 0.008107393
         tangentMode: 0
-      - time: 34.475407
+      - serializedVersion: 2
+        time: 34.475407
         value: 1.0229144
         inSlope: 0.045465432
         outSlope: 0.045465432
@@ -8846,23 +8912,28 @@ MonoBehaviour:
       m_RotationOrder: 0
   - name: flap
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: -27.608692
+      - serializedVersion: 2
+        time: -27.608692
         value: -0.011601925
         inSlope: -0.012870115
         outSlope: -0.012870115
         tangentMode: 0
-      - time: -14.174907
+      - serializedVersion: 2
+        time: -14.174907
         value: -0.014224172
         inSlope: -0.000107964624
         outSlope: -0.000107964624
         tangentMode: 0
-      - time: 0.008080823
+      - serializedVersion: 2
+        time: 0.008080823
         value: 0.0022236377
         inSlope: 0.0052593397
         outSlope: 0.0052593397
         tangentMode: 0
-      - time: 39.993923
+      - serializedVersion: 2
+        time: 39.993923
         value: 0.84747565
         inSlope: 0.06664429
         outSlope: 0.06664429
@@ -8872,18 +8943,22 @@ MonoBehaviour:
       m_RotationOrder: 0
   - name: vstab
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: -14.029041
+      - serializedVersion: 2
+        time: -14.029041
         value: -0.9877068
         inSlope: 0.0014004755
         outSlope: 0.0014004755
         tangentMode: 0
-      - time: 0.002192426
+      - serializedVersion: 2
+        time: 0.002192426
         value: -0.0001488525
         inSlope: 0.25482708
         outSlope: 0.25482708
         tangentMode: 0
-      - time: 14.584934
+      - serializedVersion: 2
+        time: 14.584934
         value: 0.9970098
         inSlope: 0.009509666
         outSlope: 0.009509666
@@ -8893,28 +8968,34 @@ MonoBehaviour:
       m_RotationOrder: 4
   - name: hstab
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: -52.808548
+      - serializedVersion: 2
+        time: -52.808548
         value: -0.706958
         inSlope: -0.026432727
         outSlope: -0.026432727
         tangentMode: 0
-      - time: -19.271294
+      - serializedVersion: 2
+        time: -19.271294
         value: -0.9775274
         inSlope: 0.003334849
         outSlope: 0.003334849
         tangentMode: 0
-      - time: 0.007161632
+      - serializedVersion: 2
+        time: 0.007161632
         value: -0.00021521654
         inSlope: 0.10461287
         outSlope: 0.10461287
         tangentMode: 0
-      - time: 18.755032
+      - serializedVersion: 2
+        time: 18.755032
         value: 0.990396
         inSlope: 0.0068888003
         outSlope: 0.0068888003
         tangentMode: 0
-      - time: 53.433216
+      - serializedVersion: 2
+        time: 53.433216
         value: 0.80135494
         inSlope: -0.01811944
         outSlope: -0.01811944
@@ -8924,13 +9005,16 @@ MonoBehaviour:
       m_RotationOrder: 0
   - name: flapDrag
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: 0.058832645
+      - serializedVersion: 2
+        time: 0.058832645
         value: 0.0008160472
         inSlope: 0.0006120859
         outSlope: 0.0006120859
         tangentMode: 0
-      - time: 31.652727
+      - serializedVersion: 2
+        time: 31.652727
         value: 0.17216936
         inSlope: 0.01666675
         outSlope: 0.01666675
@@ -8940,18 +9024,22 @@ MonoBehaviour:
       m_RotationOrder: 0
   - name: rudder
     curve:
+      serializedVersion: 2
       m_Curve:
-      - time: -39.64173
+      - serializedVersion: 2
+        time: -39.64173
         value: -0.5036839
         inSlope: 0.002628101
         outSlope: 0.002628101
         tangentMode: 0
-      - time: 0.0001788782
+      - serializedVersion: 2
+        time: 0.0001788782
         value: -0.00000958101
         inSlope: 0.028882189
         outSlope: 0.028882189
         tangentMode: 0
-      - time: 40.3039
+      - serializedVersion: 2
+        time: 40.3039
         value: 0.51217914
         inSlope: 0.004867986
         outSlope: 0.004867986
@@ -8994,38 +9082,46 @@ MonoBehaviour:
   attachedTo: {fileID: 54683267590316286}
   attachedSuspenssion: {fileID: 114052178799007372}
   latitudinalGripCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -40.26693
+    - serializedVersion: 2
+      time: -40.26693
       value: -3.1897078
       inSlope: -0.0023383803
       outSlope: -0.0023383803
       tangentMode: 0
-    - time: -27.78709
+    - serializedVersion: 2
+      time: -27.78709
       value: -3.8532305
       inSlope: -0.04612701
       outSlope: -0.04612701
       tangentMode: 0
-    - time: -22.450024
+    - serializedVersion: 2
+      time: -22.450024
       value: -3.8830795
       inSlope: 0.027217258
       outSlope: 0.027217258
       tangentMode: 0
-    - time: 0.008080823
+    - serializedVersion: 2
+      time: 0.008080823
       value: -0.00021521654
       inSlope: 0.28241438
       outSlope: 0.28241438
       tangentMode: 0
-    - time: 24.652641
+    - serializedVersion: 2
+      time: 24.652641
       value: 3.9776082
       inSlope: 0.007999809
       outSlope: 0.007999809
       tangentMode: 0
-    - time: 28.632885
+    - serializedVersion: 2
+      time: 28.632885
       value: 3.917316
       inSlope: -0.03549396
       outSlope: -0.03549396
       tangentMode: 0
-    - time: 40.05258
+    - serializedVersion: 2
+      time: 40.05258
       value: 3.271347
       inSlope: -0.011063896
       outSlope: -0.011063896
@@ -9034,18 +9130,22 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   longitudinalGripCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -0.81861484
+    - serializedVersion: 2
+      time: -0.81861484
       value: -2.648346
       inSlope: 0.58725476
       outSlope: 0.58725476
       tangentMode: 0
-    - time: 0.00034632022
+    - serializedVersion: 2
+      time: 0.00034632022
       value: -0.00031010993
       inSlope: 4.37462
       outSlope: 4.37462
       tangentMode: 0
-    - time: 0.8974011
+    - serializedVersion: 2
+      time: 0.8974011
       value: 3.0936596
       inSlope: 0.21636486
       outSlope: 0.21636486
@@ -9054,13 +9154,16 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   loadFactorCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 1
+    - serializedVersion: 2
+      time: 1
       value: 1
       inSlope: 0
       outSlope: 0
@@ -9108,6 +9211,8 @@ MonoBehaviour:
   currentGearRatio: 0
   diferentialRatio: 0
   controller: {fileID: 0}
+  wheelClutch: 0
+  wheelBrakeInput: 0
   transformSpeed: 0
 --- !u!114 &114530444629932280
 MonoBehaviour:
@@ -9144,6 +9249,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9168,6 +9274,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9192,6 +9299,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9203,6 +9311,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002992
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114530719801995624
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9215,6 +9325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
+    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -9260,6 +9371,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9284,6 +9396,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9295,6 +9408,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002377
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114552514550033522
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9349,6 +9464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curve:
+    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -9394,6 +9510,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9418,6 +9535,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9429,6 +9547,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002377
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114620278343692388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9447,13 +9567,16 @@ MonoBehaviour:
   wheelAnchor: {fileID: 4536262369062046}
   attachedWheel: {fileID: 114969025806838026}
   compressionCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -0.0063644247
+    - serializedVersion: 2
+      time: -0.0063644247
       value: 0.073883235
       inSlope: 2.4333787
       outSlope: 2.4333787
       tangentMode: 0
-    - time: 1
+    - serializedVersion: 2
+      time: 1
       value: 1
       inSlope: 0.08681688
       outSlope: 0.08681688
@@ -9481,18 +9604,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volumeCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 0
       inSlope: 0.0025035064
       outSlope: 0.0025035064
       tangentMode: 0
-    - time: 13.552411
+    - serializedVersion: 2
+      time: 13.552411
       value: 0.3508798
       inSlope: 0.08935126
       outSlope: 0.08935126
       tangentMode: 0
-    - time: 16.07424
+    - serializedVersion: 2
+      time: 16.07424
       value: 0.9900583
       inSlope: 0.25345835
       outSlope: 0.25345835
@@ -9512,18 +9639,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volumeCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 0
       inSlope: 0.0025035064
       outSlope: 0.0025035064
       tangentMode: 0
-    - time: 13.552411
+    - serializedVersion: 2
+      time: 13.552411
       value: 0.3508798
       inSlope: 0.08935126
       outSlope: 0.08935126
       tangentMode: 0
-    - time: 16.07424
+    - serializedVersion: 2
+      time: 16.07424
       value: 0.9900583
       inSlope: 0.25345835
       outSlope: 0.25345835
@@ -9547,28 +9678,34 @@ MonoBehaviour:
   propRadius: 1.25
   propMass: 50
   outputCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0.84319645
+    - serializedVersion: 2
+      time: 0.84319645
       value: 0.0008276608
       inSlope: 0.00000025620824
       outSlope: 0.00000025620824
       tangentMode: 0
-    - time: 1.7707535
+    - serializedVersion: 2
+      time: 1.7707535
       value: 0.7056595
       inSlope: 1.6566556
       outSlope: 1.6566556
       tangentMode: 0
-    - time: 2.4812744
+    - serializedVersion: 2
+      time: 2.4812744
       value: 1.9875505
       inSlope: 0.309902
       outSlope: 0.309902
       tangentMode: 0
-    - time: 2.724629
+    - serializedVersion: 2
+      time: 2.724629
       value: 1.9853187
       inSlope: -0.45895576
       outSlope: -0.45895576
       tangentMode: 0
-    - time: 3.8916802
+    - serializedVersion: 2
+      time: 3.8916802
       value: 0.8915385
       inSlope: -0.3719112
       outSlope: -0.3719112
@@ -9577,18 +9714,22 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   frictionCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -0.009866075
+    - serializedVersion: 2
+      time: -0.009866075
       value: 0.02117803
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 3.3298328
+    - serializedVersion: 2
+      time: 3.3298328
       value: 0.84825146
       inSlope: 0.8940537
       outSlope: 0.8940537
       tangentMode: 0
-    - time: 3.7943397
+    - serializedVersion: 2
+      time: 3.7943397
       value: 2.0009086
       inSlope: 1.7186496
       outSlope: 1.7186496
@@ -9603,9 +9744,12 @@ MonoBehaviour:
   frictionForce: 0.84694636
   propArea: 3.1415927
   reductionGear: 1
+  thrustDir: 1
   propBlades: {fileID: 4784110060095302}
   propBlur: {fileID: 23184497552060418}
   targetBody: {fileID: 54683267590316286}
+  useCustomForcePoint: 0
+  forcePoint: {fileID: 0}
   densityCoef: 1
 --- !u!114 &114669300730646140
 MonoBehaviour:
@@ -9642,6 +9786,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9653,6 +9798,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002377
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114698175873451998
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9664,24 +9811,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0db70c02efcdad47b2de8c96e7d6e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  remoteKinematic: 0
   torqueCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -0.015244409
+    - serializedVersion: 2
+      time: -0.015244409
       value: -0.00028467923
       inSlope: 0.018773671
       outSlope: 0.018773671
       tangentMode: 0
-    - time: 0.55673736
+    - serializedVersion: 2
+      time: 0.55673736
       value: 0.034165867
       inSlope: 0.065427914
       outSlope: 0.065427914
       tangentMode: 0
-    - time: 2.8290203
+    - serializedVersion: 2
+      time: 2.8290203
       value: 0.12701474
       inSlope: 0.00027568013
       outSlope: 0.00027568013
       tangentMode: 0
-    - time: 5.0825543
+    - serializedVersion: 2
+      time: 5.0825543
       value: 0.09540562
       inSlope: -0.021803167
       outSlope: -0.021803167
@@ -9690,23 +9843,28 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   frictionCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -0.003908707
+    - serializedVersion: 2
+      time: -0.003908707
       value: 0.0001224248
       inSlope: 0.0028173544
       outSlope: 0.0028173544
       tangentMode: 0
-    - time: 0.52984583
+    - serializedVersion: 2
+      time: 0.52984583
       value: 0.0026737903
       inSlope: 0.013637277
       outSlope: 0.013637277
       tangentMode: 0
-    - time: 3.1644983
+    - serializedVersion: 2
+      time: 3.1644983
       value: 0.14389262
       inSlope: 0.06944344
       outSlope: 0.06944344
       tangentMode: 0
-    - time: 3.596853
+    - serializedVersion: 2
+      time: 3.596853
       value: 0.20400694
       inSlope: 0.17594337
       outSlope: 0.17594337
@@ -9720,6 +9878,7 @@ MonoBehaviour:
   totalMass: 100
   idleThrottle: 0.25
   throttle: 0
+  thrustDir: 0
   rpm: 0
   inertia: 4
   outputForce: 0
@@ -9754,18 +9913,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   elevatorResponse:
+    serializedVersion: 2
     m_Curve:
-    - time: -10.043213
+    - serializedVersion: 2
+      time: -10.043213
       value: -0.28009468
       inSlope: 0.013986703
       outSlope: 0.013986703
       tangentMode: 0
-    - time: 0.025629826
+    - serializedVersion: 2
+      time: 0.025629826
       value: 0.0003129925
       inSlope: 0.052798018
       outSlope: 0.052798018
       tangentMode: 0
-    - time: 11.030456
+    - serializedVersion: 2
+      time: 11.030456
       value: 0.8688735
       inSlope: 0.09911232
       outSlope: 0.09911232
@@ -9774,18 +9937,22 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   aileronResponse:
+    serializedVersion: 2
     m_Curve:
-    - time: -10.067269
+    - serializedVersion: 2
+      time: -10.067269
       value: -0.9703775
       inSlope: -0.016962387
       outSlope: -0.016962387
       tangentMode: 0
-    - time: 0.00064013153
+    - serializedVersion: 2
+      time: 0.00064013153
       value: 0.0007011369
       inSlope: 0.1622288
       outSlope: 0.1622288
       tangentMode: 0
-    - time: 9.925997
+    - serializedVersion: 2
+      time: 9.925997
       value: 1.0006816
       inSlope: -0.015494183
       outSlope: -0.015494183
@@ -9805,6 +9972,7 @@ MonoBehaviour:
   optimusAoa: 10
   cruiseSpeed: 250
   aprouchSpeed: 135
+  landingFlapIndex: 0
   flareHeight: 10
   v1Speed: 90
   normalBankAngle: 75
@@ -9902,13 +10070,16 @@ MonoBehaviour:
   wheelAnchor: {fileID: 4245588700093848}
   attachedWheel: {fileID: 114301215071273874}
   compressionCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0.0008990094
+    - serializedVersion: 2
+      time: 0.0008990094
       value: 0.34968472
       inSlope: 0.7105849
       outSlope: 0.7105849
       tangentMode: 0
-    - time: 1
+    - serializedVersion: 2
+      time: 1
       value: 0.9863133
       inSlope: 0
       outSlope: 0
@@ -9959,6 +10130,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -9970,6 +10142,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002992
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114823830959030446
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10041,6 +10215,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -10065,6 +10240,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -10089,6 +10265,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -10100,6 +10277,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002992
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114926057653024356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10112,18 +10291,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volumeCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 0
       inSlope: 0.0025035064
       outSlope: 0.0025035064
       tangentMode: 0
-    - time: 13.552411
+    - serializedVersion: 2
+      time: 13.552411
       value: 0.3508798
       inSlope: 0.08935126
       outSlope: 0.08935126
       tangentMode: 0
-    - time: 16.07424
+    - serializedVersion: 2
+      time: 16.07424
       value: 0.9900583
       inSlope: 0.25345835
       outSlope: 0.25345835
@@ -10166,6 +10349,7 @@ MonoBehaviour:
     liftOnSection: 0
     swept: 0
     slatedWingCurve:
+      serializedVersion: 2
       m_Curve: []
       m_PreInfinity: 0
       m_PostInfinity: 0
@@ -10177,6 +10361,8 @@ MonoBehaviour:
   sweptCurve: 
   airDensity: 0.002992
   targetRigidbody: {fileID: 54683267590316286}
+  groundEffect: 0
+  geCoef: 1
 --- !u!114 &114969025806838026
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10193,38 +10379,46 @@ MonoBehaviour:
   attachedTo: {fileID: 54683267590316286}
   attachedSuspenssion: {fileID: 114620278343692388}
   latitudinalGripCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -40.26693
+    - serializedVersion: 2
+      time: -40.26693
       value: -3.1897078
       inSlope: -0.0023383803
       outSlope: -0.0023383803
       tangentMode: 0
-    - time: -38.6646
+    - serializedVersion: 2
+      time: -38.6646
       value: -3.933932
       inSlope: -0.04612701
       outSlope: -0.04612701
       tangentMode: 0
-    - time: -33.327534
+    - serializedVersion: 2
+      time: -33.327534
       value: -3.963781
       inSlope: 0.06947847
       outSlope: 0.06947847
       tangentMode: 0
-    - time: 0.008080823
+    - serializedVersion: 2
+      time: 0.008080823
       value: -0.00021521654
       inSlope: 1.0462655
       outSlope: 1.0462655
       tangentMode: 0
-    - time: 29.698174
+    - serializedVersion: 2
+      time: 29.698174
       value: 3.9920611
       inSlope: 0.054528743
       outSlope: 0.054528743
       tangentMode: 0
-    - time: 33.678417
+    - serializedVersion: 2
+      time: 33.678417
       value: 3.931769
       inSlope: -0.03549396
       outSlope: -0.03549396
       tangentMode: 0
-    - time: 40.05258
+    - serializedVersion: 2
+      time: 40.05258
       value: 3.271347
       inSlope: -0.011063896
       outSlope: -0.011063896
@@ -10233,38 +10427,46 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   longitudinalGripCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: -10.01335
+    - serializedVersion: 2
+      time: -10.01335
       value: -0.04053372
       inSlope: 0.0039297836
       outSlope: 0.0039297836
       tangentMode: 0
-    - time: -2.3257906
+    - serializedVersion: 2
+      time: -2.3257906
       value: -3.718671
       inSlope: -0.8093459
       outSlope: -0.8093459
       tangentMode: 0
-    - time: -1.1551981
+    - serializedVersion: 2
+      time: -1.1551981
       value: -4.189495
       inSlope: 0.021792738
       outSlope: 0.021792738
       tangentMode: 0
-    - time: 0.008080823
+    - serializedVersion: 2
+      time: 0.008080823
       value: -0.00021521654
       inSlope: 5.9912853
       outSlope: 5.9912853
       tangentMode: 0
-    - time: 1.6284165
+    - serializedVersion: 2
+      time: 1.6284165
       value: 4.195244
       inSlope: 0.08977392
       outSlope: 0.08977392
       tangentMode: 0
-    - time: 2.6367836
+    - serializedVersion: 2
+      time: 2.6367836
       value: 3.8919039
       inSlope: -0.82596093
       outSlope: -0.82596093
       tangentMode: 0
-    - time: 10.0587435
+    - serializedVersion: 2
+      time: 10.0587435
       value: 0.054065168
       inSlope: 0.012799713
       outSlope: 0.012799713
@@ -10273,13 +10475,16 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   loadFactorCurve:
+    serializedVersion: 2
     m_Curve:
-    - time: 0
+    - serializedVersion: 2
+      time: 0
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 1
+    - serializedVersion: 2
+      time: 1
       value: 1
       inSlope: 0
       outSlope: 0
@@ -10327,6 +10532,8 @@ MonoBehaviour:
   currentGearRatio: 0
   diferentialRatio: 0
   controller: {fileID: 0}
+  wheelClutch: 0
+  wheelBrakeInput: 0
   transformSpeed: 0
 --- !u!114 &114983482823150162
 MonoBehaviour:
@@ -10353,6 +10560,16 @@ MonoBehaviour:
   parkingBrake: 0
   tailwheelLock: 0
   deltaZ: 0
+  trueAltitude: 0
+  useAutoTrim: 0
+  autoTrimValue: 0
+  autoTrimCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  altCaster: {fileID: 0}
 --- !u!114 &114991600707907506
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1148,7 +1148,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &44762037
 Transform:
   m_ObjectHideFlags: 0
@@ -4261,7 +4261,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &202938659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4996,7 +4996,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &237963221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12855,7 +12855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &572215398
 Transform:
   m_ObjectHideFlags: 0
@@ -13866,7 +13866,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &631838381
 Transform:
   m_ObjectHideFlags: 0
@@ -20148,7 +20148,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &874722178
 Transform:
   m_ObjectHideFlags: 0
@@ -27493,7 +27493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1266767156
 Transform:
   m_ObjectHideFlags: 0
@@ -29120,7 +29120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1342555592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29128,7 +29128,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1342555591}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0db70c02efcdad47b2de8c96e7d6e31, type: 3}
   m_Name: 
@@ -29201,7 +29201,7 @@ MonoBehaviour:
   idleThrottle: 0.25
   throttle: 0
   thrustDir: 0
-  rpm: 0
+  rpm: 1000
   inertia: 4
   outputForce: 0
   contact: 1
@@ -29511,7 +29511,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1346151887}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ff94fe9e90a85d4fb2616b25a1921b0, type: 3}
   m_Name: 
@@ -29521,7 +29521,7 @@ MonoBehaviour:
   elevator: 0.5
   aileron: 0
   rudder: 0
-  steering: -1
+  steering: 0
   throttle: 0.5
   accelerator: 0
   flaps: 0
@@ -32965,7 +32965,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1573514505
 Transform:
   m_ObjectHideFlags: 0
@@ -38575,7 +38575,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1827914828
 Transform:
   m_ObjectHideFlags: 0
@@ -40510,7 +40510,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1882927866
 Transform:
   m_ObjectHideFlags: 0
@@ -42104,7 +42104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1944743766
 Transform:
   m_ObjectHideFlags: 0
