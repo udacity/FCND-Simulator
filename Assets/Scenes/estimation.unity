@@ -14030,7 +14030,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 773082661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd0ea358cf077e448bf17c99c74b3684, type: 3}
+  m_Script: {fileID: 11500000, guid: 850e6e48bde7a3f4d883484025ef6762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   quadVehicle: {fileID: 773082663}
@@ -14054,8 +14054,7 @@ MonoBehaviour:
   velocityTarget: {x: 0, y: 0, z: 0}
   accelerationTarget: {x: 0, y: 0, z: 0}
   momentThrustTarget: {x: 0, y: 0, z: 0, w: 0}
-  currentMovementBehavior: {fileID: 11400000, guid: b67ccdc9551dd8d44a7a324303427b90,
-    type: 2}
+  currentMovementBehavior: {fileID: 0}
 --- !u!114 &773082663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14064,7 +14063,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 773082661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d5bd92669eba47489c4d7970fa2cfb9, type: 3}
+  m_Script: {fileID: 11500000, guid: aa403c910318a9f42ab6485afc0d2c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   vehicleMass: 0.5
@@ -14088,7 +14087,7 @@ MonoBehaviour:
   xAxis: {fileID: 448497543}
   forward: {fileID: 1264736837}
   right: {fileID: 2030849783}
-  clampForce: 0
+  clampForce: 1
   clampTorque: 1
   maxTorqueDegrees: 17
   forceMode: 0
@@ -14136,20 +14135,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 773082661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5105182958590414ea0219f34ba32f70, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a355df2fff8e684eb8b3398df0b5183, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   imuRateHz: 500
-  imuNoiseSigma: {x: 0, y: 0, z: 0}
+  imuNoiseSigma: {x: 1, y: 1, z: 3}
   gyroRateHz: 500
   gyroNoiseSigma: {x: 0, y: 0, z: 0}
   compassRateHz: 1
-  compassNoiseSigma: {x: 0, y: 0, z: 0}
-  barometerRateHz: 100
-  barometerNoiseSigma: 0
-  gpsRateHz: 500
-  gpsPositionNoiseSigma: {x: 0, y: 0, z: 0}
-  gpsVelocityNoiseSigma: {x: 0, y: 0, z: 0}
+  compassNoiseSigma: {x: 0.01, y: 0.01, z: 0.01}
+  barometerRateHz: 1
+  barometerNoiseSigma: 0.1
+  gpsRateHz: 10
+  gpsPositionNoiseSigma: {x: 1, y: 1, z: 3}
+  gpsVelocityNoiseSigma: {x: 0.1, y: 0.1, z: 0.3}
   estimateRateHz: 500
 --- !u!114 &773082667
 MonoBehaviour:
@@ -14170,7 +14169,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 773082661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd62d24a83e8e514eb4d9593a00daa0a, type: 3}
+  m_Script: {fileID: 11500000, guid: 39ca55af509f509448cca1f9247643fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &773082669
@@ -17702,15 +17701,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 928297421}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a06ab7351f22cb4890a19136e64c553, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b751cb886089114aa0a69e703903047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkController: {fileID: 1807842540}
+  networkController: {fileID: 2116241737}
   heartbeatIntervalHz: 1
   telemetryIntervalHz: 4
   gpsIntervalHz: 40
   attitudeIntervalHz: 40
-  imuIntervalHz: 1
+  imuIntervalHz: 40
   homePositionIntervalHz: 1
 --- !u!4 &928297423
 Transform:
@@ -32621,12 +32620,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 781e3ddc9a93b8a4683cf8bf148763c9, type: 3}
   m_PrefabInternal: {fileID: 1800822643}
---- !u!114 &1807842540 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114868484622015278, guid: d4cf35dbb071efb4c85672ff3bf9680e,
-    type: 2}
-  m_PrefabInternal: {fileID: 2084894501}
-  m_Script: {fileID: 11500000, guid: ba852a39e819dc544923ab462a504243, type: 3}
 --- !u!1001 &1814106867
 Prefab:
   m_ObjectHideFlags: 0
@@ -38375,6 +38368,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2116241737 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114868484622015278, guid: d4cf35dbb071efb4c85672ff3bf9680e,
+    type: 2}
+  m_PrefabInternal: {fileID: 2084894501}
+  m_Script: {fileID: 11500000, guid: ba852a39e819dc544923ab462a504243, type: 3}
 --- !u!1001 &2125762729
 Prefab:
   m_ObjectHideFlags: 0
