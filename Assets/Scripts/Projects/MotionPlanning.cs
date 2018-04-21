@@ -32,13 +32,12 @@ public class MotionPlanning : MonoBehaviour
     {
         droneGO = GameObject.Find("Quad Drone");
         drone = droneGO.GetComponent<QuadDrone>();
-        // droneGO.GetComponent<QuadController>().NavigationUpdate();
-        // drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
         // Quaternion.identity
-
+        // var buildings = Resources.FindObjectsOfTypeAll<Mesh>();
+        // Debug.Log(buildings.Length);
         // SetupLidarRays();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);
