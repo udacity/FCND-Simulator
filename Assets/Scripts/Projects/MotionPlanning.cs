@@ -35,9 +35,6 @@ public class MotionPlanning : MonoBehaviour
         drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
-        // Quaternion.identity
-        // var buildings = Resources.FindObjectsOfTypeAll<Mesh>();
-        // Debug.Log(buildings.Length);
         // SetupLidarRays();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);
