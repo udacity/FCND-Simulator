@@ -6346,8 +6346,12 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 443340893}
-  - component: {fileID: 919259886}
   - component: {fileID: 919259881}
+  - component: {fileID: 919259890}
+  - component: {fileID: 919259889}
+  - component: {fileID: 919259888}
+  - component: {fileID: 919259887}
+  - component: {fileID: 919259886}
   - component: {fileID: 919259885}
   - component: {fileID: 919259883}
   - component: {fileID: 919259884}
@@ -6541,6 +6545,94 @@ MonoBehaviour:
   shipController: {fileID: 0}
   engines: {fileID: 1352088598}
   fuel: {fileID: 1472811717}
+--- !u!114 &919259887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 919259880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 326f616b2ef4e6b4c813f876e59d1ede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planeVehicle: {fileID: 919259889}
+  planeSensor: {fileID: 919259888}
+  simpleMode: 1
+  guided: 0
+  attitudeTarget: {x: 0, y: 0, z: 0}
+  positionTarget: {x: 0, y: 0, z: 0}
+  bodyRateTarget: {x: 0, y: 0, z: 0}
+  velocityTarget: {x: 0, y: 0, z: 0}
+  accelerationTarget: {x: 0, y: 0, z: 0}
+  momentThrustTarget: {x: 0, y: 0, z: 0, w: 0}
+  currentMovementBehavior: {fileID: 0}
+  mb_Manual: {fileID: 11400000, guid: 885ac316c46e7bb4d9920fe31b8391d9, type: 2}
+--- !u!114 &919259888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 919259880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f29e9a3c64b2c0c4b83ba742e931b8ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imuRateHz: 500
+  imuNoiseSigma: {x: 1, y: 1, z: 3}
+  gyroRateHz: 500
+  gyroNoiseSigma: {x: 0, y: 0, z: 0}
+  compassRateHz: 1
+  compassNoiseSigma: {x: 0.01, y: 0.01, z: 0.01}
+  barometerRateHz: 1
+  barometerNoiseSigma: 0.1
+  gpsRateHz: 10
+  gpsPositionNoiseSigma: {x: 1, y: 1, z: 3}
+  gpsVelocityNoiseSigma: {x: 0.1, y: 0.1, z: 0.3}
+  estimateRateHz: 500
+--- !u!114 &919259889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 919259880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d9b59680835294d97c78d4c09542a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputsManager: {fileID: 919259883}
+  prop: {fileID: 2033787014}
+  useGravity: 1
+  aileron: 0
+  maxAileron: 30
+  minAileron: -30
+  rudder: 0
+  maxRudder: 30
+  minRudder: -30
+  elevator: 0
+  maxElevator: 30
+  minElevator: -30
+  elevatorTrim: 0
+  maxTrim: 30
+  minTrime: -30
+  throttleRPM: 0
+  maxThrottleRPM: 5000
+--- !u!114 &919259890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 919259880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c35261333d9d5284da30b58ce67e9386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planeVehicle: {fileID: 919259889}
+  planeAutopilot: {fileID: 919259887}
+  planeSensors: {fileID: 919259888}
 --- !u!1 &919422430
 GameObject:
   m_ObjectHideFlags: 0
@@ -7887,7 +7979,7 @@ AudioSource:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1147629588}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c3a73ca53aef4644193de8539382833f, type: 3}
@@ -11874,6 +11966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d6db4dc97a5c91479b31257080b59c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapScript: {fileID: 0}
 --- !u!114 &1668477630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14850,6 +14943,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2033787012}
   - component: {fileID: 2033787013}
+  - component: {fileID: 2033787014}
   m_Layer: 0
   m_Name: Prop
   m_TagString: Untagged
@@ -14880,7 +14974,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2033787011}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56a014342b004654ba1a99c9a33e4c87, type: 3}
   m_Name: 
@@ -14955,6 +15049,95 @@ MonoBehaviour:
   outputForce: 0
   frictionForce: 0.84694636
   propArea: 3.1415927
+  reductionGear: 1
+  thrustDir: 1
+  propBlades: {fileID: 730216678}
+  propBlur: {fileID: 662916126}
+  targetBody: {fileID: 919259881}
+  useCustomForcePoint: 0
+  forcePoint: {fileID: 0}
+  densityCoef: 1
+--- !u!114 &2033787014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2033787011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef675961b52818c4686c44d5f17ba6cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  engineAttached: {fileID: 1671106325}
+  inputForce: 0
+  propRadius: 1.25
+  propMass: 50
+  outputCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0.84319645
+      value: 0.0008276608
+      inSlope: 0.00000025620824
+      outSlope: 0.00000025620824
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1.7272407
+      value: 1.0166496
+      inSlope: 1.736791
+      outSlope: 1.736791
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 2.3689277
+      value: 2.3752506
+      inSlope: 1.4906164
+      outSlope: 1.4906164
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 2.518512
+      value: 2.5022054
+      inSlope: 0.19086471
+      outSlope: 0.19086471
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 3.7946854
+      value: 2.040883
+      inSlope: -0.24428822
+      outSlope: -0.24428822
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  frictionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: -0.009866075
+      value: 0.02117803
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 3.3298328
+      value: 0.84825146
+      inSlope: 0.8940537
+      outSlope: 0.8940537
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 3.7943397
+      value: 2.0009086
+      inSlope: 1.7186496
+      outSlope: 1.7186496
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  friction: 90
+  rpm: 0
+  torqueAtProp: 0
+  outputForce: 0
+  frictionForce: 0
+  propArea: 0
   reductionGear: 1
   thrustDir: 1
   propBlades: {fileID: 730216678}

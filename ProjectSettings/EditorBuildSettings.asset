@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/controls-test.unity
     guid: b57b0c05302b24396ad8772167c311cf
+  - enabled: 1
+    path: Assets/Scenes/FixedWingNew.unity
+    guid: a8ed1319ee4951a47ae8409e70cee874

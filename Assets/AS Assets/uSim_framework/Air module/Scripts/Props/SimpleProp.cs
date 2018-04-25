@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Prop : MonoBehaviour {
+
+public class SimpleProp : MonoBehaviour {
 
 	public Engine engineAttached;
 
@@ -48,8 +49,8 @@ public class Prop : MonoBehaviour {
 
 	void FixedUpdate () {
 
-		if (engineAttached == null)
-			return;
+		//if (engineAttached == null)
+		//	return;
 
 		if (!useCustomForcePoint)
 			forcePoint = transform;
@@ -60,7 +61,7 @@ public class Prop : MonoBehaviour {
 
 		inputForce = engineAttached.outputForce;
 
-		rpm = engineAttached.rpm / reductionGear;
+		//rpm = engineAttached.rpm / reductionGear;
 
 		transform.Rotate (0f,0f,rpm /60f);
 
@@ -82,4 +83,9 @@ public class Prop : MonoBehaviour {
 			propBlades.gameObject.SetActive (true);
 		}
 	}
+
+    public void SetRPM(float r)
+    {
+        rpm = r;
+    }
 }
