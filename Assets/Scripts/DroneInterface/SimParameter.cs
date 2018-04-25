@@ -7,7 +7,8 @@ using ParameterAction = System.Action<SimParameter>;
 [System.Serializable]
 public class SimParameter : ISerializationCallbackReceiver
 {
-	public string displayName = "New Parameter";
+    public string type = "Generic";
+    public string displayName = "New Parameter";
 	public float Value
 	{
 		get { return thisValue; }
@@ -39,6 +40,12 @@ public class SimParameter : ISerializationCallbackReceiver
 	// to allow for declaring private variables at runtime
 	public SimParameter (string label, float value)
 	{
+        string[] labelSplit = label.Split(':');
+        if (labelSplit.Length == 2)
+        {
+            type = labelSplit[0];
+            label = labelSplit[1];
+        }
 		displayName = label;
 		thisValue = value;
 		init = true;
@@ -48,6 +55,12 @@ public class SimParameter : ISerializationCallbackReceiver
 
     public SimParameter(string label, float value, ParameterAction changeObserver)
     {
+        string[] labelSplit = label.Split(':');
+        if (labelSplit.Length == 2)
+        {
+            type = labelSplit[0];
+            label = labelSplit[1];
+        }
         displayName = label;
         thisValue = value;
         init = true;

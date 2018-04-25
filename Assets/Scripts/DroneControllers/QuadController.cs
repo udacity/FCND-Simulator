@@ -43,6 +43,7 @@ namespace DroneControllers
         public Vector3 LinearVelocity { get; protected set; }
         public Vector3 BodyVelocity { get; protected set; }
         public Vector3 LinearAcceleration { get; protected set; }
+        public Vector3 LinearAccelerationBody { get; protected set; }
 
         /// <summary>
         /// Simulated global coordinates Defined as longitude, altitude, latitude (Unity coordinates).
@@ -550,6 +551,21 @@ namespace DroneControllers
             return -LinearAcceleration.y;
         }
 
+        public float GetFrontAcceleration()
+        {
+            return LinearAccelerationBody.z;
+        }
+
+        public float GetRightAcceleration()
+        {
+            return LinearAccelerationBody.x;
+        }
+
+        public float GetBottomAcceleration()
+        {
+            return -LinearAccelerationBody.y;
+        }
+
         public float GetVerticalVelocity()
         {
             return LinearVelocity.y;
@@ -584,12 +600,20 @@ namespace DroneControllers
         {
             return AngularVelocityBody.y;
         }
+
+        public Vector4 QuaternionAttitude()
+        {
+            return (new Vector3(GetRoll(), GetPitch(), GetYaw())).ToRHQuaternion();
+        }
         public void NavigationUpdate()
         {
-            // Update acceleration
-            LinearAcceleration = (rb.velocity - lastVelocity) / Time.deltaTime;
+            // Differentiate to get acceleration, filter at tau equal twice the sampling frequency
+            //LinearAcceleration = 0.6f*LinearAcceleration + (rb.velocity - lastVelocity) + new Vector3(0.0f, 9.81f, 0.0f)*0.4f;
+            LinearAcceleration = 0.6f*LinearAcceleration + 0.4f*((rb.velocity - lastVelocity) / Time.deltaTime + new Vector3(0.0f, 9.81f, 0.0f));
+            LinearAccelerationBody = rb.transform.InverseTransformDirection(LinearAcceleration);
+
             AngularVelocityBody = rb.transform.InverseTransformDirection(rb.angularVelocity);
-            AngularAccelerationBody = (AngularVelocityBody - lastAngularVelocity) / Time.deltaTime;
+            AngularAccelerationBody = 0.6f*AngularVelocity + 0.4f*(AngularVelocityBody - lastAngularVelocity)/Time.deltaTime;
             lastVelocity = rb.velocity;
             LinearVelocity = rb.velocity;
             BodyVelocity = rb.transform.InverseTransformDirection(rb.velocity);

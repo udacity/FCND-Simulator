@@ -48,13 +48,16 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 				{
 					State = ModuleState.Working;
 					OnFactoryStateChanged(this);
+//					Debug.Log ( name + " working" );
 				}
 				if (_progress > 0 && value == 0)
 				{
 					State = ModuleState.Finished;
 					OnFactoryStateChanged(this);
+//					Debug.Log ( name + " finished" );
 				}
 				_progress = value;
+//				Debug.Log ( "factory progress on " + name + " " + _progress );
 			}
 		}
 
@@ -96,5 +99,15 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 		internal abstract void OnRegistered(UnityTile tile);
 
 		internal abstract void OnUnregistered(UnityTile tile);
+
+		public void Clear ()
+		{
+			OnClear ();
+		}
+
+		protected virtual void OnClear ()
+		{
+			
+		}
 	}
 }

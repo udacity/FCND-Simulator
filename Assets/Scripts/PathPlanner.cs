@@ -73,6 +73,11 @@ public class PathPlanner : MonoBehaviour
 		}
 	}
 
+	void OnDestroy ()
+	{
+		instance = null;
+	}
+
 	public static void AddNode (Vector3 position, Quaternion orientation)
 	{
 		instance._AddNode ( position, orientation );

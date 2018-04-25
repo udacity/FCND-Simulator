@@ -96,6 +96,11 @@ public class PlotViz : MonoBehaviour
 		}
 	}
 
+	void OnDestroy ()
+	{
+		instance = null;
+	}
+
 	IEnumerator RefreshPlots ()
 	{
 		nextRefresh = Mathf.Infinity;

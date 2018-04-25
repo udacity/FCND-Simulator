@@ -46,6 +46,23 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			{
 				_objects = new Dictionary<GameObject, List<GameObject>>();
 				_pool = new Queue<GameObject>();
+			} else
+			{
+				foreach ( var pair in _objects )
+				{
+					foreach ( GameObject go in pair.Value )
+						if ( go != null )
+							Destroy ( go );
+					if ( pair.Key != null )
+						Destroy ( pair.Key );
+				}
+				_objects.Clear ();
+				while ( _pool.Count > 0 )
+				{
+					GameObject go = _pool.Dequeue ();
+					if ( go != null )
+						Destroy ( go );
+				}
 			}
 		}
 

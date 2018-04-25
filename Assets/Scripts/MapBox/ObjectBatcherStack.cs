@@ -18,7 +18,7 @@ public class ObjectBatcherStack : ModifierStack
 		for ( int i = 0; i < renderers.Length; i++ )
 			objects [ i ] = renderers [ i ].gameObject;
 		StaticBatchingUtility.Combine ( objects, parentGo );
-		
+
 		return parent;
 	}
 }

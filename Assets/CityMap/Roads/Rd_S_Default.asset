@@ -20,3 +20,4 @@ MonoBehaviour:
   GoModifiers:
   - {fileID: 11400000, guid: 0ccdde8eb32004d4aa72bc644245b691, type: 2}
   - {fileID: 11400000, guid: 465d868c6c3fe2d4288ad5387b5a8bfe, type: 2}
+  - {fileID: 11400000, guid: 69c9fbc203d6e934ea944041d43ea709, type: 2}

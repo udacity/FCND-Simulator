@@ -86,7 +86,6 @@ public class PostMergedStack : ModifierStack
 
 		}
 
-
 		return parent;
 	}
 }

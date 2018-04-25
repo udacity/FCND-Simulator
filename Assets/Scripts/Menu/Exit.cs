@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace Menu
 {
@@ -29,6 +30,9 @@ namespace Menu
 			if ( Input.GetButtonDown ( "Back/Exit" ) )
 			{
 				Debug.Log ( "Loading main menu" );
+				// we need to destroy the map's parent now because all that is on a DontDestroyOnLoad
+				GameObject mapParent = GameObject.FindWithTag ( "MapParent" );
+				Destroy ( mapParent );
 				SceneManager.LoadScene ( "MainMenu" );
 			}
 			else if ( Input.GetButton ( "Shift Modifier" ) )
@@ -37,6 +41,15 @@ namespace Menu
 				if ( Input.GetButtonDown ( "Reload/Reset" ) )
 				{
 					Debug.Log ( "Resetting scene" );
+//					string curName = SceneManager.GetActiveScene ().name;
+
+//					var mapScript = GameObject.Find ( "Map" ).GetComponent<Mapbox.Unity.Map.AbstractMap> ();
+//					mapScript.Clear ();
+//					Destroy ( mapScript.gameObject );
+//					SceneReloader.Reload ();
+//					StartCoroutine ( DoReload () );
+
+
 					SceneManager.LoadScene ( SceneManager.GetActiveScene ().name );
 				}
                 // NOTE: not the same as loading the menu, which is done via
@@ -50,5 +63,13 @@ namespace Menu
             }
         }
 
+		IEnumerator DoReload ()
+		{
+			float t = 30f;
+			Debug.Log ( "reloading in " + t );
+			yield return new WaitForSeconds ( t );
+			Debug.Log ( "reloading" );
+			SceneReloader.Reload ();
+		}
     }
 }

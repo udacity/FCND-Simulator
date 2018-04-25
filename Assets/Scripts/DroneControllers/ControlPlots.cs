@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UdaciPlot;
+
 namespace DroneControllers
 {
     public class ControlPlots : MonoBehaviour
     {
-        SimpleQuadController ctrl;
-        QuadController nav;
+        QuadAutopilot quadAutopilot;
         private bool alive;
 
         //Names of all the control variables to plot
@@ -59,8 +59,8 @@ namespace DroneControllers
         void Start()
         {
 
-            ctrl = GetComponent<SimpleQuadController> ();
-            nav = GetComponent<QuadController>();
+            quadAutopilot = GetComponent<QuadAutopilot> ();
+
 
             //Add the plots to the list
             Plotting.AddPlottable1D(pNorthPosition);
@@ -120,51 +120,55 @@ namespace DroneControllers
             while (alive)
             {
                 
-                Plotting.AddSample(pNorthPosition, nav.GetLocalNorth(), GetTime());
-                Plotting.AddSample(pEastPosition, nav.GetLocalEast(), GetTime());
-                Plotting.AddSample(pDownPosition, nav.GetLocalDown(), GetTime());
+                Plotting.AddSample(pNorthPosition, quadAutopilot.PositionLocal().x, GetTime());
+                Plotting.AddSample(pEastPosition, quadAutopilot.PositionLocal().y, GetTime());
+                Plotting.AddSample(pDownPosition, quadAutopilot.PositionLocal().z, GetTime());
                 
 
-                Plotting.AddSample(pTargetNorthPosition, ctrl.positionTarget.x, GetTime());
-                Plotting.AddSample(pTargetEastPosition, ctrl.positionTarget.y, GetTime());
-                Plotting.AddSample(pTargetDownPosition, ctrl.positionTarget.z, GetTime());
+                Plotting.AddSample(pTargetNorthPosition, quadAutopilot.positionTarget.x, GetTime());
+                Plotting.AddSample(pTargetEastPosition, quadAutopilot.positionTarget.y, GetTime());
+                Plotting.AddSample(pTargetDownPosition, quadAutopilot.positionTarget.z, GetTime());
 
-                Plotting.AddSample(pNorthVelocity, nav.GetNorthVelocity(), GetTime());
-                Plotting.AddSample(pEastVelocity, nav.GetEastVelocity(), GetTime());
-                Plotting.AddSample(pDownVelocity, nav.GetDownVelocity(), GetTime());
+                Plotting.AddSample(pNorthVelocity, quadAutopilot.VelocityLocal().x, GetTime());
+                Plotting.AddSample(pEastVelocity, quadAutopilot.VelocityLocal().y, GetTime());
+                Plotting.AddSample(pDownVelocity, quadAutopilot.VelocityLocal().z, GetTime());
 
-                Plotting.AddSample(pTargetNorthVelocity, ctrl.velocityTarget.x, GetTime());
-                Plotting.AddSample(pTargetEastVelocity, ctrl.velocityTarget.y, GetTime());
-                Plotting.AddSample(pTargetDownVelocity, ctrl.velocityTarget.z, GetTime());
+                Plotting.AddSample(pTargetNorthVelocity, quadAutopilot.velocityTarget.x, GetTime());
+                Plotting.AddSample(pTargetEastVelocity, quadAutopilot.velocityTarget.y, GetTime());
+                Plotting.AddSample(pTargetDownVelocity, quadAutopilot.velocityTarget.z, GetTime());
 
+                /*
                 Plotting.AddSample(pNorthAcceleration, nav.GetNorthAcceleration(), GetTime());
                 Plotting.AddSample(pEastAcceleration, nav.GetEastAcceleration(), GetTime());
                 Plotting.AddSample(pDownAcceleration, nav.GetDownAcceleration(), GetTime());
+                */
 
-                Plotting.AddSample(pTargetNorthAcceleration, ctrl.accelerationTarget.x, GetTime());
-                Plotting.AddSample(pTargetEastAcceleration, ctrl.accelerationTarget.y, GetTime());
-                Plotting.AddSample(pTargetDownAcceleration, ctrl.accelerationTarget.z, GetTime());
+                Plotting.AddSample(pTargetNorthAcceleration, quadAutopilot.accelerationTarget.x, GetTime());
+                Plotting.AddSample(pTargetEastAcceleration, quadAutopilot.accelerationTarget.y, GetTime());
+                Plotting.AddSample(pTargetDownAcceleration, quadAutopilot.accelerationTarget.z, GetTime());
 
-                Plotting.AddSample(pRoll, nav.GetRoll() * 180.0f / Mathf.PI, GetTime());
-                Plotting.AddSample(pPitch, nav.GetPitch() * 180.0f / Mathf.PI, GetTime());
-                Plotting.AddSample(pYaw, nav.GetYaw() * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pRoll, quadAutopilot.AttitudeEuler().x * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pPitch, quadAutopilot.AttitudeEuler().y * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pYaw, quadAutopilot.AttitudeEuler().z * 180.0f / Mathf.PI, GetTime());
 
-                Plotting.AddSample(pTargetRoll, ctrl.attitudeTarget.x * 180.0f / Mathf.PI, GetTime());
-                Plotting.AddSample(pTargetPitch, ctrl.attitudeTarget.y * 180.0f / Mathf.PI, GetTime());
-                Plotting.AddSample(pTargetYaw, ctrl.attitudeTarget.z * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pTargetRoll, quadAutopilot.attitudeTarget.x * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pTargetPitch, quadAutopilot.attitudeTarget.y * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pTargetYaw, quadAutopilot.attitudeTarget.z * 180.0f / Mathf.PI, GetTime());
 
-                Plotting.AddSample(pRollRate, nav.GetRollrate() * 180.0f / Mathf.PI, GetTime());
-                Plotting.AddSample(pPitchRate, nav.GetPitchrate() * 180.0f / Mathf.PI, GetTime());
-                Plotting.AddSample(pYawRate, nav.GetYawrate() * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pRollRate, quadAutopilot.AngularRatesBody().x * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pPitchRate, quadAutopilot.AngularRatesBody().y * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pYawRate, quadAutopilot.AngularRatesBody().z * 180.0f / Mathf.PI, GetTime());
 
-                Plotting.AddSample(pTargetRollRate, ctrl.bodyRateTarget.x * 180.0f / Mathf.PI, GetTime());
-                Plotting.AddSample(pTargetPitchRate, ctrl.bodyRateTarget.y * 180.0f / Mathf.PI, GetTime());
-                Plotting.AddSample(pTargetYawRate, ctrl.bodyRateTarget.z * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pTargetRollRate, quadAutopilot.bodyRateTarget.x * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pTargetPitchRate, quadAutopilot.bodyRateTarget.y * 180.0f / Mathf.PI, GetTime());
+                Plotting.AddSample(pTargetYawRate, quadAutopilot.bodyRateTarget.z * 180.0f / Mathf.PI, GetTime());
 
-                Plotting.AddSample(pTotalThrust, nav.thrustOut, GetTime());
-                Plotting.AddSample(pTorqueMag, nav.TorqueOut, GetTime());
+                /*
+                Plotting.AddSample(pTotalThrust, quadAutopilot.thrustOut, GetTime());
+                Plotting.AddSample(pTorqueMag, quadAutopilot.TorqueOut, GetTime());
+                */
 
-                await System.Threading.Tasks.Task.Delay(100);
+                await System.Threading.Tasks.Task.Delay(10);
             }
         }
 

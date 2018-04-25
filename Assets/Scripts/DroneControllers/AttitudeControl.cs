@@ -23,13 +23,13 @@ public class AttitudeControl {
 
 
     private float hDotInt;
+    private float maxHDotInt = 0.1f;
 
 
 	// Use this for initialization
 	public AttitudeControl () {
-        hDotInt = 0.0f;       
-
-	}
+        hDotInt = 0.0f;
+    }
 	
     /// <summary>
     /// Closes the loop on the vehicle yaw rate returning a desired yaw moment
@@ -54,6 +54,11 @@ public class AttitudeControl {
         float hDotError = targetVerticalVelocity - verticalVelocity;
 
         hDotInt += hDotError * dt;
+        if (hDotInt > maxHDotInt)
+            hDotInt = maxHDotInt;
+        else if (hDotInt < -maxHDotInt)
+            hDotInt = -maxHDotInt;
+
         float thrust = (Kp_hdot * hDotError + Ki_hdot * hDotInt + thrustNom) / (Mathf.Cos(attitude.x) * Mathf.Cos(attitude.y));
         return thrust;
     }

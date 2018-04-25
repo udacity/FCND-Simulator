@@ -15,12 +15,12 @@ namespace MovementBehaviors
         public override void OnLateUpdate()
         {
 
-            var nav = controller.controller;
+            //var nav = controller.controller;
             var attCtrl = controller.attCtrl;
-            Vector3 attitude = new Vector3(nav.GetRoll(), nav.GetPitch(), nav.GetYaw());
-            Vector3 angularVelocity = new Vector3(nav.GetRollrate(), nav.GetPitchrate(), nav.GetYawrate());
-            Vector3 localVelocity = new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
-            Vector3 localPosition = new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
+            Vector3 attitude = controller.AttitudeEuler();// new Vector3(nav.GetRoll(), nav.GetPitch(), nav.GetYaw());
+            Vector3 angularVelocity = controller.AngularRatesBody();// new Vector3(nav.GetRollrate(), nav.GetPitchrate(), nav.GetYawrate());
+            Vector3 localVelocity = controller.VelocityLocal();// new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
+            Vector3 localPosition = controller.PositionLocal();// new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
 
             Vector3 attCmd = Vector3.zero;
             attCmd.y = -Input.GetAxis("Vertical");
@@ -39,8 +39,8 @@ namespace MovementBehaviors
             float altOutput = attCtrl.VerticalVelocityLoop(altCmd, attitude, -localVelocity.z,Time.deltaTime,-1.0f*controller.rb.mass*Physics.gravity[1]);
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawOutput);
-            nav.CmdTorque(totalMoment);
-            nav.CmdThrust(altOutput);
+            controller.CommandTorque(totalMoment);
+            controller.CommandThrust(altOutput);
 
         }
         

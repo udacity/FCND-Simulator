@@ -9,7 +9,7 @@ namespace DroneInterface
     /// </summary>
     public interface IDroneState
     {
-        Vector3 Forward { get; }
+        //Vector3 Forward { get; }
         // local coordinates (x, y, z) in Unity.
         Vector3 UnityCoords();
 
@@ -57,6 +57,11 @@ namespace DroneInterface
         double DownVelocity();
 
         /// <summary>
+        /// Returns the vehicle velocity in North, East, Down Local Frame
+        /// </summary>
+        Vector3 LocalVelocity();
+
+        /// <summary>
         /// Corresponds to velocity along the z axis.
         /// </summary>
         double VerticalVelocity();
@@ -77,7 +82,18 @@ namespace DroneInterface
         double Pitch();
 
         /// <summary>
-        /// Returns angular velocity in Radians/sec
+        /// Returns the vehicle's Euler angles (Roll, Pitch, Yaw) in radians for a 3-2-1 RH rotation
+        /// </summary>
+        Vector3 EulerAngles();
+
+        /// <summary>
+        /// Returns the vehicle's attitude in quaternion for a RH rotation from the local frame to the body frame
+        /// </summary>
+        /// <returns></returns>
+        Vector4 QuaternionAttitude();
+
+        /// <summary>
+        /// Returns angular velocity in Radians/sec in the body frame
         /// </summary>
         Vector3 AngularVelocity();
 
@@ -101,6 +117,9 @@ namespace DroneInterface
         /// </summary>
         Vector3 AngularAcceleration();
 
+        /// <summary>
+        /// Returns the linear acceleration in m/s^2 in the body frame
+        /// </summary>
         Vector3 LinearAcceleration();
 
         /// <summary>
@@ -139,5 +158,6 @@ namespace DroneInterface
         /// I'm not sure this is a required method but it seems it could be useful.
         /// </summary>
         bool ExecutingCommand();
+        
     }
 }
