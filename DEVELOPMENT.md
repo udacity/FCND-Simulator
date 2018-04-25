@@ -34,12 +34,19 @@ The base scene is Backyard Flyer, which has the Unity file name [`urban`](./Asse
 
 Most of the code is in the [Scripts directory](./Assets/Scripts). Notable Subdirectories are:
 
-- [DroneInterface](./Assets/Scripts/DroneInterface) - Interface specification for a `Drone`.
-- [DroneControllers](./Assets/Scripts/DroneControllers) - Low-level drone controllers.
+- [DroneInterface](./Assets/Scripts/DroneInterface) - Interface specification for a `Drone`. The Drone interface is split into three separate parts: DroneVehicle, DroneSensor, DroneController/DroneAutopilot.
 - [Drones](./Assets/Scripts/Drones) - Concrete implementations of `DroneInterface`.
-- [Menu](./Assets/Scripts/Menu) - UI elements for the main menu.
+- [DroneVehicles](./Assests/Scripts/DroneVehicles) - Used to control the vehicle actuators/motors (i.e. arming motors, setting actuators/motors), set vehicle properties, and return true vehicle state information. 
+- [DroneControllers](./Assets/Scripts/DroneControllers) - Low-level drone controllers. Functionality provided mainly by an autopilot. Takes in sensor/state information from the DroneVehicle/DroneSensor and passes along commands to the DroneVehicle. Different modes are set using MovementBehaviors.
+- [DroneSensors](./Assests/Scripts/DroneSensors) - Simulator flight sensors (GPS, imu, barometer, etc.). Takes in the true state from DroneVehicle and transforms them into noisey sensor measurements.- [Menu](./Assets/Scripts/Menu) - UI elements for the main menu.
 - [FlightUtils](./Assets/Scripts/FlightUtils) - Utility functions for conversions, reference frames, etc.
 - [Messaging](./Assets/Scripts/Messaging) - Serialize/deserialize messages.
 - [Networking](./Assets/Scripts/Networking) - Infra for sending and receiving messages from clients.
 - [Projects](./Assets/Scripts/Projects) - Project file scripts. Scenes will be based off one of these files.
-- [UI](./Assets/Scripts/UI) - UI elements for the ground control station (GCS) .
+- [UI](./Assets/Scripts/UI) - UI elements for the ground control station (GCS).
+
+## Quadcopter Specific Development
+Currently, the quadcopter moves by adding a thrust force in upward body frame and three moments in the body frame in QuadVehicle. These moments are sent by QuadAutopilot(previously SimpleQuadController). Thrust/Moment commands can also be passed thru directly from offboard (Python Udacidrone). QuadVehicle also controls the rotor spinning visualization.
+
+## Fixed Wing Specific Development
+The fixed wing simulator is still in development so much of the same functionality available in the Quadcopter simulation is not ready yet. We are currently using the uSim library to simulate the aerodynamics. The PlaneVehicle class is a wrapper for the vehicle functionality provided by the uSim library. 
