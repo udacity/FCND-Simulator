@@ -36,9 +36,9 @@ Most of the code is in the [Scripts directory](./Assets/Scripts). Notable Subdir
 
 - [DroneInterface](./Assets/Scripts/DroneInterface) - Interface specification for a `Drone`. The Drone interface is split into three separate parts: DroneVehicle, DroneSensor, DroneController/DroneAutopilot.
 - [Drones](./Assets/Scripts/Drones) - Concrete implementations of `DroneInterface`.
-- [DroneVehicles](./Assests/Scripts/DroneVehicles) - Used to control the vehicle actuators/motors (i.e. arming motors, setting actuators/motors), set vehicle properties, and return true vehicle state information. 
+- [DroneVehicles](./Assets/Scripts/DroneVehicles) - Used to control the vehicle actuators/motors (i.e. arming motors, setting actuators/motors), set vehicle properties, and return true vehicle state information. 
 - [DroneControllers](./Assets/Scripts/DroneControllers) - Low-level drone controllers. Functionality provided mainly by an autopilot. Takes in sensor/state information from the DroneVehicle/DroneSensor and passes along commands to the DroneVehicle. Different modes are set using MovementBehaviors.
-- [DroneSensors](./Assests/Scripts/DroneSensors) - Simulator flight sensors (GPS, imu, barometer, etc.). Takes in the true state from DroneVehicle and transforms them into noisey sensor measurements.- [Menu](./Assets/Scripts/Menu) - UI elements for the main menu.
+- [DroneSensors](./Assets/Scripts/DroneSensors) - Simulator flight sensors (GPS, imu, barometer, etc.). Takes in the true state from DroneVehicle and transforms them into noisey sensor measurements.- [Menu](./Assets/Scripts/Menu) - UI elements for the main menu.
 - [FlightUtils](./Assets/Scripts/FlightUtils) - Utility functions for conversions, reference frames, etc.
 - [Messaging](./Assets/Scripts/Messaging) - Serialize/deserialize messages.
 - [Networking](./Assets/Scripts/Networking) - Infra for sending and receiving messages from clients.
