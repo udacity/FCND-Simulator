@@ -7,10 +7,12 @@ using UdaciPlot;
 
 namespace DroneControllers
 {
+
     public class PlaneAutopilot : MonoBehaviour, IDroneController
     {
         public PlaneVehicle planeVehicle;
         public PlaneSensors planeSensor;
+        public PlaneControl planeControl;
         public bool simpleMode = true;
         public bool guided = false;
 
@@ -23,11 +25,26 @@ namespace DroneControllers
 
         public PlaneMovementBehavior currentMovementBehavior;
         public PlaneMovementBehavior mb_Manual;
+        public PlaneMovementBehavior mb_Longitude;
+        public PlaneMovementBehavior mb_Lateral;
+        public PlaneMovementBehavior mb_Stablized;
+        public PlaneMovementBehavior mb_Waypoint;
+        int flightMode;
 
+        enum FLIGHT_MODE : int
+        {
+            MANUAL = 1,
+            LONGITUDE = 2,
+            LATERAL = 3,
+            STABILIZED = 4,
+            WAYPOINT = 5
+        }
         void Awake()
         {
 
             SelectMovementBehavior();
+            planeControl = new PlaneControl();
+            flightMode = (int)FLIGHT_MODE.MANUAL;
             
         }
 
@@ -40,17 +57,60 @@ namespace DroneControllers
 
         void LateUpdate()
         {
-            
+            if (Input.GetKey("5"))
+            {
+                flightMode = (int)FLIGHT_MODE.WAYPOINT;
+                SelectMovementBehavior();
+            }
+            if (Input.GetKey("4"))
+            {
+                flightMode = (int)FLIGHT_MODE.STABILIZED;
+                SelectMovementBehavior();
+            }
+            if (Input.GetKey("3"))
+            {
+                flightMode = (int)FLIGHT_MODE.LATERAL;
+                SelectMovementBehavior();
+            }
+            if (Input.GetKey("2"))
+            {
+                flightMode = (int)FLIGHT_MODE.LONGITUDE;
+                SelectMovementBehavior();
+            }
+            if (Input.GetKey("1"))
+            {
+                flightMode = (int)FLIGHT_MODE.MANUAL;
+                SelectMovementBehavior();
+            }
+
             currentMovementBehavior.OnLateUpdate();
             
 //			
         }
 
-
         // Use this when any control variables change
         void SelectMovementBehavior()
         {
-            currentMovementBehavior = mb_Manual;
+            switch (flightMode)
+            {
+                case (int)FLIGHT_MODE.WAYPOINT:
+                    break;
+                case (int)FLIGHT_MODE.STABILIZED:
+                    break;
+                case (int)FLIGHT_MODE.LATERAL:
+                    currentMovementBehavior = mb_Lateral;
+                    break;
+                case (int)FLIGHT_MODE.LONGITUDE:
+                    currentMovementBehavior = mb_Longitude;
+                    break;
+                case (int)FLIGHT_MODE.MANUAL:
+                    currentMovementBehavior = mb_Manual;
+                    break;
+                default:
+                    currentMovementBehavior = mb_Manual;
+                    break;
+            }
+            //currentMovementBehavior = mb_Manual;
 
             currentMovementBehavior.OnSelect(this);
         }
@@ -87,6 +147,22 @@ namespace DroneControllers
                 return planeVehicle.CoordsLocal();
             else
                 return planeSensor.PositionEstimate();
+        }
+
+        public float Airspeed()
+        {
+            return VelocityLocal().magnitude;
+        }
+
+        public float Sideslip()
+        {
+            if (simpleMode)
+                if (planeVehicle.VelocityBody().x > 0.1)
+                    return planeVehicle.VelocityBody().y / planeVehicle.VelocityBody().x;
+                else
+                    return 0.0f;
+            else
+                return planeSensor.SideslipEstimate();
         }
 
         public void CommandTorque(Vector3 torque)
@@ -139,6 +215,10 @@ namespace DroneControllers
         {
             //Debug.Log("Commanding Controls");
             //if(planeVehicle.MotorsArmed())
+            momentThrustTarget.w = throttleRPM;
+            momentThrustTarget.x = aileron;
+            momentThrustTarget.y = elevator;
+            momentThrustTarget.z = rudder;
             planeVehicle.CommandThrottle(throttleRPM);
             planeVehicle.CommandElevator(elevator);
             planeVehicle.CommandAileron(aileron);

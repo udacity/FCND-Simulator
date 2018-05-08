@@ -15,7 +15,7 @@ public class LandingGearAnimation : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		aircraftControl = transform.root.GetComponent <AircraftControl>();
-		if (animation == null && GetComponent<Animation>() ["gear"] != null){			
+		if (false && animation == null && GetComponent<Animation>() ["gear"] != null){			
 			gearAnimation = GetComponent<Animation>() ["gear"];
 			//animation = GetComponent<Animation> ();
 			gearAnimation.enabled = true;
@@ -24,11 +24,13 @@ public class LandingGearAnimation : MonoBehaviour {
 			gearAnimation.normalizedTime = gearTime;
 			animation.Stop ();
 		}
+        if(false)
 		gearAnimation = animation ["gear"];
 	}
 
 	public void SetStart (bool up){
-
+        if (gearAnimation == null)
+            return;
 		if (up) {			
 
 			gearAnimation = animation ["gear"];
@@ -134,7 +136,7 @@ public class LandingGearAnimation : MonoBehaviour {
 
 	void FixedUpdate(){
 
-		if(gearAnimation.normalizedTime < 1f && gearAnimation.normalizedTime > 0f)
+		if(false && gearAnimation.normalizedTime < 1f && gearAnimation.normalizedTime > 0f)
 		gearTime = gearAnimation.normalizedTime;
 
 	}

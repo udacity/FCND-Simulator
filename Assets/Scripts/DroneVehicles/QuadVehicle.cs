@@ -536,6 +536,13 @@ namespace DroneVehicles
             throw new System.NotImplementedException();
         }
 
+        public void InitializeVehicle(Vector3 position, Vector3 velocity, Vector3 euler)
+        {
+            rb.position = position;
+            rb.velocity = velocity;
+            rb.rotation = Quaternion.Euler(euler);
+        }
+
         /*
         public double GetLatitude()
         {

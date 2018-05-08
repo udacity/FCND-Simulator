@@ -51,25 +51,23 @@ public class SimpleProp : MonoBehaviour {
 
 		//if (engineAttached == null)
 		//	return;
+		forcePoint = transform;
 
-		if (!useCustomForcePoint)
-			forcePoint = transform;
+		//thrustDir = engineAttached.thrustDir;
 
-		thrustDir = engineAttached.thrustDir;
+		//thrustDir = Mathf.Clamp (thrustDir, -1f, 1f);
 
-		thrustDir = Mathf.Clamp (thrustDir, -1f, 1f);
-
-		inputForce = engineAttached.outputForce;
+		//inputForce = engineAttached.outputForce;
 
 		//rpm = engineAttached.rpm / reductionGear;
 
 		transform.Rotate (0f,0f,rpm /60f);
 
-		frictionForce = frictionCurve.Evaluate (rpm / 1000f) * friction;
+		//frictionForce = frictionCurve.Evaluate (rpm / 1000f) * friction;
 
 		outputForce = (0.5f * rpm * propArea * outputCurve.Evaluate (rpm / 1000f) * densityCoef) * thrustDir;
 
-		engineAttached.addedFriction = frictionForce;
+		//engineAttached.addedFriction = frictionForce;
 
 		if (targetBody != null)
 			targetBody.AddForceAtPosition (transform.TransformDirection (Vector3.forward) * outputForce, forcePoint.position);

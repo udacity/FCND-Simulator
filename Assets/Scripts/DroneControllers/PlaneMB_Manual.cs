@@ -9,28 +9,31 @@ namespace MovementBehaviors
     [CreateAssetMenu(menuName = "MovementBehaviors/Plane Manual")]
     public class PlaneMB_Manual : PlaneMovementBehavior
     {
-        float throttleStep = 10.0f/5000.0f;
-        float throttle = 0.0f;
+        float throttleStep = 30.0f/5000.0f;
+        float elevatorTrim = 0.0f;
+        float trimStep = 0.001f;
 
         public override void OnSelect(PlaneAutopilot _controller)
         {
             base.OnSelect(_controller);
-            if (!_controller.planeVehicle.MotorsArmed())
-                throttle = 0.0f;
+            elevatorTrim = 0.0f;
         }
 
         public override void OnLateUpdate()
         {
-            float elevator = -1.0f * Input.GetAxis("Vertical");
-            float aileron = Input.GetAxis("Horizontal");
-            float rudder = Input.GetAxis("Yaw");
-            throttle = throttle + throttleStep * Input.GetAxis("Thrust");
-            if (throttle > 1.0f)
-                throttle = 1.0f;
-            else if (throttle < 0.0f)
-                throttle = 0.0f;
+            
+            if (!controller.guided)
+            {
+                float elevator, aileron, rudder, throttle;
+                elevatorTrim = elevatorTrim + trimStep * Input.GetAxis("Trim");
+                elevator = -1.0f * Input.GetAxis("Vertical") + elevatorTrim;
+                aileron = Input.GetAxis("Horizontal");
+                rudder = Input.GetAxis("Yaw");
+                throttle = controller.momentThrustTarget.w + throttleStep * Input.GetAxis("Thrust");
+                controller.CommandControls(throttle, elevator, aileron, rudder);
+            }
 
-            controller.CommandControls(throttle, elevator, aileron, rudder);
+            
             
             
         }

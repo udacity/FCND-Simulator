@@ -109,6 +109,11 @@ namespace DroneVehicles
 
         public void CommandThrottle(float t)
         {
+            if (t > 1.0f)
+                t = 1.0f;
+            else if (t < 0.0f)
+                t = 0.0f;
+
             throttleRPM = t*maxThrottleRPM;
         }
 
@@ -221,6 +226,14 @@ namespace DroneVehicles
         public void Place(Vector3 location)
         {
             throw new System.NotImplementedException();
+        }
+
+        
+        public void InitializeVehicle(Vector3 position, Vector3 velocity, Vector3 euler)
+        {
+            rb.position = position;
+            rb.velocity = velocity;
+            rb.rotation = Quaternion.Euler(euler);
         }
 
          public void StateUpdate()

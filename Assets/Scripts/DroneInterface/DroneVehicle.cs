@@ -80,6 +80,14 @@ namespace DroneInterface
 		/// </summary>
 		void Place(Vector3 location);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location">Coordinate in Unity frame</param>
+        /// <param name="velocity">Velocity in Unity frame</param>
+        /// <param name="euler">rotation in Unity (LH) frame</param>
+        void InitializeVehicle(Vector3 location, Vector3 velocity, Vector3 euler);
+
         /*
         //Vector3 Forward { get; }
         // local coordinates (x, y, z) in Unity.

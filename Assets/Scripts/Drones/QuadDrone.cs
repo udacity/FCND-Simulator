@@ -141,6 +141,17 @@ namespace Drones
             quadVehicle.Place(location);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location">Coordinate in Unity frame</param>
+        /// <param name="velocity">Velocity in Unity frame</param>
+        /// <param name="euler">rotation in Unity (LH) frame</param>
+        public void InitializeVehicle(Vector3 location, Vector3 velocity, Vector3 euler)
+        {
+            quadVehicle.InitializeVehicle(location, velocity, euler);
+        }
+
 
         /// IDroneController Methods
 

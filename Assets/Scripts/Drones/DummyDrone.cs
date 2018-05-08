@@ -95,6 +95,8 @@ public class DummyDrone : MonoBehaviour, IDrone
 	/// </summary>
 	public void Place (UnityEngine.Vector3 location) {transform.position = location;}
 
+    public void InitializeVehicle(Vector3 location, Vector3 velocity, Vector3 euler) { return; }
+
 	public Vector3 Forward { get { return Vector3.ProjectOnPlane ( tr.forward, Vector3.up ).normalized; } }
 	// local coordinates (x, y, z) in Unity.
 	public Vector3 CoordsUnity() { return tr.position; }

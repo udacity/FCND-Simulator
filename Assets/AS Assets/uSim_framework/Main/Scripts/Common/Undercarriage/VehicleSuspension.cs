@@ -70,6 +70,8 @@ public class VehicleSuspension : MonoBehaviour {
 					Vector3 dir = Vector3.Lerp (Vector3.up, transform.TransformDirection (Vector3.up), Mathf.Clamp01(attachedWheel.Mz));
 					anchoredTo.AddForceAtPosition (dir * currentForce, anchor.position);
 					anchoredTo.AddForceAtPosition (anchor.transform.TransformDirection (Vector3.down) * shockDrag.y, anchor.position);
+
+
 				}
 		}
 		} else {

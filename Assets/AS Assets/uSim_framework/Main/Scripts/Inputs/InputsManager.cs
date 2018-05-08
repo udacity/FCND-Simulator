@@ -210,13 +210,18 @@ public class InputsManager : MonoBehaviour {
 			
 				}
 			}
-			if (usimVeh.vehicleType == UsimVehicle.VehicleTypes.Air || usimVeh.vehicleType == UsimVehicle.VehicleTypes.Sea) {
-				enginesManager.throttleInput = throttle;	
-				enginesManager.thrustDir = thrustDir;
-			}
-			if (usimVeh.vehicleType == UsimVehicle.VehicleTypes.Land) {
-				enginesManager.throttleInput = accelerator;
-			}
+            if (enginesManager != null)
+            {
+                if (usimVeh.vehicleType == UsimVehicle.VehicleTypes.Air || usimVeh.vehicleType == UsimVehicle.VehicleTypes.Sea)
+                {
+                    enginesManager.throttleInput = throttle;
+                    enginesManager.thrustDir = thrustDir;
+                }
+                if (usimVeh.vehicleType == UsimVehicle.VehicleTypes.Land)
+                {
+                    enginesManager.throttleInput = accelerator;
+                }
+            }
 			/*if(heliControl == null) return;
 			heliControl.pitchInput = elevator;
 			heliControl.rollInput = aileron;

@@ -30,6 +30,7 @@ namespace DroneSensors
         float barometerAltitude;
         public float barometerNoiseSigma = 0.1f;
         
+        
         public float gpsRateHz = 10;
         float timeSinceGpsS;
         double gpsLatitude;
@@ -49,6 +50,8 @@ namespace DroneSensors
         Vector3 positionEstimate;
         Vector3 velocityEstimate;
         Vector3 angularRateEstimate;
+        float sideslipEstimate;
+
 
         //Legacy noise parameters
         float HDOP = 0.5f; // Random noise added to the horizontal GPS position
@@ -142,6 +145,11 @@ namespace DroneSensors
             velocityEstimate = drone.VelocityLocal();
             angularRateEstimate = drone.AngularRatesBody();
 
+            if (drone.VelocityBody().x > 0.1f)
+                sideslipEstimate = drone.VelocityBody().y / drone.VelocityBody().x;
+            else
+                sideslipEstimate = 0.0f;
+
             timeSinceEstimateS = 0.0f;
         }
 
@@ -176,6 +184,7 @@ namespace DroneSensors
             imuAcceleration.y = imuAcceleration.y + imuNoiseSigma.y * UnifSigma();
             imuAcceleration.z = imuAcceleration.z + imuNoiseSigma.z * UnifSigma();
         }
+
 
         float UnifSigma()
         {
@@ -227,6 +236,11 @@ namespace DroneSensors
         public Vector3 AngularRateEstimate()
         {
             return angularRateEstimate;
+        }
+
+        public float SideslipEstimate()
+        {
+            return sideslipEstimate;
         }
 
         public double GPSLatitude()

@@ -124,7 +124,8 @@ public class VehicleWheel : MonoBehaviour {
 		if (rpm > rpmFromEngine && isDriven)
 			rpm = rpmFromEngine;
 
-		if (Physics.Raycast (transform.position, transform.TransformDirection(Vector3.down) ,out hit, radius * 1.15f)){ 
+		if (Physics.Raycast (transform.position, transform.TransformDirection(Vector3.down), out hit, radius * 1.15f)) //transform.TransformDirection(Vector3.down), out hit, radius * 1.15f))
+        { 
 
 			onGround = true;
 
@@ -159,7 +160,7 @@ public class VehicleWheel : MonoBehaviour {
 				longSlip = Mathf.Clamp (deltaRpm / maxDeltaRPM, -1f,1f);
 				lGripFactor = longitudinalGripCurve.Evaluate (longSlip );
 				computForce = Mathf.Lerp ((maxLongForce * lGripFactor),maxLongForce * (lGripFactor-(Mathf.Abs(gripFactor) /2f)),( Mathf.Abs(sideSlip) /35f) * Mathf.Clamp01(Mz));
-				//1.41_ computForce = maxLongForce * lGripFactor;
+				//computForce = maxLongForce * lGripFactor;
 				driveForce = ( inputForce) - bForce- computForce - roadForce;
 				float accel = ((inputForce) - bForce - (computForce * 0.5f) - roadForce);			
 				angularAccel = Mathf.Lerp (angularAccel,(accel) / wheelInertia, Time.deltaTime * 10f);

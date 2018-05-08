@@ -110,7 +110,7 @@ public class Aerofoil : MonoBehaviour {
 			curLiftPoint.airVectorZ = transform.InverseTransformDirection (curLiftPoint.airVector).z;
 			curLiftPoint.airVectorY = transform.InverseTransformDirection (curLiftPoint.airVector).y;
 			curLiftPoint.airVectorX = transform.InverseTransformDirection (curLiftPoint.airVector).x;
-			curLiftPoint.pointSpeed = curLiftPoint.airVectorZ *  4.280f;			
+            curLiftPoint.pointSpeed = curLiftPoint.airVectorZ;// *  4.280f;			
 			curLiftPoint.pointAngleOfAttack = (Mathf.Atan2(-curLiftPoint.airVectorY, curLiftPoint.airVectorZ ) )* Mathf.Rad2Deg;
 			curLiftPoint.changeFactor = 0;
 			curLiftPoint.incidence = 0;
