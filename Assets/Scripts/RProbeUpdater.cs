@@ -5,6 +5,7 @@ using Mapbox.Unity.Map;
 
 public class RProbeUpdater : MonoBehaviour
 {
+	public float updateTime = 2;
 	ReflectionProbe probe;
 	Transform mapTransform;
 	float nextUpdate;
@@ -18,7 +19,7 @@ public class RProbeUpdater : MonoBehaviour
 			mapObject.GetComponent<AbstractMap> ().OnInitialized += OnMapInitialized;
 		}
 		probe = GetComponent<ReflectionProbe> ();
-		nextUpdate = Time.time + 2;
+		nextUpdate = Time.time + updateTime;
 	}
 
 	void Update ()
@@ -26,7 +27,7 @@ public class RProbeUpdater : MonoBehaviour
 		if ( Time.time > nextUpdate )
 		{
 			probe.RenderProbe ();
-			nextUpdate = Time.time + 2;
+			nextUpdate = Time.time + updateTime;
 		}
 	}
 

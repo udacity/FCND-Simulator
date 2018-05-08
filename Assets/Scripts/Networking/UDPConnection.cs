@@ -75,7 +75,7 @@ namespace UdacityNetworking
 		}
 	}
 
-	public class UDPConnection : NetworkConnection
+	public class UDPConnection : INetworkConnection
 	{
 		public NetworkController Controller { get; set; }
 		public ConnectionState ConnectionState { get { return connectionState; } }
