@@ -55,7 +55,7 @@ namespace UdacityNetworking
 		}
 	}
 
-	public class TCPConnection : NetworkConnection
+	public class TCPConnection : INetworkConnection
 	{
 		public NetworkController Controller { get; set; }
 		public ConnectionState ConnectionState { get { return connectionState; } }

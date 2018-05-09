@@ -64,7 +64,7 @@ namespace UdacityNetworking
 		public string remoteIP = "127.0.0.1";
 		public ConnectionProtocol protocol;
 		public float timeout = 30;
-		NetworkConnection connection;
+		INetworkConnection connection;
 		event Action<MessageInfo> messageHandler = delegate {};
 		event Action<ConnectionState> connectionEvent = delegate {};
 
@@ -257,5 +257,26 @@ namespace UdacityNetworking
 			}
 		}
 		#endif
+
+		public INetworkConnection CreateNetworkConnection (ConnectionProtocol protocol)
+		{
+			if ( protocol == ConnectionProtocol.TCP )
+			{
+				var tcp = new TCPConnection ();
+				tcp.Controller = this;
+				return tcp;
+			}
+
+			if ( protocol == ConnectionProtocol.UDP )
+			{
+				var udp = new UDPConnection ();
+				udp.Controller = this;
+				return udp;
+			}
+
+			var web = new WebsocketConnection ();
+			web.Controller = this;
+			return web;
+		}
 	}
 }

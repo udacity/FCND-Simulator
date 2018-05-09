@@ -12,7 +12,7 @@ namespace DroneSensors
         public float imuRateHz = 500;
         float timeSinceImuS;
         Vector3 imuAcceleration;
-        public Vector3 imuNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f);
+        public Vector3 imuNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f)*0.0f;
 
         public float gyroRateHz = 500;
         float timeSinceGyroS;
@@ -23,12 +23,12 @@ namespace DroneSensors
         float timeSinceCompassS;
         float compassHeading;
         Vector3 compassMagnetometer;
-        public Vector3 compassNoiseSigma = new Vector3(0.01f, 0.01f, 0.01f);
+        public Vector3 compassNoiseSigma = new Vector3(0.01f, 0.01f, 0.01f) * 0.0f;
 
         public float barometerRateHz = 1;
         float timeSinceBarometerS;
         float barometerAltitude;
-        public float barometerNoiseSigma = 0.1f;
+        public float barometerNoiseSigma = 0.1f * 0.0f;
         
         public float gpsRateHz = 10;
         float timeSinceGpsS;
@@ -40,8 +40,8 @@ namespace DroneSensors
         double homeAltitude;
         Vector3 localPosition;
         Vector3 gpsVelocity;
-        public Vector3 gpsPositionNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f);
-        public Vector3 gpsVelocityNoiseSigma = new Vector3(0.1f, 0.1f, 0.3f);
+        public Vector3 gpsPositionNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f) * 0.0f;
+        public Vector3 gpsVelocityNoiseSigma = new Vector3(0.1f, 0.1f, 0.3f) * 0.0f;
 
         public float estimateRateHz = 500;
         float timeSinceEstimateS;
@@ -60,6 +60,8 @@ namespace DroneSensors
 
         void Awake()
         {
+            HDOP = 0.5f;
+            VDOP = 0.5f;
             drone = GetComponent<IDrone>();
             //Reset all the time counters
             timeSinceBarometerS = 0.0f;
@@ -67,6 +69,7 @@ namespace DroneSensors
             timeSinceEstimateS = 0.0f;
             timeSinceGpsS = 0.0f;
             timeSinceImuS = 0.0f;
+
 
             //Legacy calculation
             fnNoise = new FastNoise(System.TimeSpan.FromTicks(System.DateTime.UtcNow.Ticks).Seconds);
@@ -272,10 +275,12 @@ namespace DroneSensors
         public void SetHomePosition()
         {
             UpdateGps();
-            homeLatitude = gpsLongitude;
+            homeLongitude = gpsLongitude;
             homeLatitude = gpsLatitude;
             homeAltitude = 0.0;
-            localPosition = FlightUtils.Conversions.GlobalToLocalCoords(gpsLongitude, gpsLatitude, gpsAltitude, homeLongitude, homeLatitude);
+            localPosition = positionEstimate = FlightUtils.Conversions.GlobalToLocalCoords(gpsLongitude, gpsLatitude, gpsAltitude, homeLongitude, homeLatitude);
+            Debug.Log("Home Set to " + homeLongitude + " " + homeLatitude);
+            Debug.Log("Local Postion: " + localPosition);
         }
 
         public void SetHomePosition(double longitude, double latitude, double altitude)

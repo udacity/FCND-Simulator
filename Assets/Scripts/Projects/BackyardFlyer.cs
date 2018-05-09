@@ -20,9 +20,6 @@ public class BackyardFlyer : MonoBehaviour
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-        GameObject.Find("Quad Drone").GetComponent<QuadController>().NavigationUpdate();
-        drone.SetHomePosition(drone.GPSLongitude(), drone.GPSLatitude(), drone.GPSAltitude());
-
         //drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
 
