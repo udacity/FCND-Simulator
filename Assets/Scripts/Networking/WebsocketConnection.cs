@@ -8,7 +8,7 @@ using UdacityNetworking;
 
 namespace UdacityNetworking
 {
-	public class WebsocketConnection : NetworkConnection
+	public class WebsocketConnection : INetworkConnection
 	{
 		public NetworkController Controller { get; set; }
 		public ConnectionState ConnectionState { get { return socket != null ? ( (ConnectionState) (int) socket.State ) : ConnectionState.Disconnected; } }

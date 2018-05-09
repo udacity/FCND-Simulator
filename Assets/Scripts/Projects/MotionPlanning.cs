@@ -32,12 +32,8 @@ public class MotionPlanning : MonoBehaviour
     {
         droneGO = GameObject.Find("Quad Drone");
         drone = droneGO.GetComponent<QuadDrone>();
-        // droneGO.GetComponent<QuadController>().NavigationUpdate();
-        // drone.SetHome(drone.Longitude(), drone.Latitude(), drone.Altitude());
-        //drone.ControlRemotely(false);
+        drone.ControlRemotely(false);
         messenger = new MAVLinkMessenger();
-
-        // Quaternion.identity
 
         // SetupLidarRays();
 
@@ -59,7 +55,7 @@ public class MotionPlanning : MonoBehaviour
         // Send multiple messages for different orientations
         var msgs = new List<byte[]>();
         //        print("Sensing distances ...");
-        var pos = drone.CoordsUnity();
+        var pos = drone.UnityCoords();
         var collisions = Sensors.Lidar.Sense(droneGO, mavSensorLookup.Keys.ToList(), sensorRange);
 
         for (int i = 0; i < collisions.Count; i++)

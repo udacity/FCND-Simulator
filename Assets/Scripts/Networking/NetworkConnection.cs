@@ -19,7 +19,7 @@ namespace UdacityNetworking
 		}
 	}
 
-	public interface NetworkConnection
+	public interface INetworkConnection
 	{
 		ConnectionState ConnectionState { get; }
 		NetworkController Controller { get; set; }
