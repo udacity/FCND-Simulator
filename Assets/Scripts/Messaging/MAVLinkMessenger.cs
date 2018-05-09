@@ -15,6 +15,13 @@ namespace Messaging
     {
         private double prev_time = 0.0;
         private double total_commands = 0.0;
+        private uint droneType = 0;
+
+        private enum DRONE_TYPE : uint
+        {
+            QUAD = 1,
+            PLANE = 2,
+        }
 
         DateTime startTime;
 
@@ -49,6 +56,7 @@ namespace Messaging
         public enum SET_ATTITUDE_MASK : byte
         {
             IGNORE_ATTITUDE = (byte)128,
+            IGNORE_THRUST = (byte)64,
             IGNORE_RATES = (byte)7,
         }
 
@@ -59,7 +67,16 @@ namespace Messaging
         {
             startTime = DateTime.Now;
             mav = new Mavlink();
-            drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
+            if (GameObject.Find("Quad Drone") != null)
+            {
+                drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
+                droneType = (uint)DRONE_TYPE.QUAD;
+            }
+            else if (GameObject.Find("Plane Drone") != null)
+            {
+                drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
+                droneType = (uint)DRONE_TYPE.PLANE;
+            }
             // setup event listeners
             mav.PacketReceived += new PacketReceivedEventHandler(OnPacketReceived);
             mav.PacketFailedCRC += new PacketCRCFailEventHandler(OnPacketFailure);
@@ -262,6 +279,8 @@ namespace Messaging
                 custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
             }
 
+
+
             var msg = new Msg_heartbeat
             {
                 type = 1,
@@ -450,7 +469,7 @@ namespace Messaging
 
         void OnPacketReceived(object sender, MavlinkPacket packet)
         {
-            //Debug.Log(string.Format("Received packet, message type = {0}", packet.Message));
+            Debug.Log(string.Format("Received packet, message type = {0}", packet.Message));
             var msgstr = packet.Message.ToString();
             switch (msgstr)
             {
@@ -518,12 +537,35 @@ namespace Messaging
                 Vector3 attitudeEuler = attitudeQ.ToRHEuler();
                 //drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
                 Debug.Log("Thrust Set:" + thrust);
-                drone.CommandAttitude(attitudeEuler, thrust);
+                if (droneType == (uint)DRONE_TYPE.QUAD)
+                    drone.CommandAttitude(attitudeEuler, thrust);
+                else if (droneType == (uint)DRONE_TYPE.PLANE)
+                    drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), thrust);
             }
             else
             {
                 // Debug.Log(string.Format("thrust {0}, pitch rate {1}, yaw rate {2}, roll rate {3}", msg.thrust, msg.body_pitch_rate, msg.body_yaw_rate, msg.body_roll_rate));
-                drone.CommandMoment(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate),msg.thrust);
+                if (droneType == (uint)DRONE_TYPE.QUAD)
+                    drone.CommandMoment(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), msg.thrust);
+                else if (droneType == (uint)DRONE_TYPE.PLANE)
+                    switch (drone.ControlMode()) {
+                        case 0:
+                            drone.CommandControls(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate, msg.thrust);
+                            break;
+                        case 1:
+                            drone.CommandControls(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate, msg.thrust);
+                            break;
+                        case 2:
+                            drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), msg.thrust);
+                            break;
+                        case 3:
+                            drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), msg.thrust);
+                            break;
+                        case 4:
+                            drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), msg.thrust);
+                            break;
+                    }
+                        
             }
         }
 
@@ -560,12 +602,15 @@ namespace Messaging
             {
                 var mode = (byte)msg.param1;
                 var custom_mode = (byte)msg.param2;
+                var sub_mode = (int)msg.param3;
                 if ((mode & (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) > 0)
                 {
                     if (custom_mode == (byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD)
                     {
                         drone.SetGuided(true);
                         Debug.Log("VEHICLE IS BEING GUIDED !!!");
+                        if (sub_mode != 0)
+                            drone.SetControlMode(sub_mode);
                     }
                     else
                     {

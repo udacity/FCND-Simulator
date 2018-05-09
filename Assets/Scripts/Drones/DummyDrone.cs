@@ -338,6 +338,24 @@ public class DummyDrone : MonoBehaviour, IDrone
     }
 
     /// <summary>
+    /// Used to enable different modes of control (for example stabilized vs position control)
+    /// </summary>
+    /// <param name="controlMode"></param>
+    public void SetControlMode(int controlMode)
+    {
+
+    }
+
+    /// <summary>
+    /// Returns an integer corresponding to the mode of control
+    /// </summary>
+    /// <returns></returns>
+    public int ControlMode()
+    {
+        return 0;
+    }
+
+    /// <summary>
     /// Command the vehicle to hover at the current position and altitude
     /// </summary>
     public void CommandHover()
@@ -409,6 +427,14 @@ public class DummyDrone : MonoBehaviour, IDrone
     public void CommandMoment(Vector3 bodyMoment, float thrust)
     {
 
+    }
+
+    /// <summary>
+    /// Command the vehicle's body moment and thrust
+    /// </summary>
+    public void CommandControls(float controlX, float controlY, float controlZ, float controlW)
+    {
+        return;
     }
 
 

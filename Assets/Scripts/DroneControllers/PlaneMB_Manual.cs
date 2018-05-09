@@ -30,7 +30,7 @@ namespace MovementBehaviors
                 aileron = Input.GetAxis("Horizontal");
                 rudder = Input.GetAxis("Yaw");
                 throttle = controller.momentThrustTarget.w + throttleStep * Input.GetAxis("Thrust");
-                controller.CommandControls(throttle, elevator, aileron, rudder);
+                controller.CommandControls(aileron, elevator, rudder, throttle);
             }
 
             

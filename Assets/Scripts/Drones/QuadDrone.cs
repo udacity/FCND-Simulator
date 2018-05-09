@@ -173,6 +173,24 @@ namespace Drones
         }
 
         /// <summary>
+        /// Used to enable different modes of control (for example stabilized vs position control)
+        /// </summary>
+        /// <param name="controlMode"></param>
+        public void SetControlMode(int controlMode)
+        {
+            quadAutopilot.SetControlMode(controlMode);
+        }
+
+        /// <summary>
+        /// Returns an integer corresponding to the mode of control
+        /// </summary>
+        /// <returns></returns>
+        public int ControlMode()
+        {
+            return quadAutopilot.ControlMode();
+        }
+
+        /// <summary>
         /// Command the vehicle to hover at the current position and altitude
         /// </summary>
         public void CommandHover()
@@ -244,6 +262,14 @@ namespace Drones
         public void CommandMoment(Vector3 bodyMoment, float thrust)
         {
             quadAutopilot.CommandMoment(bodyMoment, thrust);
+        }
+
+        /// <summary>
+        /// Command the vehicle's body moment and thrust
+        /// </summary>
+        public void CommandControls(float controlX, float controlY, float controlZ, float controlW)
+        {
+            return;
         }
 
         /// <summary>

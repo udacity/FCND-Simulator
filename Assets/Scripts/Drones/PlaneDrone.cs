@@ -236,6 +236,7 @@ namespace Drones
             planeAutopilot.CommandAttitude(bodyrates, thrust);
         }
 
+
         /// <summary>
         /// Command the vehicle's body moment and thrust
         /// </summary>
@@ -244,6 +245,14 @@ namespace Drones
         public void CommandMoment(Vector3 bodyMoment, float thrust)
         {
             planeAutopilot.CommandMoment(bodyMoment, thrust);
+        }
+
+        /// <summary>
+        /// Command the vehicle's body moment and thrust
+        /// </summary>
+        public void CommandControls(float controlX, float controlY, float controlZ, float controlW)
+        {
+            planeAutopilot.CommandControls(controlX, controlY, controlZ, controlW);
         }
 
         /// <summary>
@@ -435,6 +444,20 @@ namespace Drones
         public void SetHomePosition(double longitude, double latitude, double altitude)
         {
             planeSensors.SetHomePosition(longitude, latitude, altitude);
+        }
+        
+        public void SetControlMode(int controlMode)
+        {
+            planeAutopilot.SetControlMode(controlMode);
+        }
+
+        /// <summary>
+        /// Returns an integer corresponding to the mode of control
+        /// </summary>
+        /// <returns></returns>
+        public int ControlMode()
+        {
+            return planeAutopilot.ControlMode();
         }
         /*
         public QuadController quadCtrl;

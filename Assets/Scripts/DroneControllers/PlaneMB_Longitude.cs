@@ -70,7 +70,7 @@ namespace MovementBehaviors
                 throttle = 0.0f;
 
             */
-            controller.CommandControls(throttle, elevator, aileron, rudder);
+            controller.CommandControls(aileron, elevator, rudder, throttle);
             
             
         }

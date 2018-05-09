@@ -211,7 +211,7 @@ namespace DroneControllers
             return momentThrustTarget.w;
         }
 
-        public void CommandControls(float throttleRPM, float elevator, float aileron, float rudder)
+        public void CommandControls(float aileron, float elevator, float rudder, float throttleRPM)
         {
             //Debug.Log("Commanding Controls");
             //if(planeVehicle.MotorsArmed())
@@ -223,6 +223,8 @@ namespace DroneControllers
             planeVehicle.CommandElevator(elevator);
             planeVehicle.CommandAileron(aileron);
             planeVehicle.CommandRudder(rudder);
+
+            Debug.Log("Controls Command: " + new Vector4(aileron, elevator, rudder, throttleRPM));
         }
 
         //Functions requried as part of the IDroneController Interface
@@ -251,6 +253,25 @@ namespace DroneControllers
 
 
             SelectMovementBehavior();
+        }
+
+        /// <summary>
+        /// Used to enable different modes of control (for example stabilized vs position control)
+        /// </summary>
+        /// <param name="controlMode"></param>
+        public void SetControlMode(int controlMode)
+        { 
+            flightMode = controlMode;
+            SelectMovementBehavior();
+        }
+
+        /// <summary>
+        /// Returns an integer corresponding to the mode of control
+        /// </summary>
+        /// <returns></returns>
+        public int ControlMode()
+        {
+            return flightMode;
         }
 
         /// <summary>
@@ -358,16 +379,31 @@ namespace DroneControllers
             if (!guided)
                 return;
 
-            /*
-            positionControl = false;
-
-            guidedCommand.x = attitudeTarget.x = attitude.x;
-            guidedCommand.y = attitudeTarget.y = attitude.y;
-            guidedCommand.w = bodyRateTarget.z = attitude.z;
-            guidedCommand.z = momentThrustTarget.w = thrust;
-
-            attitudeControl = true;
-            */
+            switch (flightMode)
+            {
+                case (int)FLIGHT_MODE.LONGITUDE:
+                    Debug.Log("Longitude Mode Command");
+                    attitudeTarget.x = attitude.x;
+                    attitudeTarget.z = attitude.z;
+                    momentThrustTarget.y = attitude.y;
+                    momentThrustTarget.w = thrust;
+                    break;
+                case (int)FLIGHT_MODE.LATERAL:
+                    Debug.Log("Lateral Mode Command");
+                    momentThrustTarget.x = attitude.x;
+                    momentThrustTarget.z = attitude.z;
+                    velocityTarget.x = thrust;
+                    positionTarget.z = attitude.y;
+                    break;
+                case (int)FLIGHT_MODE.STABILIZED:
+                    Debug.Log("Stabilized Mode Command");
+                    attitudeTarget.x = attitude.x;
+                    attitudeTarget.z = attitude.z;
+                    velocityTarget.x = thrust;
+                    positionTarget.z = attitude.y;
+                    break;
+            }
+            Debug.Log(attitude + " " + thrust);
         }
 
         /// <summary>

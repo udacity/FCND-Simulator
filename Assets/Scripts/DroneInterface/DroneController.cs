@@ -20,6 +20,18 @@ namespace DroneInterface
         void SetGuided(bool offboard);
 
         /// <summary>
+        /// Used to enable different modes of control (for example stabilized vs position control)
+        /// </summary>
+        /// <param name="controlMode"></param>
+        void SetControlMode(int controlMode);
+
+        /// <summary>
+        /// Returns an integer corresponding to the mode of control
+        /// </summary>
+        /// <returns></returns>
+        int ControlMode();
+
+        /// <summary>
         /// Arms/disarms the vehicle motors
         /// </summary>
         /// <param name="arm">true=arm, false=disarm</param>
@@ -74,6 +86,11 @@ namespace DroneInterface
         /// <param name="bodyMoment">Body frame moments in kg*m^2/s^2</param>
         /// <param name="thrust"></param>
         void CommandMoment(Vector3 bodyMoment, float thrust);
+
+        /// <summary>
+        /// Command the vehicle's body moment and thrust
+        /// </summary>
+        void CommandControls(float controlX, float controlY, float controlZ, float controlW);
 
         /// <summary>
         /// Sets the value of the position target for visualization in m

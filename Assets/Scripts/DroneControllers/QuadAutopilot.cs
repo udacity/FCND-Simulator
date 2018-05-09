@@ -269,6 +269,37 @@ namespace DroneControllers
         }
 
         /// <summary>
+        /// Used to enable different modes of control (for example stabilized vs position control)
+        /// </summary>
+        /// <param name="controlMode"></param>
+        public void SetControlMode(int controlMode)
+        {
+            switch (controlMode)
+            {
+                case 1:
+                    attitudeControl = false;
+                    positionControl = true;
+                    break;
+                case 2:
+                    positionControl = false;
+                    attitudeControl = true;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Returns an integer corresponding to the mode of control
+        /// </summary>
+        /// <returns></returns>
+        public int ControlMode()
+        {
+            if (attitudeControl)
+                return 2;
+            else
+                return 1;
+        }
+
+        /// <summary>
         /// Arms/disarms the vehicle motors
         /// </summary>
         /// <param name="arm">true=arm, false=disarm</param>
@@ -404,6 +435,14 @@ namespace DroneControllers
             guidedCommand.w = momentThrustTarget.z = bodyMoment.z;
             guidedCommand.z = momentThrustTarget.w = thrust;
             lastControlTime = Time.time;
+        }
+
+        /// <summary>
+        /// Command the vehicle's body moment and thrust
+        /// </summary>
+        public void CommandControls(float controlX, float controlY, float controlZ, float controlW)
+        {
+            return;
         }
 
         /// <summary>

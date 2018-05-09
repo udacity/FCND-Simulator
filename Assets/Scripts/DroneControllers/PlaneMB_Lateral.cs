@@ -11,8 +11,8 @@ namespace MovementBehaviors
     {
         float throttleStep = 30.0f/5000.0f;
         float throttle = 0.0f;
-        float nominalSpeed = 61.0f;
-        float nominalThrottle = 0.75f;
+        float nominalSpeed = 40.0f;//61.0f;
+        float nominalThrottle = 0.66f;//0.75f;
         float altCommand;
 
         public override void OnSelect(PlaneAutopilot _controller)
@@ -23,8 +23,8 @@ namespace MovementBehaviors
             if (!_controller.planeVehicle.MotorsArmed())
                 throttle = controller.GetThrustTarget();
 
-            nominalThrottle = 0.75f;
-            nominalSpeed = 61.0f;
+            nominalThrottle = 0.66f;
+            nominalSpeed = 40.0f;
 
         }
 
@@ -56,7 +56,7 @@ namespace MovementBehaviors
             controller.attitudeTarget.y = pitchCommand;
             float elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
 
-            controller.CommandControls(throttle, elevator, aileron, rudder);
+            controller.CommandControls(aileron, elevator, rudder, throttle);
             
             
         }
