@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DroneControllers;
+using DroneSensors;
+using DroneInterface;
 using MovementBehaviors;
 
 namespace MovementBehaviors
@@ -12,11 +14,11 @@ namespace MovementBehaviors
 
         public override void OnLateUpdate()
         {
-            var nav = controller.controller;
-            Vector3 attitude = new Vector3(nav.GetRoll(), nav.GetPitch(), nav.GetYaw());
-            Vector3 angularVelocity = new Vector3(nav.GetRollrate(), nav.GetPitchrate(), nav.GetYawrate());
-            Vector3 localVelocity = new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
-            Vector3 localPosition = new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
+
+            Vector3 attitude = controller.AttitudeEuler();
+            Vector3 angularVelocity = controller.AngularRatesBody();
+            Vector3 localVelocity = controller.VelocityLocal();
+            Vector3 localPosition = controller.PositionLocal();
 
             Vector3 targetPosition;
             AttitudeControl attCtrl = controller.attCtrl;
@@ -42,8 +44,8 @@ namespace MovementBehaviors
             float thrust = controller.attCtrl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z,Time.deltaTime,-1.0f*controller.rb.mass*Physics.gravity[1]);
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawMoment);
-            nav.CmdTorque(totalMoment);
-            nav.CmdThrust(thrust);
+            controller.CommandTorque(totalMoment);
+            controller.CommandThrust(thrust);
         }
 
         

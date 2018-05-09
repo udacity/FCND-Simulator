@@ -13,14 +13,13 @@ namespace MovementBehaviors
         {
 
 
-            var nav = controller.controller;
             var attCtrl = controller.attCtrl;
             var posCtrl = controller.posCtrl;
 
-            Vector3 attitude = new Vector3(nav.GetRoll(), nav.GetPitch(), nav.GetYaw());
-            Vector3 angularVelocity = new Vector3(nav.GetRollrate(), nav.GetPitchrate(), nav.GetYawrate());
-            Vector3 localVelocity = new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
-            Vector3 localPosition = new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
+            Vector3 attitude = controller.AttitudeEuler();// new Vector3(nav.GetRoll(), nav.GetPitch(), nav.GetYaw());
+            Vector3 angularVelocity = controller.AngularRatesBody();// new Vector3(nav.GetRollrate(), nav.GetPitchrate(), nav.GetYawrate());
+            Vector3 localVelocity = controller.VelocityLocal();// new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
+            Vector3 localPosition = controller.PositionLocal();// new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
 
             float cosYaw = Mathf.Cos(attitude.z);
             float sinYaw = Mathf.Sin(attitude.z);
@@ -67,11 +66,11 @@ namespace MovementBehaviors
             Vector2 rollPitchMoment = attCtrl.RollPitchRateLoop(targetRate, angularVelocity);
 
             float thrust = controller.attCtrl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z, Time.deltaTime, -1.0f * controller.rb.mass * Physics.gravity[1]);
+            
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawMoment);
-            nav.CmdTorque(totalMoment);
-            nav.CmdThrust(thrust);
-
+            controller.CommandTorque(totalMoment);
+            controller.CommandThrust(thrust);
         }
 
     }

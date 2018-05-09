@@ -92,6 +92,11 @@ public static class VectorExtension
 		return new Vector3 ( -v.x, -v.z, -v.y );
 	}
 
+    public static Vector3 UnityToNEDRotation (this Vector3 v)
+    {
+        return new Vector3(-v.z, -v.x, v.y);
+    }
+
 	public static Vector3 ENUToUnityRotation (this Vector3 v)
 	{
 		return new Vector3 ( -v.x, -v.z, -v.y );

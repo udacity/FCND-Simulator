@@ -118,13 +118,37 @@ namespace Messaging
         }
 
         /// <summary>
-        /// http://mavlink.org/messages/common#RAW_IMU
+        /// http://mavlink.org/messages/common#SCALED_IMU
         /// </summary>
-        public List<byte[]> RawIMU()
+        public List<byte[]> ScaledIMU()
         {
-            var msg = new Msg_raw_imu
+            Vector3 acceleration = drone.AccelerationBody();
+            Vector3 angularRates = drone.AngularRatesBody();
+            float heading = drone.AttitudeEuler().z;
+
+            Int16 xAcc = (Int16)Mathf.Round(acceleration.x * 1000f);
+            Int16 yAcc = (Int16)Mathf.Round(acceleration.y * 1000f);
+            Int16 zAcc = (Int16)Mathf.Round(acceleration.z * 1000f);
+            Int16 xGyro = (Int16)Mathf.Round(angularRates.x * 1000f);
+            Int16 yGyro = (Int16)Mathf.Round(angularRates.y * 1000f);
+            Int16 zGyro = (Int16)Mathf.Round(angularRates.z * 1000f);
+            Int16 xMag = (Int16)Mathf.Round(Mathf.Cos(heading) * 1000f);
+            Int16 yMag = (Int16)Mathf.Round(Mathf.Sin(heading) * 1000f);
+
+            var msg = new Msg_scaled_imu
             {
+                xacc = xAcc,
+                yacc = yAcc,
+                zacc = zAcc,
+                xgyro = xGyro,
+                ygyro = yGyro,
+                zgyro = zGyro,
+                xmag = xMag,
+                ymag = yMag,
+                time_boot_ms = TimeSinceSystemStart(),
             };
+
+            //Debug.Log("Sent IMU message");
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
             msgs.Add(serializedPacket);
@@ -136,13 +160,13 @@ namespace Messaging
         /// </summary>
         public List<byte[]> GlobalPosition()
         {
-            var lat = drone.Latitude() * 1e7d;
-            var lon = drone.Longitude() * 1e7d;
-            var alt = drone.Altitude() * 1000;
-            var vx = drone.NorthVelocity() * 100;
-            var vy = drone.EastVelocity() * 100;
-            var vz = drone.DownVelocity() * 100;
-            var hdg = (drone.Yaw() * Mathf.Rad2Deg) * 100;
+            var lat = drone.GPSLatitude() * 1e7d;
+            var lon = drone.GPSLongitude() * 1e7d;
+            var alt = drone.GPSAltitude() * 1000;
+            var vx = drone.GPSVelocity().x * 100;
+            var vy = drone.GPSVelocity().y * 100;
+            var vz = drone.GPSVelocity().z * 100;
+            var hdg = (drone.AttitudeEuler().z * Mathf.Rad2Deg) * 100;
             // Debug.Log(string.Format("{0} {1}", lon, lat));
             var msg = new Msg_global_position_int
             {
@@ -167,12 +191,12 @@ namespace Messaging
         public List<byte[]> AttitudeQuaternion()
         {
 
-            var rollrate = (float)drone.Rollrate();
-            var pitchrate = (float)drone.Pitchrate();
-            var yawrate = (float)drone.Yawrate();
-            var pitch = (float)drone.Pitch();
-            var yaw = (float)drone.Yaw();
-            var roll = (float)drone.Roll();
+            var rollrate = (float)drone.AngularRatesBody().x;
+            var pitchrate = (float)drone.AngularRatesBody().y;
+            var yawrate = (float)drone.AngularRatesBody().z;
+            var pitch = (float)drone.AttitudeEuler().y;
+            var yaw = (float)drone.AttitudeEuler().z;
+            var roll = (float)drone.AttitudeEuler().x;
             var q = new Vector3(roll, pitch, yaw).ToRHQuaternion();
             var msg = new Msg_attitude_quaternion
             {
@@ -196,17 +220,17 @@ namespace Messaging
         /// <summary>
         public List<byte[]> LocalPositionNED()
         {
-            var north = drone.LocalCoords().x;
-            var east = drone.LocalCoords().y;
-            var down = drone.LocalCoords().z;
+            var north = drone.LocalPosition().x;
+            var east = drone.LocalPosition().y;
+            var down = -drone.BarometerAltitude();
             var msg = new Msg_local_position_ned
             {
                 x = north,
                 y = east,
                 z = down,
-                vx = (float)drone.NorthVelocity(),
-                vy = (float)drone.EastVelocity(),
-                vz = (float)drone.DownVelocity(),
+                vx = (float)drone.VelocityLocal().x,
+                vy = (float)drone.VelocityLocal().y,
+                vz = (float)drone.VelocityLocal().z,
                 time_boot_ms = TimeSinceSystemStart()
             };
 
@@ -222,7 +246,7 @@ namespace Messaging
         public List<byte[]> Heartbeat()
         {
             var guided = drone.Guided();
-            var armed = drone.Armed();
+            var armed = drone.MotorsArmed();
 
             // build the base mode
             byte base_mode = (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
@@ -292,10 +316,10 @@ namespace Messaging
         /// </summary>
         public List<byte[]> HILSensor()
         {
-            var gyro = drone.AngularVelocity();
-            var pitch = (float)drone.Pitch();
-            var yaw = (float)drone.Yaw();
-            var roll = (float)drone.Roll();
+            var gyro = drone.AngularRatesBody();
+            var pitch = (float)drone.AttitudeEuler().y;
+            var yaw = (float)drone.AttitudeEuler().z;
+            var roll = (float)drone.AttitudeEuler().x;
             var q = Quaternion.Euler(pitch, yaw, roll);
             var msg = new Msg_hil_sensor
             {
@@ -325,23 +349,22 @@ namespace Messaging
         /// </summary>
         public List<byte[]> HILGPS()
         {
-            var gyro = drone.AngularVelocity();
-            var pitch = (float)drone.Pitch();
-            var yaw = (float)drone.Yaw();
-            var roll = (float)drone.Roll();
+            var gyro = drone.AngularRatesBody();
+            var pitch = (float)drone.AttitudeEuler().y;
+            var yaw = (float)drone.AttitudeEuler().z;
+            var roll = (float)drone.AttitudeEuler().x;
             var q = Quaternion.Euler(pitch, yaw, roll);
 
-            var vx = drone.NorthVelocity();
-            var vy = drone.EastVelocity();
-            var vz = drone.VerticalVelocity();
+            var vx = drone.VelocityLocal().x;
+            var vy = drone.VelocityLocal().y;
+            var vz = -drone.VelocityLocal().z;
 
-            var acc = drone.LinearAcceleration().EUNToNED();
             // Latitude and longitude defined in WGS84
             // https://en.wikipedia.org/wiki/World_Geodetic_System
-            var lat = drone.Latitude() * 1e7d;
-            var lon = drone.Longitude() * 1e7d;
+            var lat = drone.GPSLatitude() * 1e7d;
+            var lon = drone.GPSLongitude() * 1e7d;
             // NOTE: Altitude needs to be AMSL (above mean sea level, positive)
-            var alt = drone.Altitude() * 1000;
+            var alt = -drone.LocalPosition().z * 1000;
             if (alt < 0)
             {
                 alt = -alt;
@@ -356,9 +379,9 @@ namespace Messaging
                 eph = (ushort)0,
                 epv = (ushort)0,
                 vel = (ushort)0,
-                vn = (short)drone.NorthVelocity(),
-                ve = (short)drone.EastVelocity(),
-                vd = (short)drone.VerticalVelocity(),
+                vn = (short)drone.VelocityLocal().x,
+                ve = (short)drone.VelocityLocal().y,
+                vd = (short)-drone.VelocityLocal().z,
                 cog = (ushort)0,
                 // Set to 255 if unknown
                 satellites_visible = (byte)255,
@@ -374,20 +397,20 @@ namespace Messaging
         /// </summary>
         public List<byte[]> HILStateQuaternion()
         {
-            var gyro = drone.AngularVelocity();
-            var pitch = (float)drone.Pitch();
-            var yaw = (float)drone.Yaw();
-            var roll = (float)drone.Roll();
+            var gyro = drone.AngularRatesBody();
+            var pitch = (float)drone.AttitudeEuler().y;
+            var yaw = (float)drone.AttitudeEuler().z;
+            var roll = (float)drone.AttitudeEuler().x;
             var q = Quaternion.Euler(pitch, yaw, roll);
 
-            var vx = drone.NorthVelocity();
-            var vy = drone.EastVelocity();
-            var vz = drone.VerticalVelocity();
+            var vx = drone.VelocityLocal().x;
+            var vy = drone.VelocityLocal().y;
+            var vz = -drone.VelocityLocal().z;
 
-            var acc = drone.LinearAcceleration().EUNToNED();
-            var lat = drone.Latitude() * 1e7d;
-            var lon = drone.Longitude() * 1e7d;
-            var alt = drone.Altitude() * 1000;
+            var acc = drone.AccelerationLocal();
+            var lat = drone.GPSLatitude() * 1e7d;
+            var lon = drone.GPSLongitude() * 1e7d;
+            var alt = -drone.LocalPosition().z * 1000;
 
             var msg = new Msg_hil_state_quaternion
             {
@@ -495,12 +518,12 @@ namespace Messaging
                 Vector3 attitudeEuler = attitudeQ.ToRHEuler();
                 //drone.SetAttitudeRate(pitchRate, yawRate, rollRate, thrust);
                 Debug.Log("Thrust Set:" + thrust);
-                drone.SetAttitude(attitudeEuler.y, yawrate, attitudeEuler.x, thrust);
+                drone.CommandAttitude(attitudeEuler, thrust);
             }
             else
             {
                 // Debug.Log(string.Format("thrust {0}, pitch rate {1}, yaw rate {2}, roll rate {3}", msg.thrust, msg.body_pitch_rate, msg.body_yaw_rate, msg.body_roll_rate));
-                drone.SetMotors(msg.thrust, msg.body_pitch_rate, msg.body_yaw_rate, msg.body_roll_rate);
+                drone.CommandMoment(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate),msg.thrust);
             }
         }
 
@@ -524,12 +547,12 @@ namespace Messaging
                 var param1 = msg.param1;
                 if (param1 == 1.0)
                 {
-                    drone.Arm(true);
+                    drone.ArmDisarm(true);
                     Debug.Log("ARMED VEHICLE !!!");
                 }
                 else
                 {
-                    drone.Arm(false);
+                    drone.ArmDisarm(false);
                     Debug.Log("DISARMED VEHICLE !!!");
                 }
             }
@@ -541,19 +564,19 @@ namespace Messaging
                 {
                     if (custom_mode == (byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD)
                     {
-                        drone.TakeControl(true);
+                        drone.SetGuided(true);
                         Debug.Log("VEHICLE IS BEING GUIDED !!!");
                     }
                     else
                     {
-                        drone.TakeControl(false);
+                        drone.SetGuided(false);
                         Debug.Log("VEHICLE IS NOT BEING GUIDED !!!");
                     }
                 }
             }
             else if (command == MAV_CMD.MAV_CMD_DO_SET_HOME)
             {
-                drone.SetHome(msg.param6, msg.param5, msg.param7);
+                drone.SetHomePosition(msg.param6, msg.param5, msg.param7);
                 Debug.Log("HOME POSITION PARAMS: " + msg.param1 + ", " + msg.param2 + ", " + msg.param3 + ", " + msg.param4 + ", " + msg.param5 + ", " + msg.param6 + ", " + msg.param7);
                 Debug.Log("Vehicle Home Position: " + msg.param6 + ", " + msg.param5 + ", " + msg.param7);
             }
@@ -576,21 +599,21 @@ namespace Messaging
         {
             var mask = (UInt16)msg.type_mask;
 
-            drone.SetHeading(msg.yaw);
+            drone.CommandHeading(msg.yaw);
 
             // TAKEOFF
             if ((mask & (UInt16)SET_POSITION_MASK.IS_TAKEOFF) > 0)
             {
                 // TODO: z is being sent as negative, check to see if a sign change needs to occur
-                //drone.Goto(drone.Latitude(), drone.Longitude(), msg.z);
-                drone.Goto(drone.LocalCoords().x, drone.LocalCoords().y, msg.z);
+                //drone.Goto(drone.GPSLatitude(), drone.GPSLongitude(), msg.z);
+                drone.CommandPosition(new Vector3(drone.LocalPosition().x, drone.LocalPosition().y, -msg.z));
                 Debug.Log(string.Format("TAKING OFF to {0} altitude", msg.z));
             }
             // LAND
             else if ((mask & (UInt16)SET_POSITION_MASK.IS_LAND) > 0)
             {
                 // TODO: z is being sent as 0 here, make sure that is ok
-                drone.Goto(drone.LocalCoords().x, drone.LocalCoords().y, msg.z);
+                drone.CommandPosition(new Vector3(drone.LocalPosition().x, drone.LocalPosition().y, -msg.z));
                 Debug.Log("LANDING !!!");
             }
             // NEED TO REVIEW MASK
@@ -605,7 +628,7 @@ namespace Messaging
                     var east = msg.y;
                     var alt = msg.z;
                     Debug.Log("Vehicle Command: (" + north + "," + east + "," + alt + ")");
-                    drone.Goto(north, east, alt);
+                    drone.CommandPosition(new Vector3(north, east, -alt));
                 }
                 else if ((mask & (UInt16)SET_POSITION_MASK.IGNORE_VELOCITY) == 0)
                 {

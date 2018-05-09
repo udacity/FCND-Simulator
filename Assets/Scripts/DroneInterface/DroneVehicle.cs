@@ -7,8 +7,80 @@ namespace DroneInterface
     /// This interface describes the minimal information that must be retrievable
     /// pertaining to a drone's state.
     /// </summary>
-    public interface IDroneState
+    public interface IDroneVehicle
     {
+        /// <summary>
+        /// The local coordinates relative to the Unity map in the Unity frame
+        /// </summary>
+        Vector3 CoordsUnity();
+
+        /// <summary>
+        /// The local coordinates relative to the Unity map in a NED frame
+        /// </summary>
+        Vector3 CoordsLocal();
+
+        /// <summary>
+        /// Vehicle attitude (roll, pitch, yaw) in radians (RH 3-2-1 transform from world to body)
+        /// </summary>
+        /// <returns></returns>
+        Vector3 AttitudeEuler();
+
+        /// <summary>
+        /// Vehicle attitude in quaternions (RH from world to body)
+        /// </summary>
+        /// <returns></returns>
+        Vector4 AttitudeQuaternion();
+
+        /// <summary>
+        /// The vehicle NED linear velocity in m/s
+        /// </summary>
+        Vector3 VelocityLocal();
+
+        /// <summary>
+        /// The linear velocity in the vehicle frame (front, right, down) in m/s
+        /// </summary>
+        /// <returns></returns>
+        Vector3 VelocityBody();
+
+        /// <summary>
+        /// The vehicle NED linear acceleration in m/s^2
+        /// </summary>
+        Vector3 AccelerationLocal();
+
+        /// <summary>
+        /// The linear acceleration in the vehicle frame (front, right, down) in m/s^2
+        /// </summary>
+        Vector3 AccelerationBody();
+
+        /// <summary>
+        /// The angular velocity around the vehicle frame axes (front, right, down) in rad/s
+        /// </summary>
+        /// <returns></returns>
+        Vector3 AngularRatesBody();
+
+        /// <summary>
+        /// The current body frame control moments being applied to the vehicle in kg*m^2/s^2
+        /// </summary>
+        Vector3 MomentBody();
+
+        /// <summary>
+        /// The current body frame control forces being applied to the vehicle in kg*m/s^2
+        /// </summary>
+        /// <returns></returns>
+        Vector3 ForceBody();
+
+        /// <summary>
+        /// The state of the motors
+        /// </summary>
+        /// <returns></returns>
+        bool MotorsArmed();
+
+        /// <summary>
+		/// Place the drone at a specific world position
+		/// </summary>
+		void Place(Vector3 location);
+
+        /*
         //Vector3 Forward { get; }
         // local coordinates (x, y, z) in Unity.
         Vector3 UnityCoords();
@@ -158,6 +230,6 @@ namespace DroneInterface
         /// I'm not sure this is a required method but it seems it could be useful.
         /// </summary>
         bool ExecutingCommand();
-        
+        */
     }
 }

@@ -5,7 +5,7 @@ namespace DroneControllers
 {
     public class ControlParameters : MonoBehaviour
     {
-        SimpleQuadController ctrl;
+        QuadAutopilot ctrl;
 
         [System.NonSerialized]
         public SimParameter paramKpRollrate;
@@ -48,32 +48,32 @@ namespace DroneControllers
 
         void Awake()
         {
-            ctrl = GetComponent<SimpleQuadController>();
+            ctrl = GetComponent<QuadAutopilot>();
 
-            paramKpRollrate = new SimParameter("rollrate_gain_P", ctrl.attCtrl.Kp_p,OnRollrateKpChanged);
-            paramKpPitchrate = new SimParameter("pitchrate_gain_P", ctrl.attCtrl.Kp_q, OnPitchrateKpChanged);
-            paramKpYawrate = new SimParameter("yawrate_gain_P", ctrl.attCtrl.Kp_r, OnYawrateKpChanged);
+            paramKpRollrate = new SimParameter("Control:rollrate_gain_P", ctrl.attCtrl.Kp_p,OnRollrateKpChanged);
+            paramKpPitchrate = new SimParameter("Control:pitchrate_gain_P", ctrl.attCtrl.Kp_q, OnPitchrateKpChanged);
+            paramKpYawrate = new SimParameter("Control:yawrate_gain_P", ctrl.attCtrl.Kp_r, OnYawrateKpChanged);
 
-            paramKpRoll = new SimParameter("roll_gain_P", ctrl.attCtrl.Kp_roll, OnRollKpChanged);
-            paramKpPitch = new SimParameter("pitch_gain_P", ctrl.attCtrl.Kp_pitch, OnPitchKpChanged);
+            paramKpRoll = new SimParameter("Control:roll_gain_P", ctrl.attCtrl.Kp_roll, OnRollKpChanged);
+            paramKpPitch = new SimParameter("Control:pitch_gain_P", ctrl.attCtrl.Kp_pitch, OnPitchKpChanged);
 
-            paramKpHdot = new SimParameter("hdot_gain_P", ctrl.attCtrl.Kp_hdot, OnHdotKpChanged);
-            paramKiHdot = new SimParameter("hdot_gain_I", ctrl.attCtrl.Ki_hdot, OnHdotKiChanged);
+            paramKpHdot = new SimParameter("Control:hdot_gain_P", ctrl.attCtrl.Kp_hdot, OnHdotKpChanged);
+            paramKiHdot = new SimParameter("Control:hdot_gain_I", ctrl.attCtrl.Ki_hdot, OnHdotKiChanged);
 
-            paramKpPos = new SimParameter("position_gain_P", ctrl.posCtrl.Kp_pos, OnPosKpChanged);
-            paramKpPos2 = new SimParameter("position_gain_P2", ctrl.posCtrl.Kp_pos2, OnPosKp2Changed);
+            paramKpPos = new SimParameter("Control:position_gain_P", ctrl.posCtrl.Kp_pos, OnPosKpChanged);
+            paramKpPos2 = new SimParameter("Control:position_gain_P2", ctrl.posCtrl.Kp_pos2, OnPosKp2Changed);
 
-            paramKpAlt = new SimParameter("altitude_gain_P", ctrl.posCtrl.Kp_alt, OnAltKpChanged);
+            paramKpAlt = new SimParameter("Control:altitude_gain_P", ctrl.posCtrl.Kp_alt, OnAltKpChanged);
 
-            paramKpVel = new SimParameter("velocity_gain_P", ctrl.posCtrl.Kp_vel, OnVelKpChanged);
+            paramKpVel = new SimParameter("Control:velocity_gain_P", ctrl.posCtrl.Kp_vel, OnVelKpChanged);
 
-            paramKpYaw = new SimParameter("yaw_gain_P", ctrl.posCtrl.Kp_yaw, OnYawKpChanged);
+            paramKpYaw = new SimParameter("Control:yaw_gain_P", ctrl.posCtrl.Kp_yaw, OnYawKpChanged);
 
-            paramMaxTilt = new SimParameter("Max Tilt (rad)", ctrl.attCtrl.maxTilt, OnMaxTiltChanged);
-            paramMaxAscentRate = new SimParameter("Max Ascent Rate (m/s)", ctrl.attCtrl.maxAscentRate, OnMaxAscentRateChanged);
-            paramMaxDescentRate = new SimParameter("Max Descent Rate (m/s)", ctrl.attCtrl.maxDescentRate, OnMaxDescentRateChanged);
-            paramPosHoldDeadband = new SimParameter("Position Gain Radius (m)", ctrl.posCtrl.posHoldDeadband, OnPosHoldDeadbandChanged);
-            paramMaxSpeed = new SimParameter("Max Speed (m/s)", ctrl.posCtrl.maxSpeed, OnMaxSpeedChanged);
+            paramMaxTilt = new SimParameter("Control:Max Tilt (rad)", ctrl.attCtrl.maxTilt, OnMaxTiltChanged);
+            paramMaxAscentRate = new SimParameter("Control:Max Ascent Rate (m/s)", ctrl.attCtrl.maxAscentRate, OnMaxAscentRateChanged);
+            paramMaxDescentRate = new SimParameter("Control:Max Descent Rate (m/s)", ctrl.attCtrl.maxDescentRate, OnMaxDescentRateChanged);
+            paramPosHoldDeadband = new SimParameter("Control:Position Gain Radius (m)", ctrl.posCtrl.posHoldDeadband, OnPosHoldDeadbandChanged);
+            paramMaxSpeed = new SimParameter("Control:Max Speed (m/s)", ctrl.posCtrl.maxSpeed, OnMaxSpeedChanged);
         }
         
 

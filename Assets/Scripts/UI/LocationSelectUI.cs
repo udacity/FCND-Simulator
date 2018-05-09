@@ -45,7 +45,7 @@ public class LocationSelectUI : MonoBehaviour
 		Debug.Log ( "Map initialized: spawning drone and cam" );
 		DroneSpawner.SpawnDrone ();
 
-		Simulation.ActiveDrone.SetHome ( mapScript.CenterLatitudeLongitude.y, mapScript.CenterLatitudeLongitude.x, -1 );
+		Simulation.ActiveDrone.SetHomePosition ( mapScript.CenterLatitudeLongitude.y, mapScript.CenterLatitudeLongitude.x, -1 );
 		uiObject.SetActive ( true );
 	}
 }

@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using FlightUtils;
+using DroneInterface;
 
 
-namespace DroneControllers
+namespace DroneVehicles
 {
 
-    public class QuadController : MonoBehaviour
+    public class QuadVehicle : MonoBehaviour, IDroneVehicle
     {
 
         //Vehicle mass properties (based off https://scholar.google.com/scholar?cluster=8960065662684134743&hl=en&as_sdt=0,5)
@@ -13,7 +14,7 @@ namespace DroneControllers
         public float Ixx = 0.005f; // Momenet of inertia for quad forward axis in Newton*m
         public float Iyy = 0.005f; // Moment of inertia for quad up axis in Newton*m
         public float Izz = 0.01f; // Moment of inertial for quad right axis in Newton*m
-        public static QuadController ActiveController;
+        public static QuadVehicle ActiveVehicle;
 
         //Motor properties
         public float maxForce = 10.0f; // Max thrust force in Newtons. approximately 2-1 max thrust to weight ratio
@@ -31,23 +32,21 @@ namespace DroneControllers
         double homeLongitude = 0; // Global longitude from which the local position is calculated. Note: can be changed mid flight
 
         public bool RotorsEnabled { get; set; }
+
+        public bool motorsArmed { get; set; }
         public Vector3 Force { get { return force; } }
         public Vector3 Torque { get { return torque; } }
 
         //Vehicle properties in Unity coordinates
         public Vector3 Position { get; protected set; }
-        public Quaternion Rotation { get; protected set; }
+        //public Quaternion Rotation { get; protected set; }
         public Vector3 AngularVelocity { get; protected set; }
         public Vector3 AngularVelocityBody { get; protected set; }
         public Vector3 AngularAccelerationBody { get; protected set; }
         public Vector3 LinearVelocity { get; protected set; }
         public Vector3 BodyVelocity { get; protected set; }
         public Vector3 LinearAcceleration { get; protected set; }
-
-        /// <summary>
-        /// Simulated global coordinates Defined as longitude, altitude, latitude (Unity coordinates).
-        /// </summary>
-        public Vector3 GPS;
+        public Vector3 LinearAccelerationBody { get; protected set; }
 
         /// <summary>
         /// x-axis -> pitch
@@ -72,7 +71,6 @@ namespace DroneControllers
         public bool ConstrainTorqueY { get; set; }
         public bool ConstrainTorqueZ { get; set; }
 
-        public Transform navTransform;
         public Transform frontLeftRotor;
         public Transform frontRightRotor;
         public Transform rearLeftRotor;
@@ -83,7 +81,7 @@ namespace DroneControllers
         public Transform right;
 
         //The autopilot object
-        public SimpleQuadController inputCtrl;
+        //public SimpleQuadController inputCtrl;
 
         //Old clamp parameters Note: currently not used
         public bool clampForce = true;
@@ -129,9 +127,9 @@ namespace DroneControllers
 
         void Awake()
         {
-            if (ActiveController == null)
+            if (ActiveVehicle == null)
             {
-                ActiveController = this;
+                ActiveVehicle = this;
             }
             rb = GetComponent<Rigidbody>();
             rotors = new Transform[4] { frontLeftRotor, frontRightRotor, rearLeftRotor, rearRightRotor };
@@ -144,7 +142,8 @@ namespace DroneControllers
             UseGravity = rb.useGravity;
             UpdateConstraints();
             rb.maxAngularVelocity = Mathf.Infinity;
-            inputCtrl = GetComponent<SimpleQuadController>();
+            //inputCtrl = GetComponent<SimpleQuadController>();
+            motorsArmed = false;
             fnNoise = new FastNoise(System.TimeSpan.FromTicks(System.DateTime.UtcNow.Ticks).Seconds);
         }
 
@@ -170,7 +169,7 @@ namespace DroneControllers
             CheckSetPose();
 
             Position = transform.position;
-            Rotation = transform.rotation;
+            //Rotation = transform.rotation;
             Forward = forward.forward;
             Right = right.forward;
             Up = transform.up;
@@ -216,7 +215,7 @@ namespace DroneControllers
             {
                 float rps = maxRotorRPM / 60f;
                 float degPerSec = rps * 360f;
-                if (inputCtrl.armed)
+                if (motorsArmed)
                 {
                     curRotorSpeed = degPerSec;
                 }
@@ -248,7 +247,7 @@ namespace DroneControllers
 
         void FixedUpdate()
         {
-            RotorsEnabled = inputCtrl.armed;
+            RotorsEnabled = motorsArmed;
             if (resetFlag)
             {
                 // ResetOrientation();
@@ -276,8 +275,9 @@ namespace DroneControllers
                 }
                 //				rb.AddRelativeTorque ( newTorque, torqueMode );
                 rb.AddRelativeTorque(torque, torqueMode);
+                
             }
-            NavigationUpdate();
+            StateUpdate();
         }
 
         /// <summary>
@@ -341,8 +341,10 @@ namespace DroneControllers
                 torque = torque * maxTorque / torque.magnitude;
             }
             TorqueOut = torque.magnitude;
+            
         }
 
+        /*
         public void ApplyMotorTorque(Vector3 v)
         {
             useTwist = false;
@@ -362,7 +364,7 @@ namespace DroneControllers
             force = torque = Vector3.zero;
             AngularVelocityBody = v;
         }
-
+        */
         public void TriggerReset()
         {
             resetFlag = true;
@@ -444,7 +446,8 @@ namespace DroneControllers
             ConstrainTorqueZ = (rb.constraints & RigidbodyConstraints.FreezeRotationY) != 0;
         }
 
-                public void SetHomePosition(double longitude, double latitude, double altitude)
+        /*
+        public void SetHomePosition(double longitude, double latitude, double altitude)
         {
             // NOTE: Currently you can only set the home lat/lon, not altitude
             SetHomeLongitude(longitude);
@@ -455,11 +458,85 @@ namespace DroneControllers
             inputCtrl.guidedCommand.x = GetLocalNorth();
             inputCtrl.guidedCommand.y = GetLocalEast();
             inputCtrl.guidedCommand.z = GetLocalDown();
-        }
+        }*/
 
         /// Convenience retrieval functions. These probably should be set as properties
         /// These functions convert all the local class variables, which are defined in Unity Left-Handed coordinate frames
         /// to the appropriate right handed coordinate frame
+        /// 
+
+        public Vector3 CoordsUnity()
+        {
+            return Position;
+        }
+
+        public Vector3 CoordsLocal()
+        {
+            return Position.UnityToENUDirection().ENUToNED();
+        }
+
+
+        public Vector3 AttitudeEuler()
+        {
+            return Mathf.Deg2Rad * eulerAngles.UnityToNEDRotation();
+        }
+
+        public Vector4 AttitudeQuaternion()
+        {
+            return AttitudeEuler().ToRHQuaternion();
+        }
+
+        public Vector3 VelocityLocal()
+        {
+            return LinearVelocity.UnityToENUDirection().ENUToNED();
+        }
+
+        public Vector3 VelocityBody()
+        {
+            return BodyVelocity.UnityToENUDirection().ENUToNED();
+        }
+
+        public Vector3 AccelerationBody()
+        {
+            return LinearAcceleration.UnityToENUDirection().ENUToNED();
+        }
+
+        public Vector3 AccelerationLocal()
+        {
+            return LinearAccelerationBody.UnityToENUDirection().ENUToNED();
+        }
+
+        public Vector3 AngularRatesBody()
+        {
+            return AngularVelocityBody.UnityToNEDRotation();
+        }
+
+        public Vector3 MomentBody()
+        {
+            return torque.UnityToNEDRotation();
+        }
+
+        public Vector3 ForceBody()
+        {
+            return force.UnityToENUDirection().ENUToNED();
+        }
+
+        public bool MotorsArmed()
+        {
+            return motorsArmed;
+        }
+
+        public void ArmDisarm(bool armed)
+        {
+            motorsArmed = armed;
+        }
+
+        public void Place(Vector3 location)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /*
         public double GetLatitude()
         {
             // return GPS.z + homeLatitude;
@@ -550,6 +627,21 @@ namespace DroneControllers
             return -LinearAcceleration.y;
         }
 
+        public float GetFrontAcceleration()
+        {
+            return LinearAccelerationBody.z;
+        }
+
+        public float GetRightAcceleration()
+        {
+            return LinearAccelerationBody.x;
+        }
+
+        public float GetBottomAcceleration()
+        {
+            return -LinearAccelerationBody.y;
+        }
+
         public float GetVerticalVelocity()
         {
             return LinearVelocity.y;
@@ -584,37 +676,27 @@ namespace DroneControllers
         {
             return AngularVelocityBody.y;
         }
-        public void NavigationUpdate()
+
+        public Vector4 QuaternionAttitude()
         {
-            // Update acceleration
-            LinearAcceleration = (rb.velocity - lastVelocity) / Time.deltaTime;
-            AngularVelocityBody = rb.transform.InverseTransformDirection(rb.angularVelocity);
-            AngularAccelerationBody = (AngularVelocityBody - lastAngularVelocity) / Time.deltaTime;
-            lastVelocity = rb.velocity;
+            return (new Vector3(GetRoll(), GetPitch(), GetYaw())).ToRHQuaternion();
+        }
+        */
+        public void StateUpdate()
+        {
+            Position = rb.position;
+
+            // Differentiate to get acceleration, filter at tau equal twice the sampling frequency
+            LinearAcceleration = 0.6f*LinearAcceleration + 0.4f*((rb.velocity - LinearVelocity) / Time.deltaTime + new Vector3(0.0f, 9.81f, 0.0f));
+            LinearAccelerationBody = rb.transform.InverseTransformDirection(LinearAcceleration);
+
             LinearVelocity = rb.velocity;
             BodyVelocity = rb.transform.InverseTransformDirection(rb.velocity);
-            navTransform = rb.transform;
 
-            eulerAngles = rb.rotation.eulerAngles;
-            eulerAngles = ConstrainEuler(eulerAngles);
+            AngularVelocity = rb.angularVelocity;
+            AngularVelocityBody = rb.transform.InverseTransformDirection(rb.angularVelocity);                
 
-            // Temporary low pass filtered noise on the position (need to implement a Gaussian distribution in the future)
-            // NOTE: These numbers result in nice noise values and are MAGICAL
-            lat_noise = 0.9f * lat_noise + 0.04f * HDOP * fnNoise.GetSimplex(Time.time * 121.7856f, 0, 0);
-            alt_noise = 0.9f * alt_noise + 0.04f * VDOP * fnNoise.GetSimplex(0, Time.time * 23.14141f, 0);
-            lon_noise = 0.9f * lon_noise + 0.04f * HDOP * fnNoise.GetSimplex(0, 0, Time.time * 127.7334f);
-
-
-            //            lat_noise = 0.9f * lat_noise + 0.2f * HDOP * (Random.value - 0.5f);
-            //            alt_noise = 0.9f * alt_noise + 0.2f * VDOP * (Random.value - 0.5f);
-            //            lon_noise = 0.9f * lon_noise + 0.2f * HDOP * (Random.value - 0.5f);
-
-            // GPS only reported in local frame because float doesn't have precision required for full GPS coordinate
-            var Meter2Latitude = FlightUtils.Conversions.Meter2Latitude;
-            var Meter2Longitude = FlightUtils.Conversions.Meter2Longitude;
-            GPS.x = (float)(rb.position.x * Meter2Longitude + Meter2Longitude * lon_noise);
-            GPS.y = rb.position.y + alt_noise;
-            GPS.z = (float)(rb.position.z * Meter2Latitude + Meter2Latitude * lat_noise);
+            eulerAngles = ConstrainEuler(rb.rotation.eulerAngles);
 
             curSpeed = rb.velocity.magnitude;
         }
