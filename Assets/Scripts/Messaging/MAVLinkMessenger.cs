@@ -469,7 +469,7 @@ namespace Messaging
 
         void OnPacketReceived(object sender, MavlinkPacket packet)
         {
-            Debug.Log(string.Format("Received packet, message type = {0}", packet.Message));
+            //Debug.Log(string.Format("Received packet, message type = {0}", packet.Message));
             var msgstr = packet.Message.ToString();
             switch (msgstr)
             {

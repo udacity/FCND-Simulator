@@ -50,10 +50,20 @@ public class FixedWing : MonoBehaviour
     public void StartScenario0()
     {
         Debug.Log("Start Scenerio 0");
+
+        //Initialize state
         Vector3 startLocation = new Vector3(900.0f, 150.0f, -700.0f);
         Vector3 startVelocity = new  Vector3(-41.0f*Mathf.Sqrt(2.0f)/2.0f, 0.0f, 41.0f*Mathf.Sqrt(2.0f) / 2.0f); //Vector3(0.0f, 0.0f, 40.0f);//
         Vector3 startEuler = new Vector3(-1.3f, -45.0f, 0.0f);
         drone.InitializeVehicle(startLocation, startVelocity, startEuler);
         drone.CommandControls(0.0f, -0.4f, 0.0f, 0.7f);
+
     }
+
+    public void SuccessScenario0()
+    {
+        //To be run in the fixed update function
+        //Check some success criterion
+    }
+
 }

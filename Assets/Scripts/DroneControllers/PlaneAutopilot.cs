@@ -96,6 +96,7 @@ namespace DroneControllers
                 case (int)FLIGHT_MODE.WAYPOINT:
                     break;
                 case (int)FLIGHT_MODE.STABILIZED:
+                    currentMovementBehavior = mb_Stablized;
                     break;
                 case (int)FLIGHT_MODE.LATERAL:
                     currentMovementBehavior = mb_Lateral;

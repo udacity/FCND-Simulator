@@ -4270,7 +4270,7 @@ MonoBehaviour:
   mb_Manual: {fileID: 11400000, guid: 2ce7f05ed2e6ea14888d2cd30a594203, type: 2}
   mb_Longitude: {fileID: 11400000, guid: 8a96c038fa5d8f443912a20b21b7d2bf, type: 2}
   mb_Lateral: {fileID: 11400000, guid: fc85cfde03c40e24fa9cec2922462472, type: 2}
-  mb_Stablized: {fileID: 0}
+  mb_Stablized: {fileID: 11400000, guid: 3aa9ea0ec00f78b478e588f56d5dc351, type: 2}
   mb_Waypoint: {fileID: 0}
 --- !u!114 &1348602776
 MonoBehaviour:
