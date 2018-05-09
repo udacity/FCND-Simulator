@@ -21,7 +21,7 @@ public class Controls : MonoBehaviour
     void Start()
     {
         drone = GameObject.Find("Quad Drone").GetComponent<QuadDrone>();
-        drone.ControlRemotely(true);
+        //drone.ControlRemotely(true);
         messenger = new MAVLinkMessenger();
 
         networkController.AddMessageHandler(messenger.ParseMessageInfo);

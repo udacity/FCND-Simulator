@@ -191,7 +191,7 @@ namespace DroneControllers
         public Vector3 PositionLocal()
         {
             if (simpleMode)
-                return quadVehicle.CoordsLocal();
+                return quadSensor.PositionEstimate(); //quadVehicle.CoordsLocal();
             else
                 return quadSensor.PositionEstimate();
         }
@@ -277,12 +277,12 @@ namespace DroneControllers
             if (arm)
             {
                 quadSensor.SetHomePosition();
-
                 //Reset the controllers (dumps the integrators)
                 attCtrl = new AttitudeControl();
                 posCtrl = new PositionControl();
                 posHoldLocal = PositionLocal();
                 posHoldLocal.z = 0.0f;
+                Debug.Log(posHoldLocal);
             }
 
             quadVehicle.ArmDisarm(arm);
