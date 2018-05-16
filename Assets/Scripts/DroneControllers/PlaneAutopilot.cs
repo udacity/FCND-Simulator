@@ -28,6 +28,7 @@ namespace DroneControllers
         public PlaneMovementBehavior mb_Longitude;
         public PlaneMovementBehavior mb_Lateral;
         public PlaneMovementBehavior mb_Stablized;
+        public PlaneMovementBehavior mb_AscendDescend;
         public PlaneMovementBehavior mb_Waypoint;
         int flightMode;
 
@@ -37,7 +38,8 @@ namespace DroneControllers
             LONGITUDE = 2,
             LATERAL = 3,
             STABILIZED = 4,
-            WAYPOINT = 5
+            ASCENDDESCEND = 5,
+            WAYPOINT = 6
         }
         void Awake()
         {
@@ -59,7 +61,7 @@ namespace DroneControllers
         {
             if (Input.GetKey("5"))
             {
-                flightMode = (int)FLIGHT_MODE.WAYPOINT;
+                flightMode = (int)FLIGHT_MODE.ASCENDDESCEND;
                 SelectMovementBehavior();
             }
             if (Input.GetKey("4"))
@@ -94,6 +96,9 @@ namespace DroneControllers
             switch (flightMode)
             {
                 case (int)FLIGHT_MODE.WAYPOINT:
+                    break;
+                case (int)FLIGHT_MODE.ASCENDDESCEND:
+                    currentMovementBehavior = mb_AscendDescend;
                     break;
                 case (int)FLIGHT_MODE.STABILIZED:
                     currentMovementBehavior = mb_Stablized;
@@ -225,7 +230,7 @@ namespace DroneControllers
             planeVehicle.CommandAileron(aileron);
             planeVehicle.CommandRudder(rudder);
 
-            Debug.Log("Controls Command: " + new Vector4(aileron, elevator, rudder, throttleRPM));
+            //Debug.Log("Controls Command: " + new Vector4(aileron, elevator, rudder, throttleRPM));
         }
 
         //Functions requried as part of the IDroneController Interface
@@ -261,9 +266,12 @@ namespace DroneControllers
         /// </summary>
         /// <param name="controlMode"></param>
         public void SetControlMode(int controlMode)
-        { 
-            flightMode = controlMode;
-            SelectMovementBehavior();
+        {
+            if (flightMode != controlMode)
+            {
+                flightMode = controlMode;
+                SelectMovementBehavior();
+            }
         }
 
         /// <summary>
@@ -403,8 +411,16 @@ namespace DroneControllers
                     velocityTarget.x = thrust;
                     positionTarget.z = attitude.y;
                     break;
+                case (int)FLIGHT_MODE.ASCENDDESCEND:
+                    Debug.Log("Ascend/Descend Mode Command");
+                    attitudeTarget.x = attitude.x;
+                    attitudeTarget.z = attitude.z;
+                    momentThrustTarget.w = thrust;
+                    velocityTarget.x = attitude.y;
+                    break;
+
             }
-            Debug.Log(attitude + " " + thrust);
+            //Debug.Log(attitude + " " + thrust);
         }
 
         /// <summary>

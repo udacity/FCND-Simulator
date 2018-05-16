@@ -20,9 +20,9 @@ namespace DroneControllers
         public SimParameter paramKpPitch;
 
         [System.NonSerialized]
-        public SimParameter paramKpHdot;
+        public SimParameter paramKpSpeed;
         [System.NonSerialized]
-        public SimParameter paramKiHdot;
+        public SimParameter paramKiSpeed;
 
         [System.NonSerialized]
         public SimParameter paramKpPos;
@@ -64,8 +64,8 @@ namespace DroneControllers
             paramKpRoll = new SimParameter("Control:roll_gain_P", ctrl.planeControl.Kp_roll, OnRollKpChanged);
             paramKpPitch = new SimParameter("Control:pitch_gain_P", ctrl.planeControl.Kp_pitch, OnPitchKpChanged);
 
-            //paramKpHdot = new SimParameter("Control:hdot_gain_P", ctrl.planeControl.Kp_hdot, OnHdotKpChanged);
-            //paramKiHdot = new SimParameter("Control:hdot_gain_I", ctrl.planeControl.Ki_hdot, OnHdotKiChanged);
+            paramKpSpeed = new SimParameter("Control:speed_gain_P", ctrl.planeControl.Kp_speed, OnSpeedKpChanged);
+            paramKiSpeed = new SimParameter("Control:speed_gain_I", ctrl.planeControl.Ki_speed, OnSpeedKiChanged);
 
             //paramKpPos = new SimParameter("Control:position_gain_P", ctrl.planeControl.Kp_pos, OnPosKpChanged);
             //paramKpPos2 = new SimParameter("Control:position_gain_P2", ctrl.planeControl.Kp_pos2, OnPosKp2Changed);
@@ -119,19 +119,19 @@ namespace DroneControllers
             Debug.Log("Kp_roll changed from: " + ctrl.planeControl.Kp_roll + " to: " + p.Value);
             ctrl.planeControl.Kp_roll = p.Value;
         }
+        
+        public void OnSpeedKpChanged(SimParameter p)
+        {
+            Debug.Log("Kp_speed changed from: " + ctrl.planeControl.Kp_speed + " to: " + p.Value);
+            ctrl.planeControl.Kp_speed = p.Value;
+        }
+
+        public void OnSpeedKiChanged(SimParameter p)
+        {
+            Debug.Log("Ki_speed changed from: " + ctrl.planeControl.Ki_speed + " to: " + p.Value);
+            ctrl.planeControl.Ki_speed = p.Value;
+        }
         /*
-        public void OnHdotKpChanged(SimParameter p)
-        {
-            Debug.Log("Kp_hdot changed from: " + ctrl.planeControl.Kp_hdot + " to: " + p.Value);
-            ctrl.planeControl.Kp_hdot = p.Value;
-        }
-
-        public void OnHdotKiChanged(SimParameter p)
-        {
-            Debug.Log("Ki_hdot changed from: " + ctrl.planeControl.Ki_hdot + " to: " + p.Value);
-            ctrl.planeControl.Ki_hdot = p.Value;
-        }
-
         public void OnPosKpChanged(SimParameter p)
         {
             Debug.Log("Kp_pos changed from: " + ctrl.planeControl.Kp_pos + " to: " + p.Value);

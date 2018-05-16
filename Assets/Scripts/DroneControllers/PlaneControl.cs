@@ -12,10 +12,20 @@ public class PlaneControl {
     public float Ki_alt = 0.01f;
     public float maxAltInt = 0.1f;
 
-    public float Kp_speed = 0.001f;
-    public float Ki_speed = 0.0001f;
+    public float Kp_speed = 0.01f;
+    public float Ki_speed = 0.001f;
     public float speedInt = 0.0f;
     public float maxSpeedInt = 0.25f;
+
+    public float Kp_speed2 = 0.01f;
+    public float Ki_speed2 = 0.001f;
+    public float speedInt2 = 0.0f;
+    public float maxSpeedInt2 = 10.0f;
+
+    public float Kp_climb = 0.01f;
+    public float Ki_climb = 0.001f;
+    public float climbInt = 0.0f;
+    public float maxClimbInt = 1.0f;
 
     public float Kp_roll = 8.0f;
     public float Kp_p = 5.0f;
@@ -52,9 +62,25 @@ public class PlaneControl {
         altInt = 0.0f;
         speedInt = 0.0f;
         sideslipInt = 0.0f;
-        Kp_speed = 0.01f;
-        Ki_speed = 0.001f;
-    }
+        Kp_speed = 0.1f;
+        Ki_speed = 0.1f;
+
+        Kp_alt = 0.02f;
+        Ki_alt = 0.05f;
+        Kp_pitch = 8.0f;
+        Kp_q = 5.0f;
+
+        Kp_speed2 = 0.06f;
+        Ki_speed2 = 0.02f;
+        speedInt2 = 0.0f;
+        maxSpeedInt2 = 100.0f;
+
+        Kp_climb = 0.1f;
+        Ki_climb = 0.1f;
+        maxClimbInt = 10.0f;
+
+
+}
 	
     /// <summary>
     /// Closes the loop on pitch and pitch rate
@@ -78,12 +104,34 @@ public class PlaneControl {
 
     public float AirspeedLoop(float targetAirspeed, float airspeed)
     {
-        speedInt = speedInt + targetAirspeed - airspeed;
+        speedInt = speedInt + (targetAirspeed - airspeed)*Time.deltaTime;
         if (speedInt > maxSpeedInt)
             speedInt = maxSpeedInt;
         else if (speedInt < -maxSpeedInt)
             speedInt = -maxSpeedInt;
         float output = Kp_speed * (targetAirspeed - airspeed) + Ki_speed*speedInt;
+        return output;
+    }
+
+    public float AirspeedLoop2(float targetAirspeed, float airspeed)
+    {
+        speedInt2 = speedInt2 + (targetAirspeed - airspeed) * Time.deltaTime;
+        if (speedInt2 > maxSpeedInt2)
+            speedInt2 = maxSpeedInt2;
+        else if (speedInt2 < -maxSpeedInt2)
+            speedInt2 = -maxSpeedInt2;
+        float output = Kp_speed2 * (targetAirspeed - airspeed) + Ki_speed2 * speedInt;
+        return output;
+    }
+
+    public float ClimbRateLoop(float targetClimbRate, float climbRate)
+    {
+        climbInt = climbInt + (targetClimbRate - climbRate) * Time.deltaTime;
+        if (climbInt > maxClimbInt)
+            climbInt = maxClimbInt;
+        else if (climbInt < -maxClimbInt)
+            climbInt = -maxClimbInt;
+        float output = Kp_climb * (targetClimbRate - climbRate) + Ki_climb * climbInt;
         return output;
     }
 

@@ -22,6 +22,8 @@ public class FollowCamera : MonoBehaviour
 
     public bool blurRotors = true;
 
+    public bool sideCam = false;
+
     [HideInInspector]
     public Camera cam;
     bool setRotationFlag;
@@ -180,11 +182,21 @@ public class FollowCamera : MonoBehaviour
 //			}
 		}
 
-		transform.position = target.transform.position - transform.forward * followDistance;
+        //transform.position = target.transform.position - transform.forward * followDistance;
+        if (sideCam)
+        {
+            transform.position = target.transform.position - -1.0f * target.transform.right * followDistance;
 
-        var tempRotation = target.transform.rotation.eulerAngles;
+            var tempRotation = target.transform.rotation.eulerAngles;
 
-        transform.rotation = Quaternion.Euler(0.0f, tempRotation.y, 0.0f);
+            transform.rotation = Quaternion.Euler(0.0f, tempRotation.y - 90.0f, 0.0f);
+        }
+        else
+        {
+            transform.position = target.transform.position - transform.forward * followDistance;
+            var tempRotation = target.transform.rotation.eulerAngles;
+            transform.rotation = Quaternion.Euler(0.0f, tempRotation.y, 0.0f);
+        }
           
     }
 

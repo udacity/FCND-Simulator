@@ -26,14 +26,18 @@ namespace DroneVehicles
         public bool useGravity = true;
 
         public float aileron = 0.0f;
+        public float elevator = 0.0f;
+        public float rudder = 0.0f;
+        public float throttleRPM = 0.0f;
+
         public float maxAileron = 30.0f;
         public float minAileron = -30.0f;
 
-        public float rudder = 0.0f;
+        
         public float maxRudder = 30.0f;
         public float minRudder = -30.0f;
 
-        public float elevator = 0.0f;
+        
         public float maxElevator = 30.0f;
         public float minElevator = -30.0f;
 
@@ -41,7 +45,7 @@ namespace DroneVehicles
         public float maxTrim = 30.0f;
         public float minTrime = -30.0f;
 
-        public float throttleRPM = 0.0f;
+        
         public float maxThrottleRPM = 5000.0f;
 
         void Awake()
@@ -231,9 +235,11 @@ namespace DroneVehicles
         
         public void InitializeVehicle(Vector3 position, Vector3 velocity, Vector3 euler)
         {
+            Debug.Log("Initializing Vehicle: position= " + position + " velocity= " + velocity + " euler= " + euler);
             rb.position = position;
             rb.velocity = velocity;
             rb.rotation = Quaternion.Euler(euler);
+            //QuadActivator.Activate(gameObject);
         }
 
          public void StateUpdate()
