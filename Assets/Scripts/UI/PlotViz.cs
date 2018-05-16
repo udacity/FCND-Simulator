@@ -11,9 +11,9 @@ public class PlotViz : MonoBehaviour
 	}
 	static PlotViz instance;
 
-	public int Count
+	public static int Count
 	{
-		get { return plotLines.Count; }
+		get { return instance == null ? 0 : instance.plotLines.Count; }
 	}
 
 	public LineRenderer line;
