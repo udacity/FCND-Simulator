@@ -60,8 +60,8 @@ namespace DroneVehicles
         public Vector3 Forward { get; protected set; }
         public Vector3 Right { get; protected set; }
         public Vector3 Up { get; protected set; }
-        public Vector3 YAxis { get; protected set; }
-        public Vector3 XAxis { get; protected set; }
+//        public Vector3 YAxis { get; protected set; }
+//        public Vector3 XAxis { get; protected set; }
 
         public bool UseGravity { get; set; }
         public bool ConstrainForceX { get; set; }
@@ -75,8 +75,8 @@ namespace DroneVehicles
         public Transform frontRightRotor;
         public Transform rearLeftRotor;
         public Transform rearRightRotor;
-        public Transform yAxis;
-        public Transform xAxis;
+//        public Transform yAxis;
+//        public Transform xAxis;
         public Transform forward;
         public Transform right;
 
@@ -173,8 +173,8 @@ namespace DroneVehicles
             Forward = forward.forward;
             Right = right.forward;
             Up = transform.up;
-            XAxis = xAxis.forward;
-            YAxis = yAxis.forward;
+//            XAxis = xAxis.forward;
+//            YAxis = yAxis.forward;
         }
 
         void LateUpdate()

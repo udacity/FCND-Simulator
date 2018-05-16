@@ -124,6 +124,9 @@ GameObject:
   - component: {fileID: 114611136500063826}
   - component: {fileID: 114861650374308536}
   - component: {fileID: 54544742548628462}
+  - component: {fileID: 114007864448821950}
+  - component: {fileID: 114220978259610358}
+  - component: {fileID: 114956266687092206}
   m_Layer: 14
   m_Name: Cora
   m_TagString: Untagged
@@ -2752,6 +2755,62 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 664.88544, y: 216.25952, z: 1095.5575}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114007864448821950
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1151861833067606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a355df2fff8e684eb8b3398df0b5183, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imuRateHz: 500
+  imuNoiseSigma: {x: 0, y: 0, z: 0}
+  gyroRateHz: 500
+  gyroNoiseSigma: {x: 0, y: 0, z: 0}
+  compassRateHz: 1
+  compassNoiseSigma: {x: 0, y: 0, z: 0}
+  barometerRateHz: 1
+  barometerNoiseSigma: 0
+  gpsRateHz: 10
+  gpsPositionNoiseSigma: {x: 0, y: 0, z: 0}
+  gpsVelocityNoiseSigma: {x: 0, y: 0, z: 0}
+  estimateRateHz: 500
+--- !u!114 &114220978259610358
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1151861833067606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 850e6e48bde7a3f4d883484025ef6762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quadVehicle: {fileID: 114861650374308536}
+  quadSensor: {fileID: 114007864448821950}
+  guided: 0
+  onGround: 0
+  simpleMode: 1
+  attitudeControl: 1
+  positionControl: 1
+  posctl_band: 0.1
+  maxTimeBetweenControl: 0.1
+  mb_Manual: {fileID: 11400000, guid: 2e0fe5cf335962840a85eec5df0ce319, type: 2}
+  mb_ManualPosCtrl: {fileID: 11400000, guid: 661be0a91b63e964bb9cc2a77504c244, type: 2}
+  mb_ManualAttCtrl: {fileID: 11400000, guid: f9edf8f5b9348594184a08e8d7a1483c, type: 2}
+  mb_GuidedPosCtrl: {fileID: 11400000, guid: b67ccdc9551dd8d44a7a324303427b90, type: 2}
+  mb_GuidedAttCtrl: {fileID: 11400000, guid: 7c3e8b5e00af4b7448b004d21a558352, type: 2}
+  mb_GuidedMotors: {fileID: 11400000, guid: ae9ee69ae0304334d8f8903430c2bf52, type: 2}
+  attitudeTarget: {x: 0, y: 0, z: 0}
+  positionTarget: {x: 0, y: 0, z: 0}
+  bodyRateTarget: {x: 0, y: 0, z: 0}
+  velocityTarget: {x: 0, y: 0, z: 0}
+  accelerationTarget: {x: 0, y: 0, z: 0}
+  momentThrustTarget: {x: 0, y: 0, z: 0, w: 0}
+  currentMovementBehavior: {fileID: 0}
 --- !u!114 &114611136500063826
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2812,7 +2871,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1151861833067606}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa403c910318a9f42ab6485afc0d2c88, type: 3}
   m_Name: 
@@ -2834,8 +2893,6 @@ MonoBehaviour:
   frontRightRotor: {fileID: 0}
   rearLeftRotor: {fileID: 0}
   rearRightRotor: {fileID: 0}
-  yAxis: {fileID: 0}
-  xAxis: {fileID: 0}
   forward: {fileID: 4642361523196624}
   right: {fileID: 4472438510481754}
   clampForce: 1
@@ -2844,10 +2901,24 @@ MonoBehaviour:
   forceMode: 0
   torqueMode: 0
   rotateWithTorque: 0
-  spinRotors: 1
+  spinRotors: 0
   maxRotorRPM: 150
   curRotorSpeed: 0
   curSpeed: 0
+--- !u!114 &114956266687092206
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1151861833067606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52a417ae9546349918340902e6c65cbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quadVehicle: {fileID: 114861650374308536}
+  quadAutopilot: {fileID: 114220978259610358}
+  quadSensors: {fileID: 114007864448821950}
 --- !u!215 &215662781108505184
 ReflectionProbe:
   m_ObjectHideFlags: 1
