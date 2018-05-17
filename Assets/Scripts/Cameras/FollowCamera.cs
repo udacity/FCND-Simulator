@@ -44,6 +44,7 @@ public class FollowCamera : MonoBehaviour
         cam = GetComponent<Camera>();
         cam.depthTextureMode |= DepthTextureMode.MotionVectors;
 		curZoomLevel = initialZoomLevel;
+		followDistance = zoomLevels [ curZoomLevel ].x;
 //		target = targetTransform.GetComponent<IDrone> ();
     }
 

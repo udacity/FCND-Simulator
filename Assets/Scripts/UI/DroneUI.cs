@@ -71,7 +71,7 @@ public class DroneUI : MonoBehaviour
             up.gameObject.SetActive(true);
             //			Debug.Log ( "parameter is " + p.displayName );
         }
-		graphImage.enabled = PlotViz.Instance.Count > 0;
+		graphImage.enabled = PlotViz.Count > 0;
     }
 
     void Update ()
@@ -229,7 +229,7 @@ public class DroneUI : MonoBehaviour
 		parametersOverlay.SetActive ( false );
 		plotOverlay.SetActive ( false );
 		plotOverlay.GetComponent<PlottingUI> ().OnClose ();
-		graphImage.enabled = PlotViz.Instance.Count > 0;
+		graphImage.enabled = PlotViz.Count > 0;
 		PauseSimulation ( false );
 		Simulation.UIIsOpen = false;
 	}
