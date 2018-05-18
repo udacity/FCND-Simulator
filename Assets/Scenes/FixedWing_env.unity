@@ -1195,6 +1195,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planeVehicle: {fileID: 155553751}
   planeSensor: {fileID: 155553750}
+  planeControl:
+    Kp_pitch: 20
+    Kp_q: 10
+    altInt: 0
+    Kp_alt: 0.03
+    Ki_alt: 0.05
+    maxAltInt: 0.1
+    Kp_speed: 0.2
+    Ki_speed: 0.1
+    speedInt: 0
+    maxSpeedInt: 0.25
+    Kp_speed2: 0.1
+    Ki_speed2: 0.02
+    speedInt2: 0
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 8
+    Kp_p: 5
+    Kp_sideslip: 0.1
+    Ki_sideslip: 0.1
+    sideslipInt: 0
+    maxSideslipInt: 0.1
   simpleMode: 1
   guided: 0
   attitudeTarget: {x: 0, y: 0, z: 0}
@@ -1994,7 +2019,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}

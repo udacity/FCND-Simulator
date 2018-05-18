@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class PlaneControl {
 
     public float Kp_pitch = 8.0f;
