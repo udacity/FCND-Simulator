@@ -21,6 +21,8 @@ public class Scenario0 : MonoBehaviour
     private float airspeedRateThreshold = 0.1f;
 
     private float timeInterval = 5.0f;
+    private float lastTrimTime = 0.0f;
+    private float currTime;
 
     public float elevatorTrim = 0.0f;
     public float throttleTrim = 0.0f;
@@ -78,8 +80,14 @@ public class Scenario0 : MonoBehaviour
 
     private void FixedUpdate()
     {
+        currTime = Time.time;
         //elevatorTrim += Input.GetAxis("Trim")*0.001f;
-        throttleTrim += Input.GetAxis("Trim") * 0.001f;
+        float trimInput = Input.GetAxis("Trim") * 0.001f;
+        if (trimInput != 0.0f)
+        {
+            throttleTrim += trimInput;
+            lastTrimTime = currTime;
+        }
         drone.CommandAttitude(new Vector3(0.0f, elevatorTrim, 0.0f), 0.7f + throttleTrim);
 
         SuccessScenario0();
@@ -87,7 +95,7 @@ public class Scenario0 : MonoBehaviour
 
     public void SuccessScenario0()
     {
-        float currTime = Time.time;
+        
         currentVelocity = drone.VelocityLocal().z*0.001f + currentVelocity*0.999f;
         if(Mathf.Abs(currentVelocity) > velocityThreshold)
         {
@@ -100,9 +108,11 @@ public class Scenario0 : MonoBehaviour
             lastAirspeedRateTime = currTime;
         }
 
-        if(((currTime-lastVelocityTime) > timeInterval) && ((currTime-lastAirspeedRateTime) > timeInterval))
+        if(((currTime - lastVelocityTime) > timeInterval) &&
+            ((currTime - lastAirspeedRateTime) > timeInterval) &&
+            ((currTime - lastTrimTime) > timeInterval))
         {
-            Debug.Log("Scenario 0 Complete: Elevator = " + drone.MomentBody().y + " Pitch: " + drone.AttitudeEuler().y + " Airspeed: " + drone.VelocityLocal().magnitude);
+            Debug.Log("Scenario 0 Complete: Throttle = " + throttleTrim + " Pitch: " + drone.AttitudeEuler().y + " Airspeed: " + drone.VelocityLocal().magnitude);
         }
     }
 

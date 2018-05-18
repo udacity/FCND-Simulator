@@ -94,7 +94,8 @@ public class DroneUI : MonoBehaviour
         var lat = drone.GPSLatitude();
         var lon = drone.GPSLongitude();
         var alt = drone.GPSAltitude();
-        gpsText.text = string.Format("Latitude = {0:0.000000}\nLongitude = {1:0.000000}\nAltitude = {2:0.000} (meters)", lat, lon, alt);
+        var airspeed = drone.VelocityLocal().magnitude;
+        gpsText.text = string.Format("Latitude = {0:0.000000}\nLongitude = {1:0.000000}\nAltitude = {2:0.000} (meters)\nAirspeed = {3:0.0} (meters/sec)", lat, lon, alt, airspeed);
         // _gpsText.color = new Color(255, 255, 255, 0);
 
         // Updates UI compass drone heading

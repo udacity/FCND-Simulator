@@ -459,6 +459,19 @@ namespace Drones
         {
             return planeAutopilot.ControlMode();
         }
+
+
+
+        public void FreezeDrone(bool freeze)
+        {
+            planeVehicle.FreezeDrone(freeze);
+        }
+
+        public bool IsFrozen()
+        {
+            return planeVehicle.IsFrozen();
+        }
+
         /*
         public QuadController quadCtrl;
         public SimpleQuadController simpleQuadCtrl;

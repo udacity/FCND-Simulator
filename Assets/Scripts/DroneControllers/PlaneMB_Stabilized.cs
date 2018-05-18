@@ -66,7 +66,7 @@ namespace MovementBehaviors
             float elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
 
             controller.CommandControls(aileron, elevator, rudder, throttle);
-            Debug.Log("Sideslip Command: " + sideslipCommand);
+            //Debug.Log("Sideslip Command: " + sideslipCommand);
             
             
         }

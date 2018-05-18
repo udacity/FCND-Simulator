@@ -93,7 +93,7 @@ public class Scenario3 : MonoBehaviour
         throttleTrim += Input.GetAxis("Trim") * 0.001f;
         drone.CommandAttitude(new Vector3(0.0f, elevatorTrim, 0.0f), 0.7f + throttleTrim);
         */
-        drone.SetControlMode(5); //Stabilized Mode
+        drone.SetControlMode(5); //Ascend/Descend Mode
         drone.SetGuided(true);
         if(Time.time-initTime < 5)
             drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), nominalThrust);

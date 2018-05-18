@@ -8,7 +8,10 @@ namespace DroneVehicles
 
     public class PlaneVehicle : MonoBehaviour, IDroneVehicle
     {
+        //Two objects used from the uSim library
         public InputsManager inputsManager;
+        public AircraftControl aircraftControl;
+
         public SimpleProp prop;
         Vector3 positionUnity;
         Vector3 eulerAngles;
@@ -59,6 +62,9 @@ namespace DroneVehicles
 
             if (prop == null)
                 prop = rb.GetComponent<SimpleProp>();
+
+            if (aircraftControl == null)
+                aircraftControl = rb.GetComponent<AircraftControl>();
 
         }
 
@@ -124,6 +130,23 @@ namespace DroneVehicles
         public void AddTrim(float t)
         {
             elevatorTrim = elevatorTrim + t;
+        }
+
+        public void FreezeDrone(bool freeze)
+        {
+            if (freeze)
+            {
+                rb.isKinematic = true;
+            }
+            else
+            {
+                rb.isKinematic = false;
+            }
+        }
+
+        public bool IsFrozen()
+        {
+            return rb.isKinematic;
         }
 
         /// <summary>
@@ -239,6 +262,7 @@ namespace DroneVehicles
             rb.position = position;
             rb.velocity = velocity;
             rb.rotation = Quaternion.Euler(euler);
+            aircraftControl.speed = velocity.magnitude;
             //QuadActivator.Activate(gameObject);
         }
 

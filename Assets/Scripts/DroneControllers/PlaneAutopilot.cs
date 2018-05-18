@@ -43,10 +43,10 @@ namespace DroneControllers
         }
         void Awake()
         {
-
-            SelectMovementBehavior();
             planeControl = new PlaneControl();
             flightMode = (int)FLIGHT_MODE.MANUAL;
+            SelectMovementBehavior();
+            
             
         }
 
@@ -84,8 +84,8 @@ namespace DroneControllers
                 flightMode = (int)FLIGHT_MODE.MANUAL;
                 SelectMovementBehavior();
             }
-
-            currentMovementBehavior.OnLateUpdate();
+            if(!planeVehicle.IsFrozen())
+                currentMovementBehavior.OnLateUpdate();
             
 //			
         }

@@ -23,11 +23,13 @@ public abstract class Scenario : MonoBehaviour
 
 	public void Begin ()
 	{
+        OnBegin();
 		IsRunning = true;
 	}
 
 	public void End ()
 	{
+        OnEnd();
 		IsRunning = false;
 	}
 
@@ -47,6 +49,8 @@ public abstract class Scenario : MonoBehaviour
 	}
 
 	protected virtual void OnInit () {}
+    protected virtual void OnBegin() {}
+    protected virtual void OnEnd() {}
 	protected virtual bool OnCheckSuccess () { return false; }
 	protected virtual bool OnCheckFailure () { return false; }
 	protected virtual void OnCleanup () {}

@@ -105,11 +105,7 @@ public class Scenario4 : MonoBehaviour
     private void FixedUpdate()
     {
         float altitudeSwitch = 20.0f;
-        //elevatorTrim += Input.GetAxis("Trim")*0.001f;
-        /*
-        throttleTrim += Input.GetAxis("Trim") * 0.001f;
-        drone.CommandAttitude(new Vector3(0.0f, elevatorTrim, 0.0f), 0.7f + throttleTrim);
-        */
+
         position2D.x = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().x - startLocation.x, 2.0f) + Mathf.Pow(drone.CoordsUnity().z - startLocation.z, 2.0f));
         position2D.y = drone.CoordsUnity().y - startLocation.y;
         drone.SetGuided(true);

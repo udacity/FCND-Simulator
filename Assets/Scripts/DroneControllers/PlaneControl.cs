@@ -62,18 +62,18 @@ public class PlaneControl {
         altInt = 0.0f;
         speedInt = 0.0f;
         sideslipInt = 0.0f;
-        Kp_speed = 0.1f;
+        Kp_speed = 0.2f;
         Ki_speed = 0.1f;
 
-        Kp_alt = 0.02f;
+        Kp_alt = 0.03f;
         Ki_alt = 0.05f;
-        Kp_pitch = 8.0f;
-        Kp_q = 5.0f;
+        Kp_pitch = 20.0f;
+        Kp_q = 10.0f;
 
-        Kp_speed2 = 0.06f;
+        Kp_speed2 = 0.1f;
         Ki_speed2 = 0.02f;
         speedInt2 = 0.0f;
-        maxSpeedInt2 = 100.0f;
+        maxSpeedInt2 = 50.0f;
 
         Kp_climb = 0.1f;
         Ki_climb = 0.1f;
@@ -120,7 +120,7 @@ public class PlaneControl {
             speedInt2 = maxSpeedInt2;
         else if (speedInt2 < -maxSpeedInt2)
             speedInt2 = -maxSpeedInt2;
-        float output = Kp_speed2 * (targetAirspeed - airspeed) + Ki_speed2 * speedInt;
+        float output = Kp_speed2 * (targetAirspeed - airspeed) + Ki_speed2 * speedInt2;
         return output;
     }
 

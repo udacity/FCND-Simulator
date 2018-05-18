@@ -8,7 +8,6 @@ public class AircraftControl : MonoBehaviour {
 	int stallSpeedWarning;
 	[HideInInspector]
 	public int ias;
-	[HideInInspector]
 	public float verticalSpeed;
 	Vector3 fusAero;
 	float fusAeroX;
