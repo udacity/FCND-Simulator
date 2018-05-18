@@ -31,13 +31,6 @@ public class ScenarioManager : MonoBehaviour
 		}
 
 		instance = this;
-
-		// register success and fail events for every scenario
-		scenarios.ForEach ( x =>
-		{
-			x.onSuccess += new System.Action ( OnSuccess );
-			x.onFailure += new System.Action ( OnFailure );
-		} );
 	}
 
 	void Update ()

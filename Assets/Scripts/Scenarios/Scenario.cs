@@ -1,17 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DroneInterface;
 
+[ExecuteInEditMode]
 public abstract class Scenario : MonoBehaviour
 {
 	public bool IsRunning { get; protected set; }
 
 	public ScenarioData data;
 	public TuningParameter[] tuningParameters;
+	public IDrone drone;
 
-	public event System.Action onSuccess = delegate {};
-	public event System.Action onFailure = delegate {};
-
+	#if UNITY_EDITOR
+	public GameObject droneObject;
+	#endif
 
 	public void Init ()
 	{
@@ -20,6 +23,22 @@ public abstract class Scenario : MonoBehaviour
 		tuningParameters.ForEach ( x => x.Reset () );
 		OnInit ();
 	}
+
+	#if UNITY_EDITOR
+	void Update ()
+	{
+		if ( droneObject != null )
+		{
+			if ( data == null )
+				data = new ScenarioData ();
+			Transform t = droneObject.transform;
+			data.vehiclePosition = t.position;
+			data.vehicleOrientation = t.rotation;
+			// velocity? probably manual
+			droneObject = null;
+		}
+	}
+	#endif
 
 	public void Begin ()
 	{
