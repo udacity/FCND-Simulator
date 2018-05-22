@@ -69,13 +69,34 @@ public class FixedWingUI : MonoBehaviour
 		}
 	}
 
-	// event for selection between Tuning mode and Python mode
+	// event for selection between Tuning mode and Python mode from the start prompt
+	public void OnStartButton (int button)
+	{
+		startObject.SetActive ( false );
+		OnSelectOperationMode ( button );
+	}
+
+	// event for doing things in the Tuning window
+	public void OnTuningButton (int button)
+	{
+		
+	}
+
+	// event for pressing a button in the Success window
+	public void OnSuccessButton (int button)
+	{
+		successObject.SetActive ( false );
+	}
+
+	// event for pressing a button in the Failure window
+	public void OnFailureButton (int button)
+	{
+		failObject.SetActive ( false );
+		scenarioManager.DoReset ();
+	}
+
 	public void OnSelectOperationMode (int mode)
 	{
-		// 0 being tuning
-//		if ( mode == 0 )
-//			scenarioManager
-		startObject.SetActive ( false );
 		// temp: start the scenario
 		scenarioStartTime = Time.time;
 		scenarioManager.Begin ();
@@ -84,12 +105,11 @@ public class FixedWingUI : MonoBehaviour
 	public void OnScenarioLoaded (Scenario s)
 	{
 		startTitle.text = s.data.title;
-		startDescription.text = s.data.description;
-		scenarioRuntime = s.data.runtime;
-		if ( scenarioRuntime == -1 )
-			scenarioRuntime = Mathf.Infinity;
-		runtimeFill.fillAmount = 0;
-		runtimeObject.SetActive ( true );
+		string _runtime = s.data.runtime == Mathf.Infinity ?
+			"indefinitely." :
+			( (int) s.data.runtime ).ToString () + " seconds.";
+		startDescription.text = s.data.description.Replace ( "^runtime", _runtime );
+		SetRuntime ( s.data.runtime );
 		startObject.SetActive ( true );
 	}
 
@@ -105,5 +125,17 @@ public class FixedWingUI : MonoBehaviour
 		failDescription.text = s.data.failText;
 		failObject.SetActive ( true );
 		runtimeObject.SetActive ( false );
+	}
+
+	void SetRuntime (float runtime)
+	{
+		if ( runtime == -1 )
+			scenarioRuntime = Mathf.Infinity;
+		else
+			scenarioRuntime = runtime;
+		
+		runtimeFill.fillAmount = 0;
+		runtimeText.text = "Runtime: 0s";
+		runtimeObject.SetActive ( true );
 	}
 }

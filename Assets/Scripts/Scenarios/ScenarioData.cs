@@ -11,6 +11,7 @@ public class ScenarioData
 
 	public Vector3 vehiclePosition;
 	public Quaternion vehicleOrientation;
+	public Vector3 vehicleEulerAngles;
 	public Vector3 vehicleVelocity;
 	public CameraLookMode cameraLookMode;
 	public float cameraDistance;

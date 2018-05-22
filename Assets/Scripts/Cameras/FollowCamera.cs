@@ -21,6 +21,7 @@ public class FollowCamera : MonoBehaviour
 	public float transitionDuration = 0.5f;
 
     public bool blurRotors = true;
+	public CameraLookMode lookMode = CameraLookMode.Follow;
 
     public bool sideCam = false;
 
@@ -57,27 +58,8 @@ public class FollowCamera : MonoBehaviour
 
     void LateUpdate()
     {
-//		if ( setRotationFlag )
-//		{
-//			setRotationFlag = false;
-//			transform.rotation = targetRotation;
-//		}
 
-//		transform.position = target.UnityCoords () - transform.forward * followDistance;
-//        if (blurRotors)
-//        {
-//            float forcePercent = Mathf.Abs(target.Force.y / target.maxForce);
-//            blurScript.velocityScale = forcePercent * forcePercent * forcePercent;
-//            if (!blurScript.enabled)
-//                blurScript.enabled = true;
-//        }
-//        else
-//        {
-//            if (blurScript.enabled)
-//                blurScript.enabled = false;
-//        }
-
-		if ( !Simulation.UIIsOpen )
+		if ( !Simulation.UIIsOpen && lookMode == CameraLookMode.Follow )
 		{
 			if ( isInTransition )
 			{
@@ -137,10 +119,6 @@ public class FollowCamera : MonoBehaviour
 						if ( zoomLevels [ lastZoomLevel ].y == Mathf.Infinity && zoomLevels [ curZoomLevel ].y != Mathf.Infinity )
 							lastAngle = transform.localEulerAngles.x;
 					}
-					
-//					float zoom = -scroll * zoomSpeed;
-//					followDistance += zoom;
-//					followDistance = Mathf.Clamp ( followDistance, zoomLevels [ 0 ].x, zoomLevels [ zoomLevels.Length - 1 ].x );
 				}
 			}
 			
@@ -171,20 +149,32 @@ public class FollowCamera : MonoBehaviour
 			if ( yaw != 0 )
 				transform.RotateAround (target.transform.position, Vector3.up, yaw * 180 * Time.deltaTime );
 			
-//			if ( !isRMB )
-//			{
-//				Vector3 targetForward = Vector3.ProjectOnPlane ( target.Forward, Vector3.up ).normalized;
-//				Vector3 myForward = Vector3.ProjectOnPlane ( transform.forward, Vector3.up ).normalized;
-//				float angle = Vector3.Angle ( targetForward, myForward );
-//				Quaternion q = Quaternion.FromToRotation ( myForward, targetForward ) * transform.rotation;
-//				
-//				angle = Mathf.Max ( angle, 5f );
-//				transform.rotation = Quaternion.RotateTowards ( transform.rotation, q, angle * 3 * Time.deltaTime );
-//			}
 		}
 
-        //transform.position = target.transform.position - transform.forward * followDistance;
-        if (sideCam)
+		switch ( lookMode )
+		{
+		case CameraLookMode.Left:
+			transform.position = targetTransform.position - targetTransform.right * followDistance;
+			transform.rotation = Quaternion.LookRotation ( targetTransform.right, Vector3.up );
+			break;
+
+		case CameraLookMode.Right:
+			transform.position = targetTransform.position + targetTransform.right * followDistance;
+			transform.rotation = Quaternion.LookRotation ( -targetTransform.right, Vector3.up );
+			break;
+
+		case CameraLookMode.Top:
+			transform.position = targetTransform.position + Vector3.up * followDistance;
+			transform.rotation = Quaternion.LookRotation ( Vector3.down, Vector3.ProjectOnPlane ( targetTransform.forward, Vector3.up ) );
+			break;
+
+		case CameraLookMode.Follow:
+			transform.position = targetTransform.position - transform.forward * followDistance;
+
+			break;
+		}
+
+/*        if (sideCam)
         {
             transform.position = target.transform.position - -1.0f * target.transform.right * followDistance;
 
@@ -197,8 +187,7 @@ public class FollowCamera : MonoBehaviour
             transform.position = target.transform.position - transform.forward * followDistance;
             var tempRotation = target.transform.rotation.eulerAngles;
             transform.rotation = Quaternion.Euler(0.0f, tempRotation.y, 0.0f);
-        }
-          
+        }*/
     }
 
 	void ResetRotation ()
@@ -207,5 +196,11 @@ public class FollowCamera : MonoBehaviour
 		euler.x = 45;
 		euler.y = targetTransform.eulerAngles.y;
 		transform.eulerAngles = euler;
+	}
+
+	public void SetLookMode (CameraLookMode mode, float distance)
+	{
+		lookMode = mode;
+		followDistance = distance;
 	}
 }

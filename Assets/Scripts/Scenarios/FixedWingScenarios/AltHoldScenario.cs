@@ -6,7 +6,6 @@ using DroneInterface;
 
 public class AltHoldScenario : Scenario
 {
-    IDrone drone;
     public float currentAltitude = 0.0f;
     private float lastAltitudeTime = 0.0f;
     private float altitudeThreshold = 1.0f;
@@ -26,30 +25,18 @@ public class AltHoldScenario : Scenario
     protected override void OnInit ()
 	{
         base.OnInit ();
-        drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-        Vector3 startVelocity = new Vector3(0.0f, 0.0f, 41.0f);
-        Vector3 startLocation = new Vector3(1500.0f, 430.0f, 0.0f);
-        Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
-        ((PlaneDrone)drone).FreezeDrone(true);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
-        
-        Vector3 startVelocity = new Vector3(0.0f, 0.0f, 41.0f);
-        Vector3 startLocation = new Vector3(1500.0f, 430.0f, 0.0f);
-        Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
-        ((PlaneDrone)drone).FreezeDrone(false);
         drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
 
         initTime = Time.time;
-
     }
+
 	protected override bool OnCheckSuccess ()
 	{
         data.successText = "Altitude Hold Scenario Successful!";

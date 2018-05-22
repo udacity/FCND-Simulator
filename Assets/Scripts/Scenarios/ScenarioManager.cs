@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Drones;
+using DroneInterface;
 
 public class ScenarioManager : MonoBehaviour
 {
@@ -17,6 +19,8 @@ public class ScenarioManager : MonoBehaviour
 	public event System.Action<Scenario> onScenarioFailed = delegate {};
 
 	public Scenario[] scenarios;
+	public IDrone drone;
+
 
 	Scenario curScenario;
 	float startTime;
@@ -31,13 +35,11 @@ public class ScenarioManager : MonoBehaviour
 		}
 
 		instance = this;
+	}
 
-		// register success and fail events for every scenario
-		scenarios.ForEach ( x =>
-		{
-			x.onSuccess += new System.Action ( OnSuccess );
-			x.onFailure += new System.Action ( OnFailure );
-		} );
+	void Start ()
+	{
+		drone = Simulation.ActiveDrone;
 	}
 
 	void Update ()
@@ -47,7 +49,7 @@ public class ScenarioManager : MonoBehaviour
 			// check for success (can a scenario even succeed before end of runtime?)
 			if ( curScenario.data.canSucceedBeforeRuntime && curScenario.CheckSuccess () )
 			{
-				curScenario.End ();
+				End ();
 				onScenarioSucceeded ( curScenario );
 				return;
 			}
@@ -55,7 +57,7 @@ public class ScenarioManager : MonoBehaviour
 			// check for failure (can it fail before end of runtime?)
 			if ( curScenario.data.canFailBeforeRuntime && curScenario.CheckFailure () )
 			{
-				curScenario.End ();
+				End ();
 				onScenarioFailed ( curScenario );
 				return;
 			}
@@ -67,7 +69,7 @@ public class ScenarioManager : MonoBehaviour
 				// again check for success
 				if ( curScenario.CheckSuccess () )
 				{
-					curScenario.End ();
+					End ();
 					onScenarioSucceeded ( curScenario );
 					return;
 				}
@@ -75,7 +77,7 @@ public class ScenarioManager : MonoBehaviour
 				// again check for failure
 				if ( curScenario.CheckFailure () )
 				{
-					curScenario.End ();
+					End ();
 					onScenarioFailed ( curScenario );
 					return;
 				}
@@ -100,6 +102,8 @@ public class ScenarioManager : MonoBehaviour
 
 		curScenario = scenarios [ id ];
 		runtime = curScenario.data.runtime;
+		curScenario.drone = drone;
+		drone.Frozen = true;
 		curScenario.Init ();
 		onScenarioLoaded ( curScenario );
 	}
@@ -107,12 +111,19 @@ public class ScenarioManager : MonoBehaviour
 	public void Begin ()
 	{
 		startTime = Time.time;
+		drone.Frozen = false;
 		curScenario.Begin ();
 	}
 
 	public void End ()
 	{
 		curScenario.End ();
+		drone.Frozen = true;
+	}
+
+	public void DoReset ()
+	{
+		curScenario.DoReset ();
 	}
 
 	void OnSuccess ()

@@ -6244,7 +6244,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114916444678542880}
-        m_MethodName: OnSelectOperationMode
+        m_MethodName: OnStartButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6407,7 +6407,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114916444678542880}
-        m_MethodName: OnSelectOperationMode
+        m_MethodName: OnFailureButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8667,7 +8667,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114916444678542880}
-        m_MethodName: OnSelectOperationMode
+        m_MethodName: OnSuccessButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9927,7 +9927,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114916444678542880}
-        m_MethodName: OnSelectOperationMode
+        m_MethodName: OnStartButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10639,7 +10639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5, b: 0.116000056, a: 0.841}
+  m_Color: {r: 0, g: 0.5, b: 0.116000056, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -12600,9 +12600,13 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: '1: Achieve Trim'
       m_Image: {fileID: 0}
-    - m_Text: '2: Hold Altitude'
+    - m_Text: '2: Hold Airspeed'
       m_Image: {fileID: 0}
-    - m_Text: '3: Change Attitude'
+    - m_Text: '3: Hold Altitude'
+      m_Image: {fileID: 0}
+    - m_Text: '4: Steady Climb'
+      m_Image: {fileID: 0}
+    - m_Text: '5: Longitudinal Challenge'
       m_Image: {fileID: 0}
     - m_Text: '4: Stabilize Bank Angle'
       m_Image: {fileID: 0}
@@ -12697,7 +12701,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114916444678542880}
-        m_MethodName: OnSelectOperationMode
+        m_MethodName: OnSuccessButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14363,7 +14367,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114916444678542880}
-        m_MethodName: OnSelectOperationMode
+        m_MethodName: OnFailureButton
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14611,7 +14615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.77254903, b: 0.5168087, a: 0.841}
+  m_Color: {r: 0, g: 0.77254903, b: 0.5168087, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -15948,7 +15952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.77254903, g: 0.09038178, b: 0, a: 0.841}
+  m_Color: {r: 0.77254903, g: 0.09038178, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -17750,7 +17754,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.6}
   m_AnchorMax: {x: 0.5, y: 0.6}
   m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 500, y: 300}
+  m_SizeDelta: {x: 600, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224023949143934396
 RectTransform:
@@ -17901,7 +17905,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 5, y: -162.4}
-  m_SizeDelta: {x: 300, y: 50}
+  m_SizeDelta: {x: 350, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224057584448207446
 RectTransform:
@@ -19250,7 +19254,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -66.33}
-  m_SizeDelta: {x: 480, y: 91.12}
+  m_SizeDelta: {x: 500, y: 413.47}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &224417082504465906
 RectTransform:

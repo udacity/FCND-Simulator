@@ -8,6 +8,12 @@ namespace DroneVehicles
 
     public class PlaneVehicle : MonoBehaviour, IDroneVehicle
     {
+		public bool Frozen
+		{
+			get { return rb.isKinematic; }
+			set { rb.isKinematic = value; }
+		}
+
         //Two objects used from the uSim library
         public InputsManager inputsManager;
         public AircraftControl aircraftControl;

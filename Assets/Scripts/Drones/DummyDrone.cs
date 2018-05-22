@@ -6,6 +6,12 @@ using DroneControllers;
 
 public class DummyDrone : MonoBehaviour, IDrone
 {
+	public bool Frozen
+	{
+		get { return rb.isKinematic; }
+		set { rb.isKinematic = value; }
+	}
+
 	public float moveSpeed = 50;
 	public float turnSpeed = 360;
 

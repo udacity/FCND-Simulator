@@ -6,7 +6,6 @@ using DroneInterface;
 
 public class ClimbScenario : Scenario
 {
-    IDrone drone;
     public float currentAirspeed = 0.0f;
     private float lastAirspeedTime = 0.0f;
     private float airspeedThreshold = 1.0f;
@@ -24,31 +23,19 @@ public class ClimbScenario : Scenario
     protected override void OnInit ()
 	{
         base.OnInit ();
-        drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
         drone.SetControlMode(5); //AscendDescend Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 0.7f);
-        Vector3 startVelocity = new Vector3(0.0f, 0.0f, 41.0f);
-        Vector3 startLocation = new Vector3(1500.0f, 450.0f, 0.0f);
-        Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
-        ((PlaneDrone)drone).FreezeDrone(true);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
-        
-        Vector3 startVelocity = new Vector3(0.0f, 0.0f, 45.0f);
-        Vector3 startLocation = new Vector3(1500.0f, 450.0f, 0.0f);
-        Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
-        ((PlaneDrone)drone).FreezeDrone(false);
         drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
 
         initTime = Time.time;
-
     }
+
 	protected override bool OnCheckSuccess ()
 	{
         data.successText = "Steay Climb Scenario Successful!\n" +

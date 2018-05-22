@@ -8,6 +8,11 @@ namespace DroneVehicles
 
     public class QuadVehicle : MonoBehaviour, IDroneVehicle
     {
+		public bool Frozen
+		{
+			get { return rb.isKinematic; }
+			set { rb.isKinematic = value; }
+		}
 
         //Vehicle mass properties (based off https://scholar.google.com/scholar?cluster=8960065662684134743&hl=en&as_sdt=0,5)
         public float vehicleMass = 0.5f; // kg

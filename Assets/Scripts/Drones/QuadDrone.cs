@@ -11,6 +11,12 @@ namespace Drones
     /// </summary>
     class QuadDrone : MonoBehaviour, IDrone
     {
+		public bool Frozen
+		{
+			get { return quadVehicle.Frozen; }
+			set { quadVehicle.Frozen = value; }
+		}
+
         public QuadVehicle quadVehicle;
         public QuadAutopilot quadAutopilot;
         public QuadSensors quadSensors;

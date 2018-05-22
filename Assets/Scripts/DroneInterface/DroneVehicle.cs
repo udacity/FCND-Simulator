@@ -9,6 +9,11 @@ namespace DroneInterface
     /// </summary>
     public interface IDroneVehicle
     {
+		/// <summary>
+		/// Freeze the drone vehicle and or query if it's frozen
+		/// </summary>
+		bool Frozen { get; set; }
+
         /// <summary>
         /// The local coordinates relative to the Unity map in the Unity frame
         /// </summary>

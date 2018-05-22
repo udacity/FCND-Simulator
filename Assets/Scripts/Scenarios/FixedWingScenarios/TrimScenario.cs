@@ -6,7 +6,6 @@ using DroneInterface;
 
 public class TrimScenario : Scenario
 {
-    IDrone drone;
     public float currentVelocity = 0.0f;
     private float lastVelocityTime = 0.0f;
     private float velocityThreshold = 0.5f;
@@ -25,24 +24,12 @@ public class TrimScenario : Scenario
     protected override void OnInit ()
 	{
         base.OnInit ();
-        drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
         drone.SetControlMode(2); //Longitude mode
         drone.SetGuided(true);
-        Vector3 startVelocity = new Vector3(0.0f, 0.0f, 41.0f);
-        Vector3 startLocation = new Vector3(1500.0f, 450.0f, 0.0f);
-        Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
-        ((PlaneDrone)drone).FreezeDrone(true);
     }
 
     protected override void OnBegin()
     {
-        base.OnInit();
-        ((PlaneDrone)drone).FreezeDrone(false);
-        Vector3 startVelocity = new Vector3(0.0f, 0.0f, 41.0f);
-        Vector3 startLocation = new Vector3(1500.0f, 450.0f, 0.0f);
-        Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
         drone.CommandControls(0.0f, 0.0f, 0.0f, 0.67f);
 
         currTime = Time.time;

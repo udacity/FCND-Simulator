@@ -6,17 +6,12 @@ using DroneInterface;
 
 public class LongitudinalChallenge : Scenario
 {
-    IDrone drone;
     Vector2 gateStart = new Vector2(200.0f, 0.0f);
     Vector2 gateHigh = new Vector2(1100.0f, 80.0f);
     Vector2 gateLow = new Vector2(1400.0f, 80.0f);//new Vector2(1600.0f, -50.0f);
     Vector3 gateEnd = new Vector2(2200.0f, 0.0f);
 
     Transform gate1, gate2, gate3, gate4;
-
-    Vector3 startLocation;
-    Vector3 startEuler;
-    Vector3 startVelocity;
     public Vector2 position2D;
 
 
@@ -47,35 +42,20 @@ public class LongitudinalChallenge : Scenario
         gate4 = GameObject.Find("Gate4").GetComponent<Transform>();
 
         base.OnInit ();
-        startLocation = new Vector3(0.0f, 200.0f, 1500.0f);
-        startVelocity = new Vector3(41.0f, 0.0f, 0.0f);
-        startEuler = new Vector3(-1.5f, 90.0f, 0.0f);
-
-        drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-        drone.CommandAttitude(new Vector3(0.0f, startLocation.y, 0.0f), startVelocity.magnitude);
-
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
-        //startLocation = new Vector3(1500.0f, 450.0f, 0.0f);
-        ((PlaneDrone)drone).FreezeDrone(true);
+		drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
-        
-        //Vector3 startVelocity = new Vector3(0.0f, 0.0f, 45.0f);
-        //Vector3 startLocation = new Vector3(1500.0f, 450.0f, 0.0f);
-        //Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
-        ((PlaneDrone)drone).FreezeDrone(false);
-        drone.CommandAttitude(new Vector3(0.0f, startLocation.y, 0.0f), startVelocity.magnitude);
+        drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
 
         initTime = Time.time;
         success = false;
-
     }
+
 	protected override bool OnCheckSuccess ()
 	{
         if (success)
@@ -84,35 +64,34 @@ public class LongitudinalChallenge : Scenario
             return true;
         }
         return false;
-
     }
 
 	protected override bool OnCheckFailure ()
 	{
         float altitudeSwitch = 25.0f;
 
-        position2D.x = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().x - startLocation.x, 2.0f) + Mathf.Pow(drone.CoordsUnity().z - startLocation.z, 2.0f));
-        position2D.y = drone.CoordsUnity().y - startLocation.y;
+        position2D.x = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().x - data.vehiclePosition.x, 2.0f) + Mathf.Pow(drone.CoordsUnity().z - data.vehiclePosition.z, 2.0f));
+        position2D.y = drone.CoordsUnity().y - data.vehiclePosition.y;
         
         if (position2D.x <= gateStart.x)
         {
-            targetAltitude = gateStart.y + startLocation.y;
+            targetAltitude = gateStart.y + data.vehiclePosition.y;
         }
         else if (position2D.x <= gateHigh.x)
         {
-            targetAltitude = gateHigh.y + startLocation.y;
+            targetAltitude = gateHigh.y + data.vehiclePosition.y;
         }
         else if (position2D.x <= gateLow.x)
         {
-            targetAltitude = gateLow.y + startLocation.y;
+            targetAltitude = gateLow.y + data.vehiclePosition.y;
         }
         else if (position2D.x <= gateEnd.x)
         {
-            targetAltitude = gateEnd.y + startLocation.y;
+            targetAltitude = gateEnd.y + data.vehiclePosition.y;
         }
         else
         {
-            targetAltitude = startLocation.y;
+            targetAltitude = data.vehiclePosition.y;
         }
 
         if (Mathf.Abs(-drone.CoordsLocal().z - targetAltitude) < altitudeSwitch)

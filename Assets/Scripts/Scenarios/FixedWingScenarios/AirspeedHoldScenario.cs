@@ -6,7 +6,6 @@ using DroneInterface;
 
 public class AirspeedHoldScenario : Scenario
 {
-    IDrone drone;
     public float currentAltitude = 0.0f;
     private float lastAltitudeTime = 0.0f;
     private float altitudeThreshold = 0.5f;
@@ -26,37 +25,23 @@ public class AirspeedHoldScenario : Scenario
     protected override void OnInit ()
 	{
         base.OnInit ();
-        drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-        Vector3 startVelocity = new Vector3(0.0f, 0.0f, 41.0f);
-        Vector3 startLocation = new Vector3(1500.0f, 450.0f, 0.0f);
-        Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
-        ((PlaneDrone)drone).FreezeDrone(true);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
-        ((PlaneDrone)drone).FreezeDrone(false);
-        Vector3 startVelocity = new Vector3(0.0f, 0.0f, 41.0f);
-        Vector3 startLocation = new Vector3(1500.0f, 450.0f, 0.0f);
-        Vector3 startEuler = new Vector3(-1.5f, 0.0f, 0.0f);
-        drone.InitializeVehicle(startLocation, startVelocity, startEuler);
         drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
 
         currTime = Time.time;
         initTime = Time.time;
-
-        
-
     }
+
 	protected override bool OnCheckSuccess ()
 	{
-        data.successText = "Scenario Succes!";
+        data.successText = "Scenario Success!";
         return true;
-
     }
 
 	protected override bool OnCheckFailure ()

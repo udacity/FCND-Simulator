@@ -11,6 +11,12 @@ namespace Drones
     /// </summary>
     class PlaneDrone : MonoBehaviour, IDrone
     {
+		public bool Frozen
+		{
+			get { return planeVehicle.Frozen; }
+			set { planeVehicle.Frozen = value; }
+		}
+
         public PlaneVehicle planeVehicle;
         public PlaneAutopilot planeAutopilot;
         public PlaneSensors planeSensors;
