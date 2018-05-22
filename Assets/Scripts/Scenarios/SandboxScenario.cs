@@ -7,6 +7,10 @@ public class SandboxScenario : Scenario
 	protected override void OnInit ()
 	{
 		base.OnInit ();
+        drone.ArmDisarm(true);
+        drone.SetControlMode(1);
+        drone.SetGuided(false);
+        drone.CommandControls(0.0f, 0.0f, 0.0f, 0.67f);
 	}
 
 	protected override bool OnCheckSuccess ()

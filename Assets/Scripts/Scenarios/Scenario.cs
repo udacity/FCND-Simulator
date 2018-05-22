@@ -11,21 +11,29 @@ public abstract class Scenario : MonoBehaviour
 
 	public ScenarioData data;
 	public TuningParameter[] tuningParameters;
-	public IDrone drone;
+
+    public IDrone drone;
 
 	#if UNITY_EDITOR
 	[Tooltip ("An editor-only field. Drag the desired drone here to store its current position and orientation")]
 	public GameObject droneObject;
-	#endif
+    #endif
 
-	public void Init ()
+
+    public void Init ()
 	{
-		Debug.Log ( "Initializing scenario: " + data.title );
+
+        drone = Simulation.ActiveDrone;
+        if (drone == null)
+            Debug.Log("Null Active Drone");
+
+        Debug.Log ( "Initializing scenario: " + data.title );
 		IsRunning = false;
 		tuningParameters.ForEach ( x => x.Reset () );
-		drone.InitializeVehicle ( data.vehiclePosition, Vector3.zero, data.vehicleEulerAngles );
-//		drone.InitializeVehicle ( data.vehiclePosition, Vector3.zero, data.vehicleOrientation.eulerAngles );
-		FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance );
+
+        drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
+        //		drone.InitializeVehicle ( data.vehiclePosition, Vector3.zero, data.vehicleOrientation.eulerAngles );
+        FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance );
 		OnInit ();
 	}
 
@@ -56,6 +64,9 @@ public abstract class Scenario : MonoBehaviour
 
 	public void Begin ()
 	{
+        
+        drone.Frozen = false;
+        drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
         OnBegin();
 		IsRunning = true;
 	}

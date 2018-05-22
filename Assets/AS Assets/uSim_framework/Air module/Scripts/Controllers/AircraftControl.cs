@@ -31,7 +31,7 @@ public class AircraftControl : MonoBehaviour {
 	float trimInput;
 	float rudderInput;
 	InputsManager inputs;
-	Rigidbody aircraft;
+	public Rigidbody aircraft;
 	[HideInInspector]
 	public bool wheelon;
 	[HideInInspector]
@@ -93,13 +93,14 @@ public class AircraftControl : MonoBehaviour {
 		
 			if (speed < 0.05f && speed > -0.05f) {
 			
-				aircraft.drag = Mathf.Lerp (aircraft.drag, z, Time.deltaTime * 3f);
+                if(!aircraft.isKinematic)
+				    aircraft.drag = Mathf.Lerp (aircraft.drag, z, Time.deltaTime * 3f);
 				//aircraft.angularDrag = Mathf.Lerp (aircraft.angularDrag, y, Time.deltaTime * 3f);
 
 			
 			} else {
-			
-				aircraft.drag = Mathf.Lerp (aircraft.drag, initialDrag, Time.deltaTime * 3f);
+			    if(!aircraft.isKinematic)
+				    aircraft.drag = Mathf.Lerp (aircraft.drag, initialDrag, Time.deltaTime * 3f);
 				//aircraft.angularDrag = Mathf.Lerp (aircraft.angularDrag, initialRotDrag, Time.deltaTime * 3f);
 			
 			}
