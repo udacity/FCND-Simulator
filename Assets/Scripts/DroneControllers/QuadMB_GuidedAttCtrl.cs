@@ -11,6 +11,7 @@ namespace MovementBehaviors
     {
         Vector3 lastVelocityErrorBody;
         float hDotInt;
+        float prevTime = 0.0f;
         AttitudeControl attCtrl = new AttitudeControl();
 
         public override void OnLateUpdate()
@@ -33,7 +34,11 @@ namespace MovementBehaviors
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawOutput);
 
             float downCmd = controller.guidedCommand.z;
-            float altOutput = attCtrl.VerticalVelocityLoop(downCmd, attitude, -localVelocity.z,Time.deltaTime,-1.0f*Physics.gravity[1]*controller.rb.mass);            
+            float dt = 0.0f;
+            if (prevTime != 0.0f)
+                dt = controller.quadVehicle.FlightTime() - prevTime;
+            prevTime = controller.quadVehicle.FlightTime();
+            float altOutput = attCtrl.VerticalVelocityLoop(downCmd, attitude, -localVelocity.z,dt,-1.0f*Physics.gravity[1]*controller.rb.mass);            
             
             controller.CommandTorque(totalMoment);
             controller.CommandThrust(altOutput);

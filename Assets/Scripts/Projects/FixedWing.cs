@@ -18,8 +18,8 @@ public class FixedWing : MonoBehaviour
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 4;
 
-    public int gpsIntervalHz = 100;
-    public int attitudeIntervalHz = 500;
+    public int gpsIntervalHz = 50;
+    public int attitudeIntervalHz = 100;
     public int imuIntervalHz = 100;
     public int homePositionIntervalHz = 1;
 

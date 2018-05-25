@@ -9,6 +9,7 @@ namespace DroneSensors
     {
         public IDrone drone;
 
+        float prevTime = 0.0f;
         public float imuRateHz = 500;
         float timeSinceImuS;
         Vector3 imuAcceleration;
@@ -77,7 +78,7 @@ namespace DroneSensors
 
         void FixedUpdate()
         {
-            float deltaTime = Time.deltaTime;
+            float deltaTime = drone.FlightTime() - prevTime;
             timeSinceBarometerS = timeSinceBarometerS + deltaTime;
             timeSinceCompassS = timeSinceCompassS + deltaTime;
             timeSinceEstimateS = timeSinceEstimateS + deltaTime;

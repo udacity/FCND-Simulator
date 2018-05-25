@@ -12,14 +12,14 @@ public class AirspeedHoldScenario : Scenario
 
     public float currentAirspeed = 0.0f;
     private float lastAirspeedTime = 0.0f;
-    private float airspeedThreshold = 0.1f;
+    private float airspeedThreshold = 0.5f;
 
     private float timeInterval = 5.0f;
     private float finalTime = 15.0f;
     private float initTime = 0.0f;
     public float currTime = 0.0f;
     private bool success = true;
-    public float targetAirspeed = 45.0f;
+    public float targetAirspeed = 41.0f;
     private float targetAltitude = 150.0f;
 
     protected override void OnInit ()
@@ -27,15 +27,15 @@ public class AirspeedHoldScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
+        drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
-        drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
-
-        currTime = Time.time;
-        initTime = Time.time;
+        
+        currTime = drone.FlightTime();
+        initTime = drone.FlightTime();
     }
 
 	protected override bool OnCheckSuccess ()
@@ -46,9 +46,9 @@ public class AirspeedHoldScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
-        drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
+        //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
 
-        currTime = Time.time - initTime;
+        currTime = drone.FlightTime() - initTime;
         currentAirspeed = drone.VelocityLocal().magnitude;
         if (currTime > finalTime - timeInterval && currTime <= finalTime)
         {
@@ -63,7 +63,15 @@ public class AirspeedHoldScenario : Scenario
         return false;
     }
 
-	protected override void OnCleanup ()
+    protected override void OnEnd()
+    {
+        drone.SetGuided(false);
+        Debug.Log("Released control of the Drone");
+        base.OnEnd();
+        
+    }
+
+    protected override void OnCleanup ()
 	{
 		base.OnCleanup ();
 	}
