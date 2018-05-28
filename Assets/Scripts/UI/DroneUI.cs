@@ -53,7 +53,9 @@ public class DroneUI : MonoBehaviour
 
     void Start ()
     {
-		int quality = QualitySettings.GetQualityLevel();
+		QualitySettings.SetQualityLevel ( 0, true );
+		int quality = 0;
+//		int quality = QualitySettings.GetQualityLevel();
 		toggles = qualityGroup.transform.GetComponentsInChildren<Toggle>();
 		for (int i = 0; i < toggles.Length; i++)
 		{
@@ -184,7 +186,7 @@ public class DroneUI : MonoBehaviour
     {
         if (toggles[toggle].isOn && toggle != QualitySettings.GetQualityLevel())
         {
-            QualitySettings.SetQualityLevel(toggle);
+			QualitySettings.SetQualityLevel ( toggle, true );
         }
     }
 

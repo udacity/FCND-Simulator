@@ -33,6 +33,14 @@ namespace UdacityNetworking
 		{
 			await client.SendAsync ( bytes, bytes.Length, target );
 		}
+
+		public void Stop ()
+		{
+			client.Close ();
+			client.Dispose ();
+			client = null;
+			_listenOn = null;
+		}
 	}
 
 	class UDPClientInfo
@@ -99,8 +107,17 @@ namespace UdacityNetworking
 			this.ip = ip;
 			this.port = port;
 			connectionState = ConnectionState.Connecting;
-			UdpListenAsync ();
-			DispatchMessages ();
+			Task.Run ( UdpListenAsync );
+			Task.Run ( DispatchMessages );
+//			UdpListenAsync ();
+//			DispatchMessages ();
+		}
+
+		public void StopServer ()
+		{
+			running = false;
+			listener.Stop ();
+			listener = null;
 		}
 
 		public void DoUpdate ()
@@ -162,7 +179,7 @@ namespace UdacityNetworking
 			
 			while ( IsServerStarted )
 			{
-//				Debug.Log ( "checking messages" );
+				Debug.Log ( "checking messages" );
 				UDPClientInfo[] clientArr = new UDPClientInfo[clients.Count];
 				clients.Values.CopyTo ( clientArr, 0 );
 				try
@@ -197,7 +214,7 @@ namespace UdacityNetworking
 			{
 				if ( listener != null )
 				{
-//					listener.Stop ();
+					listener.Stop ();
 					listener = null;
 				}
 				// Setup the UdpListener 
@@ -239,7 +256,7 @@ namespace UdacityNetworking
 			{
 				Debug.LogException ( e );
 //				Debug.Log (string.Format("SocketException: {0}", e));
-//				listener.Stop ();
+				listener.Stop ();
 				listener = null;
 				connectionState = ConnectionState.Disconnected;
 			}
@@ -253,8 +270,11 @@ namespace UdacityNetworking
 		public void Destroy ()
 		{
 			running = false;
-//			listener.Stop ();
-			listener = null;
+			if ( listener != null )
+			{
+				listener.Stop ();
+				listener = null;
+			}
 			if ( myClient != null )
 				myClient.Close ();
 		}
@@ -262,7 +282,6 @@ namespace UdacityNetworking
 		void OnClientTimeout (object obj)
 		{
 			UDPClientInfo info = (UDPClientInfo) obj;
-			IPEndPoint client;
 			UDPClientInfo ci;
 			bool removed = clients.TryRemove ( info.clientHash, out ci );
 //			bool removed = clients.TryRemove ( info.clientHash, out client );

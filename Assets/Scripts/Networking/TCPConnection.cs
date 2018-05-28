@@ -72,7 +72,9 @@ namespace UdacityNetworking
 		TcpClient myClient;
 		ConcurrentQueue<MessageInfo> messages = new ConcurrentQueue<MessageInfo> ();
 		float nextTimeoutCheck;
-		ConnectionState connectionState;
+		ConnectionState connectionState = ConnectionState.Disconnected;
+
+
 
 		public void StartServer (string ip, int port)
 		{
@@ -80,9 +82,16 @@ namespace UdacityNetworking
 			this.ip = ip;
 			this.port = port;
 			connectionState = ConnectionState.Connecting;
-			TcpListenAsync ();
+			Task.Run ( TcpListenAsync );
+//			TcpListenAsync ();
 			Task.Run ( DispatchMessages );
-//			DispatchMessages ();
+		}
+
+		public void StopServer ()
+		{
+			running = false;
+			listener.Stop ();
+			listener = null;
 		}
 
 		public void DoUpdate ()
@@ -138,7 +147,9 @@ namespace UdacityNetworking
 		{
 			// make sure server is started
 			while ( !IsServerStarted )
+			{
 				await Task.Delay ( 10 );
+			}
 
 //			SpinWait sw = new SpinWait ();
 //			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
@@ -299,7 +310,6 @@ namespace UdacityNetworking
 		void OnClientTimeout (object obj)
 		{
 			TCPClientInfo info = (TCPClientInfo) obj;
-			TcpClient client;
 			TCPClientInfo ci;
 			bool removed = clients.TryRemove ( info.clientHash, out ci );
 //			bool removed = clients.TryRemove ( info.clientHash, out client );

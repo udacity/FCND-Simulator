@@ -1,0 +1,466 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1308003417705242}
+  m_IsPrefabParent: 1
+--- !u!1 &1006522862426608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4907248548751700}
+  - component: {fileID: 114242586301637672}
+  m_Layer: 0
+  m_Name: Climb Scenario
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1029657313640208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4969159852736440}
+  - component: {fileID: 114569246367134018}
+  m_Layer: 0
+  m_Name: Sandbox Scenario
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1063519567438538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4918838391289266}
+  - component: {fileID: 114281351577105528}
+  m_Layer: 0
+  m_Name: Altitude Scenario
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1099292183768696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4707710292371856}
+  - component: {fileID: 114786816078483262}
+  m_Layer: 0
+  m_Name: Longitudinal Challenge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1174101126952512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4353954867327654}
+  - component: {fileID: 114483456881117110}
+  m_Layer: 0
+  m_Name: Trim Scenario
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1308003417705242
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4757129714770880}
+  - component: {fileID: 114165500831220880}
+  m_Layer: 0
+  m_Name: ScenarioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1997987453967002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4707875589579958}
+  - component: {fileID: 114257472909530190}
+  m_Layer: 0
+  m_Name: Airspeed Scenario
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4353954867327654
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1174101126952512}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4757129714770880}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4707710292371856
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1099292183768696}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4757129714770880}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4707875589579958
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997987453967002}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4757129714770880}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4757129714770880
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1308003417705242}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4969159852736440}
+  - {fileID: 4353954867327654}
+  - {fileID: 4707875589579958}
+  - {fileID: 4918838391289266}
+  - {fileID: 4907248548751700}
+  - {fileID: 4707710292371856}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4907248548751700
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1006522862426608}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4757129714770880}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4918838391289266
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1063519567438538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4757129714770880}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4969159852736440
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1029657313640208}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4757129714770880}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114165500831220880
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1308003417705242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67cebe007b0903649bcc3cdee28e6c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scenarios:
+  - {fileID: 114569246367134018}
+  - {fileID: 114483456881117110}
+  - {fileID: 114257472909530190}
+  - {fileID: 114281351577105528}
+  - {fileID: 114242586301637672}
+  - {fileID: 114786816078483262}
+--- !u!114 &114242586301637672
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1006522862426608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c358207c230de419b4b1eae8677db6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    runtime: 15
+    canSucceedBeforeRuntime: 0
+    canFailBeforeRuntime: 1
+    vehiclePosition: {x: 1500, y: 450, z: 0}
+    vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
+    vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
+    vehicleVelocity: {x: 0, y: 0, z: 41}
+    cameraLookMode: 1
+    cameraDistance: 10
+    title: Steady Climb Scenario
+    description: 'The objective of this scenario is to tune/design a controller to
+      maintain a constant airspeed using the elevator with full throttle. This will
+      put the aircraft in a steady climb
+
+      To complete this scenario:
+
+      -The airspeed must be within +/-1 meters/sec of the target airspeed (41 meters/sec)
+      within 10s
+
+      -The airspeed must maintain within those bounds for 5 seconds'
+    successText: 
+    failText: 
+  tuningParameters: []
+  droneObject: {fileID: 0}
+  currentAirspeed: 0
+  currTime: 0
+  targetAirspeed: 41
+  currentClimbRate: 0
+--- !u!114 &114257472909530190
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997987453967002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 705147d6a0d471140b553c27679b6179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    runtime: 15
+    canSucceedBeforeRuntime: 0
+    canFailBeforeRuntime: 1
+    vehiclePosition: {x: 1500, y: 450, z: 0}
+    vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
+    vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
+    vehicleVelocity: {x: 0, y: 0, z: 41}
+    cameraLookMode: 0
+    cameraDistance: 10
+    title: Airspeed Hold Scenario
+    description: 'The objective of this scenario is to tune/design a controller to
+      maintain a constant airspeed.
+
+      To complete this scenario:
+
+      -The airspeed must be within +/- 0.1 meters/sec of the target airspeed (45 meters/sec)
+      within 10s
+
+      -The airspeed must maintain the airspeed within those bounds for 5 seconds'
+    successText: 
+    failText: 
+  tuningParameters: []
+  droneObject: {fileID: 0}
+  currentAltitude: 0
+  currentAirspeed: 0
+  currTime: 0
+  targetAirspeed: 45
+--- !u!114 &114281351577105528
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1063519567438538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58c99d124d3f83541993ee4c30a20668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    runtime: 15
+    canSucceedBeforeRuntime: 0
+    canFailBeforeRuntime: 1
+    vehiclePosition: {x: 1500, y: 450, z: 0}
+    vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
+    vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
+    vehicleVelocity: {x: 0, y: 0, z: 41}
+    cameraLookMode: 1
+    cameraDistance: 10
+    title: Altitude Hold Scenario
+    description: 'The objective of this scenario is to tune/design a controller to
+      maintain a constant altitude using the elevator.
+
+      To complete this scenario:
+
+      -The altitude must be within +/-1 meters of the target altitude (450 meters/sec)
+      within 10s
+
+      -The altitude must maintain within those bounds for 5 seconds'
+    successText: 
+    failText: 
+  tuningParameters: []
+  droneObject: {fileID: 0}
+  currentAltitude: 0
+  currentAirspeed: 0
+  currTime: 0
+  targetAirspeed: 41
+  targetAltitude: 450
+--- !u!114 &114483456881117110
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1174101126952512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a31a6167da35964d85d03f6476625a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    runtime: Infinity
+    canSucceedBeforeRuntime: 1
+    canFailBeforeRuntime: 0
+    vehiclePosition: {x: 1500, y: 450, z: 0}
+    vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
+    vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
+    vehicleVelocity: {x: 0, y: 0, z: 41}
+    cameraLookMode: 1
+    cameraDistance: 10
+    title: Trim Scenario
+    description: "The objective of this scenario is to find a fixed throttle trim
+      for level flight with no elevator input. \nTo acheive success in this scenario
+      two objectives must be met for at least 5 seconds:\n-The vertical speed must
+      be less than 0.5 m/s\n-The airspeed rate must be less than 0.1 m^2/s\n\nThis
+      scenario will run indefinitely"
+    successText: You did it!
+    failText: You failed
+  tuningParameters: []
+  droneObject: {fileID: 0}
+  currentVelocity: 0
+  currentAirspeedRate: 0
+  elevatorTrim: 0
+  throttleTrim: 0
+--- !u!114 &114569246367134018
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1029657313640208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172d583857180a145a086c0b8017a47e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    runtime: 60
+    canSucceedBeforeRuntime: 0
+    canFailBeforeRuntime: 0
+    vehiclePosition: {x: 1500, y: 450, z: 0}
+    vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
+    vehicleEulerAngles: {x: 0, y: 0, z: 0}
+    vehicleVelocity: {x: 0, y: 0, z: 0}
+    cameraLookMode: 3
+    cameraDistance: 10
+    title: Sandbox Scenario
+    description: This is a free flying mode with no objectives.
+    successText: This scenario cannot succeed.
+    failText: This scenario cannot fail.
+  tuningParameters:
+  - name: I'm a parameter
+    minValue: 0
+    maxValue: 1
+    defaultValue: 0.5
+  droneObject: {fileID: 0}
+--- !u!114 &114786816078483262
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1099292183768696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1507773945c5d14782ef681b5d086aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    runtime: 60
+    canSucceedBeforeRuntime: 1
+    canFailBeforeRuntime: 1
+    vehiclePosition: {x: 0, y: 200, z: 1500}
+    vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
+    vehicleEulerAngles: {x: -1.5, y: 90, z: 0}
+    vehicleVelocity: {x: 41, y: 0, z: 0}
+    cameraLookMode: 1
+    cameraDistance: 10
+    title: Longitudinal Challenge
+    description: "The objective of this challenge is to successfully fly through a
+      series of virtual gates in the sky. \nTo do this, tune/implement a longitudinal
+      state machine: \n  If the vehicle is within a specified threshold of the target
+      altitude, use the maintain altitude controller.\n  If the vehicle is below or
+      above the target altitude by the specified threshold, use the climb/descend
+      controller with full or min throttle (respectively)\nTo complete the challenge,
+      you must be within +/-1 meter when arriving at the gate.\nThe three gate locations
+      (defined relative to the starting location):\nGate #1: north = 200m, altitude=450.0m\nGate
+      #2: north = 1200m, altitude = 530m\nGate #3: north = 2200m, altitude = 530m"
+    successText: 
+    failText: 
+  tuningParameters: []
+  droneObject: {fileID: 0}
+  position2D: {x: 0, y: 0}
+  currentAirspeed: 0
+  currTime: 0
+  targetAirspeed: 41
+  currentClimbRate: 0
+  targetAltitude: 0

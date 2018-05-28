@@ -26,6 +26,11 @@ namespace UdacityNetworking
 			throw new NotImplementedException ( "WebSocket server not supported at this time." );
 		}
 
+		public void StopServer ()
+		{
+			throw new NotImplementedException ( "WebSocket server not supported at this time." );
+		}
+
 		public void Connect (string ip, int port)
 		{
 			connected = false;

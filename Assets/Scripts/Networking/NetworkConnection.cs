@@ -27,6 +27,7 @@ namespace UdacityNetworking
 		bool IsConnected { get; }
 
 		void StartServer ( string ip, int port );
+		void StopServer ();
 		void Connect ( string ip, int port );
 		void AddMessageHandler ( Action<MessageInfo> handler );
 		void RemoveMessageHandler ( Action<MessageInfo> handler );

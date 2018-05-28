@@ -45,6 +45,8 @@ namespace UdacityNetworking
 
 	public class NetworkController : MonoBehaviour
 	{
+		public static NetworkController instance;
+
 		static Encoding enc = Encoding.ASCII;
 		#if UNITY_WEBGL && !UNITY_EDITOR
 		[System.Runtime.InteropServices.DllImport ("__Internal")]
@@ -74,6 +76,18 @@ namespace UdacityNetworking
 		#if UNITY_WEBGL && !UNITY_EDITOR
 		List<RepeatingMessage> repeatingMessages = new List<RepeatingMessage> ();
 		#endif
+
+		void Awake ()
+		{
+			if ( instance != null && instance != this )
+			{
+				Destroy ( gameObject );
+				return;
+			}
+
+			instance = this;
+			lastConnectionState = ConnectionState.Disconnected;
+		}
 
 		void Start ()
 		{
@@ -162,6 +176,11 @@ namespace UdacityNetworking
 		public void StartServer ()
 		{
 			connection.StartServer ( serverIP, serverPort );
+		}
+
+		public void StopServer ()
+		{
+			connection.StopServer ();
 		}
 
 		public void StartClient ()
