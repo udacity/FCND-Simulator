@@ -20,3 +20,5 @@ MonoBehaviour:
     scene: {fileID: 102900000, guid: d142dc0f8a520484fbf531443bfe9e2e, type: 3}
   - title: Controls
     scene: {fileID: 102900000, guid: b57b0c05302b24396ad8772167c311cf, type: 3}
+  - title: Fixed Wing
+    scene: {fileID: 102900000, guid: afcb1237567779449b01e0edd582c050, type: 3}
