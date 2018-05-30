@@ -11,6 +11,7 @@ ModelImporter:
     3300000: //RootNode
     4300000: Terrain_2
     4300002: Terrain_2_mod
+    6400000: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -48,7 +49,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1

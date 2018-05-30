@@ -107,9 +107,9 @@ namespace UdacityNetworking
 			this.ip = ip;
 			this.port = port;
 			connectionState = ConnectionState.Connecting;
-			Task.Run ( UdpListenAsync );
+//			Task.Run ( UdpListenAsync );
 			Task.Run ( DispatchMessages );
-//			UdpListenAsync ();
+			UdpListenAsync ();
 //			DispatchMessages ();
 		}
 

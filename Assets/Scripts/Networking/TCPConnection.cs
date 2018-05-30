@@ -82,8 +82,8 @@ namespace UdacityNetworking
 			this.ip = ip;
 			this.port = port;
 			connectionState = ConnectionState.Connecting;
-			Task.Run ( TcpListenAsync );
-//			TcpListenAsync ();
+//			Task.Run ( TcpListenAsync );
+			TcpListenAsync ();
 			Task.Run ( DispatchMessages );
 		}
 
