@@ -85,7 +85,6 @@ public class FixedWingUI : MonoBehaviour
 		{
 			if ( drone.MotorsArmed () )
 			{
-                scenarioStartTime = Time.time;
                 waitingForPython = false;
 				pythonObject.SetActive ( false );
 				scenarioManager.Begin ();
