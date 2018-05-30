@@ -25,15 +25,15 @@ public class ClimbScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(5); //AscendDescend Mode
         drone.SetGuided(true);
-        drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 0.7f);
+        drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
-        drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
+        //drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
 
-        initTime = Time.time;
+        initTime = drone.FlightTime();
     }
 
 	protected override bool OnCheckSuccess ()
@@ -46,8 +46,8 @@ public class ClimbScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
-        drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
-        currTime = Time.time - initTime;
+        //drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
+        currTime = drone.FlightTime() - initTime;
         currentAirspeed = drone.VelocityLocal().magnitude;
         currentClimbRate = -drone.VelocityLocal().z;
         if (currTime > finalTime - timeInterval && currTime <= finalTime)
@@ -64,7 +64,13 @@ public class ClimbScenario : Scenario
         return false;
     }
 
-	protected override void OnCleanup ()
+    protected override void OnEnd()
+    {
+        base.OnEnd();
+        drone.SetGuided(false);
+    }
+
+    protected override void OnCleanup ()
 	{
 		base.OnCleanup ();
 	}

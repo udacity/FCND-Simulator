@@ -162,7 +162,7 @@ namespace Messaging
                 zgyro = zGyro,
                 xmag = xMag,
                 ymag = yMag,
-                time_boot_ms = TimeSinceSystemStart(),
+                time_boot_ms = (uint)(1000.0f*drone.FlightTime()),// TimeSinceSystemStart(),
             };
 
             //Debug.Log("Sent IMU message");
@@ -194,7 +194,8 @@ namespace Messaging
                 vx = (short)vx,
                 vy = (short)vy,
                 vz = (short)vz,
-                hdg = (ushort)hdg
+                hdg = (ushort)hdg,
+                time_boot_ms = (uint)(1000.0f*drone.FlightTime()),
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
@@ -224,7 +225,7 @@ namespace Messaging
                 rollspeed = rollrate,
                 pitchspeed = pitchrate,
                 yawspeed = yawrate,
-                time_boot_ms = TimeSinceSystemStart(),
+                time_boot_ms = (uint)(1000.0f*drone.FlightTime()),//TimeSinceSystemStart(),
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
@@ -248,7 +249,7 @@ namespace Messaging
                 vx = (float)drone.VelocityLocal().x,
                 vy = (float)drone.VelocityLocal().y,
                 vz = (float)drone.VelocityLocal().z,
-                time_boot_ms = TimeSinceSystemStart()
+                time_boot_ms = (uint)(1000.0f*drone.FlightTime()),//TimeSinceSystemStart()
             };
 
             var serializedPacket = mav.SendV2(msg);
@@ -322,7 +323,7 @@ namespace Messaging
                 approach_x = 0,
                 approach_y = 0,
                 approach_z = 0,
-                time_usec = TimeSinceSystemStart()
+                time_usec = (ulong)(1000000.0f*drone.FlightTime()),//TimeSinceSystemStart()
             };
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
@@ -540,7 +541,10 @@ namespace Messaging
                 if (droneType == (uint)DRONE_TYPE.QUAD)
                     drone.CommandAttitude(attitudeEuler, thrust);
                 else if (droneType == (uint)DRONE_TYPE.PLANE)
+                {
                     drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), thrust);
+                    
+                }
             }
             else
             {
@@ -548,7 +552,10 @@ namespace Messaging
                 if (droneType == (uint)DRONE_TYPE.QUAD)
                     drone.CommandMoment(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), msg.thrust);
                 else if (droneType == (uint)DRONE_TYPE.PLANE)
-                    switch (drone.ControlMode()) {
+                {
+                    //Debug.Log("Latency = " + (drone.FlightTime() - (float)msg.time_boot_ms / 1000.0f));
+                    switch (drone.ControlMode())
+                    {
                         case 0:
                             drone.CommandControls(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate, msg.thrust);
                             break;
@@ -565,6 +572,7 @@ namespace Messaging
                             drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), msg.thrust);
                             break;
                     }
+                }
                         
             }
         }
@@ -581,7 +589,7 @@ namespace Messaging
             var command = (MAV_CMD)msg.command;
 
             // DEBUG
-            Debug.Log(string.Format("Command = {0}", command));
+            //Debug.Log(string.Format("Command = {0}", command));
 
             // handle the command types of interest
             if (command == MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM)
@@ -607,15 +615,17 @@ namespace Messaging
                 {
                     if (custom_mode == (byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD)
                     {
-                        drone.SetGuided(true);
-                        Debug.Log("VEHICLE IS BEING GUIDED !!!");
-                        if (sub_mode != 0)
+                        if(sub_mode == 0)
+                            drone.SetGuided(true);
+                        else
                             drone.SetControlMode(sub_mode);
                     }
                     else
                     {
+                        if(drone.Guided())
+                            Debug.Log("VEHICLE IS NOT BEING GUIDED !!!");
                         drone.SetGuided(false);
-                        Debug.Log("VEHICLE IS NOT BEING GUIDED !!!");
+                        
                     }
                 }
             }

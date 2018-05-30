@@ -6,12 +6,18 @@ using DroneControllers;
 
 public class DummyDrone : MonoBehaviour, IDrone
 {
+    public float FlightTime()
+    {
+        return flightTime;
+    }
+
 	public bool Frozen
 	{
 		get { return rb.isKinematic; }
 		set { rb.isKinematic = value; }
 	}
 
+    float flightTime;
 	public float moveSpeed = 50;
 	public float turnSpeed = 360;
 
@@ -30,6 +36,8 @@ public class DummyDrone : MonoBehaviour, IDrone
 		rb = GetComponent<Rigidbody> ();
 		rb.useGravity = false;
 		rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+        flightTime = 0.0f;
 	}
 	
 	void LateUpdate ()

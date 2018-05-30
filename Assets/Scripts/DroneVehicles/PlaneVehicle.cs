@@ -28,6 +28,7 @@ namespace DroneVehicles
         Vector3 localAngularVelocity;
         Vector3 bodyAngularVelocity;
         float curSpeed;
+        float flightTime;
         Rigidbody rb;
 
         bool motorsArmed;
@@ -71,6 +72,8 @@ namespace DroneVehicles
 
             if (aircraftControl == null)
                 aircraftControl = rb.GetComponent<AircraftControl>();
+
+            flightTime = 0.0f;
 
         }
 
@@ -251,6 +254,11 @@ namespace DroneVehicles
             return motorsArmed;
         }
 
+        public float FlightTime()
+        {
+            return flightTime;
+        }
+
         public void ArmDisarm(bool armed)
         {
             motorsArmed = armed;
@@ -272,12 +280,12 @@ namespace DroneVehicles
             //QuadActivator.Activate(gameObject);
         }
 
-         public void StateUpdate()
+        public void StateUpdate()
         {
             positionUnity = rb.position;
 
             // Differentiate to get acceleration, filter at tau equal twice the sampling frequency
-            localAcceleration = 0.6f*localAcceleration + 0.4f*((rb.velocity - localVelocity) / Time.deltaTime + new Vector3(0.0f, 9.81f, 0.0f));
+            localAcceleration = 0.6f*localAcceleration + 0.4f*((rb.velocity - localVelocity) / Time.fixedDeltaTime + new Vector3(0.0f, 9.81f, 0.0f));
             bodyAcceleration = rb.transform.InverseTransformDirection(localAcceleration);
 
             localVelocity = rb.velocity;
@@ -289,6 +297,13 @@ namespace DroneVehicles
             eulerAngles = ConstrainEuler(rb.rotation.eulerAngles);
 
             curSpeed = rb.velocity.magnitude;
+            if (!Frozen)
+            {
+                //Debug.Log("Fixed Delta Time = " + Time.fixedDeltaTime);
+                flightTime = Time.fixedDeltaTime + flightTime;
+            }
         }
+
+        
     }
 }

@@ -31,7 +31,7 @@ namespace UdacityNetworking
 
 		public void OnRead ()
 		{
-			lastRead = Time.unscaledTime;
+            lastRead = Time.unscaledTime;
 		}
 
 		public bool IsTimeout ()

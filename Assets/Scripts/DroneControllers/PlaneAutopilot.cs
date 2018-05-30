@@ -391,28 +391,28 @@ namespace DroneControllers
             switch (flightMode)
             {
                 case (int)FLIGHT_MODE.LONGITUDE:
-                    Debug.Log("Longitude Mode Command");
+                    //Debug.Log("Longitude Mode Command");
                     attitudeTarget.x = attitude.x;
                     attitudeTarget.z = attitude.z;
                     momentThrustTarget.y = attitude.y;
                     momentThrustTarget.w = thrust;
                     break;
                 case (int)FLIGHT_MODE.LATERAL:
-                    Debug.Log("Lateral Mode Command");
+                    //Debug.Log("Lateral Mode Command");
                     momentThrustTarget.x = attitude.x;
                     momentThrustTarget.z = attitude.z;
                     velocityTarget.x = thrust;
                     positionTarget.z = attitude.y;
                     break;
                 case (int)FLIGHT_MODE.STABILIZED:
-                    Debug.Log("Stabilized Mode Command");
+                    //Debug.Log("Stabilized Mode Command");
                     attitudeTarget.x = attitude.x;
                     attitudeTarget.z = attitude.z;
                     velocityTarget.x = thrust;
                     positionTarget.z = attitude.y;
                     break;
                 case (int)FLIGHT_MODE.ASCENDDESCEND:
-                    Debug.Log("Ascend/Descend Mode Command");
+                    //Debug.Log("Ascend/Descend Mode Command");
                     attitudeTarget.x = attitude.x;
                     attitudeTarget.z = attitude.z;
                     momentThrustTarget.w = thrust;
@@ -451,7 +451,7 @@ namespace DroneControllers
             guidedCommand.y = momentThrustTarget.y = bodyMoment.y;
             guidedCommand.w = momentThrustTarget.z = bodyMoment.z;
             guidedCommand.z = momentThrustTarget.w = thrust;
-            lastControlTime = Time.time;
+            lastControlTime = drone.flightTime();
             */
         }
 

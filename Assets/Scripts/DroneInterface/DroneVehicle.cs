@@ -9,6 +9,8 @@ namespace DroneInterface
     /// </summary>
     public interface IDroneVehicle
     {
+        float FlightTime();
+
 		/// <summary>
 		/// Freeze the drone vehicle and or query if it's frozen
 		/// </summary>

@@ -27,14 +27,15 @@ public class AltHoldScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
+        drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
-        drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
+        
 
-        initTime = Time.time;
+        initTime = drone.FlightTime();
     }
 
 	protected override bool OnCheckSuccess ()
@@ -46,8 +47,8 @@ public class AltHoldScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
-        drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
-        currTime = Time.time - initTime;
+        //drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
+        currTime = drone.FlightTime() - initTime;
         currentAltitude = -drone.CoordsLocal().z;
         if (currTime > finalTime - timeInterval && currTime <= finalTime)
         {
@@ -65,7 +66,13 @@ public class AltHoldScenario : Scenario
         return false;
     }
 
-	protected override void OnCleanup ()
+    protected override void OnEnd()
+    {
+        base.OnEnd();
+        drone.SetGuided(false);
+    }
+
+    protected override void OnCleanup ()
 	{
 		base.OnCleanup ();
 	}

@@ -32,14 +32,14 @@ public class TrimScenario : Scenario
     {
         drone.CommandControls(0.0f, 0.0f, 0.0f, 0.67f);
 
-        currTime = Time.time;
+        currTime = drone.FlightTime();
         lastTrimTime = currTime;
         lastVelocityTime = currTime;
         lastAirspeedRateTime = currTime;
     }
 	protected override bool OnCheckSuccess ()
 	{
-        currTime = Time.time;
+        currTime = drone.FlightTime();
 
         //elevatorTrim += Input.GetAxis("Trim")*0.001f;
         float trimInput = Input.GetAxis("Trim") * 0.001f;
