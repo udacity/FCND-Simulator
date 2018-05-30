@@ -89,6 +89,7 @@ public class FixedWingUI : MonoBehaviour
                 waitingForPython = false;
 				pythonObject.SetActive ( false );
 				scenarioManager.Begin ();
+				scenarioStartTime = Time.time;
 			}
 		}
 	}
