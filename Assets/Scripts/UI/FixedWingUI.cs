@@ -85,7 +85,8 @@ public class FixedWingUI : MonoBehaviour
 		{
 			if ( drone.MotorsArmed () )
 			{
-				waitingForPython = false;
+                scenarioStartTime = Time.time;
+                waitingForPython = false;
 				pythonObject.SetActive ( false );
 				scenarioManager.Begin ();
 			}
@@ -142,7 +143,8 @@ public class FixedWingUI : MonoBehaviour
 		// 0 is cancel
 		if ( button == 0 )
 		{
-			startObject.SetActive ( true );
+            networkController.StopServer();
+            startObject.SetActive ( true );
 		}
 
 		if ( button == 1 )
@@ -196,8 +198,8 @@ public class FixedWingUI : MonoBehaviour
 	{
 		successDescription.text = s.data.successText;
 		successObject.SetActive ( true );
-		runtimeObject.SetActive ( false );
-		networkController.StopServer ();
+        runtimeObject.SetActive(false);
+		//networkController.StopServer ();
 	}
 
 	void OnScenarioFailed (Scenario s)
@@ -205,7 +207,7 @@ public class FixedWingUI : MonoBehaviour
 		failDescription.text = s.data.failText;
 		failObject.SetActive ( true );
 		runtimeObject.SetActive ( false );
-		networkController.StopServer ();
+		//networkController.StopServer ();
 	}
 
 	void SetRuntime (float runtime)
