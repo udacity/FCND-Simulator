@@ -79,69 +79,71 @@ public class AircraftControl : MonoBehaviour {
 	}
 	
 	public Transform altCaster;
-	void FixedUpdate () {
-		
-
-		if (inputs.occupied) {
-			RaycastHit hit = new RaycastHit ();
-			if (Physics.Raycast (altCaster.position, Vector3.down, out hit)) {
-				trueAltitude = hit.distance;
-			}
-
-			float z = Mathf.Lerp (aircraft.mass / 1000f, initialDrag, speed / 1f);
-			float y = Mathf.Lerp (aircraft.mass / 3000f, initialRotDrag, speed / 1f); 
-		
-			if (speed < 0.05f && speed > -0.05f) {
-			
-                if(!aircraft.isKinematic)
-				    aircraft.drag = Mathf.Lerp (aircraft.drag, z, Time.deltaTime * 3f);
-				//aircraft.angularDrag = Mathf.Lerp (aircraft.angularDrag, y, Time.deltaTime * 3f);
-
-			
-			} else {
-			    if(!aircraft.isKinematic)
-				    aircraft.drag = Mathf.Lerp (aircraft.drag, initialDrag, Time.deltaTime * 3f);
-				//aircraft.angularDrag = Mathf.Lerp (aircraft.angularDrag, initialRotDrag, Time.deltaTime * 3f);
-			
-			}
-		} else {
-
-			aircraft.drag = aircraft.mass / 500f;
-			//aircraft.angularDrag = Mathf.Lerp (aircraft.angularDrag,  aircraft.mass / 300f, Time.deltaTime * 3f);
-		}
-		fusAero = aircraft.GetPointVelocity (transform.position);
-		fusAeroX = transform.InverseTransformDirection (fusAero).x;
-		fusAeroY = transform.InverseTransformDirection (fusAero).y;
-		FusAeroZ = transform.InverseTransformDirection (fusAero).z;
-		speed = FusAeroZ;
-		ias = Mathf.FloorToInt (speed * 1.94f); 
-		
+    void FixedUpdate() {
 
 
-		verticalSpeed = aircraft.velocity.y;
-	
-		//steering wheel.
-		rudderInput = inputs.rudder;
-		
-		Vector3 steerWheelEulers = steerWheel.localEulerAngles;
-		if (!isTailWheel ) {
-			
-			steerWheelEulers.y = maxSteerAngle * rudderInput;
-		} else {
-			if(!tailwheelLock)
-			steerWheelEulers.y = -maxSteerAngle * rudderInput;
-		}
-		if (isTailWheel && tailwheelLock) {
-			steerWheelEulers.y = 0f;
-		}
-			
-		steerWheel.localEulerAngles = steerWheelEulers;
-	
-		deltaZ = transform.InverseTransformDirection (lastVelo).z - speed;
+        if (inputs.occupied) {
+            RaycastHit hit = new RaycastHit();
+            if (Physics.Raycast(altCaster.position, Vector3.down, out hit)) {
+                trueAltitude = hit.distance;
+            }
 
-		Vector3 cogpos = cog.localPosition; 
-		Vector3 newPos = Vector3.Lerp (initialCogPos,new Vector3 (initialCogPos.x,initialCogPos.y,initialCogPos.z + (deltaZ * 0.75f)), Time.deltaTime * 5f);
-		cog.localPosition = newPos;
+            float z = Mathf.Lerp(aircraft.mass / 1000f, initialDrag, speed / 1f);
+            float y = Mathf.Lerp(aircraft.mass / 3000f, initialRotDrag, speed / 1f);
+
+            if (speed < 0.05f && speed > -0.05f) {
+
+                if (!aircraft.isKinematic)
+                    aircraft.drag = Mathf.Lerp(aircraft.drag, z, Time.fixedDeltaTime * 3f);
+                //aircraft.angularDrag = Mathf.Lerp (aircraft.angularDrag, y, Time.deltaTime * 3f);
+
+
+            } else {
+                if (!aircraft.isKinematic)
+                    aircraft.drag = Mathf.Lerp(aircraft.drag, initialDrag, Time.fixedDeltaTime * 3f);
+                //aircraft.angularDrag = Mathf.Lerp (aircraft.angularDrag, initialRotDrag, Time.deltaTime * 3f);
+
+            }
+        } else {
+
+            aircraft.drag = aircraft.mass / 500f;
+            //aircraft.angularDrag = Mathf.Lerp (aircraft.angularDrag,  aircraft.mass / 300f, Time.deltaTime * 3f);
+        }
+        fusAero = aircraft.GetPointVelocity(transform.position);
+        fusAeroX = transform.InverseTransformDirection(fusAero).x;
+        fusAeroY = transform.InverseTransformDirection(fusAero).y;
+        FusAeroZ = transform.InverseTransformDirection(fusAero).z;
+        speed = FusAeroZ;
+        ias = Mathf.FloorToInt(speed * 1.94f);
+
+
+
+        verticalSpeed = aircraft.velocity.y;
+
+        //steering wheel.
+        rudderInput = inputs.rudder;
+
+        Vector3 steerWheelEulers = steerWheel.localEulerAngles;
+        if (!isTailWheel) {
+
+            steerWheelEulers.y = maxSteerAngle * rudderInput;
+        } else {
+            if (!tailwheelLock)
+                steerWheelEulers.y = -maxSteerAngle * rudderInput;
+        }
+        if (isTailWheel && tailwheelLock) {
+            steerWheelEulers.y = 0f;
+        }
+
+        steerWheel.localEulerAngles = steerWheelEulers;
+
+        deltaZ = transform.InverseTransformDirection(lastVelo).z - speed;
+
+        Vector3 cogpos = cog.localPosition;
+        if (!aircraft.isKinematic) {
+            Vector3 newPos = Vector3.Lerp(initialCogPos, new Vector3(initialCogPos.x, initialCogPos.y, initialCogPos.z + (deltaZ * 0.75f)), Time.fixedDeltaTime * 5f);
+            cog.localPosition = newPos;
+        }
 
 		lastVelo = aircraft.velocity;
 

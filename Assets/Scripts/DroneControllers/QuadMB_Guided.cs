@@ -10,8 +10,8 @@ namespace MovementBehaviors
 {
     [CreateAssetMenu(menuName = "MovementBehaviors/Quad Guided")]
     public class QuadMB_Guided : QuadMovementBehavior
-    {      
-
+    {
+        float prevTime = 0.0f;
         public override void OnLateUpdate()
         {
 
@@ -41,7 +41,11 @@ namespace MovementBehaviors
             Vector2 targetRate = attCtrl.RollPitchLoop(targetRollPitch, attitude);
             Vector2 rollPitchMoment = attCtrl.RollPitchRateLoop(targetRate, angularVelocity);
 
-            float thrust = controller.attCtrl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z,Time.deltaTime,-1.0f*controller.rb.mass*Physics.gravity[1]);
+            float dt = 0.0f;
+            if (prevTime != 0.0f)
+                dt = controller.quadVehicle.FlightTime()-prevTime;
+            prevTime = controller.quadVehicle.FlightTime();
+            float thrust = controller.attCtrl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z,dt,-1.0f*controller.rb.mass*Physics.gravity[1]);
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawMoment);
             controller.CommandTorque(totalMoment);

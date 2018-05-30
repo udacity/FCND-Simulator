@@ -92,7 +92,7 @@ namespace DroneControllers
         void LateUpdate()
         {
 
-            if (!attitudeControl&&!positionControl&&((Time.time - lastControlTime) > maxTimeBetweenControl))
+            if (!attitudeControl&&!positionControl&&((quadVehicle.FlightTime()- lastControlTime) > maxTimeBetweenControl))
             {
                 CommandPosition(PositionLocal()); 
             }
@@ -434,7 +434,7 @@ namespace DroneControllers
             guidedCommand.y = momentThrustTarget.y = bodyMoment.y;
             guidedCommand.w = momentThrustTarget.z = bodyMoment.z;
             guidedCommand.z = momentThrustTarget.w = thrust;
-            lastControlTime = Time.time;
+            lastControlTime = quadVehicle.FlightTime();
         }
 
         /// <summary>

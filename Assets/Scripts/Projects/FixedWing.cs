@@ -18,16 +18,16 @@ public class FixedWing : MonoBehaviour
     public int heartbeatIntervalHz = 1;
     public int telemetryIntervalHz = 4;
 
-    public int gpsIntervalHz = 100;
-    public int attitudeIntervalHz = 500;
+    public int gpsIntervalHz = 50;
+    public int attitudeIntervalHz = 100;
     public int imuIntervalHz = 100;
     public int homePositionIntervalHz = 1;
 
     void Start()
     {
         //Debug.Log("Starting Fixed Wing");
-		drone = Simulation.ActiveDrone;
-//        drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
+        //GameObject test = GameObject.Find("Plane Drone");
+        drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
         //GameObject.Find("Quad Drone").GetComponent<QuadVehicle>().StateUpdate();
         //GameObject.Find("Quad Drone").GetComponent<QuadSensors>()
         drone.SetHomePosition();// drone.GPSLongitude(), drone.GPSLatitude(), drone.GPSAltitude());

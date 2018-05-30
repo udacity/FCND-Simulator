@@ -1073,7 +1073,7 @@ MonoBehaviour:
     vehicleEulerAngles: {x: -1.5, y: 90, z: 0}
     vehicleVelocity: {x: 41, y: 0, z: 0}
     cameraLookMode: 1
-    cameraDistance: 10
+    cameraDistance: 20
     title: Longitudinal Challenge
     description: "The objective of this challenge is to successfully fly through a
       series of virtual gates in the sky. \nTo do this, tune/implement a longitudinal
@@ -1081,9 +1081,10 @@ MonoBehaviour:
       altitude, use the maintain altitude controller.\n  If the vehicle is below or
       above the target altitude by the specified threshold, use the climb/descend
       controller with full or min throttle (respectively)\nTo complete the challenge,
-      you must be within +/-1 meter when arriving at the gate.\nThe three gate locations
-      (defined relative to the starting location):\nGate #1: north = 200m, altitude=450.0m\nGate
-      #2: north = 1200m, altitude = 530m\nGate #3: north = 2200m, altitude = 530m"
+      you must be within +/-1 meter when arriving at the gate.\nThe gate locations
+      (x = horizontal distance from the start location):\nGate #1: x = 200m, altitude=200m\nGate
+      #2: x = 1100m, altitude = 300m\nGate #3: x = 1400m, altitude = 280m\nGate #4:
+      x = 2200m, altitude = 200m"
     successText: 
     failText: 
   tuningParameters: []
@@ -1093,6 +1094,7 @@ MonoBehaviour:
   currTime: 0
   targetAirspeed: 41
   currentClimbRate: 0
+  vertThreshold: 2
   targetAltitude: 0
 --- !u!1 &120945876
 GameObject:
@@ -2708,8 +2710,8 @@ MonoBehaviour:
     vehiclePosition: {x: 1500, y: 450, z: 0}
     vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
     vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
-    vehicleVelocity: {x: 0, y: 0, z: 41}
-    cameraLookMode: 0
+    vehicleVelocity: {x: 0, y: 0, z: 30}
+    cameraLookMode: 1
     cameraDistance: 10
     title: Airspeed Hold Scenario
     description: 'The objective of this scenario is to tune/design a controller to
@@ -2728,7 +2730,7 @@ MonoBehaviour:
   currentAltitude: 0
   currentAirspeed: 0
   currTime: 0
-  targetAirspeed: 45
+  targetAirspeed: 41
 --- !u!1 &267873575
 GameObject:
   m_ObjectHideFlags: 0
@@ -3148,7 +3150,7 @@ Prefab:
     - target: {fileID: 114850417952671030, guid: ade1b5946748c45b39addbc73fc26e19,
         type: 2}
       propertyPath: followDistance
-      value: 3.5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 20651431933992884, guid: ade1b5946748c45b39addbc73fc26e19,
         type: 2}
@@ -3158,6 +3160,16 @@ Prefab:
     - target: {fileID: 114850417952671030, guid: ade1b5946748c45b39addbc73fc26e19,
         type: 2}
       propertyPath: sideCam
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114850417952671030, guid: ade1b5946748c45b39addbc73fc26e19,
+        type: 2}
+      propertyPath: initialZoomLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114850417952671030, guid: ade1b5946748c45b39addbc73fc26e19,
+        type: 2}
+      propertyPath: curZoomLevel
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3523,15 +3535,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    runtime: 60
+    runtime: Infinity
     canSucceedBeforeRuntime: 0
     canFailBeforeRuntime: 0
     vehiclePosition: {x: 1500, y: 450, z: 0}
     vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
-    vehicleEulerAngles: {x: 0, y: 0, z: 0}
-    vehicleVelocity: {x: 0, y: 0, z: 0}
+    vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
+    vehicleVelocity: {x: 0, y: 0, z: 30}
     cameraLookMode: 3
-    cameraDistance: 10
+    cameraDistance: 20
     title: Sandbox Scenario
     description: This is a free flying mode with no objectives.
     successText: This scenario cannot succeed.
@@ -3953,10 +3965,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkController: {fileID: 819399485}
   heartbeatIntervalHz: 1
-  telemetryIntervalHz: 4
-  gpsIntervalHz: 100
-  attitudeIntervalHz: 500
-  imuIntervalHz: 100
+  telemetryIntervalHz: 1
+  gpsIntervalHz: 50
+  attitudeIntervalHz: 50
+  imuIntervalHz: 1
   homePositionIntervalHz: 1
 --- !u!4 &474078471
 Transform:

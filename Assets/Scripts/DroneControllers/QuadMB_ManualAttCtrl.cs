@@ -11,6 +11,7 @@ namespace MovementBehaviors
 	{
 		Vector3 lastVelocityErrorBody;
 		float hDotInt;
+        float prevTime = 0.0f;
 
         public override void OnLateUpdate()
         {
@@ -36,7 +37,11 @@ namespace MovementBehaviors
             float yawOutput = attCtrl.YawRateLoop(yawCmd, angularVelocity.z);
             Vector2 targetRate = attCtrl.RollPitchLoop(new Vector2(attCmd.x,attCmd.y),attitude);
             Vector2 rollPitchMoment = attCtrl.RollPitchRateLoop(targetRate, angularVelocity);
-            float altOutput = attCtrl.VerticalVelocityLoop(altCmd, attitude, -localVelocity.z,Time.deltaTime,-1.0f*controller.rb.mass*Physics.gravity[1]);
+            float dt = 0.0f;
+            if (prevTime != 0.0f)
+                dt = controller.quadVehicle.FlightTime() - prevTime;
+            prevTime = controller.quadVehicle.FlightTime();
+            float altOutput = attCtrl.VerticalVelocityLoop(altCmd, attitude, -localVelocity.z,dt,-1.0f*controller.rb.mass*Physics.gravity[1]);
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawOutput);
             controller.CommandTorque(totalMoment);

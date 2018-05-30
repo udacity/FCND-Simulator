@@ -8,11 +8,17 @@ namespace DroneVehicles
 
     public class QuadVehicle : MonoBehaviour, IDroneVehicle
     {
+        public float FlightTime()
+        {
+            return flightTime;
+        }
 		public bool Frozen
 		{
 			get { return rb.isKinematic; }
 			set { rb.isKinematic = value; }
 		}
+
+        float flightTime;
 
         //Vehicle mass properties (based off https://scholar.google.com/scholar?cluster=8960065662684134743&hl=en&as_sdt=0,5)
         public float vehicleMass = 0.5f; // kg
@@ -150,6 +156,7 @@ namespace DroneVehicles
             //inputCtrl = GetComponent<SimpleQuadController>();
             motorsArmed = false;
             fnNoise = new FastNoise(System.TimeSpan.FromTicks(System.DateTime.UtcNow.Ticks).Seconds);
+            flightTime = 0.0f;
         }
 
         void Start()
@@ -699,7 +706,7 @@ namespace DroneVehicles
             Position = rb.position;
 
             // Differentiate to get acceleration, filter at tau equal twice the sampling frequency
-            LinearAcceleration = 0.6f*LinearAcceleration + 0.4f*((rb.velocity - LinearVelocity) / Time.deltaTime + new Vector3(0.0f, 9.81f, 0.0f));
+            LinearAcceleration = 0.6f*LinearAcceleration + 0.4f*((rb.velocity - LinearVelocity) / Time.fixedDeltaTime + new Vector3(0.0f, 9.81f, 0.0f));
             LinearAccelerationBody = rb.transform.InverseTransformDirection(LinearAcceleration);
 
             LinearVelocity = rb.velocity;
@@ -711,6 +718,9 @@ namespace DroneVehicles
             eulerAngles = ConstrainEuler(rb.rotation.eulerAngles);
 
             curSpeed = rb.velocity.magnitude;
+
+            if (!Frozen)
+                flightTime = flightTime + Time.fixedDeltaTime;
         }
     }
 }

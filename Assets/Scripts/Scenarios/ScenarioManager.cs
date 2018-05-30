@@ -117,9 +117,9 @@ public class ScenarioManager : MonoBehaviour
 
 	public void End ()
 	{
-		curScenario.End ();
 		drone.Frozen = true;
-	}
+        curScenario.End();
+    }
 
 	public void DoReset ()
 	{
