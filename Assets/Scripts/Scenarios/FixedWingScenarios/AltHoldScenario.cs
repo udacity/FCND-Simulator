@@ -6,6 +6,8 @@ using DroneInterface;
 
 public class AltHoldScenario : Scenario
 {
+    Transform line;
+    Material lineMat;
     public float currentAltitude = 0.0f;
     private float lastAltitudeTime = 0.0f;
     private float altitudeThreshold = 1.0f;
@@ -25,6 +27,11 @@ public class AltHoldScenario : Scenario
     protected override void OnInit ()
 	{
         base.OnInit ();
+        line = GameObject.Find("Line").GetComponent<Transform>();
+        lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
+        lineMat.color = Color.red;
+        line.position = new Vector3(data.vehiclePosition.x, targetAltitude, data.vehiclePosition.z);
+        line.localScale = new Vector3(0.1f, 0.1f, 2000.0f);
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
@@ -50,9 +57,9 @@ public class AltHoldScenario : Scenario
         //drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
         currTime = drone.FlightTime() - initTime;
         currentAltitude = -drone.CoordsLocal().z;
-        if (currTime > finalTime - timeInterval && currTime <= finalTime)
+        if (Mathf.Abs(currentAltitude - targetAltitude) > altitudeThreshold)           
         {
-            if (Mathf.Abs(currentAltitude - targetAltitude) > altitudeThreshold)
+            if (currTime > finalTime - timeInterval && currTime <= finalTime)
             {
                 data.failText = "Altitude scenario not successful:\n" +
                     "Target Altitude = " + targetAltitude + "\n" +
@@ -60,7 +67,10 @@ public class AltHoldScenario : Scenario
                 return true;
                 
             }
-
+            lineMat.color = Color.red;
+        }else
+        {
+            lineMat.color = Color.green;
         }
 
         return false;

@@ -13,6 +13,8 @@ public class LongitudinalChallenge : Scenario
     Vector2 targetGate;
 
     Transform gate;
+    Transform line;
+    Material lineMat;
     public Vector2 position2D;
 
 
@@ -38,6 +40,9 @@ public class LongitudinalChallenge : Scenario
     protected override void OnInit ()
 	{
         gate = GameObject.Find("Gate").GetComponent<Transform>();
+        line = GameObject.Find("Line").GetComponent<Transform>();
+        lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
+        lineMat.color = Color.red;
         //gate2 = GameObject.Find("Gate2").GetComponent<Transform>();
         //gate3 = GameObject.Find("Gate3").GetComponent<Transform>();
         //gate4 = GameObject.Find("Gate4").GetComponent<Transform>();
@@ -130,9 +135,9 @@ public class LongitudinalChallenge : Scenario
 
         if (position2D.x <= targetGate.x)
         {
-            if (Mathf.Abs(position2D.x - targetGate.x) < horizThreshold)
+            if (Mathf.Abs(position2D.y - targetGate.y) > vertThreshold) 
             {
-                if (Mathf.Abs(position2D.y - targetGate.y) > vertThreshold)
+                if (Mathf.Abs(position2D.x - targetGate.x) < horizThreshold)
                 {
                     Debug.Log("Missed Gate");
                     data.failText = "Longitudinal Challenge Unsuccessful:\n" +
@@ -140,6 +145,11 @@ public class LongitudinalChallenge : Scenario
                         "(threshold = " + vertThreshold + " meters)";
                     return true;
                 }
+                lineMat.color = Color.red;
+            }
+            else
+            {
+                lineMat.color = Color.green;
             }
         }
         else
@@ -206,6 +216,14 @@ public class LongitudinalChallenge : Scenario
         position.y = targetGate.y + data.vehiclePosition.y; ;
         if(positionDiff > 0.0f)
             gate.position = position;
+
+        Vector3 linePosition = position;
+        //linePosition.y = position.y;
+        line.position = linePosition;
+        Vector3 scale = line.localScale;
+        scale.x = 2000.0f;
+        line.localScale = new Vector3(2000.0f, 0.1f, 0.1f);
+
 
         /*
         positionDiff = -(position2D.x - gateHigh.x);

@@ -29,7 +29,9 @@ namespace DroneControllers
         public PlaneMovementBehavior mb_Lateral;
         public PlaneMovementBehavior mb_Stablized;
         public PlaneMovementBehavior mb_AscendDescend;
-        public PlaneMovementBehavior mb_Waypoint;
+        public PlaneMovementBehavior mb_YawHold;
+        public PlaneMovementBehavior mb_LineFollowing;
+        public PlaneMovementBehavior mb_OrbitFollowing;
         int flightMode;
 
         enum FLIGHT_MODE : int
@@ -39,7 +41,9 @@ namespace DroneControllers
             LATERAL = 3,
             STABILIZED = 4,
             ASCENDDESCEND = 5,
-            WAYPOINT = 6
+            YAWHOLD = 6,
+            LINEFOLLOWING = 7,
+            ORBITFOLLOWING = 8
         }
         void Awake()
         {
@@ -59,6 +63,11 @@ namespace DroneControllers
 
         void LateUpdate()
         {
+            if (Input.GetKey("6"))
+            {
+                flightMode = (int)FLIGHT_MODE.YAWHOLD;
+                SelectMovementBehavior();
+            }
             if (Input.GetKey("5"))
             {
                 flightMode = (int)FLIGHT_MODE.ASCENDDESCEND;
@@ -95,7 +104,14 @@ namespace DroneControllers
         {
             switch (flightMode)
             {
-                case (int)FLIGHT_MODE.WAYPOINT:
+                case (int)FLIGHT_MODE.ORBITFOLLOWING:
+                    currentMovementBehavior = mb_OrbitFollowing;
+                    break;
+                case (int)FLIGHT_MODE.LINEFOLLOWING:
+                    currentMovementBehavior = mb_LineFollowing;
+                    break;
+                case (int)FLIGHT_MODE.YAWHOLD:
+                    currentMovementBehavior = mb_YawHold;
                     break;
                 case (int)FLIGHT_MODE.ASCENDDESCEND:
                     currentMovementBehavior = mb_AscendDescend;
@@ -164,7 +180,7 @@ namespace DroneControllers
         {
             if (simpleMode)
                 if (planeVehicle.VelocityBody().x > 0.1)
-                    return planeVehicle.VelocityBody().y / planeVehicle.VelocityBody().x;
+                    return Mathf.Asin(planeVehicle.VelocityBody().y / planeVehicle.VelocityBody().magnitude);
                 else
                     return 0.0f;
             else
@@ -353,6 +369,30 @@ namespace DroneControllers
         }
 
         /// <summary>
+        /// Command the vehicle along a line.
+        /// </summary>
+        /// <param name="localPosition">Target local NED position</param>
+        public void CommandVector(Vector3 localPosition, Vector3 localVelocity) 
+        {
+            if (!guided)
+                return;
+            switch (flightMode)
+            {
+                case (int)FLIGHT_MODE.LINEFOLLOWING:
+                    positionTarget = localPosition;
+                    velocityTarget = localVelocity;
+                    break;
+                case (int)FLIGHT_MODE.ORBITFOLLOWING:
+                    positionTarget = localPosition;
+                    velocityTarget.x = localVelocity.x;
+                    bodyRateTarget.z = localVelocity.z;
+                    break;
+            }
+
+
+        }
+
+        /// <summary>
         /// If in PositionControl or VelocityControl mode, command the vehicle heading to the specified
         /// </summary>
         /// <param name="heading">Target vehicle heading in radians</param>
@@ -417,6 +457,12 @@ namespace DroneControllers
                     attitudeTarget.z = attitude.z;
                     momentThrustTarget.w = thrust;
                     velocityTarget.x = attitude.y;
+                    break;
+                case (int)FLIGHT_MODE.YAWHOLD:
+                    attitudeTarget.z = attitude.x;
+                    velocityTarget.y = attitude.z;
+                    velocityTarget.x = thrust;
+                    positionTarget.z = attitude.y;
                     break;
 
             }

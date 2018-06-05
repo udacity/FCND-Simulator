@@ -11,6 +11,11 @@ namespace Drones
     /// </summary>
     class PlaneDrone : MonoBehaviour, IDrone
     {
+        public void CommandVector(Vector3 localPosition, Vector3 localVelocity)
+        {
+            planeAutopilot.CommandVector(localPosition, localVelocity);
+
+        }
         public float FlightTime()
         {
             return planeVehicle.FlightTime();
