@@ -7,7 +7,7 @@ using DroneInterface;
 public class CoordinatedTurnScenario : Scenario
 { 
 
-    private float timeInterval = 0.0f;
+    public float timeInterval = 5.0f;
     private float initTime = 0.0f;
     public float currTime = 0.0f;
     private bool success = true;

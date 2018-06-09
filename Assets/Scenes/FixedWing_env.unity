@@ -2117,7 +2117,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -2903,7 +2903,7 @@ MonoBehaviour:
       -The airspeed must be within +/- 0.1 meters/sec of the target airspeed (45 meters/sec)
       within 10s
 
-      -The airspeed must maintain the airspeed within those bounds for 5 seconds'
+      -The airspeed must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
   tuningParameters: []
@@ -4702,11 +4702,19 @@ MonoBehaviour:
     cameraLookMode: 3
     cameraDistance: 10
     title: Coordinated Turn Scenario
-    description: 
+    description: 'The objective of this scenario is to tune/design a controller to
+      regulate the sideslip of the aircraft during a banked turn.
+
+      To complete this scenario:
+
+      -The airspeed must be within +/- 0.5 degrees within 25s
+
+      -The airspeed must maintain the airspeed within those bounds for 5 seconds'
     successText: 
     failText: 
   tuningParameters: []
   droneObject: {fileID: 0}
+  timeInterval: 0
   currTime: 0
   currentSideslip: 0
   sideslipThreshold: 0.5
@@ -5472,7 +5480,15 @@ MonoBehaviour:
     cameraLookMode: 2
     cameraDistance: 20
     title: Line Following Scenario
-    description: 
+    description: 'The objective of this scenario is to tune/design a controller to
+      track the aircraft to the desired line. The aircraft will start 50 meters to
+      offset from the line.
+
+      To complete this scenario:
+
+      -The crosstrack error from the line must be within +/- 3 meters within 25s
+
+      -The crosstrack error must maintain within those bounds for 5s'
     successText: 
     failText: 
   tuningParameters: []
@@ -8974,7 +8990,15 @@ MonoBehaviour:
     cameraLookMode: 2
     cameraDistance: 20
     title: Yaw Hold Scenario
-    description: "\t"
+    description: 'The objective of this scenario is to tune/design a controller to
+      maintain a constant yaw angle. The target yaw is zero degrees; the aircraft
+      will strat with a 20 degree yaw.
+
+      To complete this scenario:
+
+      -The yaw must be within +/- 5 degrees of the target yaw within 10s
+
+      -The airspeed must maintain the airspeed within those bounds for 5 seconds'
     successText: 
     failText: 
   tuningParameters: []
@@ -9167,7 +9191,20 @@ MonoBehaviour:
     cameraLookMode: 2
     cameraDistance: 100
     title: Lateral Challenge
-    description: 
+    description: "The objective of this challenge is to successfully fly through a
+      series of virtual gates in the sky. \nTo do this, tune/implement a lateral state
+      machine: \n  The first leg (before Gate #1) should implement a line following
+      controller between North =  500 meters, East = 1700 meters and Gate #1.\n  The
+      second leg (between Gate#1 and Gate #2) should implement an orbit following
+      controller around the orbit center North = 1000 meters, East = 1300 meters (radius
+      = 400 meters)\n  The third leg (between Gate #2 and Gate #3) should implement
+      an orbit following controller around the orbit center North = 1100 meters, East
+      = 1300 (radius = 300 meters)\n  The final leg (between Gate #3 and Gate #4)
+      should implement a line following controller between the two gates\nTo complete
+      the challenge, you must be within +/-5 meter lateral distance when arriving
+      at the gate.\nThe gate locations:\nGate #1: North = 1000m, East = 1700m \nGate
+      #2: North = 1400m, East = 1300m\nGate #3: North = 1100m, East = 1000m\nGate
+      #4: North = 100m, East = 1000m"
     successText: 
     failText: 
   tuningParameters: []
@@ -9233,7 +9270,15 @@ MonoBehaviour:
     cameraLookMode: 3
     cameraDistance: 10
     title: Stabilize Roll Scenario
-    description: "\t"
+    description: 'The objective of this scenario is to tune/design a controller to
+      maintain a constant roll angle. The aircraft will start at 45 degree roll angle
+      and the controller should return the aircraft to wings level.
+
+      To complete this scenario:
+
+      -The roll angle must be within +/- 5 degrees rs/sec) within 5s
+
+      -The roll angle must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
   tuningParameters:
@@ -9242,7 +9287,7 @@ MonoBehaviour:
     maxValue: 1
     defaultValue: 0
   droneObject: {fileID: 0}
-  timeInterval: 6
+  timeInterval: 5
   currTime: 0
   currentRoll: 0
   targetRoll: 0
@@ -9846,7 +9891,16 @@ MonoBehaviour:
     cameraLookMode: 2
     cameraDistance: 20
     title: Orbit Following Scenario
-    description: "\t\t\t\t\t"
+    description: 'The objective of this scenario is to tune/design a controller to
+      track the vehicle to a circular orbit. The aircraft will start with zero roll
+      angle on the orbit.
+
+      To complete this scenario:
+
+      -The radius from the orbit center (North = 0 meters, East = 1600 meters) must
+      be within +/- 5 meters of the target radius (100 meters) within 15s
+
+      -The radius from the orbit center must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
   tuningParameters: []
