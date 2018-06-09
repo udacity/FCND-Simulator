@@ -512,6 +512,11 @@ namespace DroneControllers
             positionTarget.z = v.z;
         }
 
+        public Vector3 LocalPositionTarget()
+        {
+            return positionTarget;
+        }
+
         /// <summary>
         /// Sets the value of the velocity target for visualization in m
         /// Note: Does not command the vehicle
@@ -521,6 +526,11 @@ namespace DroneControllers
             velocityTarget.x = v.x;
             velocityTarget.y = v.y;
             velocityTarget.z = v.z;
+        }
+
+        public Vector3 LocalVelocityTarget()
+        {
+            return velocityTarget;
         }
 
         /// <summary>
@@ -534,6 +544,11 @@ namespace DroneControllers
             accelerationTarget.z = v.z;
         }
 
+        public Vector3 LocalAccelerationTarget()
+        {
+            return accelerationTarget;
+        }
+
         /// <summary>
         /// Sets the value of the attitude target for visualization in m
         /// Note: Does not command the vehicle
@@ -545,6 +560,11 @@ namespace DroneControllers
             attitudeTarget.z = v.z;
         }
 
+        public Vector3 AttitudeTarget()
+        {
+            return attitudeTarget;
+        }
+
         /// <summary>
         /// Sets the value of the body rate target for visualization in m
         /// Note: Does not command the vehicle
@@ -554,6 +574,11 @@ namespace DroneControllers
             bodyRateTarget.x = v.x;
             bodyRateTarget.y = v.y;
             bodyRateTarget.z = v.z;
+        }
+
+        public Vector3 BodyRateTarget()
+        {
+            return bodyRateTarget;
         }
 
     }

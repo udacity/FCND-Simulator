@@ -13,7 +13,7 @@ public class LineFollowingScenario : Scenario
     private bool success = true;
     public float currentXTrack;
     public float xTrackThreshold = 3f;
-
+    public float targetCourse;
     public Vector3 startWaypoint;
     public Vector3 endWaypoint;
 
@@ -61,8 +61,8 @@ public class LineFollowingScenario : Scenario
         
         
         currTime = drone.FlightTime() - initTime;
-        float targetCourse = Mathf.Atan((endWaypoint - startWaypoint).y / (endWaypoint - startWaypoint).x);
-        float currentXTrack = Mathf.Cos(targetCourse) * (drone.LocalPosition().y - startWaypoint.y) + Mathf.Sin(-targetCourse) * (drone.LocalPosition().x - startWaypoint.x);
+        targetCourse = Mathf.Atan2((endWaypoint - startWaypoint).y , (endWaypoint - startWaypoint).x);
+        currentXTrack = Mathf.Cos(targetCourse) * (drone.LocalPosition().y - startWaypoint.y) + Mathf.Sin(-targetCourse) * (drone.LocalPosition().x - startWaypoint.x);
         if (Mathf.Abs(currentXTrack) > xTrackThreshold)
         {
             lineMat.color = Color.red;

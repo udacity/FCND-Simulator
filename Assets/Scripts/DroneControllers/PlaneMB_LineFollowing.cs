@@ -29,8 +29,12 @@ namespace MovementBehaviors
             controller.planeControl.altInt = 0.0f;
             controller.planeControl.speedInt = 0.0f;
             yawCommand = controller.AttitudeEuler().z;
+            controller.planeControl.yawInt = 0.0f;
+            controller.planeControl.sideslipInt = 0.0f;
+
             if (!_controller.planeVehicle.MotorsArmed())
                 throttle = controller.GetThrustTarget();
+                
 
         }
 
@@ -56,7 +60,7 @@ namespace MovementBehaviors
             }
 
             float yawCommand = controller.planeControl.CrossTrackLoop(positionCommand, courseCommand, controller.PositionLocal());
-            
+            controller.attitudeTarget.z = yawCommand;
             float rollCommand = controller.planeControl.YawLoop(yawCommand, controller.AttitudeEuler().z, Time.fixedDeltaTime);
             if (Mathf.Abs(rollCommand) > maxRoll)
                 rollCommand = Mathf.Sign(rollCommand) * maxRoll;

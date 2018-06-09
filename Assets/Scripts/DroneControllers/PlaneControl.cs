@@ -97,11 +97,12 @@ public class PlaneControl {
         Kp_p = 1.0f;
 
         Kp_yaw = 2.0f;
-        Ki_yaw = 0.1f;
+        Ki_yaw = 0.01f;
+        maxYawInt = 100.0f;
 
-        Kp_xTrack = 0.003f;
+        Kp_xTrack = 0.002f;
 
-        K_orbit = 2f;
+        K_orbit = 2.5f;
 
 
     }
@@ -188,6 +189,9 @@ public class PlaneControl {
     public float YawLoop(float targetYaw, float yaw, float dt)
     {
         float yawError = targetYaw - yaw;
+        while (Mathf.Abs(yawError) > Mathf.PI)
+            yawError = yawError - Mathf.Sign(yawError) * Mathf.PI * 2f;
+
         yawInt = yawInt + yawError;
 
         if (yawInt > maxYawInt)

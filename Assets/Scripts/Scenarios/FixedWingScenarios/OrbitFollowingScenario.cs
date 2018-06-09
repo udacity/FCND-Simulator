@@ -15,8 +15,7 @@ public class OrbitFollowingScenario : Scenario
     public float targetRadius = 100.0f;
     public float radiusThreshold = 3f;
 
-    public Vector3 startWaypoint;
-    public Vector3 endWaypoint;
+    public Vector3 orbitCenter;
 
     Transform line;
     Material lineMat;
@@ -27,19 +26,24 @@ public class OrbitFollowingScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(8); //Line Following Mode
         drone.SetGuided(true);
-        startWaypoint.x = data.vehiclePosition.z;
-        startWaypoint.y = data.vehiclePosition.x + 500.0f;
-        startWaypoint.z = -data.vehiclePosition.y;
+        orbitCenter.x = data.vehiclePosition.z;
+        orbitCenter.y = data.vehiclePosition.x + targetRadius;
+        orbitCenter.z = -data.vehiclePosition.y;
+
+        drone.CommandVector(orbitCenter, new Vector3(41.0f, 0.0f, 41.0f / targetRadius));
+
+
+        /*
         endWaypoint.x = startWaypoint.x + 2000.0f;
         endWaypoint.y = startWaypoint.y;
         endWaypoint.z = startWaypoint.z;
-        drone.CommandVector(startWaypoint, new Vector3(41.0f, 0.0f, 41.0f/targetRadius));
-
+                
         line = GameObject.Find("Line").GetComponent<Transform>();
         lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
         lineMat.color = Color.red;
         line.position = new Vector3((startWaypoint.y + endWaypoint.y) / 2f, -(startWaypoint.z+endWaypoint.z)/2f, (startWaypoint.x+endWaypoint.x)/2f);
         line.localScale = new Vector3(Mathf.Abs(startWaypoint.y - endWaypoint.y)+0.1f, Mathf.Abs(startWaypoint.z - endWaypoint.z) + 0.1f, Mathf.Abs(startWaypoint.x - endWaypoint.x) + 0.1f);
+        */
     }
 
     protected override void OnBegin()
@@ -52,7 +56,7 @@ public class OrbitFollowingScenario : Scenario
 
 	protected override bool OnCheckSuccess ()
 	{
-        data.successText = "Line Following Scenario Successful!";
+        data.successText = "Orbit Following Scenario Successful!";
         return true;
     }
 
@@ -62,11 +66,11 @@ public class OrbitFollowingScenario : Scenario
         
         
         currTime = drone.FlightTime() - initTime;
-        float targetCourse = Mathf.Atan((endWaypoint - startWaypoint).y / (endWaypoint - startWaypoint).x);
-        currentRadius  = Mathf.Sqrt(Mathf.Pow(startWaypoint.x - drone.LocalPosition().x, 2.0f) + Mathf.Pow(startWaypoint.y - drone.LocalPosition().y, 2.0f));
+
+        currentRadius  = Mathf.Sqrt(Mathf.Pow(orbitCenter.x - drone.LocalPosition().x, 2.0f) + Mathf.Pow(orbitCenter.y - drone.LocalPosition().y, 2.0f));
         if (Mathf.Abs(currentRadius-targetRadius) > radiusThreshold)
         {
-            lineMat.color = Color.red;
+            //lineMat.color = Color.red;
             if (currTime > data.runtime - timeInterval && currTime <= data.runtime)          
             
             {
@@ -75,10 +79,7 @@ public class OrbitFollowingScenario : Scenario
                 return true;
             }
         }
-        else
-        {
-            lineMat.color = Color.green;
-        }
+
         
         return false;
     }

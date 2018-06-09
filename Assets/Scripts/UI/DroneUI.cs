@@ -131,7 +131,18 @@ public class DroneUI : MonoBehaviour
         }
         else
         {
-            windArrow.enabled = false;
+            //windArrow.enabled = false;
+            windArrow.enabled = true;
+            float angle = -((PlaneDrone)drone).AttitudeTarget().z*180f/Mathf.PI + 90;
+            windArrow.rectTransform.eulerAngles = Vector3.forward * angle;
+            Vector2 size = windArrow.rectTransform.sizeDelta;
+            size.x = size.y * 0.5f + size.y;
+            windArrow.rectTransform.sizeDelta = size;
+            float radAngle = angle * Mathf.Deg2Rad;
+            Vector2 anchor = new Vector2(0.5f + Mathf.Cos(radAngle) * 0.15f, 0.5f + Mathf.Sin(radAngle) * 0.15f);
+            //			Vector2 anchor = new Vector2 ( 0.5f + Mathf.Cos ( radAngle ) * 0.55f, 0.5f + Mathf.Sin ( radAngle ) * 0.55f );
+            windArrow.rectTransform.anchorMin = windArrow.rectTransform.anchorMax = anchor;
+
         }
     }
 

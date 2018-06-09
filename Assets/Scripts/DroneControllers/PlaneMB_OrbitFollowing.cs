@@ -54,10 +54,12 @@ namespace MovementBehaviors
                 Debug.Log("Orbit Following Not Available as Manual Mode");
                 return;
             }
-
-            float yawCommand = controller.planeControl.OrbitLoop(controller.positionTarget, controller.velocityTarget.x / controller.bodyRateTarget.z, controller.PositionLocal(), controller.AttitudeEuler().z);
-            
+            bool clockwise = controller.bodyRateTarget.z >= 0;
+            float yawCommand = controller.planeControl.OrbitLoop(controller.positionTarget, Mathf.Abs(controller.velocityTarget.x / controller.bodyRateTarget.z), controller.PositionLocal(), controller.AttitudeEuler().z,clockwise);
+            controller.attitudeTarget.z = yawCommand;
             float rollCommand = controller.planeControl.YawLoop(yawCommand, controller.AttitudeEuler().z, Time.fixedDeltaTime);
+
+            rollCommand = rollCommand + Mathf.Atan(speedCommand * speedCommand / (9.81f*controller.velocityTarget.x / controller.bodyRateTarget.z));
             if (Mathf.Abs(rollCommand) > maxRoll)
                 rollCommand = Mathf.Sign(rollCommand) * maxRoll;
 
