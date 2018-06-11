@@ -25,7 +25,9 @@ public class FixedWingUI : MonoBehaviour
 
 	// scenario tuning panel
 	public GameObject tuningObject;
-
+	public UITunable tunablePrefab;
+	public UITunable[] tunables;
+	public RectTransform tunableGridParent;
 
 	// scenario success panel
 	public GameObject successObject;
@@ -42,6 +44,7 @@ public class FixedWingUI : MonoBehaviour
 
 	// other variables
 	public ScenarioManager scenarioManager;
+
 
 	float scenarioStartTime;
 	float scenarioRuntime;
@@ -143,13 +146,16 @@ public class FixedWingUI : MonoBehaviour
 		// 0 is cancel
 		if ( button == 0 )
 		{
-            networkController.StopServer();
+			ClearPanels ();
             startObject.SetActive ( true );
 		}
 
 		if ( button == 1 )
 		{
-			
+			if ( tunables != null )
+				tunables.ForEach ( x => x.ApplyValue () );
+			scenarioStartTime = Time.time;
+			scenarioManager.Begin ();
 		}
 	}
 
@@ -170,9 +176,7 @@ public class FixedWingUI : MonoBehaviour
 	{
 		if ( mode == 0 )
 		{
-			// temp: start the scenario
-			scenarioStartTime = Time.time;
-			scenarioManager.Begin ();
+			tuningObject.SetActive ( true );
 		}
 
 		if ( mode == 1 )
@@ -192,6 +196,39 @@ public class FixedWingUI : MonoBehaviour
 		startDescription.text = s.data.description.Replace ( "^runtime", _runtime );
 		SetRuntime ( s.data.runtime );
 		startObject.SetActive ( true );
+		// initialize the tunable stuff
+		if (tunables != null && tunables.Length > 0)
+		{
+			tunables.ForEach ( x => Destroy ( x.gameObject ) );
+			tunables = null;
+		}
+
+		if ( s.tunableParameters != null && s.tunableParameters.Length > 0 )
+		{
+			var list = new List<UITunable> ();
+			var tp = s.tunableParameters;
+			var runtimeTunables = TunableManager.RuntimeParameters;
+//			var allTunables = TunableManager.Parameters;
+			foreach ( var p in tp )
+			{
+				if ( string.IsNullOrWhiteSpace ( p ) )
+				{
+					Debug.LogError ( "empty tunable parameter name in " + s.name );
+					continue;
+				}
+
+				var tunable = runtimeTunables.Find ( x => x.field.Name.ToLower () == p.ToLower () );
+//				var tunable = allTunables.Find ( x => x.field.Name.ToLower () == p.ToLower () );
+				if ( tunable != null )
+				{
+					UITunable uit = Instantiate ( tunablePrefab, tunableGridParent );
+					uit.Set ( tunable.field.Name, tunable.data.defaultValue, tunable.data.minValue, tunable.data.maxValue, tunable );
+					uit.gameObject.SetActive ( true );
+					list.Add ( uit );
+				}
+			}
+			tunables = list.ToArray ();
+		}
 	}
 
 	void OnScenarioSucceeded (Scenario s)

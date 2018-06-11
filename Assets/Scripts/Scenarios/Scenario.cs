@@ -10,7 +10,8 @@ public abstract class Scenario : MonoBehaviour
 	public bool IsRunning { get; protected set; }
 
 	public ScenarioData data;
-	public TuningParameter[] tuningParameters;
+//	public TuningParameter[] tuningParameters;
+	public string[] tunableParameters;
 
     public IDrone drone;
 
@@ -22,17 +23,15 @@ public abstract class Scenario : MonoBehaviour
 
     public void Init ()
 	{
-
         drone = Simulation.ActiveDrone;
         if (drone == null)
             Debug.Log("Null Active Drone");
 
         Debug.Log ( "Initializing scenario: " + data.title );
 		IsRunning = false;
-		tuningParameters.ForEach ( x => x.Reset () );
+//		tuningParameters.ForEach ( x => x.Reset () );
 
         drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
-        //		drone.InitializeVehicle ( data.vehiclePosition, Vector3.zero, data.vehicleOrientation.eulerAngles );
         FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance );
 		OnInit ();
 	}

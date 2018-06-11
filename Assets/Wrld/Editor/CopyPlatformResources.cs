@@ -219,6 +219,7 @@ public class CopyPlatformResources : Editor
             case BuildTarget.StandaloneOSXIntel:
 //		case BuildTarget.StandaloneOSXIntel64:
             case BuildTarget.StandaloneOSXIntel64:
+		case BuildTarget.StandaloneOSX:
                 PrepareForPlatform(RuntimePlatform.OSXPlayer);
                 break;
             case BuildTarget.Android:

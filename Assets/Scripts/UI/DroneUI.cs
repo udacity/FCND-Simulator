@@ -64,14 +64,14 @@ public class DroneUI : MonoBehaviour
 		qualityGroup.NotifyToggleOn(toggles[quality]);
 		drone = Simulation.ActiveDrone;
         var parameters = SimParameters.Parameters;
-        //		Debug.Log ( "there are " + parameters.Length + " parameters" );
+//		Debug.Log ( "there are " + parameters.Length + " parameters" );
         foreach (SimParameter p in parameters)
         {
             UIParameter up = Instantiate(parameterPrefab, parametersParent);
-            //			up.transform.SetParent ( parametersParent );
+//			up.transform.SetParent ( parametersParent );
             up.Init(p, false);
             up.gameObject.SetActive(true);
-            //			Debug.Log ( "parameter is " + p.displayName );
+//			Debug.Log ( "parameter is " + p.displayName );
         }
 		graphImage.enabled = PlotViz.Count > 0;
     }

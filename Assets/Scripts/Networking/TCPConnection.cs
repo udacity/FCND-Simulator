@@ -90,8 +90,11 @@ namespace UdacityNetworking
 		public void StopServer ()
 		{
 			running = false;
-			listener.Stop ();
-			listener = null;
+			if (listener != null)
+			{
+				listener.Stop ();
+				listener = null;
+			}
 		}
 
 		public void DoUpdate ()
@@ -253,6 +256,7 @@ namespace UdacityNetworking
 					listener = null;
 				}
 				connectionState = ConnectionState.Disconnected;
+				running = false;
 			}
 		}
 
