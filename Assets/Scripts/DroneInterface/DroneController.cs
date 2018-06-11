@@ -93,6 +93,13 @@ namespace DroneInterface
         void CommandControls(float controlX, float controlY, float controlZ, float controlW);
 
         /// <summary>
+        /// Command a vehicle along a vector defined the position and velocity vectors
+        /// </summary>
+        /// <param name="localPosition">reference local position NED in m</param>
+        /// <param name="localVelocity">reference local velocity NED in m/s</param>
+        void CommandVector(Vector3 localPosition, Vector3 localVelocity);
+
+        /// <summary>
         /// Sets the value of the position target for visualization in m
         /// Note: Does not command the vehicle
         /// </summary>

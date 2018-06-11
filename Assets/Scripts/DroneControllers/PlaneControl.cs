@@ -34,7 +34,17 @@ public class PlaneControl {
     public float Kp_sideslip = 0.1f;
     public float Ki_sideslip = 0.1f;
     public float sideslipInt = 0.0f;
-    public float maxSideslipInt = 0.1f;
+    public float maxSideslipInt = 10.0f;
+
+    public float Kp_yaw = 1.0f;
+    public float Ki_yaw = 0.1f;
+    public float yawInt = 0.0f;
+    public float maxYawInt = 1.0f;
+
+    public float Kp_xTrack = 1.0f;
+    public float approachYaw = Mathf.PI / 2.0f;
+
+    public float K_orbit = 1.0f;
 
     /*
     public float Kp_r = 0.04f;//20.0f;
@@ -72,7 +82,7 @@ public class PlaneControl {
         Kp_q = 10.0f;
 
         Kp_speed2 = 0.2f;
-        Ki_speed2 = 0.1f;
+        Ki_speed2 = 0.2f;
         speedInt2 = 0.0f;
         maxSpeedInt2 = 50.0f;
 
@@ -80,8 +90,22 @@ public class PlaneControl {
         Ki_climb = 0.1f;
         maxClimbInt = 10.0f;
 
+        Kp_sideslip = 1*1.0f;
+        Ki_sideslip = 1*1.0f;
 
-}
+        Kp_roll = 5*8.0f;
+        Kp_p = 1.0f;
+
+        Kp_yaw = 2.0f;
+        Ki_yaw = 0.01f;
+        maxYawInt = 100.0f;
+
+        Kp_xTrack = 0.002f;
+
+        K_orbit = 2.5f;
+
+
+    }
 	
     /// <summary>
     /// Closes the loop on pitch and pitch rate
@@ -105,7 +129,8 @@ public class PlaneControl {
 
     public float AirspeedLoop(float targetAirspeed, float airspeed, float dt=0.0f)
     {
-        
+        if (dt == 0.0)
+            dt = Time.fixedDeltaTime;
         speedInt = speedInt + (targetAirspeed - airspeed)*dt;
         if (speedInt > maxSpeedInt)
             speedInt = maxSpeedInt;
@@ -117,6 +142,9 @@ public class PlaneControl {
 
     public float AirspeedLoop2(float targetAirspeed, float airspeed, float dt = 0.0f)
     {
+        if (dt == 0.0)
+            dt = Time.fixedDeltaTime;
+
         speedInt2 = speedInt2 + (targetAirspeed - airspeed) * dt;
         if (speedInt2 > maxSpeedInt2)
             speedInt2 = maxSpeedInt2;
@@ -128,6 +156,8 @@ public class PlaneControl {
 
     public float ClimbRateLoop(float targetClimbRate, float climbRate, float dt = 0.0f)
     {
+        if (dt == 0.0)
+            dt = Time.fixedDeltaTime;
         climbInt = climbInt + (targetClimbRate - climbRate) * dt;
         if (climbInt > maxClimbInt)
             climbInt = maxClimbInt;
@@ -139,7 +169,7 @@ public class PlaneControl {
 
     public float RollLoop(float targetRoll, float roll, float rollrate)
     {
-        float output = Kp_roll * (targetRoll - roll) - Kp_pitch * rollrate;
+        float output = Kp_roll * (targetRoll - roll) - Kp_p * rollrate;
         return output;
     }
 
@@ -154,6 +184,49 @@ public class PlaneControl {
         float output = -1.0f*(Kp_sideslip * (targetSideslip - sideslip) + Ki_sideslip * sideslipInt);
         return output;
         
+    }
+
+    public float YawLoop(float targetYaw, float yaw, float dt)
+    {
+        float yawError = targetYaw - yaw;
+        while (Mathf.Abs(yawError) > Mathf.PI)
+            yawError = yawError - Mathf.Sign(yawError) * Mathf.PI * 2f;
+
+        yawInt = yawInt + yawError;
+
+        if (yawInt > maxYawInt)
+            yawInt = maxYawInt;
+        else if (yawInt < -maxYawInt)
+            yawInt = -maxYawInt;
+
+        float output = Kp_yaw * yawError + Ki_yaw * yawInt;
+        return output;
+    }
+
+    public float CrossTrackLoop(Vector3 targetPosition, float targetCourse, Vector3 position)
+    {
+        float xTrackError = Mathf.Cos(targetCourse) * (position.y - targetPosition.y) + Mathf.Sin(-targetCourse) * (position.x - targetPosition.x);
+        float output = -Mathf.PI / 2.0f * Mathf.Atan(Kp_xTrack * xTrackError) + targetCourse;
+
+        return output;
+    }
+
+    public float OrbitLoop(Vector3 orbitCenter, float targetRadius, Vector3 position, float yaw, bool clockwise=true)
+    {
+        float radius = Mathf.Sqrt(Mathf.Pow(orbitCenter.x - position.x, 2.0f) + Mathf.Pow(orbitCenter.y - position.y, 2.0f));
+        float output = Mathf.PI / 2.0f + Mathf.Atan(K_orbit * (radius - targetRadius) / targetRadius);
+        if (!clockwise)
+            output = -output;
+
+        float addon = Mathf.Atan2(position.y - orbitCenter.y, position.x - orbitCenter.x);
+        if (addon-yaw < -Mathf.PI)
+            while (addon-yaw < -Mathf.PI)
+                addon = addon + Mathf.PI * 2f;
+        else if (addon - yaw > Mathf.PI)
+            while (addon - yaw > Mathf.PI)
+                addon = addon - Mathf.PI * 2f;
+        output = output + addon;
+        return output;
     }
 
    

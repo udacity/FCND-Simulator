@@ -169,7 +169,8 @@ public class FollowCamera : MonoBehaviour
 			break;
 
 		case CameraLookMode.Follow:
-			transform.position = targetTransform.position - transform.forward * followDistance;
+                transform.position = targetTransform.position - transform.forward * followDistance;
+                transform.rotation = Quaternion.LookRotation(targetTransform.forward, Vector3.up);
 
 			break;
 		}

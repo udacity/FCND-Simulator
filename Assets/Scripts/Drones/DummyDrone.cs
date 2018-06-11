@@ -451,6 +451,16 @@ public class DummyDrone : MonoBehaviour, IDrone
         return;
     }
 
+    /// <summary>
+    /// Command a vehicle along a vector defined the position and velocity vectors
+    /// </summary>
+    /// <param name="localPosition">reference local position NED in m</param>
+    /// <param name="localVelocity">reference local velocity NED in m/s</param>
+    public void CommandVector(Vector3 localPosition, Vector3 localVelocity)
+    {
+
+    }
+
 
     /// IDroneSensors Methods
 
