@@ -2,24 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [System.Serializable]
 public class PlaneControl {
 
-    public float Kp_pitch = 8.0f;
-    public float Kp_q = 5.0f;
+    [Tunable(0.0f,-1.0f, 1.0f)] // 0.2f
+    public float Kp_speed;
 
-    public float altInt = 0.0f;
-    public float Kp_alt = 0.05f;
-    public float Ki_alt = 0.01f;
-    public float maxAltInt = 0.1f;
+    [Tunable(0.0f,-1.0f, 1.0f)] // 0.1f
+    public float Ki_speed;
 
-    public float Kp_speed = 0.01f;
-    public float Ki_speed = 0.001f;
     public float speedInt = 0.0f;
     public float maxSpeedInt = 0.25f;
 
-    public float Kp_speed2 = 0.01f;
+
+    [Tunable(0.0f,-50.0f,50.0f)] //20.0f
+    public float Kp_pitch = 8.0f;
+
+    [Tunable(0.0f,-50.0f,50.0f)] //10.0f
+    public float Kp_q = 5.0f;
+
+    [Tunable(0.0f, -1.0f, 1.0f)] // 0.03f
+    public float Kp_alt;
+
+    [Tunable(0.0f, -1.0f, 1.0f)] // 0.05f
+    public float Ki_alt;
+
+    public float altInt = 0.0f;
+    public float maxAltInt = 0.1f;
+
+    [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
+    public float Kp_speed2;
+
+    [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
     public float Ki_speed2 = 0.001f;
+
     public float speedInt2 = 0.0f;
     public float maxSpeedInt2 = 10.0f;
 
@@ -69,20 +86,22 @@ public class PlaneControl {
 
 	// Use this for initialization
 	public PlaneControl() {
-        //hDotInt = 0.0f;
+
+        //Kp_speed = 0.2f;
+        //Ki_speed = 0.1f;
+
+        //Kp_pitch = 20.0f;
+        //Kp_q = 10.0f;
+
+        //Kp_alt = 0.03f;
+        //Ki_alt = 0.05f;
+
+        //Kp_speed2 = 0.2f;
+        //Ki_speed2 = 0.2f;
+
         altInt = 0.0f;
         speedInt = 0.0f;
         sideslipInt = 0.0f;
-        Kp_speed = 0.2f;
-        Ki_speed = 0.1f;
-
-        Kp_alt = 0.03f;
-        Ki_alt = 0.05f;
-        Kp_pitch = 20.0f;
-        Kp_q = 10.0f;
-
-        Kp_speed2 = 0.2f;
-        Ki_speed2 = 0.2f;
         speedInt2 = 0.0f;
         maxSpeedInt2 = 50.0f;
 
@@ -90,8 +109,8 @@ public class PlaneControl {
         Ki_climb = 0.1f;
         maxClimbInt = 10.0f;
 
-        Kp_sideslip = 1*1.0f;
-        Ki_sideslip = 1*1.0f;
+        Kp_sideslip = 1.0f;
+        Ki_sideslip = 1.0f;
 
         Kp_roll = 5*8.0f;
         Kp_p = 1.0f;
@@ -106,7 +125,22 @@ public class PlaneControl {
 
 
     }
-	
+
+
+    public float AirspeedLoop(float targetAirspeed, float airspeed, float dt = 0.0f)
+    {
+        if (dt == 0.0)
+            dt = Time.fixedDeltaTime;
+        speedInt = speedInt + (targetAirspeed - airspeed) * dt;
+        if (speedInt > maxSpeedInt)
+            speedInt = maxSpeedInt;
+        else if (speedInt < -maxSpeedInt)
+            speedInt = -maxSpeedInt;
+        float output = Kp_speed * (targetAirspeed - airspeed) + Ki_speed * speedInt;
+        return output;
+        
+    }
+
     /// <summary>
     /// Closes the loop on pitch and pitch rate
     /// </summary>
@@ -127,18 +161,7 @@ public class PlaneControl {
         return output;
     }
 
-    public float AirspeedLoop(float targetAirspeed, float airspeed, float dt=0.0f)
-    {
-        if (dt == 0.0)
-            dt = Time.fixedDeltaTime;
-        speedInt = speedInt + (targetAirspeed - airspeed)*dt;
-        if (speedInt > maxSpeedInt)
-            speedInt = maxSpeedInt;
-        else if (speedInt < -maxSpeedInt)
-            speedInt = -maxSpeedInt;
-        float output = Kp_speed * (targetAirspeed - airspeed) + Ki_speed*speedInt;
-        return output;
-    }
+    
 
     public float AirspeedLoop2(float targetAirspeed, float airspeed, float dt = 0.0f)
     {

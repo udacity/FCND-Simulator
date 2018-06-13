@@ -63,35 +63,38 @@ namespace DroneControllers
 
         void LateUpdate()
         {
-            if (Input.GetKey("6"))
+            if (!guided)
             {
-                flightMode = (int)FLIGHT_MODE.YAWHOLD;
-                SelectMovementBehavior();
-            }
-            if (Input.GetKey("5"))
-            {
-                flightMode = (int)FLIGHT_MODE.ASCENDDESCEND;
-                SelectMovementBehavior();
-            }
-            if (Input.GetKey("4"))
-            {
-                flightMode = (int)FLIGHT_MODE.STABILIZED;
-                SelectMovementBehavior();
-            }
-            if (Input.GetKey("3"))
-            {
-                flightMode = (int)FLIGHT_MODE.LATERAL;
-                SelectMovementBehavior();
-            }
-            if (Input.GetKey("2"))
-            {
-                flightMode = (int)FLIGHT_MODE.LONGITUDE;
-                SelectMovementBehavior();
-            }
-            if (Input.GetKey("1"))
-            {
-                flightMode = (int)FLIGHT_MODE.MANUAL;
-                SelectMovementBehavior();
+                if (Input.GetKey("6"))
+                {
+                    flightMode = (int)FLIGHT_MODE.YAWHOLD;
+                    SelectMovementBehavior();
+                }
+                if (Input.GetKey("5"))
+                {
+                    flightMode = (int)FLIGHT_MODE.ASCENDDESCEND;
+                    SelectMovementBehavior();
+                }
+                if (Input.GetKey("4"))
+                {
+                    flightMode = (int)FLIGHT_MODE.STABILIZED;
+                    SelectMovementBehavior();
+                }
+                if (Input.GetKey("3"))
+                {
+                    flightMode = (int)FLIGHT_MODE.LATERAL;
+                    SelectMovementBehavior();
+                }
+                if (Input.GetKey("2"))
+                {
+                    flightMode = (int)FLIGHT_MODE.LONGITUDE;
+                    SelectMovementBehavior();
+                }
+                if (Input.GetKey("1"))
+                {
+                    flightMode = (int)FLIGHT_MODE.MANUAL;
+                    SelectMovementBehavior();
+                }
             }
             if(!planeVehicle.IsFrozen())
                 currentMovementBehavior.OnLateUpdate();

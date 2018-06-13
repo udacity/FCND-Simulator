@@ -4,8 +4,11 @@ using UnityEngine;
 using Drones;
 using DroneInterface;
 
+[System.Serializable]
 public class AirspeedHoldScenario : Scenario
 {
+    
+
     public float currentAltitude = 0.0f;
     private float lastAltitudeTime = 0.0f;
     private float altitudeThreshold = 0.5f;
@@ -25,6 +28,7 @@ public class AirspeedHoldScenario : Scenario
     protected override void OnInit ()
 	{
         base.OnInit ();
+
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
@@ -47,7 +51,6 @@ public class AirspeedHoldScenario : Scenario
 	protected override bool OnCheckFailure ()
 	{
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
-
         currTime = drone.FlightTime() - initTime;
         currentAirspeed = drone.VelocityLocal().magnitude;
         if (currTime > finalTime - timeInterval && currTime <= finalTime)

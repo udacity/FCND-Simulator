@@ -1087,7 +1087,8 @@ MonoBehaviour:
       x = 2200m, altitude = 200m"
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters:
+  - altitudeThreshold
   droneObject: {fileID: 0}
   position2D: {x: 0, y: 0}
   currentAirspeed: 0
@@ -1200,16 +1201,16 @@ MonoBehaviour:
   planeVehicle: {fileID: 155553751}
   planeSensor: {fileID: 155553750}
   planeControl:
-    Kp_pitch: 20
-    Kp_q: 10
-    altInt: 0
-    Kp_alt: 0.03
-    Ki_alt: 0.05
-    maxAltInt: 0.1
     Kp_speed: 0.2
     Ki_speed: 0.1
     speedInt: 0
     maxSpeedInt: 0.25
+    Kp_pitch: 20
+    Kp_q: 10
+    Kp_alt: 0.03
+    Ki_alt: 0.05
+    altInt: 0
+    maxAltInt: 0.1
     Kp_speed2: 0.1
     Ki_speed2: 0.02
     speedInt2: 0
@@ -2445,12 +2446,12 @@ Prefab:
     - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_Options.m_Options.Array.data[7].m_Text
-      value: '6: Coordinated Turn'
+      value: '6: Stabilize Roll'
       objectReference: {fileID: 0}
     - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_Options.m_Options.Array.data[8].m_Text
-      value: '7: Stabilize Roll'
+      value: '7: Coordinated Turn'
       objectReference: {fileID: 0}
     - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -2476,6 +2477,10 @@ Prefab:
         type: 2}
       propertyPath: m_Options.m_Options.Array.data[13].m_Text
       value: '8: Fixed Wing Challenge'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1695017282473400, guid: f71ee99d13775b74ab589fef8f05da06, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f71ee99d13775b74ab589fef8f05da06, type: 2}
@@ -2906,7 +2911,9 @@ MonoBehaviour:
       -The airspeed must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters:
+  - Kp_speed
+  - Ki_speed
   droneObject: {fileID: 0}
   currentAltitude: 0
   currentAirspeed: 0
@@ -3729,11 +3736,7 @@ MonoBehaviour:
     description: This is a free flying mode with no objectives.
     successText: This scenario cannot succeed.
     failText: This scenario cannot fail.
-  tuningParameters:
-  - name: I'm a parameter
-    minValue: 0
-    maxValue: 1
-    defaultValue: 0.5
+  tunableParameters: []
   droneObject: {fileID: 0}
 --- !u!4 &427670809
 Transform:
@@ -4678,7 +4681,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 713719898}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &599105115
 MonoBehaviour:
@@ -4712,9 +4715,9 @@ MonoBehaviour:
       -The airspeed must maintain the airspeed within those bounds for 5 seconds'
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters: []
   droneObject: {fileID: 0}
-  timeInterval: 0
+  timeInterval: 5
   currTime: 0
   currentSideslip: 0
   sideslipThreshold: 0.5
@@ -4768,7 +4771,11 @@ MonoBehaviour:
       -The altitude must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters:
+  - Kp_pitch
+  - Kp_q
+  - Kp_alt
+  - Ki_alt
   droneObject: {fileID: 0}
   currentAltitude: 0
   currentAirspeed: 0
@@ -5336,12 +5343,13 @@ Transform:
   - {fileID: 606392156}
   - {fileID: 768558206}
   - {fileID: 118137638}
-  - {fileID: 599105114}
   - {fileID: 1838104314}
+  - {fileID: 599105114}
   - {fileID: 1701306795}
   - {fileID: 730093708}
   - {fileID: 1980859575}
   - {fileID: 1782651365}
+  - {fileID: 878061819}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5363,8 +5371,8 @@ MonoBehaviour:
   - {fileID: 606392155}
   - {fileID: 768558207}
   - {fileID: 118137639}
-  - {fileID: 599105115}
   - {fileID: 1838104315}
+  - {fileID: 599105115}
   - {fileID: 1701306796}
   - {fileID: 730093707}
   - {fileID: 1980859576}
@@ -5491,7 +5499,7 @@ MonoBehaviour:
       -The crosstrack error must maintain within those bounds for 5s'
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters: []
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -5717,7 +5725,9 @@ MonoBehaviour:
       -The airspeed must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters:
+  - Kp_speed2
+  - Ki_speed2
   droneObject: {fileID: 0}
   currentAirspeed: 0
   currTime: 0
@@ -5798,6 +5808,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 267873577}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &878061818
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 878061819}
+  m_Layer: 0
+  m_Name: TuningParameters
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &878061819
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 878061818}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 713719898}
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &879157287
 GameObject:
@@ -6088,7 +6126,8 @@ MonoBehaviour:
       scenario will run indefinitely"
     successText: You did it!
     failText: You failed
-  tuningParameters: []
+  tunableParameters:
+  - testParameter
   droneObject: {fileID: 0}
   currentVelocity: 0
   currentAirspeedRate: 0
@@ -9001,7 +9040,7 @@ MonoBehaviour:
       -The airspeed must maintain the airspeed within those bounds for 5 seconds'
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters: []
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -9207,7 +9246,7 @@ MonoBehaviour:
       #4: North = 100m, East = 1000m"
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters: []
   droneObject: {fileID: 0}
   gateNum: 0
   targetRadius: 0
@@ -9246,7 +9285,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 713719898}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1838104315
 MonoBehaviour:
@@ -9281,11 +9320,7 @@ MonoBehaviour:
       -The roll angle must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
-  tuningParameters:
-  - name: Roll Gain
-    minValue: -1
-    maxValue: 1
-    defaultValue: 0
+  tunableParameters: []
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -9903,7 +9938,7 @@ MonoBehaviour:
       -The radius from the orbit center must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
-  tuningParameters: []
+  tunableParameters: []
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0

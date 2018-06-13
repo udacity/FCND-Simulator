@@ -53,6 +53,7 @@ public class CoordinatedTurnScenario : Scenario
                     "Sideslip = " + (currentSideslip*180.0f/Mathf.PI) + " deg at t = " + currTime;
                 return true;
             }
+            Debug.Log("Sideslip (deg): " + (Mathf.Abs(currentSideslip) * 180.0f / Mathf.PI));
         }
         return false;
     }

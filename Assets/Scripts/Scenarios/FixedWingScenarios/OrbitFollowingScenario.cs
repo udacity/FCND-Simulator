@@ -67,7 +67,7 @@ public class OrbitFollowingScenario : Scenario
         
         currTime = drone.FlightTime() - initTime;
 
-        currentRadius  = Mathf.Sqrt(Mathf.Pow(orbitCenter.x - drone.LocalPosition().x, 2.0f) + Mathf.Pow(orbitCenter.y - drone.LocalPosition().y, 2.0f));
+        currentRadius  = Mathf.Sqrt(Mathf.Pow(orbitCenter.x - drone.CoordsUnity().z, 2.0f) + Mathf.Pow(orbitCenter.y - drone.CoordsUnity().x, 2.0f));
         if (Mathf.Abs(currentRadius-targetRadius) > radiusThreshold)
         {
             //lineMat.color = Color.red;
@@ -75,7 +75,7 @@ public class OrbitFollowingScenario : Scenario
             
             {
                 data.failText = "Scenario Failed:\n" +
-                    "Crostrack Error = " + currentRadius + " m at t = " + currTime;
+                    "Crostrack Error = " + (currentRadius-targetRadius) + " m at t = " + currTime;
                 return true;
             }
         }
