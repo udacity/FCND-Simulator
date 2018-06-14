@@ -1088,7 +1088,7 @@ MonoBehaviour:
     successText: 
     failText: 
   tunableParameters:
-  - altitudeThreshold
+  - altitudeSwitch
   droneObject: {fileID: 0}
   position2D: {x: 0, y: 0}
   currentAirspeed: 0
@@ -1097,6 +1097,7 @@ MonoBehaviour:
   currentClimbRate: 0
   vertThreshold: 2
   targetAltitude: 0
+  altitudeSwitch: 25
 --- !u!1 &120945876
 GameObject:
   m_ObjectHideFlags: 0
@@ -2118,7 +2119,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -3736,7 +3737,15 @@ MonoBehaviour:
     description: This is a free flying mode with no objectives.
     successText: This scenario cannot succeed.
     failText: This scenario cannot fail.
-  tunableParameters: []
+  tunableParameters:
+  - Kp_speed
+  - Ki_speed
+  - Kp_pitch
+  - Kp_q
+  - Kp_alt
+  - Ki_alt
+  - Kp_speed2
+  - Ki_speed2
   droneObject: {fileID: 0}
 --- !u!4 &427670809
 Transform:
@@ -6126,8 +6135,7 @@ MonoBehaviour:
       scenario will run indefinitely"
     successText: You did it!
     failText: You failed
-  tunableParameters:
-  - testParameter
+  tunableParameters: []
   droneObject: {fileID: 0}
   currentVelocity: 0
   currentAirspeedRate: 0

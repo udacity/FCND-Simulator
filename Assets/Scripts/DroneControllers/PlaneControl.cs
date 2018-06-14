@@ -6,35 +6,35 @@ using UnityEngine;
 [System.Serializable]
 public class PlaneControl {
 
-    [Tunable(0.0f,-1.0f, 1.0f)] // 0.2f
+    [Tunable(0.2f,-1.0f, 1.0f)] // 0.2f
     public float Kp_speed;
 
-    [Tunable(0.0f,-1.0f, 1.0f)] // 0.1f
+    [Tunable(0.1f,-1.0f, 1.0f)] // 0.1f
     public float Ki_speed;
 
     public float speedInt = 0.0f;
     public float maxSpeedInt = 0.25f;
 
 
-    [Tunable(0.0f,-50.0f,50.0f)] //20.0f
+    [Tunable(20.0f,-50.0f,50.0f)] //20.0f
     public float Kp_pitch = 8.0f;
 
-    [Tunable(0.0f,-50.0f,50.0f)] //10.0f
+    [Tunable(10.0f,-50.0f,50.0f)] //10.0f
     public float Kp_q = 5.0f;
 
-    [Tunable(0.0f, -1.0f, 1.0f)] // 0.03f
+    [Tunable(0.03f, -1.0f, 1.0f)] // 0.03f
     public float Kp_alt;
 
-    [Tunable(0.0f, -1.0f, 1.0f)] // 0.05f
+    [Tunable(0.05f, -1.0f, 1.0f)] // 0.05f
     public float Ki_alt;
 
     public float altInt = 0.0f;
     public float maxAltInt = 0.1f;
 
-    [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
+    [Tunable(0.2f, -1.0f, 1.0f)] // 0.2f
     public float Kp_speed2;
 
-    [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
+    [Tunable(0.2f, -1.0f, 1.0f)] // 0.2f
     public float Ki_speed2 = 0.001f;
 
     public float speedInt2 = 0.0f;

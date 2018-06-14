@@ -78,6 +78,7 @@ public class AltHoldScenario : Scenario
 
     protected override void OnEnd()
     {
+        line.localScale = new Vector3(0f, 0f, 0f);
         base.OnEnd();
         drone.SetGuided(false);
     }

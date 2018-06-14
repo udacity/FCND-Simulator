@@ -63,6 +63,7 @@ public class LateralChallenge: Scenario
         drone.SetHomePosition();
         targetGate = gate1;
         gateNum = 1;
+        UpdateGatePosition();
     }
 
     protected override void OnBegin()
@@ -92,7 +93,8 @@ public class LateralChallenge: Scenario
             gateError = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().z - targetGate.y, 2f) + Mathf.Pow(drone.CoordsUnity().x - targetGate.x, 2f));
             if (gateNum == 1)
             {
-
+                line.localPosition = new Vector3((startPosition.x + gate1.x) / 2, data.vehiclePosition.y, (startPosition.y + gate1.y) / 2);
+                line.localScale = new Vector3(Mathf.Abs(startPosition.x - gate1.x) + 1f, 1f, Mathf.Abs(startPosition.y - gate1.y) + 1f);
                 if (drone.CoordsUnity().z >= gate1.y)
                 {
                     if (gateError > errorThreshold)
@@ -114,6 +116,7 @@ public class LateralChallenge: Scenario
                 }
             } else if (gateNum == 2)
             {
+                line.localScale = new Vector3(0f,0f,0f);
                 if (drone.CoordsUnity().x <= gate2.x)
                 {
                     if (gateError > errorThreshold)
@@ -134,6 +137,7 @@ public class LateralChallenge: Scenario
                 }
             } else if (gateNum == 3)
             {
+
                 if(drone.CoordsUnity().z <= gate3.y)
                 {
                     if (gateError > errorThreshold)
@@ -154,7 +158,9 @@ public class LateralChallenge: Scenario
                 }
             }else if (gateNum  == 4)
             {
-                if(drone.CoordsUnity().z <= gate4.y)
+                line.localPosition = new Vector3((gate4.x + gate3.x) / 2, data.vehiclePosition.y, (gate4.y + gate3.y) / 2);
+                line.localScale = new Vector3(Mathf.Abs(gate4.x - gate3.x) + 1f, 1f, Mathf.Abs(gate4.y - gate3.y) + 1f);
+                if (drone.CoordsUnity().z <= gate4.y)
                 {
                     if (gateError > errorThreshold)
                     {
@@ -184,13 +190,14 @@ public class LateralChallenge: Scenario
     {
         float heading = drone.AttitudeEuler().z;
         gate.position = new Vector3(targetGate.x, data.vehiclePosition.y, targetGate.y);
+        gate.localScale = new Vector3(4f, 1f, 4f);
         gate.rotation.SetEulerAngles(0f, heading, 0f);
-
-
     }
 
     protected override void OnEnd()
     {
+        gate.localScale = new Vector3(0f, 0f, 0f);
+        line.localScale = new Vector3(0f, 0f, 0f);
         drone.SetGuided(false);
         base.OnEnd();
     }

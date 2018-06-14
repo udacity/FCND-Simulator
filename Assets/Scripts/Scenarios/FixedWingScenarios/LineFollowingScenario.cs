@@ -84,6 +84,7 @@ public class LineFollowingScenario : Scenario
 
     protected override void OnEnd()
     {
+        line.localScale = new Vector3(0f, 0f, 0f);
         drone.SetGuided(false);
         Debug.Log("Released control of the Drone");
         base.OnEnd();

@@ -36,23 +36,21 @@ public class LongitudinalChallenge : Scenario
     public float vertThreshold = 2.0f;
 
     public float targetAltitude;
-
+    public float altitudeSwitch = 25.0f;
     protected override void OnInit ()
 	{
         gate = GameObject.Find("Gate").GetComponent<Transform>();
         line = GameObject.Find("Line").GetComponent<Transform>();
         lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
         lineMat.color = Color.red;
-        //gate2 = GameObject.Find("Gate2").GetComponent<Transform>();
-        //gate3 = GameObject.Find("Gate3").GetComponent<Transform>();
-        //gate4 = GameObject.Find("Gate4").GetComponent<Transform>();
-
+        
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
 		drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
         drone.SetHomePosition();
         targetGate = gate1;
+        UpdateGatePosition();
     }
 
     protected override void OnBegin()
@@ -80,29 +78,8 @@ public class LongitudinalChallenge : Scenario
         position2D.y = drone.CoordsUnity().y - data.vehiclePosition.y;
         if (drone.ControlMode() != 2.0)
         {
-            float altitudeSwitch = 25.0f;
+            
             targetAltitude = targetGate.y + data.vehiclePosition.y;
-            /*
-            if (position2D.x <= gateStart.x)
-            {
-                targetAltitude = gateStart.y + data.vehiclePosition.y;
-            }
-            else if (position2D.x <= gateHigh.x)
-            {
-                targetAltitude = gateHigh.y + data.vehiclePosition.y;
-            }
-            else if (position2D.x <= gateLow.x)
-            {
-                targetAltitude = gateLow.y + data.vehiclePosition.y;
-            }
-            else if (position2D.x <= gateEnd.x)
-            {
-                targetAltitude = gateEnd.y + data.vehiclePosition.y;
-            }
-            else
-            {
-                targetAltitude = data.vehiclePosition.y;
-            }*/
 
             if (Mathf.Abs(-drone.CoordsLocal().z - targetAltitude) < altitudeSwitch)
             {
@@ -156,52 +133,8 @@ public class LongitudinalChallenge : Scenario
         {
             success = true;
         }
-        /*
-        else if (position2D.x <= gateHigh.x)
-        {
-            if (Mathf.Abs(position2D.x - gateHigh.x) < horizThreshold)
-            {
-                if (Mathf.Abs(position2D.y - gateHigh.y) > vertThreshold)
-                {
-                    Debug.Log("Missed Gate High");
-                    data.failText = "Longitudinal Challenge Unsuccessful:\n" +
-                        "Gate #2 Missed by " + Mathf.Abs(position2D.y - gateStart.y) + " meters " +
-                        "(threshold = " + vertThreshold + " meters)";
-                    return true;
-                }
-            }
-        }
-        else if (position2D.x <= gateLow.x)
-        {
-            if (Mathf.Abs(position2D.x - gateLow.x) < horizThreshold)
-            {
-                if (Mathf.Abs(position2D.y - gateLow.y) > vertThreshold)
-                {
-                    Debug.Log("Missed Gate Low");
-                    data.failText = "Longitudinal Challenge Unsuccessful:\n" +
-                        "Gate #3 Missed by " + Mathf.Abs(position2D.y - gateStart.y) + " meters " +
-                        "(threshold = " + vertThreshold + " meters)";
-                    return true;
-                }
-            }
-        }
-        else if (position2D.x <= gateEnd.x)
-        {
-            if (Mathf.Abs(position2D.x - gateEnd.x) < horizThreshold)
-            {
-                if (Mathf.Abs(position2D.y - gateEnd.y) > vertThreshold)
-                {
-                    Debug.Log("Missed Gate End");
-                    data.failText = "Longitudinal Challenge Unsuccessful:\n" +
-                        "Gate #4 Missed by " + Mathf.Abs(position2D.y - gateStart.y) + " meters " +
-                        "(threshold = " + vertThreshold + " meters)";
-                    return true;
-                }
-            }
-        }
-        */
-        UpdateGatePosition();
 
+        UpdateGatePosition();
         return false;
     }
 
@@ -216,7 +149,7 @@ public class LongitudinalChallenge : Scenario
         position.y = targetGate.y + data.vehiclePosition.y; ;
         if(positionDiff > 0.0f)
             gate.position = position;
-
+        gate.localScale = new Vector3(4.0f, 1.0f, 4.0f);
         Vector3 linePosition = position;
         //linePosition.y = position.y;
         line.position = linePosition;
@@ -224,37 +157,13 @@ public class LongitudinalChallenge : Scenario
         scale.x = 2000.0f;
         line.localScale = new Vector3(2000.0f, 0.1f, 0.1f);
 
-
-        /*
-        positionDiff = -(position2D.x - gateHigh.x);
-
-        position.x = drone.CoordsUnity().x + positionDiff * Mathf.Sin(heading);
-        position.z = drone.CoordsUnity().z + positionDiff * Mathf.Cos(heading);
-        position.y = gate2.position.y;
-        if(positionDiff > 0.0f)
-            gate2.position = position;
-
-        positionDiff = -(position2D.x - gateLow.x);
-
-        position.x = drone.CoordsUnity().x + positionDiff * Mathf.Sin(heading);
-        position.z = drone.CoordsUnity().z + positionDiff * Mathf.Cos(heading);
-        position.y = gate3.position.y;
-        if(positionDiff > 0.0f)
-            gate3.position = position;
-
-        positionDiff = -(position2D.x - gateEnd.x);
-
-        position.x = drone.CoordsUnity().x + positionDiff * Mathf.Sin(heading);
-        position.z = drone.CoordsUnity().z + positionDiff * Mathf.Cos(heading);
-        position.y = gate4.position.y;
-        if (positionDiff > 0.0f)
-            gate4.position = position;
-        */
     }
 
     protected override void OnEnd()
     {
         drone.SetGuided(false);
+        line.localScale = new Vector3(0.0f, 0.0f, 0.0f);
+        gate.localScale = new Vector3(0.0f, 0.0f, 0.0f);
         base.OnEnd();        
     }
 
