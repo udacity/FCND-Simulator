@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Drones;
 using DroneInterface;
+using DroneControllers;
 
 public class LateralChallenge: Scenario
 {
@@ -42,8 +43,12 @@ public class LateralChallenge: Scenario
 
     public float targetAltitude;
 
+    PlaneControl planeControl;
+
     protected override void OnInit()
     {
+        planeControl = GameObject.Find("Plane Drone").GetComponent<PlaneAutopilot>().planeControl;
+        
         gate = GameObject.Find("Gate").GetComponent<Transform>();
         line = GameObject.Find("Line").GetComponent<Transform>();
         lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
@@ -70,6 +75,9 @@ public class LateralChallenge: Scenario
     {
         base.OnBegin();
         //drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
+        //Set the gains appropriate for the scenario
+        planeControl.SetDefaultLongitudinalGains();
+        planeControl.SetStudentLateralGains();
 
         initTime = drone.FlightTime();
         success = false;
@@ -88,95 +96,105 @@ public class LateralChallenge: Scenario
     protected override bool OnCheckFailure()
     {
 
-        if (drone.ControlMode() != 3.0)
+        gateError = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().z - targetGate.y, 2f) + Mathf.Pow(drone.CoordsUnity().x - targetGate.x, 2f));
+        if (gateNum == 1)
         {
-            gateError = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().z - targetGate.y, 2f) + Mathf.Pow(drone.CoordsUnity().x - targetGate.x, 2f));
-            if (gateNum == 1)
+            line.localPosition = new Vector3((startPosition.x + gate1.x) / 2, data.vehiclePosition.y, (startPosition.y + gate1.y) / 2);
+            line.localScale = new Vector3(Mathf.Abs(startPosition.x - gate1.x) + 1f, 1f, Mathf.Abs(startPosition.y - gate1.y) + 1f);
+            if (drone.CoordsUnity().z >= gate1.y)
             {
-                line.localPosition = new Vector3((startPosition.x + gate1.x) / 2, data.vehiclePosition.y, (startPosition.y + gate1.y) / 2);
-                line.localScale = new Vector3(Mathf.Abs(startPosition.x - gate1.x) + 1f, 1f, Mathf.Abs(startPosition.y - gate1.y) + 1f);
-                if (drone.CoordsUnity().z >= gate1.y)
+                if (gateError > errorThreshold)
                 {
-                    if (gateError > errorThreshold)
-                    {
-                        data.failText = "Lateral Challenged Not Completed.\n" +
-                            "Gate was missed by " + gateError + " meters " +
-                            " (Threshold = " + errorThreshold + " meters)";
-                        return true;
-                    }
+                    data.failText = "Lateral Challenged Not Completed.\n" +
+                        "Gate was missed by " + gateError + " meters " +
+                        " (Threshold = " + errorThreshold + " meters)";
+                    return true;
+                }
 
+                
+                Vector3 orbitCenter = new Vector3(1000f, 1300f, -data.vehiclePosition.y);
+                targetRadius = 400f;
+                Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
+                if (drone.ControlMode() != 3)
+                {
                     drone.SetControlMode(8);
-                    Vector3 orbitCenter = new Vector3(1000f, 1300f, -data.vehiclePosition.y);
-                    targetRadius = 400f;
-                    Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
                     drone.CommandVector(orbitCenter, velocityVec);
-                    gateNum++;
-                    Debug.Log("Gate #1 Error = " + gateError);
-                    targetGate = gate2;
                 }
-            } else if (gateNum == 2)
-            {
-                line.localScale = new Vector3(0f,0f,0f);
-                if (drone.CoordsUnity().x <= gate2.x)
-                {
-                    if (gateError > errorThreshold)
-                    {
-                        data.failText = "Lateral Challenged Not Completed.\n" +
-                            "Gate was missed by " + gateError + " meters " +
-                            " (Threshold = " + errorThreshold + " meters)";
-                        return true;
-                    }
-                    drone.SetControlMode(8);
-                    Vector3 orbitCenter = new Vector3(1100f, 1300f, -data.vehiclePosition.y);
-                    targetRadius = 300f;
-                    Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
-                    drone.CommandVector(orbitCenter, velocityVec);
-                    gateNum++;
-                    Debug.Log("Gate #2 Error = " + gateError);
-                    targetGate = gate3;
-                }
-            } else if (gateNum == 3)
-            {
-
-                if(drone.CoordsUnity().z <= gate3.y)
-                {
-                    if (gateError > errorThreshold)
-                    {
-                        data.failText = "Lateral Challenged Not Completed.\n" +
-                            "Gate was missed by " + gateError + " meters " +
-                            " (Threshold = " + errorThreshold + " meters)";
-                        return true;
-                    }
-                    drone.SetControlMode(7);
-                    Vector3 startWaypoint = new Vector3(gate3.y, gate3.x, -data.vehiclePosition.y);
-                    Vector3 endWaypoint = new Vector3(gate4.y, gate4.x, -data.vehiclePosition.y);
-                    Vector3 velocityVec = 41f * (endWaypoint - startWaypoint).normalized;
-                    drone.CommandVector(startWaypoint, velocityVec);
-                    gateNum++;
-                    Debug.Log("Gate #3 Error = " + gateError);
-                    targetGate = gate4;
-                }
-            }else if (gateNum  == 4)
-            {
-                line.localPosition = new Vector3((gate4.x + gate3.x) / 2, data.vehiclePosition.y, (gate4.y + gate3.y) / 2);
-                line.localScale = new Vector3(Mathf.Abs(gate4.x - gate3.x) + 1f, 1f, Mathf.Abs(gate4.y - gate3.y) + 1f);
-                if (drone.CoordsUnity().z <= gate4.y)
-                {
-                    if (gateError > errorThreshold)
-                    {
-                        data.failText = "Lateral Challenged Not Completed.\n" +
-                            "Gate was missed by " + gateError + " meters " +
-                            " (Threshold = " + errorThreshold + " meters)";
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.Log("Gate #4 Error = " + gateError);
-                        success = true;
-                    }
-
-                }
+                gateNum++;
+                Debug.Log("Gate #1 Error = " + gateError);
+                targetGate = gate2;
             }
+        } else if (gateNum == 2)
+        {
+            line.localScale = new Vector3(0f,0f,0f);
+            if (drone.CoordsUnity().x <= gate2.x)
+            {
+                if (gateError > errorThreshold)
+                {
+                    data.failText = "Lateral Challenged Not Completed.\n" +
+                        "Gate was missed by " + gateError + " meters " +
+                        " (Threshold = " + errorThreshold + " meters)";
+                    return true;
+                }
+                
+                Vector3 orbitCenter = new Vector3(1100f, 1300f, -data.vehiclePosition.y);
+                targetRadius = 300f;
+                Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
+                if (drone.ControlMode() != 3)
+                {
+                    drone.SetControlMode(8);
+                    drone.CommandVector(orbitCenter, velocityVec);
+                }
+                gateNum++;
+                Debug.Log("Gate #2 Error = " + gateError);
+                targetGate = gate3;
+            }
+        } else if (gateNum == 3)
+        {
+
+            if(drone.CoordsUnity().z <= gate3.y)
+            {
+                if (gateError > errorThreshold)
+                {
+                    data.failText = "Lateral Challenged Not Completed.\n" +
+                        "Gate was missed by " + gateError + " meters " +
+                        " (Threshold = " + errorThreshold + " meters)";
+                    return true;
+                }
+                
+                Vector3 startWaypoint = new Vector3(gate3.y, gate3.x, -data.vehiclePosition.y);
+                Vector3 endWaypoint = new Vector3(gate4.y, gate4.x, -data.vehiclePosition.y);
+                Vector3 velocityVec = 41f * (endWaypoint - startWaypoint).normalized;
+                if (drone.ControlMode() != 3)
+                {
+                    drone.SetControlMode(7);
+                    drone.CommandVector(startWaypoint, velocityVec);
+                }
+                gateNum++;
+                Debug.Log("Gate #3 Error = " + gateError);
+                targetGate = gate4;
+            }
+        }else if (gateNum  == 4)
+        {
+            line.localPosition = new Vector3((gate4.x + gate3.x) / 2, data.vehiclePosition.y, (gate4.y + gate3.y) / 2);
+            line.localScale = new Vector3(Mathf.Abs(gate4.x - gate3.x) + 1f, 1f, Mathf.Abs(gate4.y - gate3.y) + 1f);
+            if (drone.CoordsUnity().z <= gate4.y)
+            {
+                if (gateError > errorThreshold)
+                {
+                    data.failText = "Lateral Challenged Not Completed.\n" +
+                        "Gate was missed by " + gateError + " meters " +
+                        " (Threshold = " + errorThreshold + " meters)";
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Gate #4 Error = " + gateError);
+                    success = true;
+                }
+
+            }
+            
 
         }
 

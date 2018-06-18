@@ -388,6 +388,8 @@ namespace DroneControllers
                 case (int)FLIGHT_MODE.ORBITFOLLOWING:
                     positionTarget = localPosition;
                     velocityTarget.x = localVelocity.x;
+                    velocityTarget.y = 0f;
+                    velocityTarget.z = 0f;
                     bodyRateTarget.z = localVelocity.z;
                     break;
             }

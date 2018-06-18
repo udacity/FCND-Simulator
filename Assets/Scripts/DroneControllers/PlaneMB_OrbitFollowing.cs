@@ -59,10 +59,12 @@ namespace MovementBehaviors
             controller.attitudeTarget.z = yawCommand;
             float rollCommand = controller.planeControl.YawLoop(yawCommand, controller.AttitudeEuler().z, Time.fixedDeltaTime);
 
-            rollCommand = rollCommand + Mathf.Atan(speedCommand * speedCommand / (9.81f*controller.velocityTarget.x / controller.bodyRateTarget.z));
+            float roll_ff = Mathf.Atan(speedCommand * speedCommand / (9.81f * controller.velocityTarget.x / controller.bodyRateTarget.z));
+            rollCommand = rollCommand + roll_ff;
             if (Mathf.Abs(rollCommand) > maxRoll)
                 rollCommand = Mathf.Sign(rollCommand) * maxRoll;
 
+            Debug.Log("Roll Cmd " + rollCommand);
             float aileron = controller.planeControl.RollLoop(rollCommand, controller.AttitudeEuler().x, controller.AngularRatesBody().x);
             float rudder = controller.planeControl.SideslipLoop(sideslipCommand, controller.Sideslip());
 

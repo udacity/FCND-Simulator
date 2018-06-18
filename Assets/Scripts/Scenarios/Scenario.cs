@@ -33,7 +33,9 @@ public abstract class Scenario : MonoBehaviour
 
         drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
         FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance );
-		OnInit ();
+        drone.SetGuided(false);
+        drone.ArmDisarm(false);
+        OnInit ();
 	}
 
 	#if UNITY_EDITOR

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Drones;
 using DroneInterface;
+using DroneControllers;
 
 public class OrbitFollowingScenario : Scenario
 { 
@@ -23,6 +24,9 @@ public class OrbitFollowingScenario : Scenario
 
     protected override void OnInit ()
 	{
+        var planeControl = GameObject.Find("Plane Drone").GetComponent<PlaneAutopilot>().planeControl;
+        planeControl.SetDefaultLongitudinalGains();
+        planeControl.SetStudentLateralGains();
         base.OnInit ();
         drone.SetControlMode(8); //Line Following Mode
         drone.SetGuided(true);

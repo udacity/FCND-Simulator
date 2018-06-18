@@ -6,36 +6,44 @@ using UnityEngine;
 [System.Serializable]
 public class PlaneControl {
 
-    [Tunable(0.2f,-1.0f, 1.0f)] // 0.2f
+    [Tunable(0.0f,-1.0f, 1.0f)] // 0.2f
     public float Kp_speed;
+    public float Kp_speed_student;
 
-    [Tunable(0.1f,-1.0f, 1.0f)] // 0.1f
+    [Tunable(0.0f,-1.0f, 1.0f)] // 0.1f
     public float Ki_speed;
+    public float Ki_speed_student;
 
     public float speedInt = 0.0f;
     public float maxSpeedInt = 0.25f;
 
 
-    [Tunable(20.0f,-50.0f,50.0f)] //20.0f
+    [Tunable(0.0f,-50.0f,50.0f)] //20.0f
     public float Kp_pitch = 8.0f;
+    public float Kp_pitch_student;
 
-    [Tunable(10.0f,-50.0f,50.0f)] //10.0f
+    [Tunable(0.0f,-50.0f,50.0f)] //10.0f
     public float Kp_q = 5.0f;
+    public float Kp_q_student;
 
-    [Tunable(0.03f, -1.0f, 1.0f)] // 0.03f
+    [Tunable(0.0f, -1.0f, 1.0f)] // 0.03f
     public float Kp_alt;
+    public float Kp_alt_student;
 
-    [Tunable(0.05f, -1.0f, 1.0f)] // 0.05f
+    [Tunable(0.0f, -1.0f, 1.0f)] // 0.05f
     public float Ki_alt;
+    public float Ki_alt_student;
 
     public float altInt = 0.0f;
     public float maxAltInt = 0.1f;
 
-    [Tunable(0.2f, -1.0f, 1.0f)] // 0.2f
+    [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
     public float Kp_speed2;
+    public float Kp_speed2_student;
 
-    [Tunable(0.2f, -1.0f, 1.0f)] // 0.2f
+    [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
     public float Ki_speed2 = 0.001f;
+    public float Ki_speed2_student;
 
     public float speedInt2 = 0.0f;
     public float maxSpeedInt2 = 10.0f;
@@ -63,41 +71,12 @@ public class PlaneControl {
 
     public float K_orbit = 1.0f;
 
-    /*
-    public float Kp_r = 0.04f;//20.0f;
-
-    public float Kp_hdot = 2.5f;//5.0f;
-    public float Ki_hdot = 0.25f;//0.5f;
-
-    public float Kp_p = 0.1f;//10.0f;
-    public float Kp_roll = 8.0f;//6.5f;
-
-
-
-    public float maxTilt = 0.5f;
-    public float maxAscentRate = 5.0f;
-    public float maxDescentRate = 2.0f;
-
-    */
-
     private float hDotInt;
     private float maxHDotInt = 0.1f;
 
 
 	// Use this for initialization
 	public PlaneControl() {
-
-        //Kp_speed = 0.2f;
-        //Ki_speed = 0.1f;
-
-        //Kp_pitch = 20.0f;
-        //Kp_q = 10.0f;
-
-        //Kp_alt = 0.03f;
-        //Ki_alt = 0.05f;
-
-        //Kp_speed2 = 0.2f;
-        //Ki_speed2 = 0.2f;
 
         altInt = 0.0f;
         speedInt = 0.0f;
@@ -250,6 +229,63 @@ public class PlaneControl {
                 addon = addon - Mathf.PI * 2f;
         output = output + addon;
         return output;
+    }
+
+    public void SetDefaultLongitudinalGains()
+    {
+        Kp_speed_student = Kp_speed;
+        Kp_speed = 0.2f;
+
+        Ki_speed_student = Ki_speed;
+        Ki_speed = 0.1f;
+
+        Kp_pitch_student = Kp_pitch;
+        Kp_pitch = 8.0f;
+
+        Kp_q_student = Kp_q;
+        Kp_q = 5.0f;
+
+        Kp_alt_student = Kp_alt;
+        Kp_alt = 0.03f;
+
+        Ki_alt_student = Ki_alt;
+        Ki_alt = 0.05f;
+
+        Kp_speed2_student = Kp_speed2;
+        Kp_speed2 = 0.2f;
+
+        Ki_speed2_student = Ki_speed2;
+        Ki_speed2 = 0.001f;
+    }
+
+    public void SetStudentLongitudinalGains()
+    {
+        Kp_speed = Kp_speed_student;
+
+        Ki_speed = Ki_speed_student;
+
+        Kp_pitch = Kp_pitch_student;
+
+        Kp_q = Kp_q_student;
+
+        Kp_alt = Kp_alt_student;
+
+        Ki_alt = Ki_alt_student;
+
+        Kp_speed2= Kp_speed2_student;
+
+        Ki_speed2 = Ki_speed2_student;
+
+    }
+
+    public void SetDefaultLateralGains()
+    {
+
+    }
+
+    public void SetStudentLateralGains()
+    {
+
     }
 
    

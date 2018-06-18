@@ -28,7 +28,6 @@ public class AirspeedHoldScenario : Scenario
     protected override void OnInit ()
 	{
         base.OnInit ();
-
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);

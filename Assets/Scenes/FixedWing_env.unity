@@ -1203,17 +1203,25 @@ MonoBehaviour:
   planeSensor: {fileID: 155553750}
   planeControl:
     Kp_speed: 0.2
+    Kp_speed_student: 0
     Ki_speed: 0.1
+    Ki_speed_student: 0
     speedInt: 0
     maxSpeedInt: 0.25
     Kp_pitch: 20
+    Kp_pitch_student: 0
     Kp_q: 10
+    Kp_q_student: 0
     Kp_alt: 0.03
+    Kp_alt_student: 0
     Ki_alt: 0.05
+    Ki_alt_student: 0
     altInt: 0
     maxAltInt: 0.1
     Kp_speed2: 0.1
+    Kp_speed2_student: 0
     Ki_speed2: 0.02
+    Ki_speed2_student: 0
     speedInt2: 0
     maxSpeedInt2: 50
     Kp_climb: 0.1
@@ -2119,7 +2127,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -2897,16 +2905,17 @@ MonoBehaviour:
     vehiclePosition: {x: 1500, y: 450, z: 0}
     vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
     vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
-    vehicleVelocity: {x: 0, y: 0, z: 30}
+    vehicleVelocity: {x: 0, y: 0, z: 31}
     cameraLookMode: 1
     cameraDistance: 10
     title: Airspeed Hold Scenario
     description: 'The objective of this scenario is to tune/design a controller to
-      maintain a constant airspeed.
+      maintain a constant airspeed. The aircraft will start 10 meters/sec slower than
+      the target airspeed.
 
       To complete this scenario:
 
-      -The airspeed must be within +/- 0.1 meters/sec of the target airspeed (45 meters/sec)
+      -The airspeed must be within +/- 0.1 meters/sec of the target airspeed (41 meters/sec)
       within 10s
 
       -The airspeed must maintain within those bounds for 5 seconds'
@@ -4719,7 +4728,7 @@ MonoBehaviour:
 
       To complete this scenario:
 
-      -The airspeed must be within +/- 0.5 degrees within 25s
+      -The sideslip must be within +/- 0.5 degrees within 25s
 
       -The airspeed must maintain the airspeed within those bounds for 5 seconds'
     successText: 
@@ -4770,7 +4779,8 @@ MonoBehaviour:
     cameraDistance: 20
     title: Altitude Hold Scenario
     description: 'The objective of this scenario is to tune/design a controller to
-      maintain a constant altitude using the elevator.
+      maintain a constant altitude using the elevator. The aircraft will start 20
+      meters below the desired altitude.
 
       To complete this scenario:
 
@@ -5358,7 +5368,6 @@ Transform:
   - {fileID: 730093708}
   - {fileID: 1980859575}
   - {fileID: 1782651365}
-  - {fileID: 878061819}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5817,34 +5826,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 267873577}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &878061818
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 878061819}
-  m_Layer: 0
-  m_Name: TuningParameters
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &878061819
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 878061818}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 713719898}
-  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &879157287
 GameObject:
@@ -9323,7 +9304,7 @@ MonoBehaviour:
 
       To complete this scenario:
 
-      -The roll angle must be within +/- 5 degrees rs/sec) within 5s
+      -The roll angle must be within +/- 5 degrees within 5s
 
       -The roll angle must maintain within those bounds for 5 seconds'
     successText: 
@@ -9940,8 +9921,8 @@ MonoBehaviour:
 
       To complete this scenario:
 
-      -The radius from the orbit center (North = 0 meters, East = 1600 meters) must
-      be within +/- 5 meters of the target radius (100 meters) within 15s
+      -The radius from the orbit center (North = 0 meters, East = 500 meters) must
+      be within +/- 5 meters of the target radius (500 meters) within 15s
 
       -The radius from the orbit center must maintain within those bounds for 5 seconds'
     successText: 
@@ -9952,7 +9933,7 @@ MonoBehaviour:
   currTime: 0
   currentRadius: 0
   targetRadius: 500
-  radiusThreshold: 2
+  radiusThreshold: 5
   orbitCenter: {x: 0, y: 0, z: 0}
 --- !u!1 &2002531338
 GameObject:
