@@ -1081,7 +1081,7 @@ MonoBehaviour:
       altitude, use the maintain altitude controller.\n  If the vehicle is below or
       above the target altitude by the specified threshold, use the climb/descend
       controller with full or min throttle (respectively)\nTo complete the challenge,
-      you must be within +/-1 meter when arriving at the gate.\nThe gate locations
+      you must be within +/-3 meters when arriving at the gate.\nThe gate locations
       (x = horizontal distance from the start location):\nGate #1: x = 200m, altitude=200m\nGate
       #2: x = 1100m, altitude = 300m\nGate #3: x = 1400m, altitude = 280m\nGate #4:
       x = 2200m, altitude = 200m"
@@ -1089,13 +1089,59 @@ MonoBehaviour:
     failText: 
   tunableParameters:
   - altitudeSwitch
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   position2D: {x: 0, y: 0}
   currentAirspeed: 0
   currTime: 0
   targetAirspeed: 41
   currentClimbRate: 0
-  vertThreshold: 2
+  vertThreshold: 3
   targetAltitude: 0
   altitudeSwitch: 25
 --- !u!1 &120945876
@@ -1207,6 +1253,8 @@ MonoBehaviour:
     Ki_speed: 0.1
     Ki_speed_student: 0
     speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
     maxSpeedInt: 0.25
     Kp_pitch: 20
     Kp_pitch_student: 0
@@ -1217,12 +1265,16 @@ MonoBehaviour:
     Ki_alt: 0.05
     Ki_alt_student: 0
     altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
     maxAltInt: 0.1
     Kp_speed2: 0.1
     Kp_speed2_student: 0
     Ki_speed2: 0.02
     Ki_speed2_student: 0
     speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
     maxSpeedInt2: 50
     Kp_climb: 0.1
     Ki_climb: 0.1
@@ -2127,7 +2179,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -2490,6 +2542,16 @@ Prefab:
     - target: {fileID: 1695017282473400, guid: f71ee99d13775b74ab589fef8f05da06, type: 2}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[3].m_Text
+      value: '2: Hold Altitude'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[4].m_Text
+      value: '3: Hold Airspeed'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f71ee99d13775b74ab589fef8f05da06, type: 2}
@@ -2885,7 +2947,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 713719898}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &251205315
 MonoBehaviour:
@@ -2904,7 +2966,7 @@ MonoBehaviour:
     canFailBeforeRuntime: 1
     vehiclePosition: {x: 1500, y: 450, z: 0}
     vehicleOrientation: {x: 0, y: 0, z: 0, w: 1}
-    vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
+    vehicleEulerAngles: {x: 0, y: 0, z: 0}
     vehicleVelocity: {x: 0, y: 0, z: 31}
     cameraLookMode: 1
     cameraDistance: 10
@@ -2915,7 +2977,7 @@ MonoBehaviour:
 
       To complete this scenario:
 
-      -The airspeed must be within +/- 0.1 meters/sec of the target airspeed (41 meters/sec)
+      -The airspeed must be within +/- 0.5 meters/sec of the target airspeed (41 meters/sec)
       within 10s
 
       -The airspeed must maintain within those bounds for 5 seconds'
@@ -2924,9 +2986,56 @@ MonoBehaviour:
   tunableParameters:
   - Kp_speed
   - Ki_speed
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   currentAltitude: 0
   currentAirspeed: 0
+  airspeedThreshold: 0.5
   currTime: 0
   targetAirspeed: 41
 --- !u!1 &267873575
@@ -3755,6 +3864,52 @@ MonoBehaviour:
   - Ki_alt
   - Kp_speed2
   - Ki_speed2
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
 --- !u!4 &427670809
 Transform:
@@ -4734,6 +4889,52 @@ MonoBehaviour:
     successText: 
     failText: 
   tunableParameters: []
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -4784,7 +4985,7 @@ MonoBehaviour:
 
       To complete this scenario:
 
-      -The altitude must be within +/-1 meters of the target altitude (450 meters/sec)
+      -The altitude must be within +/-3 meters of the target altitude (450 meters)
       within 10s
 
       -The altitude must maintain within those bounds for 5 seconds'
@@ -4795,8 +4996,55 @@ MonoBehaviour:
   - Kp_q
   - Kp_alt
   - Ki_alt
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   currentAltitude: 0
+  altitudeThreshold: 3
   currentAirspeed: 0
   currTime: 0
   targetAirspeed: 41
@@ -4812,7 +5060,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 713719898}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &606396012
 GameObject:
@@ -5358,8 +5606,8 @@ Transform:
   m_Children:
   - {fileID: 427670809}
   - {fileID: 1077483077}
-  - {fileID: 251205314}
   - {fileID: 606392156}
+  - {fileID: 251205314}
   - {fileID: 768558206}
   - {fileID: 118137638}
   - {fileID: 1838104314}
@@ -5385,8 +5633,8 @@ MonoBehaviour:
   scenarios:
   - {fileID: 427670808}
   - {fileID: 1077483076}
-  - {fileID: 251205315}
   - {fileID: 606392155}
+  - {fileID: 251205315}
   - {fileID: 768558207}
   - {fileID: 118137639}
   - {fileID: 1838104315}
@@ -5518,6 +5766,52 @@ MonoBehaviour:
     successText: 
     failText: 
   tunableParameters: []
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -5746,6 +6040,52 @@ MonoBehaviour:
   tunableParameters:
   - Kp_speed2
   - Ki_speed2
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   currentAirspeed: 0
   currTime: 0
@@ -6117,6 +6457,52 @@ MonoBehaviour:
     successText: You did it!
     failText: You failed
   tunableParameters: []
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   currentVelocity: 0
   currentAirspeedRate: 0
@@ -9030,6 +9416,52 @@ MonoBehaviour:
     successText: 
     failText: 
   tunableParameters: []
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -9236,6 +9668,52 @@ MonoBehaviour:
     successText: 
     failText: 
   tunableParameters: []
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   gateNum: 0
   targetRadius: 0
@@ -9310,6 +9788,52 @@ MonoBehaviour:
     successText: 
     failText: 
   tunableParameters: []
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -9928,6 +10452,52 @@ MonoBehaviour:
     successText: 
     failText: 
   tunableParameters: []
+  planeControl:
+    Kp_speed: 0
+    Kp_speed_student: 0
+    Ki_speed: 0
+    Ki_speed_student: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_pitch_student: 0
+    Kp_q: 5
+    Kp_q_student: 0
+    Kp_alt: 0
+    Kp_alt_student: 0
+    Ki_alt: 0
+    Ki_alt_student: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Kp_speed2_student: 0
+    Ki_speed2: 0.001
+    Ki_speed2_student: 0
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    K_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0

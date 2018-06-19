@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Drones;
 using DroneInterface;
+using DroneControllers;
 
 [System.Serializable]
 public class AirspeedHoldScenario : Scenario
@@ -15,7 +16,7 @@ public class AirspeedHoldScenario : Scenario
 
     public float currentAirspeed = 0.0f;
     private float lastAirspeedTime = 0.0f;
-    private float airspeedThreshold = 0.5f;
+    public float airspeedThreshold = 0.5f;
 
     private float timeInterval = 5.0f;
     private float finalTime = 15.0f;
@@ -31,6 +32,9 @@ public class AirspeedHoldScenario : Scenario
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
+        planeControl.SetDefaultLongitudinalGains();
+        planeControl.SetDefaultLateralGains();
+        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()
@@ -39,6 +43,7 @@ public class AirspeedHoldScenario : Scenario
         
         currTime = drone.FlightTime();
         initTime = drone.FlightTime();
+        
     }
 
 	protected override bool OnCheckSuccess ()

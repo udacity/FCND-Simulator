@@ -10,7 +10,7 @@ public class AltHoldScenario : Scenario
     Material lineMat;
     public float currentAltitude = 0.0f;
     private float lastAltitudeTime = 0.0f;
-    private float altitudeThreshold = 1.0f;
+    public float altitudeThreshold = 2.0f;
 
     public float currentAirspeed = 0.0f;
     private float lastAirspeedTime = 0.0f;
@@ -35,6 +35,9 @@ public class AltHoldScenario : Scenario
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
+        planeControl.SetDefaultLongitudinalGains();
+        planeControl.SetDefaultLateralGains();
+        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()

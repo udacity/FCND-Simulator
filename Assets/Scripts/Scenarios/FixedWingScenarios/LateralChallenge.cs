@@ -43,11 +43,11 @@ public class LateralChallenge: Scenario
 
     public float targetAltitude;
 
-    PlaneControl planeControl;
+    
 
     protected override void OnInit()
     {
-        planeControl = GameObject.Find("Plane Drone").GetComponent<PlaneAutopilot>().planeControl;
+        
         
         gate = GameObject.Find("Gate").GetComponent<Transform>();
         line = GameObject.Find("Line").GetComponent<Transform>();

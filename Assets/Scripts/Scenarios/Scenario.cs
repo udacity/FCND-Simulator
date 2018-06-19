@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Drones;
 using DroneInterface;
+using DroneControllers;
 
 [ExecuteInEditMode]
 public abstract class Scenario : MonoBehaviour
@@ -14,9 +15,10 @@ public abstract class Scenario : MonoBehaviour
 	public string[] tunableParameters;
 
     public IDrone drone;
+    public PlaneControl planeControl;
 
-	#if UNITY_EDITOR
-	[Tooltip ("An editor-only field. Drag the desired drone here to store its current position and orientation")]
+#if UNITY_EDITOR
+    [Tooltip ("An editor-only field. Drag the desired drone here to store its current position and orientation")]
 	public GameObject droneObject;
     #endif
 
@@ -24,6 +26,7 @@ public abstract class Scenario : MonoBehaviour
     public void Init ()
 	{
         drone = Simulation.ActiveDrone;
+        planeControl = GameObject.Find("Plane Drone").GetComponent<PlaneAutopilot>().planeControl;
         if (drone == null)
             Debug.Log("Null Active Drone");
 

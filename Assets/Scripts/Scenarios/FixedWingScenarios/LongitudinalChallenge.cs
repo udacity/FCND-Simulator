@@ -47,7 +47,7 @@ public class LongitudinalChallenge : Scenario
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-		drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
+		drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), targetAirspeed);
         drone.SetHomePosition();
         targetGate = gate1;
         UpdateGatePosition();
@@ -56,7 +56,7 @@ public class LongitudinalChallenge : Scenario
     protected override void OnBegin()
     {
         base.OnBegin();
-        drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
+        drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), targetAirspeed);
 
         initTime = drone.FlightTime();
         success = false;

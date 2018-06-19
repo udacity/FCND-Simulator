@@ -15,6 +15,8 @@ public class PlaneControl {
     public float Ki_speed_student;
 
     public float speedInt = 0.0f;
+    public float minThrottle = 0.0f;
+    public float maxThrottle = 1.0f;
     public float maxSpeedInt = 0.25f;
 
 
@@ -35,6 +37,8 @@ public class PlaneControl {
     public float Ki_alt_student;
 
     public float altInt = 0.0f;
+    public float minPitch = -30f * Mathf.PI / 180f;
+    public float maxPitch = 30f * Mathf.PI / 180f;
     public float maxAltInt = 0.1f;
 
     [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
@@ -46,6 +50,8 @@ public class PlaneControl {
     public float Ki_speed2_student;
 
     public float speedInt2 = 0.0f;
+    public float minPitch2 = -45f * Mathf.PI / 180f;
+    public float maxPitch2 = 45f * Mathf.PI / 180f;
     public float maxSpeedInt2 = 10.0f;
 
     public float Kp_climb = 0.01f;
@@ -108,14 +114,21 @@ public class PlaneControl {
 
     public float AirspeedLoop(float targetAirspeed, float airspeed, float dt = 0.0f)
     {
+        float airspeedError = (targetAirspeed - airspeed);
         if (dt == 0.0)
             dt = Time.fixedDeltaTime;
-        speedInt = speedInt + (targetAirspeed - airspeed) * dt;
-        if (speedInt > maxSpeedInt)
+        speedInt = speedInt + airspeedError * dt;
+
+        /*if (speedInt > maxSpeedInt)
             speedInt = maxSpeedInt;
         else if (speedInt < -maxSpeedInt)
             speedInt = -maxSpeedInt;
-        float output = Kp_speed * (targetAirspeed - airspeed) + Ki_speed * speedInt;
+        */
+        float outputUnsat = Kp_speed * airspeedError + Ki_speed * speedInt;
+        float output = Mathf.Clamp(outputUnsat, minThrottle, maxThrottle);
+        if (Ki_speed != 0.0f)
+            speedInt = speedInt + dt / Ki_speed * (output - outputUnsat);
+
         return output;
         
     }
@@ -129,14 +142,24 @@ public class PlaneControl {
         return output;
     }
 
-    public float AltitudeLoop(float targetAltitude, float altitude)
+    public float AltitudeLoop(float targetAltitude, float altitude, float dt = 0f)
     {
-        altInt = altInt + targetAltitude - altitude;
-        if (altInt > maxAltInt)
+        if (dt == 0)
+            dt = Time.fixedDeltaTime;
+
+        float altError = targetAltitude-altitude;
+        altInt = altInt + altError*dt;
+
+        /*if (altInt > maxAltInt)
             altInt = maxAltInt;
         else if (altInt < -maxAltInt)
             altInt = -maxAltInt;
-        float output = Kp_alt * (targetAltitude - altitude) + Ki_alt * altInt;
+        */
+
+        float outputUnsat = Kp_alt * altError + Ki_alt * altInt;
+        float output = Mathf.Clamp(outputUnsat, minPitch, maxPitch);
+        if (Ki_alt != 0f)
+            altInt = altInt + dt / Ki_alt * (output - outputUnsat);
         return output;
     }
 
@@ -146,13 +169,18 @@ public class PlaneControl {
     {
         if (dt == 0.0)
             dt = Time.fixedDeltaTime;
-
-        speedInt2 = speedInt2 + (targetAirspeed - airspeed) * dt;
+        float speedError = (targetAirspeed - airspeed);
+        speedInt2 = speedInt2 + speedError* dt;
+        /*
         if (speedInt2 > maxSpeedInt2)
             speedInt2 = maxSpeedInt2;
         else if (speedInt2 < -maxSpeedInt2)
             speedInt2 = -maxSpeedInt2;
-        float output = Kp_speed2 * (targetAirspeed - airspeed) + Ki_speed2 * speedInt2;
+        */
+        float outputUnsat = Kp_speed2 * speedError + Ki_speed2 * speedInt2;
+        float output = Mathf.Clamp(outputUnsat, minPitch2, maxPitch2);
+        if (Ki_speed2 != 0f)
+            speedInt2 = speedInt2 + dt / Ki_speed2 * (output - outputUnsat);
         return output;
     }
 
@@ -237,7 +265,7 @@ public class PlaneControl {
         Kp_speed = 0.2f;
 
         Ki_speed_student = Ki_speed;
-        Ki_speed = 0.1f;
+        Ki_speed = 0.2f;
 
         Kp_pitch_student = Kp_pitch;
         Kp_pitch = 8.0f;
@@ -249,13 +277,13 @@ public class PlaneControl {
         Kp_alt = 0.03f;
 
         Ki_alt_student = Ki_alt;
-        Ki_alt = 0.05f;
+        Ki_alt = 0.02f;
 
         Kp_speed2_student = Kp_speed2;
         Kp_speed2 = 0.2f;
 
         Ki_speed2_student = Ki_speed2;
-        Ki_speed2 = 0.001f;
+        Ki_speed2 = 0.2f;
     }
 
     public void SetStudentLongitudinalGains()
@@ -277,6 +305,7 @@ public class PlaneControl {
         Ki_speed2 = Ki_speed2_student;
 
     }
+
 
     public void SetDefaultLateralGains()
     {
