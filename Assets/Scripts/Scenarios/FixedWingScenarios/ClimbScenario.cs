@@ -8,7 +8,7 @@ public class ClimbScenario : Scenario
 {
     public float currentAirspeed = 0.0f;
     private float lastAirspeedTime = 0.0f;
-    private float airspeedThreshold = 1.0f;
+    public float airspeedThreshold = 1.0f;
 
 
     private float timeInterval = 5.0f;
@@ -26,6 +26,9 @@ public class ClimbScenario : Scenario
         drone.SetControlMode(5); //AscendDescend Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
+        planeControl.SetDefaultLongitudinalGains();
+        planeControl.SetDefaultLateralGains();
+        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()
