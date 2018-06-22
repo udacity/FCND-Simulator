@@ -15,7 +15,7 @@ MonoBehaviour:
   - name: Kp_speed
     minValue: -1
     maxValue: 1
-    fixedValue: 0.2
+    fixedValue: 0.5
   - name: Ki_speed
     minValue: -1
     maxValue: 1
@@ -35,7 +35,7 @@ MonoBehaviour:
   - name: Ki_alt
     minValue: -1
     maxValue: 1
-    fixedValue: 0.02
+    fixedValue: 0.01
   - name: Kp_speed2
     minValue: -1
     maxValue: 1
@@ -45,6 +45,6 @@ MonoBehaviour:
     maxValue: 1
     fixedValue: 0.2
   - name: altitudeSwitch
-    minValue: -1
-    maxValue: 1
+    minValue: 0
+    maxValue: 100
     fixedValue: 25
