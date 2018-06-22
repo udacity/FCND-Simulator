@@ -5,6 +5,19 @@ using Drones;
 using DroneInterface;
 using DroneControllers;
 
+//[System.Serializable]
+//public struct TunableSet
+//{
+//	public bool Kp_speed;
+//	public bool Ki_speed;
+//	public bool Kp_pitch;
+//	public bool Kp_q;
+//	public bool Kp_alt;
+//	public bool Ki_alt;
+//	public bool Kp_speed2;
+//	public bool Ki_speed2;
+//}
+
 [ExecuteInEditMode]
 public abstract class Scenario : MonoBehaviour
 {
@@ -33,6 +46,9 @@ public abstract class Scenario : MonoBehaviour
         Debug.Log ( "Initializing scenario: " + data.title );
 		IsRunning = false;
 //		tuningParameters.ForEach ( x => x.Reset () );
+
+		// set default (fixed) values for scenario
+		planeControl.SetScenarioParameters ( tunableParameters );
 
         drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
         FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance );
@@ -100,6 +116,12 @@ public abstract class Scenario : MonoBehaviour
 	{
 //		OnReset ();
 		Init ();
+	}
+
+	public virtual void OnApplyTunableValues ()
+	{
+		// set default (fixed) values for scenario
+		planeControl.SetScenarioParameters ( tunableParameters );
 	}
 
 	protected virtual void OnInit () {}

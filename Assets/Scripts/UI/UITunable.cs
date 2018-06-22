@@ -15,7 +15,7 @@ public class UITunable : MonoBehaviour
 	public TText maxValue;
 
 	[System.NonSerialized]
-	public RuntimeTunableParameter parameter;
+	public TunableParameter parameter;
 
 	float defaultValue;
 
@@ -29,7 +29,20 @@ public class UITunable : MonoBehaviour
 		slider.value = float.Parse ( curValue.text );
 	}
 
-	public void Set (string pName, float value, float min, float max, RuntimeTunableParameter parm)
+	public void Set (TunableParameter param)
+	{
+		paramName.text = param.name;
+		curValue.text = param.value.ToString ( "F2" );
+		minValue.text = param.minValue.ToString ( "F2" );
+		maxValue.text = param.maxValue.ToString ( "F2" );
+		slider.minValue = param.minValue;
+		slider.maxValue = param.maxValue;
+		slider.value = param.value;
+		defaultValue = param.value;
+		parameter = param;
+	}
+
+	public void Set (string pName, float value, float min, float max, TunableParameter parm)
 	{
 		paramName.text = pName;
 		curValue.text = value.ToString ( "F2" );
@@ -49,7 +62,14 @@ public class UITunable : MonoBehaviour
 
 	public void ApplyValue ()
 	{
-		parameter.field.SetValue ( parameter.fieldInstance, GetValue () );
+		parameter.value = GetValue ();
+	}
+
+	public void RestoreValue ()
+	{
+		float value = parameter.value;
+		curValue.text = value.ToString ( "F2" );
+		slider.value = value;
 	}
 
 	public void ResetToDefault ()

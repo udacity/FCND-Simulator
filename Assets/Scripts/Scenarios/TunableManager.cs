@@ -1,137 +1,102 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
-using System.Reflection;
-using System.Diagnostics;
-#if UNITY_EDITOR
-using UnityEditor.Callbacks;
-#endif
-
-[Serializable]
-public class TunableParameter
-{
-	public Tunable data;
-	public FieldInfo field;
-
-	public TunableParameter (Tunable t, FieldInfo f)
-	{
-		data = t;
-		field = f;
-	}
-}
 
 [System.Serializable]
-public class RuntimeTunableParameter
+public class TunableParameter
 {
-	public Tunable data;
-	public FieldInfo field;
-	public object fieldInstance;
+	public string name;
+	public float minValue;
+	public float maxValue;
+	public float fixedValue;
+	[System.NonSerialized]
+	public float value;
 }
 
-public class TunableManager
+// only needed this once to create the asset
+//[CreateAssetMenu (menuName="Scriptables/TunableManager")]
+public class TunableManager : ScriptableObject
 {
 	static TunableManager Instance
 	{
 		get
 		{
 			if ( instance == null )
-				instance = new TunableManager ();
+				LoadInstance ();
 			return instance;
 		}
 	}
 	static TunableManager instance;
 
 	public static List<TunableParameter> Parameters { get { return Instance.parameters; } }
-	List<TunableParameter> parameters;
-	public static List<RuntimeTunableParameter> RuntimeParameters { get { return Instance.runtimeParameters; } }
-	List<RuntimeTunableParameter> runtimeParameters;
+	public List<TunableParameter> parameters;
 
-	void Init ()
+
+	public static TunableParameter GetParameter (string name)
 	{
-		Stopwatch sw = new Stopwatch ();
-		sw.Start ();
-		if ( parameters == null )
-			parameters = new List<TunableParameter> ();
-		Assembly asm = Assembly.GetExecutingAssembly ();
-		var types = asm.GetExportedTypes ();
-		foreach ( Type t in types )
+		return Parameters.Find ( x => x.name.ToLower () == name.ToLower () );
+	}
+
+	static void LoadInstance ()
+	{
+		instance = Resources.Load<TunableManager> ( "TunableManager" );
+		instance.LoadFromFile ();
+	}
+
+	public static void Init ()
+	{
+		if ( instance == null )
+			LoadInstance ();
+	}
+
+	public void LoadFromFile ()
+	{
+//		string line;
+		string[] split;
+
+		string path = "";
+		// editor
+		#if UNITY_EDITOR
+		path = "Assets/Resources/gains.txt";
+		#else
+		path = Application.dataPath;
+		if ( Application.platform != RuntimePlatform.OSXPlayer )
+		path += "/../";
+		path += "gains.txt";
+		#endif
+
+		string[] lines = File.ReadAllLines ( path );
+		foreach ( string line in lines )
 		{
-			FieldInfo[] fields = t.GetFields ();
-			foreach ( var field in fields )
+			split = line.Split ( ':' );
+			TunableParameter p = parameters.Find ( x => x.name.ToLower () == split [ 0 ].ToLower () );
+			if ( p != null )
 			{
-				var tunableAttribute = field.GetCustomAttribute<Tunable> ( false );
-				if ( tunableAttribute != null )
-				{
-					parameters.Add ( new TunableParameter ( tunableAttribute, field ) );
-//					UnityEngine.Debug.Log ( "Found one! default: " + tunableAttribute.defaultValue + " min: " + tunableAttribute.minValue + " max: " + tunableAttribute.maxValue );
-//					var tt = Activator.CreateInstance ( t );
-//					field.SetValue ( tt, tunableAttribute.minValue );
-//					UnityEngine.Debug.Log ( "Field value is now " + field.GetValue ( tt ) );
-				}
+				p.value = float.Parse ( split [ 1 ] );
+			} else
+				Debug.Log ( "TunableManager can't find parameter named " + split [ 0 ] );
+		}
+
+		Debug.Log ( "Gains loaded from file" );
+	}
+
+	public static void SaveGains ()
+	{
+		string path = Application.dataPath;
+		if ( Application.platform != RuntimePlatform.OSXPlayer )
+			path = path.Substring ( 0, path.LastIndexOf ( '/' ) + 1 );
+//			path += "/../";
+		path += "gains_new.txt";
+		using ( StreamWriter s = File.CreateText ( path ) )
+		{
+			foreach ( var p in instance.parameters )
+			{
+				string line = p.name + ":" + p.value;
+				s.WriteLine ( line );
 			}
 		}
-		sw.Stop ();
-		UnityEngine.Debug.Log ( "That took " + sw.ElapsedMilliseconds + "ms" );
+		Debug.Log ( "Saved gains out to " + path );
 	}
-
-	public static void Init (object o)
-	{
-		Instance.InitRuntime ( o );
-	}
-	void InitRuntime (object o)
-	{
-		if ( runtimeParameters == null )
-			runtimeParameters = new List<RuntimeTunableParameter> ();
-
-		// iterate over the objects and check if they have a Tunable attribute.
-		// if so, add it to the list. then push children onto queue to iterate over them
-		// but also track objects already iterated
-		HashSet<int> hashes = new HashSet<int> ();
-		hashes.Add ( o.GetHashCode () );
-		Queue<object> objects = new Queue<object> ();
-		objects.Enqueue ( o );
-		Type t;
-		object obj;
-		while ( objects.Count > 0 )
-		{
-			obj = objects.Dequeue ();
-			t = obj.GetType ();
-
-			var fields = t.GetFields ();
-//			var fields = t.GetFields ( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
-			if ( fields == null || fields.Length == 0 )
-				continue;
-
-			foreach ( var field in fields )
-			{
-				var tunableAttribute = field.GetCustomAttribute<Tunable> ( false );
-				if ( tunableAttribute != null )
-				{
-					RuntimeTunableParameter p = new RuntimeTunableParameter ();
-					p.data = tunableAttribute;
-					p.field = field;
-					p.fieldInstance = obj;
-					runtimeParameters.Add ( p );
-				}
-				// assembly check will prevent primitive types, unity types, etc from being added to this.
-				if ( field.FieldType.Assembly != o.GetType ().Assembly || field.FieldType.IsEnum )
-					continue;
-				object obj2 = field.GetValue ( obj );
-				if ( obj2 != null && !hashes.Contains ( obj2.GetHashCode () ) )
-				{
-					hashes.Add ( obj2.GetHashCode () );
-					objects.Enqueue ( obj2 );
-				}
-			}
-		}
-	}
-
-	#if UNITY_EDITOR
-	[DidReloadScripts]
-	static void OnScriptReload ()
-	{
-		Instance.Init ();
-	}
-	#endif
 }

@@ -48,6 +48,15 @@ public static class ExtensionMethods
 	* ARRAY methods
 	*******************************************************************************/
 
+	// check if an array contains a specific value
+	public static bool Contains<T> (this T[] array, T value)
+	{
+		for ( int i = 0; i < array.Length; i++ )
+			if ( array [ i ].Equals ( value ) )
+				return true;
+		return false;
+	}
+
 	// find the index of an item in an array
 	public static int IndexOf<T> (this T[] array, T item)
 	{

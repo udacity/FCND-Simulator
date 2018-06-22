@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a997b0d1ccc8ff1408752386efb9aafc, type: 3}
+  m_Name: TunableManager
+  m_EditorClassIdentifier: 
+  parameters:
+  - name: Kp_speed
+    minValue: -1
+    maxValue: 1
+    fixedValue: 0.2
+  - name: Ki_speed
+    minValue: -1
+    maxValue: 1
+    fixedValue: 0.2
+  - name: Kp_pitch
+    minValue: -50
+    maxValue: 50
+    fixedValue: 8
+  - name: Kp_q
+    minValue: -50
+    maxValue: 50
+    fixedValue: 5
+  - name: Kp_alt
+    minValue: -1
+    maxValue: 1
+    fixedValue: 0.03
+  - name: Ki_alt
+    minValue: -1
+    maxValue: 1
+    fixedValue: 0.02
+  - name: Kp_speed2
+    minValue: -1
+    maxValue: 1
+    fixedValue: 0.2
+  - name: Ki_speed2
+    minValue: -1
+    maxValue: 1
+    fixedValue: 0.2
+  - name: altitudeSwitch
+    minValue: -1
+    maxValue: 1
+    fixedValue: 25
