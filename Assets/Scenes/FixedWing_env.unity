@@ -6088,6 +6088,7 @@ MonoBehaviour:
     K_orbit: 2.5
   droneObject: {fileID: 0}
   currentAirspeed: 0
+  airspeedThreshold: 1
   currTime: 0
   targetAirspeed: 41
   currentClimbRate: 0
