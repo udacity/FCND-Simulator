@@ -172,4 +172,9 @@ public class LongitudinalChallenge : Scenario
 	{
 		base.OnCleanup ();
 	}
+
+	public override void OnApplyTunableValues ()
+	{
+		altitudeSwitch = TunableManager.GetParameter ( "altitudeSwitch" ).value;
+	}
 }

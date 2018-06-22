@@ -492,8 +492,6 @@ namespace Drones
         {
             return planeVehicle.IsFrozen();
         }
-
-
     }
 
 }

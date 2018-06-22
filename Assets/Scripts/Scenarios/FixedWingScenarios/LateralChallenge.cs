@@ -76,8 +76,8 @@ public class LateralChallenge: Scenario
         base.OnBegin();
         //drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
         //Set the gains appropriate for the scenario
-        planeControl.SetDefaultLongitudinalGains();
-        planeControl.SetStudentLateralGains();
+//        planeControl.SetDefaultLongitudinalGains();
+//        planeControl.SetStudentLateralGains();
 
         initTime = drone.FlightTime();
         success = false;

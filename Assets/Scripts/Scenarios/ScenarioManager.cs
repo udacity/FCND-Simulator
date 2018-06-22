@@ -35,12 +35,12 @@ public class ScenarioManager : MonoBehaviour
 		}
 
 		instance = this;
+		TunableManager.Init ();
 	}
 
 	void Start ()
 	{
 		drone = Simulation.ActiveDrone;
-		TunableManager.Init ( drone );
 	}
 
 	void Update ()

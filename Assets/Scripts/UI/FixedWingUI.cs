@@ -154,7 +154,9 @@ public class FixedWingUI : MonoBehaviour
 		{
 			if ( tunables != null )
 				tunables.ForEach ( x => x.ApplyValue () );
+			
 			scenarioStartTime = Time.time;
+			scenarioManager.CurrentScenario.OnApplyTunableValues ();
 			scenarioManager.Begin ();
 		}
 	}
@@ -170,6 +172,17 @@ public class FixedWingUI : MonoBehaviour
 	{
 		ClearPanels ();
 		scenarioManager.DoReset ();
+		if ( button == 0 )
+		{
+			tuningObject.SetActive ( true );
+			SetRuntime ( scenarioManager.CurrentScenario.data.runtime );
+		}
+	}
+
+	// event for saving tuned parameters
+	public void OnSaveParameterButton ()
+	{
+		TunableManager.SaveGains ();
 	}
 
 	public void OnSelectOperationMode (int mode)
@@ -189,6 +202,7 @@ public class FixedWingUI : MonoBehaviour
 
 	public void OnScenarioLoaded (Scenario s)
 	{
+		ClearPanels ();
 		startTitle.text = s.data.title;
 		string _runtime = s.data.runtime == Mathf.Infinity ?
 			"indefinitely." :
@@ -207,8 +221,7 @@ public class FixedWingUI : MonoBehaviour
 		{
 			var list = new List<UITunable> ();
 			var tp = s.tunableParameters;
-			var runtimeTunables = TunableManager.RuntimeParameters;
-//			var allTunables = TunableManager.Parameters;
+			var parameters = TunableManager.Parameters;
 			foreach ( var p in tp )
 			{
 				if ( string.IsNullOrWhiteSpace ( p ) )
@@ -217,12 +230,12 @@ public class FixedWingUI : MonoBehaviour
 					continue;
 				}
 
-				var tunable = runtimeTunables.Find ( x => x.field.Name.ToLower () == p.ToLower () );
-//				var tunable = allTunables.Find ( x => x.field.Name.ToLower () == p.ToLower () );
+				var tunable = parameters.Find ( x => x.name.ToLower () == p.ToLower () );
 				if ( tunable != null )
 				{
 					UITunable uit = Instantiate ( tunablePrefab, tunableGridParent );
-					uit.Set ( tunable.field.Name, tunable.data.defaultValue, tunable.data.minValue, tunable.data.maxValue, tunable );
+					uit.Set ( tunable );
+//					uit.Set ( tunable.name, tunable.value, tunable.minValue, tunable.maxValue, tunable );
 					uit.gameObject.SetActive ( true );
 					list.Add ( uit );
 				}

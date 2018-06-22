@@ -26,9 +26,9 @@ public class ClimbScenario : Scenario
         drone.SetControlMode(5); //AscendDescend Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
-        planeControl.SetDefaultLongitudinalGains();
-        planeControl.SetDefaultLateralGains();
-        planeControl.SetStudentLongitudinalGains();
+//        planeControl.SetDefaultLongitudinalGains();
+//        planeControl.SetDefaultLateralGains();
+//        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()

@@ -32,9 +32,9 @@ public class AirspeedHoldScenario : Scenario
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
-        planeControl.SetDefaultLongitudinalGains();
-        planeControl.SetDefaultLateralGains();
-        planeControl.SetStudentLongitudinalGains();
+//        planeControl.SetDefaultLongitudinalGains();
+//        planeControl.SetDefaultLateralGains();
+//        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()
