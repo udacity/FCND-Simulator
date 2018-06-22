@@ -182,6 +182,9 @@ public class FixedWingUI : MonoBehaviour
 	// event for saving tuned parameters
 	public void OnSaveParameterButton ()
 	{
+		if ( tunables != null )
+			tunables.ForEach ( x => x.ApplyValue () );
+		
 		TunableManager.SaveGains ();
 	}
 
