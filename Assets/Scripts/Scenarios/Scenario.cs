@@ -26,6 +26,7 @@ public abstract class Scenario : MonoBehaviour
 	public ScenarioData data;
 //	public TuningParameter[] tuningParameters;
 	public string[] tunableParameters;
+    public string[] userParameters;
 
     public IDrone drone;
     public PlaneControl planeControl;
@@ -120,9 +121,16 @@ public abstract class Scenario : MonoBehaviour
 
 	public virtual void OnApplyTunableValues ()
 	{
-		// set default (fixed) values for scenario
-		planeControl.SetScenarioParameters ( tunableParameters );
-	}
+        // set default (fixed) values for scenario
+
+        string[] allParameters = new string[tunableParameters.Length + userParameters.Length];
+        tunableParameters.CopyTo(allParameters,0);
+        userParameters.CopyTo(allParameters, tunableParameters.Length);
+        Debug.Log(allParameters);
+        //planeControl.SetScenarioParameters ( tunableParameters );
+        planeControl.SetScenarioParameters(allParameters);
+
+    }
 
 	protected virtual void OnInit () {}
     protected virtual void OnBegin() {}

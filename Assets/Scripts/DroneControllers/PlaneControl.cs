@@ -74,7 +74,7 @@ public class PlaneControl {
     public float Kp_xTrack = 1.0f;
     public float approachYaw = Mathf.PI / 2.0f;
 
-    public float K_orbit = 1.0f;
+    public float Kp_orbit = 1.0f;
 
     private float hDotInt;
     private float maxHDotInt = 0.1f;
@@ -105,7 +105,7 @@ public class PlaneControl {
 
         Kp_xTrack = 0.002f;
 
-        K_orbit = 2.5f;
+        Kp_orbit = 2.5f;
 
 
     }
@@ -243,7 +243,7 @@ public class PlaneControl {
     public float OrbitLoop(Vector3 orbitCenter, float targetRadius, Vector3 position, float yaw, bool clockwise=true)
     {
         float radius = Mathf.Sqrt(Mathf.Pow(orbitCenter.x - position.x, 2.0f) + Mathf.Pow(orbitCenter.y - position.y, 2.0f));
-        float output = Mathf.PI / 2.0f + Mathf.Atan(K_orbit * (radius - targetRadius) / targetRadius);
+        float output = Mathf.PI / 2.0f + Mathf.Atan(Kp_orbit * (radius - targetRadius) / targetRadius);
         if (!clockwise)
             output = -output;
 
@@ -260,6 +260,7 @@ public class PlaneControl {
 
 	public void SetScenarioParameters (string[] names)
 	{
+        Debug.Log(names.Length);
 		TunableParameter p = TunableManager.GetParameter ( "Kp_speed" );
 		if ( names.Contains ( "Kp_speed" ) )
 			Kp_speed = p.value;
@@ -307,7 +308,55 @@ public class PlaneControl {
 			Ki_speed2 = p.value;
 		else
 			Ki_speed2 = p.fixedValue;
-	}
+
+        p = TunableManager.GetParameter("Kp_roll");
+        if (names.Contains("Kp_roll"))
+            Kp_roll = p.value;
+        else
+            Kp_roll = p.fixedValue;
+
+        p = TunableManager.GetParameter("Kp_p");
+        if (names.Contains("Kp_p"))
+            Kp_p = p.value;
+        else
+            Kp_p = p.fixedValue;
+
+        p = TunableManager.GetParameter("Kp_yaw");
+        if (names.Contains("Kp_yaw"))
+            Kp_yaw = p.value;
+        else
+            Kp_yaw = p.fixedValue;
+
+        p = TunableManager.GetParameter("Ki_yaw");
+        if (names.Contains("Ki_yaw"))
+            Ki_yaw = p.value;
+        else
+            Ki_yaw = p.fixedValue;
+
+        p = TunableManager.GetParameter("Kp_sideslip");
+        if (names.Contains("Kp_sideslip"))
+            Kp_sideslip = p.value;
+        else
+            Kp_sideslip = p.fixedValue;
+
+        p = TunableManager.GetParameter("Ki_sideslip");
+        if (names.Contains("Ki_sideslip"))
+            Ki_sideslip = p.value;
+        else
+            Ki_sideslip = p.fixedValue;
+
+        p = TunableManager.GetParameter("Kp_xTrack");
+        if (names.Contains("Kp_xTrack"))
+            Kp_xTrack = p.value;
+        else
+            Kp_xTrack = p.fixedValue;
+
+        p = TunableManager.GetParameter("Kp_orbit");
+        if (names.Contains("Kp_orbit"))
+            Kp_orbit = p.value;
+        else
+            Kp_orbit = p.fixedValue;
+    }
 
 /*    public void SetDefaultLongitudinalGains()
     {

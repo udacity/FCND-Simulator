@@ -1089,6 +1089,15 @@ MonoBehaviour:
     failText: 
   tunableParameters:
   - altitudeSwitch
+  userParameters:
+  - Kp_pitch
+  - Kp_q
+  - Kp_alt
+  - Ki_alt
+  - Kp_speed
+  - Ki_speed
+  - Kp_speed2
+  - Ki_speed2
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -1126,7 +1135,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   position2D: {x: 0, y: 0}
   currentAirspeed: 0
@@ -1276,7 +1285,7 @@ MonoBehaviour:
     maxYawInt: 1
     Kp_xTrack: 1
     approachYaw: 1.5707964
-    K_orbit: 1
+    Kp_orbit: 2.5
   simpleMode: 1
   guided: 0
   attitudeTarget: {x: 0, y: 0, z: 0}
@@ -2208,7 +2217,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -2918,6 +2927,11 @@ MonoBehaviour:
   tunableParameters:
   - Kp_speed
   - Ki_speed
+  userParameters:
+  - Kp_pitch
+  - Kp_q
+  - Kp_alt
+  - Ki_alt
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -2955,7 +2969,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   currentAltitude: 0
   currentAirspeed: 0
@@ -3779,15 +3793,8 @@ MonoBehaviour:
     description: This is a free flying mode with no objectives.
     successText: This scenario cannot succeed.
     failText: This scenario cannot fail.
-  tunableParameters:
-  - Kp_speed
-  - Ki_speed
-  - Kp_pitch
-  - Kp_q
-  - Kp_alt
-  - Ki_alt
-  - Kp_speed2
-  - Ki_speed2
+  tunableParameters: []
+  userParameters: []
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -3825,7 +3832,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
 --- !u!4 &427670809
 Transform:
@@ -4804,7 +4811,12 @@ MonoBehaviour:
       -The airspeed must maintain the airspeed within those bounds for 5 seconds'
     successText: 
     failText: 
-  tunableParameters: []
+  tunableParameters:
+  - Kp_sideslip
+  - Ki_sideslip
+  userParameters:
+  - Kp_roll
+  - Kp_q
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -4842,7 +4854,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -4904,6 +4916,7 @@ MonoBehaviour:
   - Kp_q
   - Kp_alt
   - Ki_alt
+  userParameters: []
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -4941,7 +4954,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   currentAltitude: 0
   altitudeThreshold: 3
@@ -5665,7 +5678,15 @@ MonoBehaviour:
       -The crosstrack error must maintain within those bounds for 5s'
     successText: 
     failText: 
-  tunableParameters: []
+  tunableParameters:
+  - Kp_xTrack
+  userParameters:
+  - Kp_roll
+  - Kp_q
+  - Kp_sideslip
+  - Ki_sideslip
+  - Kp_yaw
+  - Ki_yaw
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -5703,7 +5724,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -5932,6 +5953,11 @@ MonoBehaviour:
   tunableParameters:
   - Kp_speed2
   - Ki_speed2
+  userParameters:
+  - Kp_speed
+  - Ki_speed
+  - Kp_pitch
+  - Kp_q
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -5969,7 +5995,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   currentAirspeed: 0
   airspeedThreshold: 1
@@ -6342,6 +6368,7 @@ MonoBehaviour:
     successText: You did it!
     failText: You failed
   tunableParameters: []
+  userParameters: []
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -6379,7 +6406,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   currentVelocity: 0
   currentAirspeedRate: 0
@@ -9292,7 +9319,14 @@ MonoBehaviour:
       -The airspeed must maintain the airspeed within those bounds for 5 seconds'
     successText: 
     failText: 
-  tunableParameters: []
+  tunableParameters:
+  - Kp_yaw
+  - Ki_yaw
+  userParameters:
+  - Kp_roll
+  - Kp_q
+  - Kp_sideslip
+  - Ki_sideslip
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -9330,7 +9364,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -9537,6 +9571,15 @@ MonoBehaviour:
     successText: 
     failText: 
   tunableParameters: []
+  userParameters:
+  - Kp_rol
+  - Kp_q
+  - Kp_sideslip
+  - Ki_sideslip
+  - Kp_yaw
+  - Ki_yaw
+  - Kp_xTrack
+  - Kp_orbit
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -9574,7 +9617,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   gateNum: 0
   targetRadius: 0
@@ -9648,7 +9691,10 @@ MonoBehaviour:
       -The roll angle must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
-  tunableParameters: []
+  tunableParameters:
+  - Kp_roll
+  - Kp_p
+  userParameters: []
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -9686,7 +9732,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -10304,7 +10350,15 @@ MonoBehaviour:
       -The radius from the orbit center must maintain within those bounds for 5 seconds'
     successText: 
     failText: 
-  tunableParameters: []
+  tunableParameters:
+  - Kp_orbit
+  userParameters:
+  - Kp_roll
+  - Kp_q
+  - Kp_sideslip
+  - Ki_sideslip
+  - Kp_yaw
+  - Ki_yaw
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -10342,7 +10396,7 @@ MonoBehaviour:
     maxYawInt: 100
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
-    K_orbit: 2.5
+    Kp_orbit: 2.5
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0

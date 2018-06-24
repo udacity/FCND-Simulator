@@ -48,3 +48,35 @@ MonoBehaviour:
     minValue: 0
     maxValue: 100
     fixedValue: 25
+  - name: Kp_roll
+    minValue: -100
+    maxValue: 100
+    fixedValue: 40
+  - name: Kp_p
+    minValue: -100
+    maxValue: 100
+    fixedValue: 1
+  - name: Kp_yaw
+    minValue: -10
+    maxValue: 10
+    fixedValue: 2
+  - name: Ki_yaw
+    minValue: -1
+    maxValue: 1
+    fixedValue: 0.01
+  - name: Kp_sideslip
+    minValue: -10
+    maxValue: 10
+    fixedValue: 1
+  - name: Ki_sideslip
+    minValue: -10
+    maxValue: 10
+    fixedValue: 1
+  - name: Kp_xTrack
+    minValue: -1
+    maxValue: 1
+    fixedValue: 0.002
+  - name: Kp_orbit
+    minValue: -10
+    maxValue: 10
+    fixedValue: 1
