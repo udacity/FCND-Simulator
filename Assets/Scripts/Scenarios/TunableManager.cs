@@ -62,8 +62,10 @@ public class TunableManager : ScriptableObject
 		path = "Assets/Resources/gains.txt";
 		#else
 		path = Application.dataPath;
-		if ( Application.platform != RuntimePlatform.OSXPlayer )
-		path += "/../";
+		if ( Application.platform == RuntimePlatform.OSXPlayer )
+			path += "/../../";
+		else
+			path += "/../";
 		path += "gains.txt";
 		#endif
 
@@ -84,11 +86,13 @@ public class TunableManager : ScriptableObject
 
 	public static void SaveGains ()
 	{
-		string path = Application.dataPath;
-		if ( Application.platform != RuntimePlatform.OSXPlayer )
-			path = path.Substring ( 0, path.LastIndexOf ( '/' ) + 1 );
-//			path += "/../";
-		path += "gains_new.txt";
+		string path = Application.dataPath.TrimEnd ( '/' );
+		path = path.Substring ( 0, path.LastIndexOf ( '/' ) );
+		#if !UNITY_EDITOR
+		if ( Application.platform == RuntimePlatform.OSXPlayer )
+			path = path.Substring ( 0, path.LastIndexOf ( '/' ) );
+		#endif
+		path += "/gains_new.txt";
 		using ( StreamWriter s = File.CreateText ( path ) )
 		{
 			foreach ( var p in instance.parameters )
