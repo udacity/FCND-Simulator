@@ -59,7 +59,9 @@ public class FirstInstallActionsRunner : Editor
                 break;
             }
             case BuildTarget.StandaloneOSXIntel:
+			#if UNITY_2017_3_OR_NEWER
             case BuildTarget.StandaloneOSX:
+			#endif
             {
                 newTarget = BuildTarget.StandaloneOSXIntel64;
                 break;
