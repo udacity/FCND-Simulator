@@ -219,7 +219,9 @@ public class CopyPlatformResources : Editor
             case BuildTarget.StandaloneOSXIntel:
 //		case BuildTarget.StandaloneOSXIntel64:
             case BuildTarget.StandaloneOSXIntel64:
+			#if UNITY_2017_3_OR_NEWER
 		case BuildTarget.StandaloneOSX:
+			#endif
                 PrepareForPlatform(RuntimePlatform.OSXPlayer);
                 break;
             case BuildTarget.Android:
