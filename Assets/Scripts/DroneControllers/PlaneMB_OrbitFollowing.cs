@@ -28,6 +28,8 @@ namespace MovementBehaviors
             base.OnSelect(_controller);
             controller.planeControl.altInt = 0.0f;
             controller.planeControl.speedInt = 0.0f;
+            controller.planeControl.sideslipInt = 0f;
+            controller.planeControl.yawInt = 0f;
             yawCommand = controller.AttitudeEuler().z;
             if (!_controller.planeVehicle.MotorsArmed())
                 throttle = controller.GetThrustTarget();
@@ -57,13 +59,15 @@ namespace MovementBehaviors
             bool clockwise = controller.bodyRateTarget.z >= 0;
             float yawCommand = controller.planeControl.OrbitLoop(controller.positionTarget, Mathf.Abs(controller.velocityTarget.x / controller.bodyRateTarget.z), controller.PositionLocal(), controller.AttitudeEuler().z,clockwise);
             controller.attitudeTarget.z = yawCommand;
-            float rollCommand = controller.planeControl.YawLoop(yawCommand, controller.AttitudeEuler().z, Time.fixedDeltaTime);
-
             float roll_ff = Mathf.Atan(speedCommand * speedCommand / (9.81f * controller.velocityTarget.x / controller.bodyRateTarget.z));
+            float rollCommand = controller.planeControl.YawLoop(yawCommand, controller.AttitudeEuler().z, Time.fixedDeltaTime, roll_ff);
+
+
+            /*
             rollCommand = rollCommand + roll_ff;
             if (Mathf.Abs(rollCommand) > maxRoll)
                 rollCommand = Mathf.Sign(rollCommand) * maxRoll;
-
+            */
             Debug.Log("Roll Cmd " + rollCommand);
             float aileron = controller.planeControl.RollLoop(rollCommand, controller.AttitudeEuler().x, controller.AngularRatesBody().x);
             float rudder = controller.planeControl.SideslipLoop(sideslipCommand, controller.Sideslip());

@@ -1131,6 +1131,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -1281,6 +1282,7 @@ MonoBehaviour:
     maxSideslipInt: 0.1
     Kp_yaw: 0
     Ki_yaw: 0
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 1
     Kp_xTrack: 1
@@ -1486,7 +1488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 208ef5606400697478275f105ff5176a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inertiaTensors: {x: 3, y: 3, z: 7}
+  inertiaTensors: {x: 1825, y: 2660, z: 1285}
   speed: 41
   ias: 0
   verticalSpeed: 0
@@ -2217,7 +2219,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -2965,6 +2967,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -3569,7 +3572,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 411039999}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.010004054, y: -0.516, z: -2.23}
+  m_LocalPosition: {x: 0.01, y: -0.516, z: -2.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 29978940}
@@ -3674,7 +3677,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 411721766}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0, z: -0.35}
+  m_LocalPosition: {x: 0, y: 0, z: -0.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2105032456}
@@ -3828,6 +3831,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -4378,7 +4382,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -4402,7 +4406,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!1 &486807152
 GameObject:
   m_ObjectHideFlags: 0
@@ -4850,6 +4854,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -4950,6 +4955,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -5720,6 +5726,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -5991,6 +5998,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -6402,6 +6410,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -6702,7 +6711,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1132708837}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.010004054, y: -0.516, z: -2.23}
+  m_LocalPosition: {x: 0.01, y: -0.516, z: -2.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 159984455}
@@ -8262,7 +8271,7 @@ Transform:
   m_PrefabParentObject: {fileID: 402486, guid: 48984c1609028764bb999a2db57ce859, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1528577970}
-  m_LocalRotation: {x: -0.0026287183, y: 0.08381491, z: -0.03123755, w: 0.9959882}
+  m_LocalRotation: {x: -0.0026287285, y: 0.083810546, z: -0.031239305, w: 0.9959885}
   m_LocalPosition: {x: -3.51, y: 0.107, z: 2.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -8270,7 +8279,7 @@ Transform:
   - {fileID: 1624132047}
   m_Father: {fileID: 443519382}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 9.62, z: -3.5930002}
 --- !u!1 &1537579402
 GameObject:
   m_ObjectHideFlags: 0
@@ -8820,13 +8829,13 @@ Transform:
   m_PrefabParentObject: {fileID: 492532, guid: 48984c1609028764bb999a2db57ce859, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1624132045}
-  m_LocalRotation: {x: -0.030538544, y: 0, z: 0, w: 0.99953365}
-  m_LocalPosition: {x: 0, y: 0, z: -0.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1528577971}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -3.5, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1670984984
 GameObject:
   m_ObjectHideFlags: 0
@@ -8990,22 +8999,22 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: -35.002544
-        value: -0.38259745
-        inSlope: 0.026826728
-        outSlope: 0.026826728
+        time: -30
+        value: -0.45
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.0021696985
-        value: -0.000023538349
-        inSlope: 0.0020542375
-        outSlope: 0.0020542375
+        time: 0
+        value: 0
+        inSlope: 0.022500753
+        outSlope: 0.022500753
         tangentMode: 0
       - serializedVersion: 2
-        time: 30.110672
-        value: 0.4622153
-        inSlope: 0.027388763
-        outSlope: 0.027388763
+        time: 30
+        value: 0.45
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -9015,22 +9024,16 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: -39.131126
-        value: -0.95759064
-        inSlope: 0.05917907
-        outSlope: 0.05917907
+        time: -40
+        value: -1
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.008080823
-        value: -0.00021521654
-        inSlope: 0.0059083574
-        outSlope: 0.0059083574
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 41.361877
-        value: 0.86931044
-        inSlope: 0.06115771
-        outSlope: 0.06115771
+        time: 40
+        value: 1
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -9158,8 +9161,8 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: -39.64173
-        value: -0.5036839
+        time: -40
+        value: -0.5
         inSlope: 0.002628101
         outSlope: 0.002628101
         tangentMode: 0
@@ -9170,14 +9173,14 @@ MonoBehaviour:
         outSlope: 0.028882189
         tangentMode: 0
       - serializedVersion: 2
-        time: 40.3039
-        value: 0.51217914
+        time: 40
+        value: 0.5
         inSlope: 0.004867986
         outSlope: 0.004867986
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-      m_RotationOrder: 4
+      m_RotationOrder: 0
 --- !u!1 &1684311728
 GameObject:
   m_ObjectHideFlags: 0
@@ -9303,8 +9306,8 @@ MonoBehaviour:
     canFailBeforeRuntime: 1
     vehiclePosition: {x: 1500, y: 450, z: 0}
     vehicleOrientation: {x: 0, y: 0, z: 0, w: 0}
-    vehicleEulerAngles: {x: -1.5, y: 20, z: 0}
-    vehicleVelocity: {x: 0, y: 0, z: 41}
+    vehicleEulerAngles: {x: -1.5, y: 45, z: 0}
+    vehicleVelocity: {x: 28.987, y: 0, z: 28.987}
     cameraLookMode: 2
     cameraDistance: 20
     title: Yaw Hold Scenario
@@ -9360,6 +9363,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -9547,7 +9551,7 @@ MonoBehaviour:
     runtime: Infinity
     canSucceedBeforeRuntime: 1
     canFailBeforeRuntime: 1
-    vehiclePosition: {x: 1650, y: 300, z: 500}
+    vehiclePosition: {x: 1680, y: 300, z: 500}
     vehicleOrientation: {x: 0, y: 0, z: 0, w: 0}
     vehicleEulerAngles: {x: -1.5, y: 0, z: 0}
     vehicleVelocity: {x: 0, y: 0, z: 41}
@@ -9555,19 +9559,20 @@ MonoBehaviour:
     cameraDistance: 100
     title: Lateral Challenge
     description: "The objective of this challenge is to successfully fly through a
-      series of virtual gates in the sky. \nTo do this, tune/implement a lateral state
-      machine: \n  The first leg (before Gate #1) should implement a line following
-      controller between North =  500 meters, East = 1700 meters and Gate #1.\n  The
-      second leg (between Gate#1 and Gate #2) should implement an orbit following
-      controller around the orbit center North = 1000 meters, East = 1300 meters (radius
-      = 400 meters)\n  The third leg (between Gate #2 and Gate #3) should implement
-      an orbit following controller around the orbit center North = 1100 meters, East
-      = 1300 (radius = 300 meters)\n  The final leg (between Gate #3 and Gate #4)
-      should implement a line following controller between the two gates\nTo complete
-      the challenge, you must be within +/-5 meter lateral distance when arriving
-      at the gate.\nThe gate locations:\nGate #1: North = 1000m, East = 1700m \nGate
-      #2: North = 1400m, East = 1300m\nGate #3: North = 1100m, East = 1000m\nGate
-      #4: North = 100m, East = 1000m"
+      series of virtual gates in the sky. All the positions given in this scenario
+      are relative to the vehicle start location.\r\nTo do this, tune/implement a
+      lateral state machine:\r\n\r\n  The first leg (before Gate #1) should implement
+      a line following controller between North =  0 meters, East = 20 meters and
+      Gate #1.\r\n  The second leg (between Gate#1 and Gate #2) should implement an
+      orbit following controller around the orbit center North = 500 meters, East
+      = -380 meters (radius = 400 meters)\r\n  The third leg (between Gate #2 and
+      Gate #3) should implement an orbit following controller around the orbit center
+      North = 600 meters, East = -380 (radius = 300 meters)\r\n  The final leg (between
+      Gate #3 and Gate #4) should implement a line following controller between the
+      two gates.\r\n  \r\nTo complete the challenge, you must be within +/-5 meter
+      lateral distance when arriving at the gate.\r\n\r\nThe gate locations:\r\n\r\n-
+      Gate #1: North = 500m, East = 20m\r\n- Gate #2: North = 900m, East = -380m\r\n-
+      Gate #3: North = 600m, East = -680m\r\n- Gate #4: North = 100m, East = -680m"
     successText: 
     failText: 
   tunableParameters: []
@@ -9613,6 +9618,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -9728,6 +9734,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -10392,6 +10399,7 @@ MonoBehaviour:
     maxSideslipInt: 10
     Kp_yaw: 2
     Ki_yaw: 0.01
+    maxRoll: 1.0471976
     yawInt: 0
     maxYawInt: 100
     Kp_xTrack: 0.002
@@ -10702,7 +10710,7 @@ Transform:
   m_PrefabParentObject: {fileID: 432900, guid: 48984c1609028764bb999a2db57ce859, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2105032455}
-  m_LocalRotation: {x: 0.0026287113, y: 0.08381469, z: -0.03123755, w: -0.9959882}
+  m_LocalRotation: {x: -0.0026287255, y: -0.08381045, z: 0.031239307, w: 0.9959885}
   m_LocalPosition: {x: 3.51, y: 0.107, z: 2.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -10710,7 +10718,7 @@ Transform:
   - {fileID: 1861297316}
   m_Father: {fileID: 1559097065}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -9.62, z: 3.5930002}
 --- !u!1 &2110980210
 GameObject:
   m_ObjectHideFlags: 0

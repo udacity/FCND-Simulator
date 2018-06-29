@@ -25,6 +25,8 @@ namespace MovementBehaviors
             base.OnSelect(_controller);
             controller.planeControl.altInt = 0.0f;
             controller.planeControl.speedInt = 0.0f;
+            controller.planeControl.sideslipInt = 0f;
+
             if (!_controller.planeVehicle.MotorsArmed())
                 throttle = controller.GetThrustTarget();
 

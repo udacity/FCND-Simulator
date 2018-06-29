@@ -48,7 +48,7 @@ namespace MovementBehaviors
                 courseCommand = Mathf.Atan2(controller.velocityTarget.y, controller.velocityTarget.x);
                 speedCommand = controller.velocityTarget.magnitude;
                 altCommand = -controller.positionTarget.z;
-                maxRoll = 45.0f * Mathf.PI / 180.0f;
+                //maxRoll = 45.0f * Mathf.PI / 180.0f;
                 positionCommand = controller.positionTarget;
                 //elevator = controller.momentThrustTarget.y;
                 //throttle = controller.momentThrustTarget.w;
@@ -61,9 +61,9 @@ namespace MovementBehaviors
 
             float yawCommand = controller.planeControl.CrossTrackLoop(positionCommand, courseCommand, controller.PositionLocal());
             controller.attitudeTarget.z = yawCommand;
-            float rollCommand = controller.planeControl.YawLoop(yawCommand, controller.AttitudeEuler().z, Time.fixedDeltaTime);
-            if (Mathf.Abs(rollCommand) > maxRoll)
-                rollCommand = Mathf.Sign(rollCommand) * maxRoll;
+            float rollCommand = controller.planeControl.YawLoop(yawCommand, controller.AttitudeEuler().z, Time.fixedDeltaTime, 0f);
+            //if (Mathf.Abs(rollCommand) > maxRoll)
+            //    rollCommand = Mathf.Sign(rollCommand) * maxRoll;
 
             float aileron = controller.planeControl.RollLoop(rollCommand, controller.AttitudeEuler().x, controller.AngularRatesBody().x);
             float rudder = controller.planeControl.SideslipLoop(sideslipCommand, controller.Sideslip());
@@ -72,7 +72,7 @@ namespace MovementBehaviors
             //controller.attitudeTarget.z = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed());
             //controller.positionTarget.z = altCommand;
             float pitchCommand = controller.planeControl.AltitudeLoop(altCommand, -controller.PositionLocal().z);
-            pitchCommand = Mathf.Clamp(pitchCommand, -20.0f * Mathf.PI / 180.0f, 20.0f * Mathf.PI / 180.0f);
+            //pitchCommand = Mathf.Clamp(pitchCommand, -20.0f * Mathf.PI / 180.0f, 20.0f * Mathf.PI / 180.0f);
             controller.attitudeTarget.y = pitchCommand;
             float elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
 

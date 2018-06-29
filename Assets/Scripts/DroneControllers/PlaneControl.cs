@@ -68,6 +68,7 @@ public class PlaneControl {
 
     public float Kp_yaw = 1.0f;
     public float Ki_yaw = 0.1f;
+    public float maxRoll = 60.0f * Mathf.PI / 180f;
     public float yawInt = 0.0f;
     public float maxYawInt = 1.0f;
 
@@ -202,33 +203,55 @@ public class PlaneControl {
         return output;
     }
 
-    public float SideslipLoop(float targetSideslip, float sideslip)
+    public float SideslipLoop(float targetSideslip, float sideslip, float dt = 0f)
     {
-        sideslipInt = sideslipInt + (targetSideslip - sideslip);
-        if (sideslipInt > maxSideslipInt)
+        if (dt == 0)
+            dt = Time.fixedDeltaTime;
+
+        sideslipInt = sideslipInt + dt*(targetSideslip - sideslip);
+
+
+        /*if (sideslipInt > maxSideslipInt)
             sideslipInt = maxSideslipInt;
         else if (sideslipInt < -maxSideslipInt)
             sideslipInt = -maxSideslipInt;
-
-        float output = -1.0f*(Kp_sideslip * (targetSideslip - sideslip) + Ki_sideslip * sideslipInt);
+        */
+        /*
+        float outputUnsat = Mathf.Clamp(Kp_sideslip * (targetSideslip - sideslip), -1f, 1f);
+        outputUnsat = outputUnsat + Ki_sideslip * sideslipInt;
+        */
+        float outputUnsat = Kp_sideslip * (targetSideslip - sideslip) + Ki_sideslip * sideslipInt;
+        float output = Mathf.Clamp(outputUnsat, -1f, 1f);
+        if (Ki_sideslip != 0)
+            sideslipInt = sideslipInt + dt / Ki_sideslip * (output - outputUnsat);
+        
         return output;
         
     }
 
-    public float YawLoop(float targetYaw, float yaw, float dt)
+    public float YawLoop(float targetYaw, float yaw, float dt, float rollFF = 0f)
     {
         float yawError = targetYaw - yaw;
-        while (Mathf.Abs(yawError) > Mathf.PI)
+        while (Mathf.Abs(yawError) >= Mathf.PI)
             yawError = yawError - Mathf.Sign(yawError) * Mathf.PI * 2f;
 
-        yawInt = yawInt + yawError;
+        yawInt = yawInt + dt*yawError;
 
+        /*
         if (yawInt > maxYawInt)
             yawInt = maxYawInt;
         else if (yawInt < -maxYawInt)
             yawInt = -maxYawInt;
+        */
+        //float outputUnsat = Mathf.Clamp(Kp_yaw * yawError + rollFF,-maxRoll, maxRoll);
+        float outputUnsat = Mathf.Clamp(Kp_yaw*yawError + rollFF,-maxRoll, maxRoll) + Ki_yaw * yawInt;
+        float output = Mathf.Clamp(outputUnsat, -maxRoll, maxRoll);
 
-        float output = Kp_yaw * yawError + Ki_yaw * yawInt;
+        if (Ki_yaw != 0f)
+            yawInt = yawInt + dt / Ki_yaw * (output - outputUnsat);
+
+        Debug.Log("Roll Command: " + output + " Int: " + (Ki_yaw * yawInt) + " Yaw Error: " + yawError);
+
         return output;
     }
 

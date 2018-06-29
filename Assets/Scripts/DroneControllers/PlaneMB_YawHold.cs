@@ -28,6 +28,8 @@ namespace MovementBehaviors
             base.OnSelect(_controller);
             controller.planeControl.altInt = 0.0f;
             controller.planeControl.speedInt = 0.0f;
+            controller.planeControl.sideslipInt = 0f;
+            controller.planeControl.yawInt = 0f;
             yawCommand = controller.AttitudeEuler().z;
             if (!_controller.planeVehicle.MotorsArmed())
                 throttle = controller.GetThrustTarget();

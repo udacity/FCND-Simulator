@@ -61,10 +61,11 @@ public class AircraftControl : MonoBehaviour {
 		wheelon = false; 
 
 		Vector3 tensors = aircraft.inertiaTensor;
-		tensors.x *= inertiaTensors.x;
-		tensors.y *= inertiaTensors.y;
-		tensors.z *= inertiaTensors.z;
+		tensors.x = inertiaTensors.x;
+		tensors.y = inertiaTensors.y;
+		tensors.z = inertiaTensors.z;
 		aircraft.inertiaTensor = tensors;
+        Debug.Log("Inertia Tensor: " + aircraft.inertiaTensor);
 
 		initialDrag = aircraft.drag;
 		initialRotDrag = aircraft.angularDrag;
@@ -116,6 +117,7 @@ public class AircraftControl : MonoBehaviour {
         speed = FusAeroZ;
         ias = Mathf.FloorToInt(speed * 1.94f);
 
+        
 
 
         verticalSpeed = aircraft.velocity.y;
