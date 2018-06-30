@@ -22,5 +22,4 @@ public class ScenarioData
 	public string successText;
 	[Multiline]
 	public string failText;
-
 }

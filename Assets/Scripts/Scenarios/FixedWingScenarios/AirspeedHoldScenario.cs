@@ -26,6 +26,14 @@ public class AirspeedHoldScenario : Scenario
     public float targetAirspeed = 41.0f;
     private float targetAltitude = 150.0f;
 
+	void Update ()
+	{
+		if ( !IsRunning )
+			return;
+		
+		UpdateVizParameters ();
+	}
+
     protected override void OnInit ()
 	{
         base.OnInit ();
@@ -81,5 +89,12 @@ public class AirspeedHoldScenario : Scenario
     protected override void OnCleanup ()
 	{
 		base.OnCleanup ();
+	}
+
+	void UpdateVizParameters ()
+	{
+		onParameter1Update ( currentAirspeed, 1 );
+		float noise = Mathf.PerlinNoise ( Time.time * 0.5f, 0 ) * 0.5f - 0.25f;
+		onParameter2Update ( 0.5f + noise, 2 );
 	}
 }

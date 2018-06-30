@@ -42,6 +42,10 @@ public class FixedWingUI : MonoBehaviour
 	public TMP_Text runtimeText;
 	public Image runtimeFill;
 
+	// parameter visualization
+	public UIVizParameter parameter1;
+	public UIVizParameter parameter2;
+
 	// other variables
 	public ScenarioManager scenarioManager;
 
@@ -50,6 +54,7 @@ public class FixedWingUI : MonoBehaviour
 	float scenarioRuntime;
 	IDrone drone;
 	bool waitingForPython;
+	int curScenarioMode;
 
 
 	void Awake ()
@@ -165,6 +170,18 @@ public class FixedWingUI : MonoBehaviour
 	public void OnSuccessButton (int button)
 	{
 		ClearPanels ();
+		if ( button == 0 )
+		{
+			scenarioManager.DoReset ();
+//			SetRuntime ( scenarioManager.CurrentScenario.data.runtime );
+			
+		} else
+		{
+			scenarioDropdown.value = ++scenarioDropdown.value % scenarioDropdown.options.Count;
+//			scenarioDropdown.value++;
+			scenarioDropdown.RefreshShownValue ();
+			scenarioManager.SelectScenario ( scenarioDropdown.value - 1 );
+		}
 	}
 
 	// event for pressing a button in the Failure window
@@ -174,8 +191,14 @@ public class FixedWingUI : MonoBehaviour
 		scenarioManager.DoReset ();
 		if ( button == 0 )
 		{
-			tuningObject.SetActive ( true );
+			OnSelectOperationMode ( curScenarioMode );
+//			tuningObject.SetActive ( true );
 			SetRuntime ( scenarioManager.CurrentScenario.data.runtime );
+		} else
+		{
+			
+			scenarioManager.SelectScenario ( scenarioDropdown.value - 1 );
+//			scenarioRuntime 
 		}
 	}
 
@@ -190,6 +213,7 @@ public class FixedWingUI : MonoBehaviour
 
 	public void OnSelectOperationMode (int mode)
 	{
+		curScenarioMode = mode;
 		if ( mode == 0 )
 		{
 			tuningObject.SetActive ( true );
@@ -205,6 +229,18 @@ public class FixedWingUI : MonoBehaviour
 
 	public void OnScenarioLoaded (Scenario s)
 	{
+		s.onParameter1Update = OnVizParameter1Update;
+		s.onParameter2Update = OnVizParameter2Update;
+
+		if ( s.vizParameters > 0 )
+			parameter1.Set ( s.vizParameter1 );
+		else
+			parameter1.SetActive ( false );
+		if ( s.vizParameters > 1 )
+			parameter2.Set ( s.vizParameter2 );
+		else
+			parameter2.SetActive ( false );
+
 		ClearPanels ();
 		startTitle.text = s.data.title;
 		string _runtime = s.data.runtime == Mathf.Infinity ?
@@ -286,5 +322,15 @@ public class FixedWingUI : MonoBehaviour
 				drone.ArmDisarm ( false );
 			}
 		}
+	}
+
+	void OnVizParameter1Update (float value, int decimals = 1)
+	{
+		parameter1.UpdateValue ( value, decimals );
+	}
+
+	void OnVizParameter2Update (float value, int decimals = 1)
+	{
+		parameter2.UpdateValue ( value, decimals );
 	}
 }

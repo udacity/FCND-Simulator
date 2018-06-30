@@ -5,19 +5,6 @@ using Drones;
 using DroneInterface;
 using DroneControllers;
 
-//[System.Serializable]
-//public struct TunableSet
-//{
-//	public bool Kp_speed;
-//	public bool Ki_speed;
-//	public bool Kp_pitch;
-//	public bool Kp_q;
-//	public bool Kp_alt;
-//	public bool Ki_alt;
-//	public bool Kp_speed2;
-//	public bool Ki_speed2;
-//}
-
 [ExecuteInEditMode]
 public abstract class Scenario : MonoBehaviour
 {
@@ -27,6 +14,11 @@ public abstract class Scenario : MonoBehaviour
 //	public TuningParameter[] tuningParameters;
 	public string[] tunableParameters;
     public string[] userParameters;
+	public int vizParameters;
+	public VisualizationParameter vizParameter1;
+	public VisualizationParameter vizParameter2;
+	public System.Action<float, int> onParameter1Update = delegate {};
+	public System.Action<float, int> onParameter2Update = delegate {};
 
     public IDrone drone;
     public PlaneControl planeControl;
