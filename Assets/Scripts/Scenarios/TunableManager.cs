@@ -13,6 +13,8 @@ public class TunableParameter
 	public float fixedValue;
 	[System.NonSerialized]
 	public float value;
+	[Tooltip ("Number of decimal digits")]
+	public int resolution = 3;
 }
 
 // only needed this once to create the asset
@@ -61,12 +63,12 @@ public class TunableManager : ScriptableObject
 		#if UNITY_EDITOR
 		path = "Assets/Resources/gains.txt";
 		#else
-		path = Application.dataPath;
-		if ( Application.platform == RuntimePlatform.OSXPlayer )
-			path += "/../../";
-		else
-			path += "/../";
-		path += "gains.txt";
+		path = Application.dataPath.TrimEnd ( '/' );
+//		if ( Application.platform == RuntimePlatform.OSXPlayer )
+//			path += "/../../";
+//		else
+//			path += "/../";
+		path += "/gains.txt";
 		#endif
 
 		string[] lines = File.ReadAllLines ( path );
@@ -87,10 +89,11 @@ public class TunableManager : ScriptableObject
 	public static void SaveGains ()
 	{
 		string path = Application.dataPath.TrimEnd ( '/' );
-		path = path.Substring ( 0, path.LastIndexOf ( '/' ) );
+//		path = path.Substring ( 0, path.LastIndexOf ( '/' ) );
 		#if !UNITY_EDITOR
 		if ( Application.platform == RuntimePlatform.OSXPlayer )
-			path = path.Substring ( 0, path.LastIndexOf ( '/' ) );
+			path = Application.persistentDataPath.TrimEnd ( '/' );
+//			path = path.Substring ( 0, path.LastIndexOf ( '/' ) );
 		#endif
 		path += "/gains_new.txt";
 		using ( StreamWriter s = File.CreateText ( path ) )

@@ -13,7 +13,9 @@ public class CopyGainsFile
 //		Debug.Log ( "build path " + buildPath );
 		string fileName = "gains.txt";
 		string location = buildPath;
-//		if ( target != BuildTarget.StandaloneOSX )
+		if ( target == BuildTarget.StandaloneOSX )
+			location = location.TrimEnd ( '/' ) + "/Contents";
+		else
 			location = location.Substring ( 0, location.LastIndexOf ( '/' ) + 1 );
 
 		string dest = Path.Combine ( location, fileName );
