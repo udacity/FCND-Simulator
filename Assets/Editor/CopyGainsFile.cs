@@ -13,7 +13,11 @@ public class CopyGainsFile
 //		Debug.Log ( "build path " + buildPath );
 		string fileName = "gains.txt";
 		string location = buildPath;
+		#if UNITY_2017_3_OR_NEWER
 		if ( target == BuildTarget.StandaloneOSX )
+		#else
+		if ( target == BuildTarget.StandaloneOSXIntel64 )
+		#endif
 			location = location.TrimEnd ( '/' ) + "/Contents";
 		else
 			location = location.Substring ( 0, location.LastIndexOf ( '/' ) + 1 );
