@@ -42,7 +42,7 @@ public class TrimScenario : Scenario
         currTime = drone.FlightTime();
 
         //elevatorTrim += Input.GetAxis("Trim")*0.001f;
-        float trimInput = Input.GetAxis("Trim") * 0.001f;
+        float trimInput = Input.GetAxis("Thrust") * 0.001f;
         if (trimInput != 0.0f)
         {
             throttleTrim += trimInput;
@@ -62,12 +62,14 @@ public class TrimScenario : Scenario
             lastAirspeedRateTime = currTime;
         }
 
+        UpdateVizParameters();
+
         if (((currTime - lastVelocityTime) > timeInterval) &&
             ((currTime - lastAirspeedRateTime) > timeInterval) &&
             ((currTime - lastTrimTime) > timeInterval))
         {
             data.successText = "Scenario 0 Complete:\n" + 
-                "Throttle = " + throttleTrim + "\n" + 
+                "Throttle = " + (0.7f+throttleTrim) + "\n" + 
                 "Pitch: " + drone.AttitudeEuler().y*180.0f/Mathf.PI + "degrees\n" + 
                 "Airspeed: " + drone.VelocityLocal().magnitude + "m/s";
             Debug.Log("Scenario 0 Complete: Throttle = " + throttleTrim + " Pitch: " + drone.AttitudeEuler().y + " Airspeed: " + drone.VelocityLocal().magnitude);
@@ -89,4 +91,11 @@ public class TrimScenario : Scenario
 	{
 		base.OnCleanup ();
 	}
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update(-currentVelocity, 2);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        onParameter2Update(currentAirspeedRate, 2);
+    }
 }

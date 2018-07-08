@@ -37,6 +37,7 @@ public class LongitudinalChallenge : Scenario
 
     public float targetAltitude;
     public float altitudeSwitch = 25.0f;
+    int mode;
     protected override void OnInit ()
 	{
         gate = GameObject.Find("Gate").GetComponent<Transform>();
@@ -85,22 +86,46 @@ public class LongitudinalChallenge : Scenario
             {
                 drone.SetControlMode(4);
                 drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
+                mode = 0;
             }
             else if (-drone.CoordsLocal().z > targetAltitude)
             {
                 drone.SetControlMode(5);
                 drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 0.1f);
+                mode = -1;
             }
             else
             {
                 drone.SetControlMode(5);
                 drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
+                mode = 1;
             }
         }
 
         currTime = drone.FlightTime() - initTime;
         currentAirspeed = drone.VelocityLocal().magnitude;
         currentClimbRate = -drone.VelocityLocal().z;
+        float gateError = Mathf.Abs(position2D.y - targetGate.y);
+        
+
+        if (Mathf.Abs(position2D.y - targetGate.y) > vertThreshold) 
+        {
+            if ((position2D.x - targetGate.x) > -horizThreshold)
+            {
+                Debug.Log("Missed Gate");
+                data.failText = "Longitudinal Challenge Unsuccessful:\n" +
+                    "Gate Missed by " + Mathf.Abs(position2D.y - targetGate.y) + " meters " +
+                    "(threshold = " + vertThreshold + " meters)";
+                return true;
+            }
+            lineMat.color = Color.red;
+        }
+        else
+        {
+            lineMat.color = Color.green;
+        }
+
+
         if (position2D.x <= gate1.x)
             targetGate = gate1;
         else if (position2D.x <= gate2.x)
@@ -110,31 +135,10 @@ public class LongitudinalChallenge : Scenario
         else
             targetGate = gate4;
 
-        if (position2D.x <= targetGate.x)
-        {
-            if (Mathf.Abs(position2D.y - targetGate.y) > vertThreshold) 
-            {
-                if (Mathf.Abs(position2D.x - targetGate.x) < horizThreshold)
-                {
-                    Debug.Log("Missed Gate");
-                    data.failText = "Longitudinal Challenge Unsuccessful:\n" +
-                        "Gate Missed by " + Mathf.Abs(position2D.y - targetGate.y) + " meters " +
-                        "(threshold = " + vertThreshold + " meters)";
-                    return true;
-                }
-                lineMat.color = Color.red;
-            }
-            else
-            {
-                lineMat.color = Color.green;
-            }
-        }
-        else
-        {
+        if (position2D.x > gate4.x)
             success = true;
-        }
-
         UpdateGatePosition();
+        UpdateVizParameters();
         return false;
     }
 
@@ -156,6 +160,7 @@ public class LongitudinalChallenge : Scenario
         Vector3 scale = line.localScale;
         scale.x = 2000.0f;
         line.localScale = new Vector3(2000.0f, 0.1f, 0.1f);
+        line.eulerAngles = new Vector3(0, 0, 0);
 
     }
 
@@ -178,4 +183,12 @@ public class LongitudinalChallenge : Scenario
         base.OnApplyTunableValues();
 		altitudeSwitch = TunableManager.GetParameter ( "altitudeSwitch" ).value;
 	}
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update(position2D.y - targetGate.y, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
+        onParameter2Update(mode, 0);
+    }
 }

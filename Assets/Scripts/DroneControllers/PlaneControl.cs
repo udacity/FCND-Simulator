@@ -53,6 +53,9 @@ public class PlaneControl {
     public float maxPitch2 = 45f * Mathf.PI / 180f;
     public float maxSpeedInt2 = 10.0f;
 
+    public float altitudeSwitch = 25.0f;
+
+    //Not used
     public float Kp_climb = 0.01f;
     public float Ki_climb = 0.001f;
     public float climbInt = 0.0f;
@@ -250,7 +253,7 @@ public class PlaneControl {
         if (Ki_yaw != 0f)
             yawInt = yawInt + dt / Ki_yaw * (output - outputUnsat);
 
-        Debug.Log("Roll Command: " + output + " Int: " + (Ki_yaw * yawInt) + " Yaw Error: " + yawError);
+        //Debug.Log("Roll Command: " + output + " Int: " + (Ki_yaw * yawInt) + " Yaw Error: " + yawError);
 
         return output;
     }
@@ -379,6 +382,12 @@ public class PlaneControl {
             Kp_orbit = p.value;
         else
             Kp_orbit = p.fixedValue;
+
+        p = TunableManager.GetParameter("altitudeSwitch");
+        if (names.Contains("altitudeSwitch"))
+            altitudeSwitch = p.value;
+        else
+            altitudeSwitch = p.fixedValue;
     }
 
 /*    public void SetDefaultLongitudinalGains()

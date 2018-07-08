@@ -22,6 +22,8 @@ public class CoordinatedTurnScenario : Scenario
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(targetRoll*Mathf.PI/180.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
+        Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        line.localScale = new Vector3(0, 0, 0);
     }
 
     protected override void OnBegin()
@@ -55,6 +57,8 @@ public class CoordinatedTurnScenario : Scenario
             }
             Debug.Log("Sideslip (deg): " + (Mathf.Abs(currentSideslip) * 180.0f / Mathf.PI));
         }
+
+        UpdateVizParameters();
         return false;
     }
 
@@ -64,6 +68,13 @@ public class CoordinatedTurnScenario : Scenario
         Debug.Log("Released control of the Drone");
         base.OnEnd();
         
+    }
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update(currentSideslip*180/Mathf.PI, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
     }
 
     protected override void OnCleanup ()

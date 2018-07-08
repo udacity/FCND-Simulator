@@ -22,6 +22,8 @@ public class StabilizeRollScenario : Scenario
         drone.SetControlMode(4); //Yaw Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(targetRoll, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
+        Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        line.localScale = new Vector3(0, 0, 0);
     }
 
     protected override void OnBegin()
@@ -54,6 +56,7 @@ public class StabilizeRollScenario : Scenario
                 return true;
             }
         }
+        UpdateVizParameters();
         return false;
     }
 
@@ -69,4 +72,12 @@ public class StabilizeRollScenario : Scenario
 	{
 		base.OnCleanup ();
 	}
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update((targetRoll-currentRoll)*180/Mathf.PI, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
+    }
+
 }

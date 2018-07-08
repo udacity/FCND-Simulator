@@ -1098,25 +1098,25 @@ MonoBehaviour:
   - Ki_speed
   - Kp_speed2
   - Ki_speed2
-  vizParameters: 0
+  vizParameters: 2
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Alt Error
+    minValue: -20
+    maxValue: 20
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -3
+    maxAcceptableValue: 3
+    suffix: m
   vizParameter2:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Descend/Hold/Ascend
+    minValue: -1
+    maxValue: 1
     value: 0
     useAcceptableRange: 0
     minAcceptableValue: 0
     maxAcceptableValue: 0
-    suffix: 
+    suffix: ' Unity Mode'
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -1138,6 +1138,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -1289,6 +1290,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -1650,7 +1652,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 168372511}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 642, y: 355.20996, z: 1887.716}
+  m_LocalPosition: {x: 1000, y: 500, z: 0}
   m_LocalScale: {x: 1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 1169211622}
@@ -2208,7 +2210,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -2524,6 +2526,56 @@ Prefab:
         type: 2}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[11].m_Text
+      value: '10: Orbit Following'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[12].m_Text
+      value: '11: Lateral Challenge'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[13].m_Text
+      value: '12: Fixed Wing Challenge'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114372810955749692, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: useFill
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[2].m_Text
+      value: '1: Trim'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[3].m_Text
+      value: '2: Altitude Hold'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[4].m_Text
+      value: '3: Airspeed Hold'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[5].m_Text
+      value: '4: Climb'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[7].m_Text
+      value: '6: Roll Stabilization'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114661182707754994, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_Options.m_Options.Array.data[9].m_Text
+      value: '8: Yaw Hold'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f71ee99d13775b74ab589fef8f05da06, type: 2}
@@ -2963,15 +3015,15 @@ MonoBehaviour:
   - Kp_q
   - Kp_alt
   - Ki_alt
-  vizParameters: 2
+  vizParameters: 1
   vizParameter1:
-    name: Airspeed
-    minValue: 25
-    maxValue: 65
-    value: 41
+    name: Speed Error
+    minValue: -10
+    maxValue: 10
+    value: 0
     useAcceptableRange: 1
-    minAcceptableValue: 40
-    maxAcceptableValue: 42
+    minAcceptableValue: -0.5
+    maxAcceptableValue: 0.5
     suffix: m/s
   vizParameter2:
     name: Fake Parameter
@@ -3003,6 +3055,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -3886,6 +3939,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -4888,16 +4942,16 @@ MonoBehaviour:
   userParameters:
   - Kp_roll
   - Kp_q
-  vizParameters: 0
+  vizParameters: 1
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Sideslip
+    minValue: -2
+    maxValue: 2
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -0.5
+    maxAcceptableValue: 0.5
+    suffix: deg
   vizParameter2:
     name: 
     minValue: 0
@@ -4928,6 +4982,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -5008,18 +5063,18 @@ MonoBehaviour:
   - Kp_alt
   - Ki_alt
   userParameters: []
-  vizParameters: 0
+  vizParameters: 1
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Alt Error
+    minValue: -20
+    maxValue: 20
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -3
+    maxAcceptableValue: 3
+    suffix: m
   vizParameter2:
-    name: 
+    name: Elevator (TBD)
     minValue: 0
     maxValue: 0
     value: 0
@@ -5048,6 +5103,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -5640,6 +5696,7 @@ Transform:
   - {fileID: 730093708}
   - {fileID: 1980859575}
   - {fileID: 1782651365}
+  - {fileID: 1972373556}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5667,6 +5724,7 @@ MonoBehaviour:
   - {fileID: 730093707}
   - {fileID: 1980859576}
   - {fileID: 1782651366}
+  - {fileID: 1972373555}
 --- !u!1 &716001638
 GameObject:
   m_ObjectHideFlags: 0
@@ -5798,16 +5856,16 @@ MonoBehaviour:
   - Ki_sideslip
   - Kp_yaw
   - Ki_yaw
-  vizParameters: 0
+  vizParameters: 1
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: xTrack Error
+    minValue: -20
+    maxValue: 20
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -3
+    maxAcceptableValue: 3
+    suffix: m
   vizParameter2:
     name: 
     minValue: 0
@@ -5838,6 +5896,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -6068,7 +6127,7 @@ MonoBehaviour:
     vehicleVelocity: {x: 0, y: 0, z: 41}
     cameraLookMode: 1
     cameraDistance: 10
-    title: Steady Climb Scenario
+    title: Climb Scenario
     description: 'The objective of this scenario is to tune/design a controller to
       maintain a constant airspeed using the elevator with full throttle. This will
       put the aircraft in a steady climb
@@ -6089,16 +6148,16 @@ MonoBehaviour:
   - Ki_speed
   - Kp_pitch
   - Kp_q
-  vizParameters: 0
+  vizParameters: 1
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Speed Error
+    minValue: -5
+    maxValue: 5
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -1
+    maxAcceptableValue: 1
+    suffix: m/s
   vizParameter2:
     name: 
     minValue: 0
@@ -6129,6 +6188,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -6514,31 +6574,31 @@ MonoBehaviour:
     description: "The objective of this scenario is to find a fixed throttle trim
       for level flight with no elevator input. \nTo achieve success in this scenario
       two objectives must be met for at least 5 seconds:\n-The vertical speed must
-      be less than 0.5 m/s\n-The airspeed rate must be less than 0.1 m^2/s\n\nThis
-      scenario will run indefinitely"
+      be less than 0.5 m/s\n-The magnitude of the airspeed acceleration must be less
+      than 0.1 m^2/s\n\nThis scenario will run indefinitely"
     successText: You did it!
     failText: You failed
   tunableParameters: []
   userParameters: []
-  vizParameters: 0
+  vizParameters: 2
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Vertical Speed
+    minValue: -2
+    maxValue: 2
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -0.5
+    maxAcceptableValue: 0.5
+    suffix: m/s
   vizParameter2:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Airspeed Accel
+    minValue: -0.5
+    maxValue: 0.5
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -0.1
+    maxAcceptableValue: 0.1
+    suffix: m^2/s
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -6560,6 +6620,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -9492,16 +9553,16 @@ MonoBehaviour:
   - Kp_q
   - Kp_sideslip
   - Ki_sideslip
-  vizParameters: 0
+  vizParameters: 1
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Yaw Error
+    minValue: -45
+    maxValue: 45
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -5
+    maxAcceptableValue: 5
+    suffix: deg
   vizParameter2:
     name: 
     minValue: 0
@@ -9532,6 +9593,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -9751,9 +9813,8 @@ MonoBehaviour:
       North = 600 meters, East = -380 (radius = 300 meters)\r\n  The final leg (between
       Gate #3 and Gate #4) should implement a line following controller between the
       two gates.\r\n  \r\nTo complete the challenge, you must be within +/-5 meter
-      lateral distance when arriving at the gate.\r\n\r\nThe gate locations:\r\n\r\n-
-      Gate #1: North = 500m, East = 20m\r\n- Gate #2: North = 900m, East = -380m\r\n-
-      Gate #3: North = 600m, East = -680m\r\n- Gate #4: North = 100m, East = -680m"
+      lateral distance when arriving at the gate.\r\n\r\nFor more information about
+      the route and locations of the gates, see the project README."
     successText: 
     failText: 
   tunableParameters: []
@@ -9766,16 +9827,16 @@ MonoBehaviour:
   - Ki_yaw
   - Kp_xTrack
   - Kp_orbit
-  vizParameters: 0
+  vizParameters: 1
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: xTrack Error
+    minValue: -20
+    maxValue: 20
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -5
+    maxAcceptableValue: 5
+    suffix: m
   vizParameter2:
     name: 
     minValue: 0
@@ -9806,6 +9867,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -9885,7 +9947,7 @@ MonoBehaviour:
     vehicleVelocity: {x: 0, y: 0, z: 41}
     cameraLookMode: 3
     cameraDistance: 10
-    title: Stabilize Roll Scenario
+    title: Roll Stabilization Scenario
     description: 'The objective of this scenario is to tune/design a controller to
       maintain a constant roll angle. The aircraft will start at 45 degree roll angle
       and the controller should return the aircraft to wings level.
@@ -9901,16 +9963,16 @@ MonoBehaviour:
   - Kp_roll
   - Kp_p
   userParameters: []
-  vizParameters: 0
+  vizParameters: 1
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Roll Error
+    minValue: -45
+    maxValue: 45
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -5
+    maxAcceptableValue: 5
+    suffix: deg
   vizParameter2:
     name: 
     minValue: 0
@@ -9941,6 +10003,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0
@@ -10513,6 +10576,181 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!1 &1972373554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1972373556}
+  - component: {fileID: 1972373555}
+  m_Layer: 0
+  m_Name: Fixed Wing Challenge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1972373555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1972373554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4da8fcf6fb5f52742b9b5b00272b22c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    runtime: Infinity
+    canSucceedBeforeRuntime: 1
+    canFailBeforeRuntime: 1
+    vehiclePosition: {x: 2000, y: 450, z: 0}
+    vehicleOrientation: {x: 0, y: 0, z: 0, w: 0}
+    vehicleEulerAngles: {x: 0, y: 90, z: 0}
+    vehicleVelocity: {x: 41, y: 0, z: 0}
+    cameraLookMode: 3
+    cameraDistance: 20
+    title: Fixed Wing Challenge
+    description: 'This challenge is meant to test your longitudinal and lateral controllers
+      working together. Your got is to control the aircraft between a series of waypoints.
+      In between waypoints, you''ll controll the aircraft using a line-following controller.
+      To transition between segments, you''ll use an orbit following controller with
+      a 500 meter radius.
+
+      The waypoint locations (N/E or relative to the vehicle start location):
+
+      Waypoint #1: N=0m, E=500m
+
+      Waypoint #2: N-2600m, E=500m
+
+      Waypoint #3: N=2600m, E=-2500m
+
+      Waypoint #4: N=100m, E=500m
+
+      Waypoint #5: N=100m, E=-2000m
+
+
+      To complete this challenge, you''ll implement/tune your controller to hit the
+      target gates within the error threshold (5m). Each of the gates are positioned
+      where the aircraft should transition between segments (using a 500m radius orbit)
+
+
+      For more information regarding the route and locations of the gates, see the
+      project README.'
+    successText: 
+    failText: 
+  tunableParameters: []
+  userParameters:
+  - Kp_pitch
+  - Kp_q
+  - Kp_alt
+  - Ki_alt
+  - Kp_speed
+  - Ki_speed
+  - Kp_speed2
+  - Ki_speed2
+  - Kp_roll
+  - Kp_p
+  - Kp_yaw
+  - Ki_yaw
+  - Kp_xTrack
+  - Kp_orbit
+  - altitudeSwitch
+  - Kp_sideslip
+  - Ki_slideslip
+  vizParameters: 2
+  vizParameter1:
+    name: xTrack Error
+    minValue: -20
+    maxValue: 20
+    value: 0
+    useAcceptableRange: 1
+    minAcceptableValue: -5
+    maxAcceptableValue: 5
+    suffix: m
+  vizParameter2:
+    name: Alt Error
+    minValue: -20
+    maxValue: 20
+    value: 0
+    useAcceptableRange: 1
+    minAcceptableValue: -5
+    maxAcceptableValue: 5
+    suffix: m
+  planeControl:
+    Kp_speed: 0
+    Ki_speed: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_q: 5
+    Kp_alt: 0
+    Ki_alt: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Ki_speed2: 0.001
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    altitudeSwitch: 25
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    maxRoll: 1.0471976
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    Kp_orbit: 2.5
+  droneObject: {fileID: 0}
+  waypoint1: {x: 0, y: 2500, z: -400}
+  waypoint2: {x: 2600, y: 2500, z: -500}
+  waypoint3: {x: 2600, y: -500, z: -400}
+  waypoint4: {x: 100, y: 2500, z: -450}
+  waypoint5: {x: 100, y: 0, z: -450}
+  targetGate: {x: 0, y: 0, z: 0}
+  gateNum: 0
+  numOfGates: 4
+  targetRadius: 0
+  position2D: {x: 0, y: 0}
+  currentAirspeed: 0
+  currTime: 0
+  targetAirspeed: 41
+  currentClimbRate: 0
+  gateError: 0
+  errorThreshold: 5
+  targetAltitude: 0
+--- !u!4 &1972373556
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1972373554}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 713719898}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1980859574
 GameObject:
   m_ObjectHideFlags: 0
@@ -10585,16 +10823,16 @@ MonoBehaviour:
   - Ki_sideslip
   - Kp_yaw
   - Ki_yaw
-  vizParameters: 0
+  vizParameters: 1
   vizParameter1:
-    name: 
-    minValue: 0
-    maxValue: 0
+    name: Radius Error
+    minValue: -20
+    maxValue: 20
     value: 0
-    useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: 
+    useAcceptableRange: 1
+    minAcceptableValue: -5
+    maxAcceptableValue: 5
+    suffix: m
   vizParameter2:
     name: 
     minValue: 0
@@ -10625,6 +10863,7 @@ MonoBehaviour:
     minPitch2: -0.7853982
     maxPitch2: 0.7853982
     maxSpeedInt2: 50
+    altitudeSwitch: 25
     Kp_climb: 0.1
     Ki_climb: 0.1
     climbInt: 0

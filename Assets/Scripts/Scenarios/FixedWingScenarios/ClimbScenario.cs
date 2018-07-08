@@ -26,9 +26,11 @@ public class ClimbScenario : Scenario
         drone.SetControlMode(5); //AscendDescend Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
-//        planeControl.SetDefaultLongitudinalGains();
-//        planeControl.SetDefaultLateralGains();
-//        planeControl.SetStudentLongitudinalGains();
+        Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        line.localScale = new Vector3(0, 0, 0);
+        //        planeControl.SetDefaultLongitudinalGains();
+        //        planeControl.SetDefaultLateralGains();
+        //        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()
@@ -63,7 +65,7 @@ public class ClimbScenario : Scenario
             }
 
         }
-
+        UpdateVizParameters();
         return false;
     }
 
@@ -77,4 +79,11 @@ public class ClimbScenario : Scenario
 	{
 		base.OnCleanup ();
 	}
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update(currentAirspeed - targetAirspeed, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
+    }
 }

@@ -22,6 +22,7 @@ public class LateralChallenge: Scenario
     Transform line;
     Material lineMat;
     public Vector2 position2D;
+    Vector3 orbitCenter = new Vector3(0, 0, 0);
 
 
     public float currentAirspeed = 0.0f;
@@ -42,6 +43,8 @@ public class LateralChallenge: Scenario
     public float errorThreshold = 2.0f;
 
     public float targetAltitude;
+
+    float xTrackError;
 
     
 
@@ -97,6 +100,7 @@ public class LateralChallenge: Scenario
     {
 
         gateError = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().z - targetGate.y, 2f) + Mathf.Pow(drone.CoordsUnity().x - targetGate.x, 2f));
+        
         if (gateNum == 1)
         {
             line.localPosition = new Vector3((startPosition.x + gate1.x) / 2, data.vehiclePosition.y, (startPosition.y + gate1.y) / 2);
@@ -112,8 +116,9 @@ public class LateralChallenge: Scenario
                 }
 
                 
-                Vector3 orbitCenter = new Vector3(1000f, 1300f, -data.vehiclePosition.y);
+                orbitCenter = new Vector3(1000f, 1300f, -data.vehiclePosition.y);
                 targetRadius = 400f;
+                
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
                 if (drone.ControlMode() != 3)
                 {
@@ -137,8 +142,9 @@ public class LateralChallenge: Scenario
                     return true;
                 }
                 
-                Vector3 orbitCenter = new Vector3(1100f, 1300f, -data.vehiclePosition.y);
+                orbitCenter = new Vector3(1100f, 1300f, -data.vehiclePosition.y);
                 targetRadius = 300f;
+
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
                 if (drone.ControlMode() != 3)
                 {
@@ -198,9 +204,21 @@ public class LateralChallenge: Scenario
 
         }
 
-
+        if(gateNum == 2 || gateNum == 3)
+        {
+            float radius = (new Vector2(orbitCenter.x - drone.CoordsLocal().x, orbitCenter.y - drone.CoordsLocal().y)).magnitude;
+            Debug.Log("Radius: " + radius + " Target Radius: " + targetRadius + " Orbit Center: " + orbitCenter);
+            xTrackError = targetRadius - radius;
+        }
+        else if(gateNum == 1)
+        {
+            xTrackError = gate1.x - drone.CoordsLocal().y;
+        }else if(gateNum == 4)
+        {
+            xTrackError = -(gate4.x - drone.CoordsLocal().y);
+        }
         UpdateGatePosition();
-
+        UpdateVizParameters();
         return false;
     }
 
@@ -224,5 +242,12 @@ public class LateralChallenge: Scenario
     protected override void OnCleanup()
     {
         base.OnCleanup();
+    }
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update(xTrackError, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
     }
 }

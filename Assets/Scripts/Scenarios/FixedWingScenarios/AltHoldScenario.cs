@@ -32,6 +32,7 @@ public class AltHoldScenario : Scenario
         lineMat.color = Color.red;
         line.position = new Vector3(data.vehiclePosition.x, targetAltitude, data.vehiclePosition.z);
         line.localScale = new Vector3(0.1f, 0.1f, 2000.0f);
+        line.eulerAngles = new Vector3(0, 0, 0);
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
@@ -75,7 +76,7 @@ public class AltHoldScenario : Scenario
         {
             lineMat.color = Color.green;
         }
-
+        UpdateVizParameters();
         return false;
     }
 
@@ -90,4 +91,11 @@ public class AltHoldScenario : Scenario
 	{
 		base.OnCleanup ();
 	}
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update(currentAltitude-targetAltitude, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
+    }
 }

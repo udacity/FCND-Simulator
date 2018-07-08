@@ -21,6 +21,8 @@ public class YawHoldScenario : Scenario
         drone.SetControlMode(6); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
+        Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        line.localScale = new Vector3(0, 0, 0);
     }
 
     protected override void OnBegin()
@@ -53,6 +55,7 @@ public class YawHoldScenario : Scenario
                 return true;
             }
         }
+        UpdateVizParameters();
         return false;
     }
 
@@ -68,4 +71,11 @@ public class YawHoldScenario : Scenario
 	{
 		base.OnCleanup ();
 	}
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update((0-currentYaw)*180/Mathf.PI, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
+    }
 }

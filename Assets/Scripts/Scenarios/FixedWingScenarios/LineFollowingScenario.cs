@@ -35,10 +35,12 @@ public class LineFollowingScenario : Scenario
         drone.CommandVector(startWaypoint, 41.0f*(endWaypoint-startWaypoint)/((endWaypoint - startWaypoint).magnitude));
 
         line = GameObject.Find("Line").GetComponent<Transform>();
+
         lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
         lineMat.color = Color.red;
         line.position = new Vector3((startWaypoint.y + endWaypoint.y) / 2f, -(startWaypoint.z+endWaypoint.z)/2f, (startWaypoint.x+endWaypoint.x)/2f);
         line.localScale = new Vector3(Mathf.Abs(startWaypoint.y - endWaypoint.y)+0.1f, Mathf.Abs(startWaypoint.z - endWaypoint.z) + 0.1f, Mathf.Abs(startWaypoint.x - endWaypoint.x) + 0.1f);
+        line.eulerAngles = new Vector3(0, 0, 0);
     }
 
     protected override void OnBegin()
@@ -78,7 +80,7 @@ public class LineFollowingScenario : Scenario
         {
             lineMat.color = Color.green;
         }
-        
+        UpdateVizParameters();
         return false;
     }
 
@@ -95,4 +97,11 @@ public class LineFollowingScenario : Scenario
 	{
 		base.OnCleanup ();
 	}
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update(currentXTrack, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
+    }
 }

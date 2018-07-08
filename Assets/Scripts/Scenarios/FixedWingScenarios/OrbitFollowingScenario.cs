@@ -35,6 +35,8 @@ public class OrbitFollowingScenario : Scenario
         orbitCenter.z = -data.vehiclePosition.y;
 
         drone.CommandVector(orbitCenter, new Vector3(41.0f, 0.0f, 41.0f / targetRadius));
+        Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        line.localScale = new Vector3(0, 0, 0);
 
 
         /*
@@ -79,12 +81,12 @@ public class OrbitFollowingScenario : Scenario
             
             {
                 data.failText = "Scenario Failed:\n" +
-                    "Crostrack Error = " + (currentRadius-targetRadius) + " m at t = " + currTime;
+                    "Crostrack Error = " + (targetRadius-currentRadius) + " m at t = " + currTime;
                 return true;
             }
         }
 
-        
+        UpdateVizParameters();
         return false;
     }
 
@@ -100,4 +102,11 @@ public class OrbitFollowingScenario : Scenario
 	{
 		base.OnCleanup ();
 	}
+
+    void UpdateVizParameters()
+    {
+        onParameter1Update(targetRadius-currentRadius, 1);
+        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
+        //onParameter2Update(0.5f + noise, 2);
+    }
 }

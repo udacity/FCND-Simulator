@@ -40,9 +40,11 @@ public class AirspeedHoldScenario : Scenario
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
-//        planeControl.SetDefaultLongitudinalGains();
-//        planeControl.SetDefaultLateralGains();
-//        planeControl.SetStudentLongitudinalGains();
+        Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        line.localScale = new Vector3(0, 0, 0);
+        //        planeControl.SetDefaultLongitudinalGains();
+        //        planeControl.SetDefaultLateralGains();
+        //        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()
@@ -93,8 +95,8 @@ public class AirspeedHoldScenario : Scenario
 
 	void UpdateVizParameters ()
 	{
-		onParameter1Update ( currentAirspeed, 1 );
-		float noise = Mathf.PerlinNoise ( Time.time * 0.5f, 0 ) * 0.5f - 0.25f;
-		onParameter2Update ( 0.5f + noise, 2 );
+		onParameter1Update ( currentAirspeed-targetAirspeed, 1 );
+		//float noise = Mathf.PerlinNoise ( Time.time * 0.5f, 0 ) * 0.5f - 0.25f;
+		//onParameter2Update ( 0.5f + noise, 2 );
 	}
 }

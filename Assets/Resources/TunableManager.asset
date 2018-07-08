@@ -15,68 +15,85 @@ MonoBehaviour:
   - name: Kp_speed
     minValue: -1
     maxValue: 1
-    fixedValue: 0.5
+    fixedValue: 1
+    resolution: 3
   - name: Ki_speed
     minValue: -1
     maxValue: 1
-    fixedValue: 0.2
+    fixedValue: 1
+    resolution: 3
   - name: Kp_pitch
     minValue: -50
     maxValue: 50
-    fixedValue: 8
+    fixedValue: 5
+    resolution: 3
   - name: Kp_q
     minValue: -50
     maxValue: 50
-    fixedValue: 5
+    fixedValue: 1
+    resolution: 3
   - name: Kp_alt
     minValue: -1
     maxValue: 1
     fixedValue: 0.03
+    resolution: 3
   - name: Ki_alt
     minValue: -1
     maxValue: 1
     fixedValue: 0.01
+    resolution: 3
   - name: Kp_speed2
     minValue: -1
     maxValue: 1
     fixedValue: 0.2
+    resolution: 3
   - name: Ki_speed2
     minValue: -1
     maxValue: 1
     fixedValue: 0.2
+    resolution: 3
   - name: altitudeSwitch
     minValue: 0
     maxValue: 100
     fixedValue: 25
+    resolution: 3
   - name: Kp_roll
     minValue: -100
     maxValue: 100
     fixedValue: 40
+    resolution: 3
   - name: Kp_p
     minValue: -10
     maxValue: 10
     fixedValue: 1
+    resolution: 3
   - name: Kp_yaw
     minValue: -10
     maxValue: 10
-    fixedValue: 1.6
+    fixedValue: 3
+    resolution: 3
   - name: Ki_yaw
     minValue: -10
     maxValue: 10
-    fixedValue: 0.1
+    fixedValue: 0.2
+    resolution: 3
   - name: Kp_sideslip
     minValue: -10
     maxValue: 10
     fixedValue: -1
+    resolution: 3
   - name: Ki_sideslip
     minValue: -10
     maxValue: 10
     fixedValue: -1
+    resolution: 3
   - name: Kp_xTrack
     minValue: -0.1
     maxValue: 0.1
-    fixedValue: 0.003
+    fixedValue: 0.0035
+    resolution: 4
   - name: Kp_orbit
     minValue: -10
     maxValue: 10
-    fixedValue: 1
+    fixedValue: 5
+    resolution: 3
