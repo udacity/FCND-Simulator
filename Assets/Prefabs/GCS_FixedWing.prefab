@@ -4384,6 +4384,8 @@ MonoBehaviour:
   vertical: 1
   displayAsPercent: 1
   precision: 1
+  minValue: 0
+  maxValue: 1
 --- !u!114 &114016980281690574
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8105,6 +8107,8 @@ MonoBehaviour:
   vertical: 0
   displayAsPercent: 0
   precision: 1
+  minValue: -1
+  maxValue: 1
 --- !u!114 &114199787357552122
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8816,8 +8820,10 @@ MonoBehaviour:
   indicator: {fileID: 224531360309719076}
   valueText: {fileID: 114853454645287496}
   vertical: 1
-  displayAsPercent: 1
+  displayAsPercent: 0
   precision: 1
+  minValue: -1
+  maxValue: 1
 --- !u!114 &114234864170460110
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13425,6 +13431,8 @@ MonoBehaviour:
   vertical: 0
   displayAsPercent: 0
   precision: 1
+  minValue: -1
+  maxValue: 1
 --- !u!114 &114464126365843546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -27408,7 +27416,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 10, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &224768810090529550

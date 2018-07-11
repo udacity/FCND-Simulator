@@ -12,6 +12,8 @@ public class UIBarValue : MonoBehaviour
 	public bool vertical;
 	public bool displayAsPercent;
 	public int precision = 1;
+	public float minValue = 0;
+	public float maxValue = 1;
 
 	string format = "F1";
 
@@ -22,10 +24,12 @@ public class UIBarValue : MonoBehaviour
 
 	public void SetValue (float value)
 	{
-		if ( vertical )
-			value = Mathf.Clamp01 ( value );
-		else
-			value = Mathf.Clamp ( value, -1f, 1f );
+		value = Mathf.Clamp ( value, minValue, maxValue );
+		float lerp = Mathf.InverseLerp ( minValue, maxValue, value );
+//		if ( vertical )
+//			value = Mathf.Clamp01 ( value );
+//		else
+//			value = Mathf.Clamp ( value, -1f, 1f );
 
 		if ( displayAsPercent )
 			valueText.text = ( value * 100f ).ToString ( format ) + "%";
@@ -34,11 +38,11 @@ public class UIBarValue : MonoBehaviour
 
 		if ( vertical )
 		{
-			barFill.fillAmount = value;
-			indicator.anchorMin = indicator.anchorMax = new Vector2 ( 0.5f, value );
+			barFill.fillAmount = lerp;
+			indicator.anchorMin = indicator.anchorMax = new Vector2 ( 0.5f, lerp );
 		} else
 		{
-			float lerp = Mathf.InverseLerp ( -1f, 1f, value );
+//			float lerp = Mathf.InverseLerp ( -1f, 1f, value );
 			indicator.anchorMin = indicator.anchorMax = new Vector2 ( lerp, 0.5f );
 		}
 	}
