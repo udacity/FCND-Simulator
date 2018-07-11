@@ -83,6 +83,14 @@ namespace Drones
             return quadVehicle.VelocityBody();
         }
 
+		/// <summary>
+		/// Linear velocity in unity coords
+		/// </summary>
+		public Vector3 VelocityUnity()
+		{
+			return quadVehicle.VelocityUnity ();
+		}
+
         /// <summary>
         /// The vehicle NED linear acceleration in m/s^2
         /// </summary>
@@ -107,6 +115,14 @@ namespace Drones
         {
             return quadVehicle.AngularRatesBody();
         }
+
+		/// <summary>
+		/// Angular velocity in unity coords
+		/// </summary>
+		public Vector3 AngularRatesUnity()
+		{
+			return quadVehicle.AngularRatesUnity ();
+		}
 
         /// <summary>
         /// The current body frame control moments being applied to the vehicle in kg*m^2/s^2

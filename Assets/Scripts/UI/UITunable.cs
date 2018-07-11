@@ -18,6 +18,8 @@ public class UITunable : MonoBehaviour
 	public TunableParameter parameter;
 
 	float defaultValue;
+	int resolution = 3;
+	string format = "F3";
 
 	public void OnSliderChanged ()
 	{
@@ -31,10 +33,12 @@ public class UITunable : MonoBehaviour
 
 	public void Set (TunableParameter param)
 	{
+		resolution = param.resolution;
+		format = "F" + resolution;
 		paramName.text = param.name;
-		curValue.text = param.value.ToString ( "F3" );
-		minValue.text = param.minValue.ToString ( "F3" );
-		maxValue.text = param.maxValue.ToString ( "F3" );
+		curValue.text = param.value.ToString ( format );
+		minValue.text = param.minValue.ToString ( format );
+		maxValue.text = param.maxValue.ToString ( format );
 		slider.minValue = param.minValue;
 		slider.maxValue = param.maxValue;
 		slider.value = param.value;
@@ -42,18 +46,18 @@ public class UITunable : MonoBehaviour
 		parameter = param;
 	}
 
-	public void Set (string pName, float value, float min, float max, TunableParameter parm)
+/*	public void Set (string pName, float value, float min, float max, TunableParameter parm)
 	{
 		paramName.text = pName;
-		curValue.text = value.ToString ( "F3" );
-		minValue.text = min.ToString ( "F3" );
-		maxValue.text = max.ToString ( "F3" );
+		curValue.text = value.ToString ( format );
+		minValue.text = min.ToString ( format );
+		maxValue.text = max.ToString ( format );
 		slider.minValue = min;
 		slider.maxValue = max;
 		slider.value = value;
 		defaultValue = value;
 		parameter = parm;
-	}
+	}*/
 
 	public float GetValue ()
 	{
@@ -68,13 +72,13 @@ public class UITunable : MonoBehaviour
 	public void RestoreValue ()
 	{
 		float value = parameter.value;
-		curValue.text = value.ToString ( "F3" );
+		curValue.text = value.ToString ( format );
 		slider.value = value;
 	}
 
 	public void ResetToDefault ()
 	{
-		curValue.text = defaultValue.ToString ( "F3" );
+		curValue.text = defaultValue.ToString ( format );
 		slider.value = defaultValue;
 	}
 }

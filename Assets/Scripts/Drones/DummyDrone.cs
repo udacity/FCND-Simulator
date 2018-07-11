@@ -278,6 +278,14 @@ public class DummyDrone : MonoBehaviour, IDrone
         return Vector3.zero;
     }
 
+	/// <summary>
+	/// Linear velocity in unity coords
+	/// </summary>
+	public Vector3 VelocityUnity()
+	{
+		return rb.velocity;
+	}
+
     /// <summary>
     /// The vehicle NED linear acceleration in m/s^2
     /// </summary>
@@ -302,6 +310,14 @@ public class DummyDrone : MonoBehaviour, IDrone
     {
         return Vector3.zero;
     }
+
+	/// <summary>
+	/// Angular velocity in unity coords
+	/// </summary>
+	public Vector3 AngularRatesUnity()
+	{
+		return Vector3.zero;
+	}
 
     /// <summary>
     /// The current body frame control moments being applied to the vehicle in kg*m^2/s^2

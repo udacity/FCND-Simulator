@@ -511,7 +511,7 @@ namespace Messaging
             total_commands = total_commands + 1.0f;
             if (curr_time - prev_time > 2.0)
             {
-                Debug.Log("Message Freq: " + total_commands / (curr_time - prev_time));
+//                Debug.Log("Message Freq: " + total_commands / (curr_time - prev_time));
                 prev_time = curr_time;
                 total_commands = 0.0f;
             }

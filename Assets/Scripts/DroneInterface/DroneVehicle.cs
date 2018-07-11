@@ -49,6 +49,11 @@ namespace DroneInterface
         /// <returns></returns>
         Vector3 VelocityBody();
 
+		/// <summary>
+		/// Linear velocity in unity coords
+		/// </summary>
+		Vector3 VelocityUnity();
+
         /// <summary>
         /// The vehicle NED linear acceleration in m/s^2
         /// </summary>
@@ -64,6 +69,12 @@ namespace DroneInterface
         /// </summary>
         /// <returns></returns>
         Vector3 AngularRatesBody();
+
+		/// <summary>
+		/// Angular velocity in unity coords
+		/// </summary>
+		/// <returns></returns>
+		Vector3 AngularRatesUnity();
 
         /// <summary>
         /// The current body frame control moments being applied to the vehicle in kg*m^2/s^2

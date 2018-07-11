@@ -46,6 +46,12 @@ public class FixedWingUI : MonoBehaviour
 	public UIVizParameter parameter1;
 	public UIVizParameter parameter2;
 
+	// other values
+	public UIBarValue throttle;
+	public UIBarValue elevator;
+	public UIBarValue rudder;
+	public UIBarValue aileron;
+
 	// other variables
 	public ScenarioManager scenarioManager;
 
@@ -63,6 +69,9 @@ public class FixedWingUI : MonoBehaviour
 		successObject.SetActive ( false );
 		failObject.SetActive ( false );
 		runtimeObject.SetActive ( false );
+
+		Simulation.FixedWingUI = this;
+		Simulation.DroneUI = GetComponent<DroneUI> ();
 	}
 
 	void Start ()
@@ -172,7 +181,8 @@ public class FixedWingUI : MonoBehaviour
 		ClearPanels ();
 		if ( button == 0 )
 		{
-			scenarioManager.DoReset ();
+			scenarioManager.SelectScenario ( scenarioDropdown.value - 1 );
+//			scenarioManager.DoReset ();
 //			SetRuntime ( scenarioManager.CurrentScenario.data.runtime );
 			
 		} else

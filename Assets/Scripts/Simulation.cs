@@ -46,6 +46,9 @@ public class Simulation
 		set { Instance.activeDrone = value; }
 	}
 
+	public static DroneUI DroneUI { get; set; }
+	public static FixedWingUI FixedWingUI { get; set; }
+
 	public static double latitude0 = 37.792480d;
 	public static double longitude0 = -122.397450d;
 

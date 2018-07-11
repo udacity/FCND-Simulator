@@ -222,6 +222,11 @@ namespace DroneVehicles
             return bodyVelocity.UnityToENUDirection().ENUToNED();
         }
 
+		public Vector3 VelocityUnity()
+		{
+			return rb.velocity;
+		}
+
         public Vector3 AccelerationBody()
         {
             return localAcceleration.UnityToENUDirection().ENUToNED();
@@ -236,6 +241,11 @@ namespace DroneVehicles
         {
             return bodyAngularVelocity.UnityToNEDRotation();
         }
+
+		public Vector3 AngularRatesUnity ()
+		{
+			return rb.angularVelocity;
+		}
 
         // TODO: Implement this method
         public Vector3 MomentBody()

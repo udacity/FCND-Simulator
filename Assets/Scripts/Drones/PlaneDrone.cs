@@ -39,6 +39,15 @@ namespace Drones
             Simulation.ActiveDrone = this;
         }
 
+		void Update ()
+		{
+			// shove some fake values into the ui
+			Simulation.FixedWingUI.throttle.SetValue ( Mathf.Sin ( Time.time ) * 0.5f + 0.5f );
+			Simulation.FixedWingUI.elevator.SetValue ( Mathf.Cos ( Time.time ) * 0.5f + 0.5f );
+			Simulation.FixedWingUI.rudder.SetValue ( Mathf.Sin ( Time.time ) );
+			Simulation.FixedWingUI.aileron.SetValue ( Mathf.Cos ( Time.time ) );
+		}
+
         //IDroneVehicle Methods
 
         public Vector3 CoordsUnity()
@@ -89,6 +98,14 @@ namespace Drones
             return planeVehicle.VelocityBody();
         }
 
+		/// <summary>
+		/// Linear velocity in unity coords
+		/// </summary>
+		public Vector3 VelocityUnity()
+		{
+			return planeVehicle.VelocityUnity ();
+		}
+
         /// <summary>
         /// The vehicle NED linear acceleration in m/s^2
         /// </summary>
@@ -113,6 +130,14 @@ namespace Drones
         {
             return planeVehicle.AngularRatesBody();
         }
+
+		/// <summary>
+		/// Angular velocity in unity coords
+		/// </summary>
+		public Vector3 AngularRatesUnity()
+		{
+			return planeVehicle.AngularRatesUnity ();
+		}
 
         /// <summary>
         /// The current body frame control moments being applied to the vehicle in kg*m^2/s^2
