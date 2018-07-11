@@ -42,6 +42,9 @@ public class SimpleProp : MonoBehaviour {
 
 	public float densityCoef = 1f;
 
+    //Low pass time constant to add engine dynamics
+    public float throttleAlpha = 0.1f;
+
 	void Start () {
 		propArea = Mathf.PI * (propRadius * propRadius) ;
 		thrustDir = 1f;
@@ -84,6 +87,6 @@ public class SimpleProp : MonoBehaviour {
 
     public void SetRPM(float r)
     {
-        rpm = r;
+        rpm = (1-throttleAlpha)*rpm+throttleAlpha*r;
     }
 }

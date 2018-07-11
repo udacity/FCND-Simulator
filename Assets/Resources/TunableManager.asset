@@ -26,12 +26,12 @@ MonoBehaviour:
     minValue: -50
     maxValue: 50
     fixedValue: 5
-    resolution: 3
+    resolution: 2
   - name: Kp_q
     minValue: -50
     maxValue: 50
     fixedValue: 1
-    resolution: 3
+    resolution: 2
   - name: Kp_alt
     minValue: -1
     maxValue: 1
@@ -56,22 +56,22 @@ MonoBehaviour:
     minValue: 0
     maxValue: 100
     fixedValue: 25
-    resolution: 3
+    resolution: 0
   - name: Kp_roll
-    minValue: -100
-    maxValue: 100
-    fixedValue: 40
-    resolution: 3
+    minValue: -50
+    maxValue: 50
+    fixedValue: 10
+    resolution: 1
   - name: Kp_p
     minValue: -10
     maxValue: 10
     fixedValue: 1
-    resolution: 3
+    resolution: 1
   - name: Kp_yaw
     minValue: -10
     maxValue: 10
     fixedValue: 3
-    resolution: 3
+    resolution: 2
   - name: Ki_yaw
     minValue: -10
     maxValue: 10
@@ -81,12 +81,12 @@ MonoBehaviour:
     minValue: -10
     maxValue: 10
     fixedValue: -1
-    resolution: 3
+    resolution: 2
   - name: Ki_sideslip
     minValue: -10
     maxValue: 10
     fixedValue: -1
-    resolution: 3
+    resolution: 2
   - name: Kp_xTrack
     minValue: -0.1
     maxValue: 0.1
@@ -96,4 +96,4 @@ MonoBehaviour:
     minValue: -10
     maxValue: 10
     fixedValue: 5
-    resolution: 3
+    resolution: 2

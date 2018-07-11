@@ -461,6 +461,7 @@ MonoBehaviour:
   useCustomForcePoint: 0
   forcePoint: {fileID: 0}
   densityCoef: 1
+  throttleAlpha: 0.1
 --- !u!4 &30642892
 Transform:
   m_ObjectHideFlags: 0
@@ -1081,10 +1082,8 @@ MonoBehaviour:
       altitude, use the maintain altitude controller.\n  If the vehicle is below or
       above the target altitude by the specified threshold, use the climb/descend
       controller with full or min throttle (respectively)\nTo complete the challenge,
-      you must be within +/-3 meters when arriving at the gate.\nThe gate locations
-      (x = horizontal distance from the start location):\nGate #1: x = 200m, altitude=200m\nGate
-      #2: x = 1100m, altitude = 300m\nGate #3: x = 1400m, altitude = 280m\nGate #4:
-      x = 2200m, altitude = 200m"
+      you must be within +/-3 meters when arriving at the gate.\nThe local positions
+      of the gate positions can be found in the project README\n"
     successText: 
     failText: 
   tunableParameters:
@@ -1368,6 +1367,7 @@ MonoBehaviour:
   elevator: 0
   rudder: 0
   throttleRPM: 0
+  throttleAlpha: 0.1
   maxAileron: 30
   minAileron: -30
   maxRudder: 30
@@ -1376,7 +1376,7 @@ MonoBehaviour:
   minElevator: -30
   elevatorTrim: 0
   maxTrim: 30
-  minTrime: -30
+  minTrim: -30
   maxThrottleRPM: 2500
 --- !u!114 &155553752
 MonoBehaviour:
@@ -1497,6 +1497,7 @@ MonoBehaviour:
   aircraftControl: {fileID: 0}
   enginesManager: {fileID: 0}
   usimVeh: {fileID: 0}
+  actuatorAlpha: 0.2
 --- !u!114 &155553756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2285,17 +2286,17 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -2306,6 +2307,301 @@ Prefab:
         type: 2}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224824507232944046, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224824507232944046, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224018988587698024, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224018988587698024, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224018988587698024, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224018988587698024, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224795766788488088, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224795766788488088, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224795766788488088, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224795766788488088, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224332288121247742, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224332288121247742, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224332288121247742, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224332288121247742, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224332288121247742, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224332288121247742, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224361583015418444, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224361583015418444, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224361583015418444, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224361583015418444, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224361583015418444, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224361583015418444, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224102356214142936, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224102356214142936, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224102356214142936, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224102356214142936, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224102356214142936, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224102356214142936, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224270773673108280, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224270773673108280, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224270773673108280, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224270773673108280, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224270773673108280, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224270773673108280, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224668542318372212, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224668542318372212, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224668542318372212, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224668542318372212, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224668542318372212, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224668542318372212, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224458284615305190, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224458284615305190, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224458284615305190, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224458284615305190, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224458284615305190, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224458284615305190, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224077087569968714, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224077087569968714, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224077087569968714, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224077087569968714, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224077087569968714, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224077087569968714, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224813292865584000, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224813292865584000, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224813292865584000, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224813292865584000, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224813292865584000, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224813292865584000, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114463055357146122, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: precision
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f71ee99d13775b74ab589fef8f05da06, type: 2}
@@ -4793,7 +5089,7 @@ MonoBehaviour:
   - Kp_alt
   - Ki_alt
   userParameters: []
-  vizParameters: 1
+  vizParameters: 2
   vizParameter1:
     name: Alt Error
     minValue: -20
@@ -4804,9 +5100,9 @@ MonoBehaviour:
     maxAcceptableValue: 3
     suffix: m
   vizParameter2:
-    name: Elevator (TBD)
-    minValue: 0
-    maxValue: 0
+    name: Pitch
+    minValue: -20
+    maxValue: 20
     value: 0
     useAcceptableRange: 0
     minAcceptableValue: 0
@@ -6305,7 +6601,9 @@ MonoBehaviour:
       for level flight with no elevator input. \nTo achieve success in this scenario
       two objectives must be met for at least 5 seconds:\n-The vertical speed must
       be less than 0.5 m/s\n-The magnitude of the airspeed acceleration must be less
-      than 0.1 m^2/s\n\nThis scenario will run indefinitely"
+      than 0.1 m^2/s\n\nThere are no gains to tune prior to the start of the scenario,
+      the throttle can be adjusted during the scenario using space/c buttons.\n\nThis
+      scenario will run indefinitely"
     successText: You did it!
     failText: You failed
   tunableParameters: []
@@ -9533,18 +9831,17 @@ MonoBehaviour:
     title: Lateral Challenge
     description: "The objective of this challenge is to successfully fly through a
       series of virtual gates in the sky. All the positions given in this scenario
-      are relative to the vehicle start location.\r\nTo do this, tune/implement a
-      lateral state machine:\r\n\r\n  The first leg (before Gate #1) should implement
-      a line following controller between North =  0 meters, East = 20 meters and
-      Gate #1.\r\n  The second leg (between Gate#1 and Gate #2) should implement an
-      orbit following controller around the orbit center North = 500 meters, East
-      = -380 meters (radius = 400 meters)\r\n  The third leg (between Gate #2 and
-      Gate #3) should implement an orbit following controller around the orbit center
-      North = 600 meters, East = -380 (radius = 300 meters)\r\n  The final leg (between
-      Gate #3 and Gate #4) should implement a line following controller between the
-      two gates.\r\n  \r\nTo complete the challenge, you must be within +/-5 meter
-      lateral distance when arriving at the gate.\r\n\r\nFor more information about
-      the route and locations of the gates, see the project README."
+      are relative to the vehicle start location.\r\nTo do this, implement a lateral
+      state machine:\r\r\n  The first leg (before Gate #1) should implement a line
+      following controller.\r\n  The second leg (between Gate#1 and Gate #2) should
+      implement an orbit following controller\r\n  The third leg (between Gate #2
+      and Gate #3) should implement an orbit following controller.\r\n  The final
+      leg (between Gate #3 and Gate #4) should implement a line following controller.\r\n
+      \ \r\nTo complete the challenge, you must be within +/-5 meter lateral distance
+      when arriving at the gate.\r\n\r\nFor more information about the route and locations
+      of the gates, see the project README.\n\nNote: there are no specific parameters
+      to tune for this scenario but gains chosen in the lateral scenarios will determine
+      success."
     successText: 
     failText: 
   tunableParameters: []
@@ -10345,31 +10642,23 @@ MonoBehaviour:
     cameraDistance: 20
     title: Fixed Wing Challenge
     description: 'This challenge is meant to test your longitudinal and lateral controllers
-      working together. Your got is to control the aircraft between a series of waypoints.
+      working together. Your goal is to control the aircraft between a series of waypoints.
       In between waypoints, you''ll controll the aircraft using a line-following controller.
       To transition between segments, you''ll use an orbit following controller with
       a 500 meter radius.
 
-      The waypoint locations (N/E or relative to the vehicle start location):
 
-      Waypoint #1: N=0m, E=500m
-
-      Waypoint #2: N-2600m, E=500m
-
-      Waypoint #3: N=2600m, E=-2500m
-
-      Waypoint #4: N=100m, E=500m
-
-      Waypoint #5: N=100m, E=-2000m
-
-
-      To complete this challenge, you''ll implement/tune your controller to hit the
-      target gates within the error threshold (5m). Each of the gates are positioned
-      where the aircraft should transition between segments (using a 500m radius orbit)
+      To complete this challenge, you''ll implement your controller to hit the target
+      gates within the error threshold (5m). Each of the gates are positioned where
+      the aircraft should transition between segments (using a 500m radius orbit)
 
 
       For more information regarding the route and locations of the gates, see the
-      project README.'
+      project README.
+
+
+      Note: there are no specific gains to tune in Unity for this scenario, but the
+      your gains selected in previous scenarios will determine success'
     successText: 
     failText: 
   tunableParameters: []

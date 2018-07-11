@@ -35,6 +35,7 @@ public class InputsManager : MonoBehaviour {
 	public AircraftControl aircraftControl;	
 	public EnginesManager enginesManager;
 	public UsimVehicle usimVeh;
+    public float actuatorAlpha = 0.2f;
 
 
 	void Start () {
@@ -57,19 +58,19 @@ public class InputsManager : MonoBehaviour {
 
 	public void SetElevator (float set){
 
-		elevator = set ;
+		elevator = actuatorAlpha*set + (1-actuatorAlpha)*elevator;
 
 	}
 
 	public void SetAileron (float set){
 
-		aileron = set ;
+		aileron = actuatorAlpha * set + (1-actuatorAlpha)*aileron;
 
 	}
 
 	public void SetRudder (float set){
 
-		rudder = set;
+		rudder = actuatorAlpha * set + (1-actuatorAlpha)*rudder;
 		shipRudder = set;
 	}
 

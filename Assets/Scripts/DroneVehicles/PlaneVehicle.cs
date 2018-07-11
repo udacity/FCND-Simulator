@@ -39,6 +39,7 @@ namespace DroneVehicles
         public float elevator = 0.0f;
         public float rudder = 0.0f;
         public float throttleRPM = 0.0f;
+        public float throttleAlpha = 0.1f;
 
         public float maxAileron = 30.0f;
         public float minAileron = -30.0f;
@@ -53,7 +54,7 @@ namespace DroneVehicles
 
         public float elevatorTrim = 0.0f;
         public float maxTrim = 30.0f;
-        public float minTrime = -30.0f;
+        public float minTrim = -30.0f;
 
         
         public float maxThrottleRPM = 5000.0f;
