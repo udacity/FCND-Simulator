@@ -15,12 +15,12 @@ MonoBehaviour:
   - name: Kp_speed
     minValue: -1
     maxValue: 1
-    fixedValue: 1
+    fixedValue: 0.5
     resolution: 3
   - name: Ki_speed
     minValue: -1
     maxValue: 1
-    fixedValue: 1
+    fixedValue: 0.2
     resolution: 3
   - name: Kp_pitch
     minValue: -50
