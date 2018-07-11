@@ -37,8 +37,8 @@ public class UITunable : MonoBehaviour
 		format = "F" + resolution;
 		paramName.text = param.name;
 		curValue.text = param.value.ToString ( format );
-		minValue.text = param.minValue.ToString ( format );
-		maxValue.text = param.maxValue.ToString ( format );
+		minValue.text = ((int) param.minValue ).ToString ();
+		maxValue.text = ((int) param.maxValue ).ToString ();
 		slider.minValue = param.minValue;
 		slider.maxValue = param.maxValue;
 		slider.value = param.value;
