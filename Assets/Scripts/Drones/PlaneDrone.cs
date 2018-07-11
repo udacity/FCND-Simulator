@@ -41,11 +41,13 @@ namespace Drones
 
 		void Update ()
 		{
-			// shove some fake values into the ui
-			Simulation.FixedWingUI.throttle.SetValue ( Mathf.Sin ( Time.time ) * 0.5f + 0.5f );
+            // shove some fake values into the ui
+            /*
+            Simulation.FixedWingUI.throttle.SetValue ( Mathf.Sin ( Time.time ) * 0.5f + 0.5f );
 			Simulation.FixedWingUI.elevator.SetValue ( Mathf.Cos ( Time.time ) * 0.5f + 0.5f );
 			Simulation.FixedWingUI.rudder.SetValue ( Mathf.Sin ( Time.time ) );
 			Simulation.FixedWingUI.aileron.SetValue ( Mathf.Cos ( Time.time ) );
+            */
 		}
 
         //IDroneVehicle Methods

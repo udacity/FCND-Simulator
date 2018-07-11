@@ -102,8 +102,17 @@ namespace DroneVehicles
             inputsManager.SetRudder(rudder);
             inputsManager.SetElevator(elevator);
             prop.SetRPM(throttleRPM);
-            
+
+            UIUpdate();
             StateUpdate();
+        }
+
+        void UIUpdate()
+        {
+            Simulation.FixedWingUI.throttle.SetValue(throttleRPM/maxThrottleRPM);
+            Simulation.FixedWingUI.elevator.SetValue(elevator);
+            Simulation.FixedWingUI.rudder.SetValue(rudder);
+            Simulation.FixedWingUI.aileron.SetValue(aileron);
         }
 
         public void CommandAileron(float a)
