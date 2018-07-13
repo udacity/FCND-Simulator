@@ -86,14 +86,14 @@ namespace MovementBehaviors
             if ((-controller.PositionLocal().z - altCommand) > altSwitch)
             {
                 throttle = 0.1f;
-                float pitchCommand = -controller.planeControl.AirspeedLoop2(speedCommand, controller.Airspeed());
+                float pitchCommand = controller.planeControl.AirspeedLoop2(speedCommand, controller.Airspeed());
                 controller.attitudeTarget.y = pitchCommand;
                 elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
             }
             else if ((-controller.PositionLocal().z - altCommand) < -altSwitch)
             {
                 throttle = 1.0f;
-                float pitchCommand = -controller.planeControl.AirspeedLoop2(speedCommand, controller.Airspeed());
+                float pitchCommand = controller.planeControl.AirspeedLoop2(speedCommand, controller.Airspeed());
                 controller.attitudeTarget.y = pitchCommand;
                 elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
             }

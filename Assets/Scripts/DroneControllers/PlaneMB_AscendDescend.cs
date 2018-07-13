@@ -65,7 +65,7 @@ namespace MovementBehaviors
             //controller.attitudeTarget.z = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed());
             //controller.positionTarget.z = altCommand;
             //float pitchCommand = controller.planeControl.AltitudeLoop(altCommand, -controller.PositionLocal().z);
-            float pitchCommand = -controller.planeControl.AirspeedLoop2(speedCommand, controller.Airspeed());
+            float pitchCommand = controller.planeControl.AirspeedLoop2(speedCommand, controller.Airspeed());
             //float pitchCommand = controller.planeControl.ClimbRateLoop(climbCommand, -controller.VelocityLocal().z);
             controller.velocityTarget.x = speedCommand;
             controller.velocityTarget.y = controller.Airspeed();

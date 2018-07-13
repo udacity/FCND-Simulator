@@ -18,11 +18,11 @@ public class FixedWingChallenge: Scenario
     Vector2 gate4 = new Vector2(1000, 100);
     */
 
-    public Vector3 waypoint1 = new Vector3(0, 2000, -350);
+    public Vector3 waypoint1 = new Vector3(0, 2000, -400);
     public Vector3 waypoint2 = new Vector3(2000, 2000, -500);
-    public Vector3 waypoint3 = new Vector3(2000, 0, -500);
+    public Vector3 waypoint3 = new Vector3(2000, 0, -400);
     public Vector3 waypoint4 = new Vector3(0, 2000, -450);
-    public Vector3 waypoint5 = new Vector3(0, 0, -400);
+    public Vector3 waypoint5 = new Vector3(0, 0, -450);
     //public Vector3 gate1 = new Vector3(1500, 2000, -350);
     //Vector3 gate2 = new Vector3(2000, 1000, -500);
     //Vector3 gate3 = new Vector3(1300, 700, 450);
@@ -165,8 +165,11 @@ public class FixedWingChallenge: Scenario
             }
             else
             {
-                drone.SetControlMode(7);
-                drone.CommandVector(prevWaypoint, 41 * (currWaypoint - prevWaypoint).normalized);
+                if (drone.ControlMode() != 1)
+                {
+                    drone.SetControlMode(7);
+                    drone.CommandVector(prevWaypoint, 41 * (currWaypoint - prevWaypoint).normalized);
+                }
             }
         }
 
@@ -193,11 +196,15 @@ public class FixedWingChallenge: Scenario
             }
             else
             {
-                drone.SetControlMode(8);
+                
                 Vector3 orbitCenter = new Vector3(c.x, c.y, prevWaypoint.z);
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, lambda*41.0f / radius);
                 Debug.Log("Orbit Center: " + orbitCenter);
-                drone.CommandVector(orbitCenter, velocityVec);
+                if (drone.ControlMode() != 1)
+                {
+                    drone.SetControlMode(8);
+                    drone.CommandVector(orbitCenter, velocityVec);
+                }
             }
         }
 
