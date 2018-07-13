@@ -225,6 +225,7 @@ public class FixedWingChallenge: Scenario
             Debug.Log("Rotation: " + line.rotation + " heading: " + heading);
             gate.position = new Vector3(targetGate.y, -targetGate.z, targetGate.x);
             gate.localScale = new Vector3(5f, 5f, 5f);
+            gate.eulerAngles = new Vector3(0f, heading * 180f / Mathf.PI, -90f);
         }
         else
         {
