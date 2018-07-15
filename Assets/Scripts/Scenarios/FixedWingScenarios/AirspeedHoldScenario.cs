@@ -39,9 +39,9 @@ public class AirspeedHoldScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-        drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
         Transform line = GameObject.Find("Line").GetComponent<Transform>();
         line.localScale = new Vector3(0, 0, 0);
+        drone.Status = 3;
         //        planeControl.SetDefaultLongitudinalGains();
         //        planeControl.SetDefaultLateralGains();
         //        planeControl.SetStudentLongitudinalGains();
@@ -64,6 +64,8 @@ public class AirspeedHoldScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
+        if(!drone.MotorsArmed())
+            drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
         currTime = drone.FlightTime() - initTime;
         currentAirspeed = drone.VelocityLocal().magnitude;

@@ -26,13 +26,14 @@ public class LineFollowingScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(7); //Line Following Mode
         drone.SetGuided(true);
+        drone.Status = 9;
         startWaypoint.x = data.vehiclePosition.z;
         startWaypoint.y = data.vehiclePosition.x + 20.0f;
         startWaypoint.z = -data.vehiclePosition.y;
         endWaypoint.x = startWaypoint.x + 2000.0f;
         endWaypoint.y = startWaypoint.y;
         endWaypoint.z = startWaypoint.z;
-        drone.CommandVector(startWaypoint, 41.0f*(endWaypoint-startWaypoint)/((endWaypoint - startWaypoint).magnitude));
+        //drone.CommandVector(startWaypoint, 41.0f*(endWaypoint-startWaypoint)/((endWaypoint - startWaypoint).magnitude));
 
         line = GameObject.Find("Line").GetComponent<Transform>();
 
@@ -59,9 +60,11 @@ public class LineFollowingScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
+        if(!drone.MotorsArmed())
+            drone.CommandVector(startWaypoint, 41.0f * (endWaypoint - startWaypoint) / ((endWaypoint - startWaypoint).magnitude));
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
-        
-        
+
+
         currTime = drone.FlightTime() - initTime;
         targetCourse = Mathf.Atan2((endWaypoint - startWaypoint).y , (endWaypoint - startWaypoint).x);
         currentXTrack = Mathf.Cos(targetCourse) * (drone.CoordsUnity().x - startWaypoint.y) + Mathf.Sin(-targetCourse) * (drone.CoordsUnity().z - startWaypoint.x);

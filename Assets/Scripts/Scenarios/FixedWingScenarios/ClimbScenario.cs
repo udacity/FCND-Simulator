@@ -25,7 +25,7 @@ public class ClimbScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(5); //AscendDescend Mode
         drone.SetGuided(true);
-        drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
+        drone.Status = 4;
         Transform line = GameObject.Find("Line").GetComponent<Transform>();
         line.localScale = new Vector3(0, 0, 0);
         //        planeControl.SetDefaultLongitudinalGains();
@@ -51,6 +51,8 @@ public class ClimbScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
+        if(!drone.MotorsArmed())
+            drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
         //drone.CommandAttitude(new Vector3(0.0f, targetAirspeed, 0.0f), 1.0f);
         currTime = drone.FlightTime() - initTime;
         currentAirspeed = drone.VelocityLocal().magnitude;

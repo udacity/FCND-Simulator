@@ -8,6 +8,12 @@ namespace DroneVehicles
 
     public class PlaneVehicle : MonoBehaviour, IDroneVehicle
     {
+        int status;
+        public int Status
+        {
+            get { return status; }
+            set { status = value; }
+        }
 		public bool Frozen
 		{
 			get { return rb.isKinematic; }

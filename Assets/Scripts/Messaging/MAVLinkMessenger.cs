@@ -281,12 +281,11 @@ namespace Messaging
             }
 
 
-
             var msg = new Msg_heartbeat
             {
                 type = 1,
                 autopilot = 1,
-                system_status = 1,
+                system_status = (byte)drone.Status,
                 base_mode = base_mode,
                 custom_mode = custom_mode,
                 mavlink_version = 3,
@@ -463,6 +462,8 @@ namespace Messaging
             msgs.Add(serializedPacket);
             return msgs;
         }
+
+        
 
         ///
         /// Receiver methods
@@ -762,6 +763,7 @@ namespace Messaging
         void MsgHeartbeat(Msg_heartbeat msg)
         {
         }
+
 
 
     }

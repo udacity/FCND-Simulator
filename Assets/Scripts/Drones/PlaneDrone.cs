@@ -10,7 +10,14 @@ namespace Drones
     /// Drone based off a Quadrotor.
     /// </summary>
     class PlaneDrone : MonoBehaviour, IDrone
-    {
+    { 
+
+        public int Status
+        {
+            get { return planeVehicle.Status; }
+            set { planeVehicle.Status = value; }
+        }
+
         public void CommandVector(Vector3 localPosition, Vector3 localVelocity)
         {
             planeAutopilot.CommandVector(localPosition, localVelocity);

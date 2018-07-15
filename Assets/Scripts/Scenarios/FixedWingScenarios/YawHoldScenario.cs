@@ -20,7 +20,8 @@ public class YawHoldScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(6); //Stabilized Mode
         drone.SetGuided(true);
-        drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
+        drone.Status = 8;
+        //drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
         Transform line = GameObject.Find("Line").GetComponent<Transform>();
         line.localScale = new Vector3(0, 0, 0);
     }
@@ -41,8 +42,10 @@ public class YawHoldScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
+        if(!drone.MotorsArmed())
+            drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
-        
+
         currTime = drone.FlightTime() - initTime;
         currentYaw = drone.AttitudeEuler().z;
         if (currTime > data.runtime - timeInterval && currTime <= data.runtime)

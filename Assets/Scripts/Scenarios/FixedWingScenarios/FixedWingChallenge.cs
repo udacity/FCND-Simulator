@@ -81,12 +81,13 @@ public class FixedWingChallenge: Scenario
         base.OnInit();
         drone.SetControlMode(7);
         drone.SetGuided(true);
+        drone.Status = 12;
 
         prevWaypoint = waypoint1;
         currWaypoint = waypoint2;
         nextWaypoint = waypoint3;
 
-        drone.CommandVector(prevWaypoint, 41*(currWaypoint-prevWaypoint).normalized);
+        //drone.CommandVector(prevWaypoint, 41*(currWaypoint-prevWaypoint).normalized);
         drone.SetHomePosition();
 
         gateNum = 1;
@@ -127,6 +128,7 @@ public class FixedWingChallenge: Scenario
 
         if (state == 1)
         {
+
             Debug.Log("Straight Line Segment");
             flag = 1;
             Vector2 r = new Vector2(prevWaypoint.x, prevWaypoint.y);
@@ -165,7 +167,7 @@ public class FixedWingChallenge: Scenario
             }
             else
             {
-                if (drone.ControlMode() != 1)
+                if (!drone.MotorsArmed())
                 {
                     drone.SetControlMode(7);
                     drone.CommandVector(prevWaypoint, 41 * (currWaypoint - prevWaypoint).normalized);
@@ -200,7 +202,7 @@ public class FixedWingChallenge: Scenario
                 Vector3 orbitCenter = new Vector3(c.x, c.y, prevWaypoint.z);
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, lambda*41.0f / radius);
                 Debug.Log("Orbit Center: " + orbitCenter);
-                if (drone.ControlMode() != 1)
+                if (!drone.MotorsArmed())
                 {
                     drone.SetControlMode(8);
                     drone.CommandVector(orbitCenter, velocityVec);

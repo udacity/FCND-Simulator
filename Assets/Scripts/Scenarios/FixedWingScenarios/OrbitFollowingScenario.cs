@@ -30,11 +30,12 @@ public class OrbitFollowingScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(8); //Line Following Mode
         drone.SetGuided(true);
+        drone.Status = 10;
         orbitCenter.x = data.vehiclePosition.z;
         orbitCenter.y = data.vehiclePosition.x + targetRadius;
         orbitCenter.z = -data.vehiclePosition.y;
 
-        drone.CommandVector(orbitCenter, new Vector3(41.0f, 0.0f, 41.0f / targetRadius));
+        //drone.CommandVector(orbitCenter, new Vector3(41.0f, 0.0f, 41.0f / targetRadius));
         Transform line = GameObject.Find("Line").GetComponent<Transform>();
         line.localScale = new Vector3(0, 0, 0);
 
@@ -68,9 +69,12 @@ public class OrbitFollowingScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
+        if(!drone.MotorsArmed())
+            drone.CommandVector(orbitCenter, new Vector3(41.0f, 0.0f, 41.0f / targetRadius));
+
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
-        
-        
+
+
         currTime = drone.FlightTime() - initTime;
 
         currentRadius  = Mathf.Sqrt(Mathf.Pow(orbitCenter.x - drone.CoordsUnity().z, 2.0f) + Mathf.Pow(orbitCenter.y - drone.CoordsUnity().x, 2.0f));

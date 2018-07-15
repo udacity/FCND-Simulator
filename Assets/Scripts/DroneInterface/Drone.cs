@@ -7,5 +7,5 @@ namespace DroneInterface
     ///  state
     /// </summary>
 	//public interface IDrone : IDroneCommands, IDroneState {}
-    public interface IDrone : IDroneVehicle, IDroneController, IDroneSensors { }
+    public interface IDrone : IDroneVehicle, IDroneController, IDroneSensors {  }
 }

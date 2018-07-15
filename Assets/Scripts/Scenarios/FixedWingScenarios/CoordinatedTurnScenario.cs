@@ -21,7 +21,8 @@ public class CoordinatedTurnScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-        drone.CommandAttitude(new Vector3(targetRoll*Mathf.PI/180.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
+        drone.Status = 7;
+        //drone.CommandAttitude(new Vector3(targetRoll*Mathf.PI/180.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
         Transform line = GameObject.Find("Line").GetComponent<Transform>();
         line.localScale = new Vector3(0, 0, 0);
     }
@@ -42,8 +43,10 @@ public class CoordinatedTurnScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
+        if(!drone.MotorsArmed())
+            drone.CommandAttitude(new Vector3(targetRoll * Mathf.PI / 180.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
-        
+
         currTime = drone.FlightTime() - initTime;
         currentSideslip = Mathf.Asin(drone.VelocityBody().y / drone.VelocityBody().magnitude);
         if (currTime > data.runtime - timeInterval && currTime <= data.runtime)

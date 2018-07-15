@@ -8,6 +8,12 @@ namespace DroneVehicles
 
     public class QuadVehicle : MonoBehaviour, IDroneVehicle
     {
+        public int Status
+        {
+            get { return 0; }
+            set { }
+        }
+
         public float FlightTime()
         {
             return flightTime;

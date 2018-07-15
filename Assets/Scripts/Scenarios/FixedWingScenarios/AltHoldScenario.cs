@@ -35,18 +35,17 @@ public class AltHoldScenario : Scenario
         line.eulerAngles = new Vector3(0, 0, 0);
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-        drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
-//        planeControl.SetDefaultLongitudinalGains();
-//        planeControl.SetDefaultLateralGains();
-//        planeControl.SetStudentLongitudinalGains();
+        drone.Status = 2;
+        //        planeControl.SetDefaultLongitudinalGains();
+        //        planeControl.SetDefaultLateralGains();
+        //        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
-        
-
         initTime = drone.FlightTime();
+        
     }
 
 	protected override bool OnCheckSuccess ()
@@ -58,7 +57,9 @@ public class AltHoldScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
-        //drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
+        if (!drone.MotorsArmed()) 
+            drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
+
         currTime = drone.FlightTime() - initTime;
         currentAltitude = -drone.CoordsLocal().z;
         if (Mathf.Abs(currentAltitude - targetAltitude) > altitudeThreshold)           

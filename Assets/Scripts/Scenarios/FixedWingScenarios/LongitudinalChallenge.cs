@@ -48,7 +48,8 @@ public class LongitudinalChallenge : Scenario
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-		drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), targetAirspeed);
+        drone.Status = 5;
+		//drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), targetAirspeed);
         drone.SetHomePosition();
         targetGate = gate1;
         UpdateGatePosition();
@@ -77,7 +78,7 @@ public class LongitudinalChallenge : Scenario
 	{
         position2D.x = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().x - data.vehiclePosition.x, 2.0f) + Mathf.Pow(drone.CoordsUnity().z - data.vehiclePosition.z, 2.0f));
         position2D.y = drone.CoordsUnity().y - data.vehiclePosition.y;
-        if (drone.ControlMode() != 2.0)
+        if (!drone.MotorsArmed())
         {
             
             targetAltitude = targetGate.y + data.vehiclePosition.y;

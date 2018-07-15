@@ -45,7 +45,8 @@ public class LateralChallenge: Scenario
     public float targetAltitude;
 
     float xTrackError;
-
+    Vector3 startWaypoint;
+    Vector3 velocityVec;
     
 
     protected override void OnInit()
@@ -63,11 +64,12 @@ public class LateralChallenge: Scenario
         base.OnInit();
         drone.SetControlMode(7); //Stabilized Mode
         drone.SetGuided(true);
-        Vector3 startWaypoint = new Vector3(startPosition.y, startPosition.x, -data.vehiclePosition.y);
+        drone.Status = 11;
+        startWaypoint = new Vector3(startPosition.y, startPosition.x, -data.vehiclePosition.y);
         Vector3 goalWaypoint = new Vector3(gate1.y, gate1.x, -data.vehiclePosition.y);
-        Vector3 velocityVec = goalWaypoint - startWaypoint;
+        velocityVec = goalWaypoint - startWaypoint;
         velocityVec = 41.0f * velocityVec.normalized;
-        drone.CommandVector(startWaypoint, velocityVec);
+        //drone.CommandVector(startWaypoint, velocityVec);
         drone.SetHomePosition();
         targetGate = gate1;
         gateNum = 1;
@@ -103,6 +105,8 @@ public class LateralChallenge: Scenario
         
         if (gateNum == 1)
         {
+            if(!drone.MotorsArmed())
+                drone.CommandVector(startWaypoint, velocityVec);
             line.localPosition = new Vector3((startPosition.x + gate1.x) / 2, data.vehiclePosition.y, (startPosition.y + gate1.y) / 2);
             line.localScale = new Vector3(Mathf.Abs(startPosition.x - gate1.x) + 1f, 1f, Mathf.Abs(startPosition.y - gate1.y) + 1f);
             if (drone.CoordsUnity().z >= gate1.y)
@@ -120,7 +124,7 @@ public class LateralChallenge: Scenario
                 targetRadius = 400f;
                 
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
-                if (drone.ControlMode() != 3)
+                if (!drone.MotorsArmed())
                 {
                     drone.SetControlMode(8);
                     drone.CommandVector(orbitCenter, velocityVec);
@@ -146,7 +150,7 @@ public class LateralChallenge: Scenario
                 targetRadius = 300f;
 
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
-                if (drone.ControlMode() != 3)
+                if (!drone.MotorsArmed())
                 {
                     drone.SetControlMode(8);
                     drone.CommandVector(orbitCenter, velocityVec);
@@ -171,7 +175,7 @@ public class LateralChallenge: Scenario
                 Vector3 startWaypoint = new Vector3(gate3.y, gate3.x, -data.vehiclePosition.y);
                 Vector3 endWaypoint = new Vector3(gate4.y, gate4.x, -data.vehiclePosition.y);
                 Vector3 velocityVec = 41f * (endWaypoint - startWaypoint).normalized;
-                if (drone.ControlMode() != 3)
+                if (!drone.MotorsArmed())
                 {
                     drone.SetControlMode(7);
                     drone.CommandVector(startWaypoint, velocityVec);

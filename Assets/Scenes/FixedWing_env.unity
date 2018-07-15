@@ -1108,14 +1108,14 @@ MonoBehaviour:
     maxAcceptableValue: 3
     suffix: m
   vizParameter2:
-    name: Descend/Hold/Ascend
+    name: Unity Mode
     minValue: -1
     maxValue: 1
     value: 0
     useAcceptableRange: 0
-    minAcceptableValue: 0
-    maxAcceptableValue: 0
-    suffix: ' Unity Mode'
+    minAcceptableValue: -1
+    maxAcceptableValue: 1
+    suffix: A/H/D
   planeControl:
     Kp_speed: 0
     Ki_speed: 0
@@ -2622,6 +2622,16 @@ Prefab:
         type: 2}
       propertyPath: m_firstOverflowCharacterIndex
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114979033301571364, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: states.Array.data[1].title
+      value: PYTHON
+      objectReference: {fileID: 0}
+    - target: {fileID: 114979033301571364, guid: f71ee99d13775b74ab589fef8f05da06,
+        type: 2}
+      propertyPath: states.Array.data[0].title
+      value: UNITY
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f71ee99d13775b74ab589fef8f05da06, type: 2}

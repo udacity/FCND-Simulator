@@ -9,6 +9,11 @@ namespace DroneInterface
     /// </summary>
     public interface IDroneVehicle
     {
+        /// <summary>
+        /// Vehicle status to pass along to the python side. Currently used to send along a scenario number
+        /// </summary>
+        int Status { get; set; }
+
         float FlightTime();
 
 		/// <summary>

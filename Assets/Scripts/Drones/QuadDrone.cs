@@ -11,6 +11,13 @@ namespace Drones
     /// </summary>
     class QuadDrone : MonoBehaviour, IDrone
     {
+
+        public int Status
+        {
+            get { return 0; }
+            set {  }
+        }
+
         public float FlightTime()
         {
             return quadVehicle.FlightTime();
