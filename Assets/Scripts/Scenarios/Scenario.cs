@@ -22,6 +22,8 @@ public abstract class Scenario : MonoBehaviour
 
     public IDrone drone;
     public PlaneControl planeControl;
+    public float unityTimestep = 0.02f; // Physics timestep used when tuning gains within Unity
+    public float pythonTimestep = 0.005f; // Physics timestep used when running Python control
 
 #if UNITY_EDITOR
     [Tooltip ("An editor-only field. Drag the desired drone here to store its current position and orientation")]
@@ -81,7 +83,11 @@ public abstract class Scenario : MonoBehaviour
         drone.Frozen = false;
         drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
         OnBegin();
-		IsRunning = true;
+        if (drone.MotorsArmed())
+            Time.fixedDeltaTime = 0.005f;
+        else
+            Time.fixedDeltaTime = 0.02f;
+        IsRunning = true;
 	}
 
 	public void End ()
@@ -118,7 +124,6 @@ public abstract class Scenario : MonoBehaviour
         string[] allParameters = new string[tunableParameters.Length + userParameters.Length];
         tunableParameters.CopyTo(allParameters,0);
         userParameters.CopyTo(allParameters, tunableParameters.Length);
-        Debug.Log(allParameters);
         //planeControl.SetScenarioParameters ( tunableParameters );
         planeControl.SetScenarioParameters(allParameters);
 

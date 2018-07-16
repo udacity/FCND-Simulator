@@ -298,7 +298,6 @@ namespace DroneVehicles
         
         public void InitializeVehicle(Vector3 position, Vector3 velocity, Vector3 euler)
         {
-            Debug.Log("Initializing Vehicle: position= " + position + " velocity= " + velocity + " euler= " + euler);
             rb.position = position;
             rb.velocity = velocity;
             rb.rotation = Quaternion.Euler(euler);

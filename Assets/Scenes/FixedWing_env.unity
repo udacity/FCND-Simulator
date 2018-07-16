@@ -1156,6 +1156,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   position2D: {x: 0, y: 0}
   currentAirspeed: 0
@@ -2281,7 +2283,7 @@ Prefab:
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224765861517793878, guid: f71ee99d13775b74ab589fef8f05da06,
         type: 2}
@@ -3130,6 +3132,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   currentAltitude: 0
   currentAirspeed: 0
@@ -4014,6 +4018,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
 --- !u!4 &427670809
 Transform:
@@ -5057,6 +5063,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -5178,6 +5186,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   currentAltitude: 0
   altitudeThreshold: 3
@@ -5971,6 +5981,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -6263,6 +6275,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   currentAirspeed: 0
   airspeedThreshold: 1
@@ -6697,6 +6711,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   currentVelocity: 0
   currentAirspeedRate: 0
@@ -9670,6 +9686,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -9943,6 +9961,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   gateNum: 0
   targetRadius: 0
@@ -10079,6 +10099,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0
@@ -10769,6 +10791,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   waypoint1: {x: 0, y: 2500, z: -400}
   waypoint2: {x: 2600, y: 2500, z: -500}
@@ -10931,6 +10955,8 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  unityTimestep: 0.02
+  pythonTimestep: 0.005
   droneObject: {fileID: 0}
   timeInterval: 5
   currTime: 0

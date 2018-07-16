@@ -36,15 +36,13 @@ public class AltHoldScenario : Scenario
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.Status = 2;
-        //        planeControl.SetDefaultLongitudinalGains();
-        //        planeControl.SetDefaultLateralGains();
-        //        planeControl.SetStudentLongitudinalGains();
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
         initTime = drone.FlightTime();
+
         
     }
 
@@ -97,7 +95,5 @@ public class AltHoldScenario : Scenario
     {
         onParameter1Update(currentAltitude-targetAltitude, 1);
         onParameter2Update(drone.AttitudeEuler().y * 180f / Mathf.PI,1);
-        //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;
-        //onParameter2Update(0.5f + noise, 2);
     }
 }

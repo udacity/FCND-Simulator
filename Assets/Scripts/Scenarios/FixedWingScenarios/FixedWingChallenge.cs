@@ -71,8 +71,6 @@ public class FixedWingChallenge: Scenario
 
     protected override void OnInit()
     {
-        
-        
         gate = GameObject.Find("Gate").GetComponent<Transform>();
         line = GameObject.Find("Line").GetComponent<Transform>();
         lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;

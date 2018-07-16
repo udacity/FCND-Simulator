@@ -65,7 +65,7 @@ public class AircraftControl : MonoBehaviour {
 		tensors.y = inertiaTensors.y;
 		tensors.z = inertiaTensors.z;
 		aircraft.inertiaTensor = tensors;
-        Debug.Log("Inertia Tensor: " + aircraft.inertiaTensor);
+        //Debug.Log("Inertia Tensor: " + aircraft.inertiaTensor);
 
 		initialDrag = aircraft.drag;
 		initialRotDrag = aircraft.angularDrag;

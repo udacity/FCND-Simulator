@@ -287,7 +287,6 @@ public class PlaneControl {
 
 	public void SetScenarioParameters (string[] names)
 	{
-        Debug.Log(names.Length);
 		TunableParameter p = TunableManager.GetParameter ( "Kp_speed" );
 		if ( names.Contains ( "Kp_speed" ) )
 			Kp_speed = p.value;
