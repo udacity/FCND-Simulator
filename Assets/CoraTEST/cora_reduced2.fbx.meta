@@ -126,6 +126,30 @@ ModelImporter:
     4300042: TailFlap5
     4300044: RotorLFL
     4300046: TailFlap4
+    6400000: //RootNode
+    6400002: FlapL1
+    6400004: FlapL2
+    6400006: FlapL3
+    6400008: FlapR1
+    6400010: RotorLFL
+    6400012: RotorLFLM
+    6400014: RotorLFLR
+    6400016: RotorLRL
+    6400018: RotorLRM
+    6400020: RotorLRR
+    6400022: RotorRFL
+    6400024: RotorRFM
+    6400026: RotorRFR
+    6400028: RotorRRL
+    6400030: RotorRRM
+    6400032: RotorRRR
+    6400034: TailFlap1
+    6400036: TailFlap2
+    6400038: TailFlap3
+    6400040: TailFlap4
+    6400042: TailFlap5
+    6400044: TailFlap6
+    6400046: TailRotor
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -158,7 +182,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -167,7 +191,7 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
-    keepQuads: 0
+    keepQuads: 1
     weldVertices: 1
     preserveHierarchy: 0
     indexFormat: 0
