@@ -24,7 +24,7 @@ public class SplineEditor : Editor
 			EditorGUILayout.BeginHorizontal ();
 			if ( GUILayout.Button ( "Point " + i, EditorStyles.label ) )
 			{
-				SceneView.lastActiveSceneView.LookAt ( spline.controlPoints [ i ].position );
+				SceneView.lastActiveSceneView.LookAt ( builder.SplineToWorldPosition ( spline.controlPoints [ i ].position ) );
 			}
 //			EditorGUILayout.LabelField ( "Point " + i );
 			GUILayout.FlexibleSpace ();
@@ -47,6 +47,15 @@ public class SplineEditor : Editor
 		{
 			Undo.RecordObject ( builder, "Add CP" );
 			builder.AddControlPoint ();
+			EditorUtility.SetDirty ( builder );
+		}
+
+		EditorGUI.BeginChangeCheck ();
+		bool showTest = EditorGUILayout.ToggleLeft ( "Show Test Position", builder.showTestPosition );
+		if ( EditorGUI.EndChangeCheck () )
+		{
+			Undo.RecordObject ( builder, "Show Test" );
+			builder.showTestPosition = showTest;
 			EditorUtility.SetDirty ( builder );
 		}
 	}
@@ -73,6 +82,11 @@ public class SplineEditor : Editor
 				selectedIndex = i;
 			}
 		}
+
+		if ( builder.showTestPosition )
+		{
+			ShowTestPosition ();
+		}
 	}
 
 	void DrawSelectedPointInspector ()
@@ -90,26 +104,31 @@ public class SplineEditor : Editor
 
 	bool DrawControlPoint (ControlPoint point, bool selected)
 	{
-		float size = HandleUtility.GetHandleSize ( point.position ) * 0.2f;
+		Vector3 p = builder.SplineToWorldPosition ( point.position );
+		float size = HandleUtility.GetHandleSize ( p ) * 0.2f;
 
 		// only draw movement controls if point is selected
 		if ( selected )
 		{
+
 			Handles.color = Color.yellow;
 			if ( point.hasLeftHandle )
-				Handles.DrawLine ( point.position, point.leftHandle );
+				Handles.DrawLine ( p, builder.SplineToWorldPosition ( point.leftHandle ) );
 			if ( point.hasRightHandle )
-				Handles.DrawLine ( point.position, point.rightHandle );
+				Handles.DrawLine ( p, builder.SplineToWorldPosition ( point.rightHandle ) );
 
 			// draw main node
 			Vector3 snap = Vector3.one * 0.5f;
 			EditorGUI.BeginChangeCheck ();
-			Vector3 pos = Handles.FreeMoveHandle ( point.position, Quaternion.identity, size * 2, snap, Handles.SphereHandleCap );
+			Vector3 pos = Handles.FreeMoveHandle ( p, Quaternion.identity, size * 2, snap, Handles.SphereHandleCap );
 			if ( EditorGUI.EndChangeCheck () )
 			{
+				p = pos;
+				pos = builder.WorldToSplinePosition ( pos );
 				Vector3 move = pos - point.position;
 				Undo.RecordObject ( builder, "Move Point" );
 				point.position = pos;
+
 				if ( isCtrlHeld )
 				{
 					point.leftHandle += move;
@@ -122,11 +141,11 @@ public class SplineEditor : Editor
 			if ( point.hasLeftHandle )
 			{
 				EditorGUI.BeginChangeCheck ();
-				pos = Handles.FreeMoveHandle ( point.leftHandle, Quaternion.identity, size, snap, Handles.CubeHandleCap );
+				pos = Handles.FreeMoveHandle ( builder.SplineToWorldPosition ( point.leftHandle ), Quaternion.identity, size, snap, Handles.CubeHandleCap );
 				if ( EditorGUI.EndChangeCheck () )
 				{
 					Undo.RecordObject ( builder, "Move Left Handle" );
-					point.leftHandle = pos;
+					point.leftHandle = builder.WorldToSplinePosition ( pos );
 					EditorUtility.SetDirty ( builder );
 				}
 			}
@@ -136,11 +155,11 @@ public class SplineEditor : Editor
 			{
 				Handles.color = Color.yellow;
 				EditorGUI.BeginChangeCheck ();
-				pos = Handles.FreeMoveHandle ( point.rightHandle, Quaternion.identity, size, snap, Handles.CubeHandleCap );
+				pos = Handles.FreeMoveHandle ( builder.SplineToWorldPosition ( point.rightHandle ), Quaternion.identity, size, snap, Handles.CubeHandleCap );
 				if ( EditorGUI.EndChangeCheck () )
 				{
 					Undo.RecordObject ( builder, "Move Right Handle" );
-					point.rightHandle = pos;
+					point.rightHandle = builder.WorldToSplinePosition ( pos );
 					EditorUtility.SetDirty ( builder );
 				}
 			}
@@ -148,7 +167,7 @@ public class SplineEditor : Editor
 		} else
 		{
 			Handles.color = Color.white;
-			if ( Handles.Button ( point.position, Quaternion.identity, size, size, Handles.SphereHandleCap ) )
+			if ( Handles.Button ( p, Quaternion.identity, size, size, Handles.SphereHandleCap ) )
 			{
 				Repaint ();
 				return true;
@@ -160,36 +179,41 @@ public class SplineEditor : Editor
 
 	void DrawCurve (ControlPoint p1, ControlPoint p2)
 	{
-		Handles.DrawBezier ( p1.position, p2.position, p1.rightHandle, p2.leftHandle, Color.white, null, 6 );
+		Handles.DrawBezier ( builder.SplineToWorldPosition ( p1.position ), builder.SplineToWorldPosition ( p2.position ), builder.SplineToWorldPosition ( p1.rightHandle ), builder.SplineToWorldPosition ( p2.leftHandle ), Color.white, null, 6 );
+		// temp
+		Handles.color = new Color ( 1f, 0, 0, 0.5f );
+		for (int i = 0; i < 10; i++)
+		{
+			float t = 1f * i / 9;
+			Vector3 position = builder.SplineToWorldPosition ( spline.Sample ( p1, p2, t ) );
+			Vector3 direction = spline.GetDirection ( builder.SplineToWorldPosition ( spline.controlPoints [ 0 ].position ), builder.SplineToWorldPosition ( spline.GetFirstDerivative ( p1, p2, t ) ) );
+//			Vector3 direction = spline.GetDirection ( builder.SplineToWorldPosition ( p1.position ), builder.SplineToWorldPosition ( spline.GetFirstDerivative ( p1, p2, t ) ) );
+			float size = HandleUtility.GetHandleSize ( position ) * 0.1f;
+//			Handles.CircleHandleCap ( -1, position, Quaternion.LookRotation ( direction ), HandleUtility.GetHandleSize ( position ) * 0.1f, EventType.Repaint );
+			if ( Handles.Button ( position, Quaternion.LookRotation ( direction ), size, size, Handles.CylinderHandleCap ) )
+			{
+				SceneView.lastActiveSceneView.LookAt ( position );
+			}
+			Handles.CylinderHandleCap ( -1, position, Quaternion.LookRotation ( direction ), HandleUtility.GetHandleSize ( position ) * 0.1f, EventType.Repaint );
+		}
 	}
 
-/*	Vector3 ShowPoint (int index)
+	void ShowTestPosition ()
 	{
-		var cp = spline.controlPoints [ index ];
-		Vector3 point = cp.position;
-		float size = HandleUtility.GetHandleSize ( point ) * 0.1f;
-		if ( index == selectedIndex )
+		Vector3 pos = builder.SplineToWorldPosition ( builder.testPosition );
+		float size = HandleUtility.GetHandleSize ( pos ) * 0.2f;
+		Handles.color = Color.green;
+		EditorGUI.BeginChangeCheck ();
+		Vector3 newTestPos = Handles.FreeMoveHandle ( pos, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
+		if ( EditorGUI.EndChangeCheck () )
 		{
-			size *= 2f;
-			Handles.color = Color.yellow;
-		} else
-			Handles.color = Color.white;
-		if ( Handles.Button ( point, Quaternion.identity, size, size, Handles.DotHandleCap ) )
-		{
-			selectedIndex = index;
-			Repaint ();
+			Undo.RecordObject ( builder, "Move Test Pos" );
+			builder.testPosition = builder.WorldToSplinePosition ( newTestPos );
+			EditorUtility.SetDirty ( builder );
 		}
-		if ( selectedIndex == index )
-		{
-			EditorGUI.BeginChangeCheck ();
-			point = Handles.DoPositionHandle ( point, Quaternion.identity );
-			if ( EditorGUI.EndChangeCheck () )
-			{
-				Undo.RecordObject ( builder, "Move Point" );
-				EditorUtility.SetDirty ( builder );
-				spline.controlPoints [ index ].position = point;
-			}
-		}
-		return point;
-	}*/
+
+		Vector3 closest = builder.SplineToWorldPosition ( spline.GetClosestPoint ( builder.testPosition ) );
+		Handles.color = Color.black;
+		Handles.SphereHandleCap ( -1, closest, Quaternion.identity, size, EventType.Repaint );
+	}
 }

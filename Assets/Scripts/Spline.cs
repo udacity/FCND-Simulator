@@ -121,4 +121,69 @@ public class Spline
 			3f * oneMinusT * t * t * p2 +
 			t * t * t * p3;
 	}
+
+	public Vector3 GetClosestPoint (Vector3 position)
+	{
+		ControlPoint cp1 = controlPoints [ 0 ];
+		ControlPoint cp2 = controlPoints [ 0 ];
+		float distance = Mathf.Infinity;
+		for ( int i = 0; i < controlPoints.Count; i++ )
+		{
+			float dist = ( controlPoints [ i ].position - position ).sqrMagnitude;
+			if ( dist < distance )
+			{
+				distance = dist;
+				cp1 = controlPoints [ i ];
+				if ( i == controlPoints.Count - 1 )
+				{
+					cp1 = controlPoints [ i - 1 ];
+					cp2 = controlPoints [ i ];
+				} else
+					cp2 = controlPoints [ i + 1 ];
+			}
+		}
+
+		distance = Mathf.Infinity;
+		Vector3 curvePoint = Vector3.zero;
+
+		int samples = 10;
+		for ( int i = 0; i < samples; i++ )
+		{
+			float t = 1f * i / ( samples - 1 );
+			
+			Vector3 sample = Sample ( cp1, cp2, t );
+			float dist = ( position - sample ).sqrMagnitude;
+			if ( dist < distance )
+			{
+				distance = dist;
+				curvePoint = sample;
+			}
+		}
+		return curvePoint;
+	}
+
+	public Vector3 GetFirstDerivative (ControlPoint cp1, ControlPoint cp2, float t)
+	{
+		Vector3 p0 = cp1.position;
+		Vector3 p1 = cp1.rightHandle;
+		Vector3 p2 = cp2.leftHandle;
+		Vector3 p3 = cp2.position;
+
+		t = Mathf.Clamp01 ( t );
+		float oneMinusT = 1f - t;
+		return
+			3f * oneMinusT * oneMinusT * ( p1 - p0 ) +
+			6f * oneMinusT * t * ( p2 - p1 ) +
+			3f * t * t * ( p3 - p2 );
+	}
+
+	public Vector3 GetVelocity (Vector3 position, Vector3 derivative)
+	{
+		return derivative - position;
+	}
+
+	public Vector3 GetDirection (Vector3 position, Vector3 derivative)
+	{
+		return GetVelocity ( position, derivative ).normalized;
+	}
 }
