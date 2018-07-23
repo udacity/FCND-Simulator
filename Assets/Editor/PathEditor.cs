@@ -57,6 +57,67 @@ public class PathEditor : Editor
 			EditorUtility.SetDirty ( builder );
 		}
 
+		// material
+		EditorGUI.BeginChangeCheck ();
+		EditorGUILayout.ObjectField ( serializedObject.FindProperty ( "lineMaterial" ) );
+//		Material m = EditorGUILayout.ObjectField ( serializedObject.FindProperty ( "lineMaterial" ) );
+		if ( EditorGUI.EndChangeCheck () )
+		{
+			Undo.RecordObject ( builder, "Material" );
+			serializedObject.ApplyModifiedProperties ();
+//			builder.lineMaterial = m;
+			EditorUtility.SetDirty ( builder );
+		}
+
+
+		if ( GUILayout.Button ( "Build" ) )
+		{
+			Vector3[] positions;
+			Transform t;
+			LineRenderer l;
+			Undo.RecordObject ( builder, "Build" );
+			int childCount = builder.tr.childCount;
+			List<GameObject> children = new List<GameObject> ();
+			foreach ( Transform c in builder.tr )
+				children.Add ( c.gameObject );
+			for ( int i = children.Count - 1; i >= 0; i-- )
+				DestroyImmediate ( children [ i ] );
+			
+			for ( int i = 0; i < count; i++ )
+			{
+				GameObject g = new GameObject ( "Segment" );
+				g.transform.SetParent ( builder.tr );
+				l = g.AddComponent<LineRenderer> ();
+				l.sharedMaterial = builder.lineMaterial;
+				l.widthMultiplier = 0.3f;
+				seg = builder.segments [ i ];
+				if ( seg.type == PathSegmentType.Linear )
+				{
+					positions = new Vector3[2] {
+						builder.LocalToWorld ( seg.start.position ),
+						builder.LocalToWorld ( seg.end.position )
+					};
+					l.positionCount = 2;
+					l.SetPositions ( positions );
+				} else
+				{
+					int posCount = (int) seg.angle + 1;
+					positions = new Vector3[posCount];
+					for ( int p = 0; p < posCount; p++ )
+					{
+						float tt = 1f * p / posCount;
+//						positions [ p ] = seg.Sample ( tt );
+						positions [ p ] = builder.LocalToWorld ( seg.Sample ( tt ) );
+//						Debug.Log ( "setting position " + p + " at " + tt + " to " + positions [ p ] );
+//						GameObject gg = GameObject.CreatePrimitive ( PrimitiveType.Sphere );
+//						gg.transform.position = positions [ p ];
+					}
+					l.positionCount = posCount;
+					l.SetPositions ( positions );
+				}
+			}
+		}
+
 /*		EditorGUI.BeginChangeCheck ();
 		bool showTest = EditorGUILayout.ToggleLeft ( "Show Test Position", builder.showTestPosition );
 		if ( EditorGUI.EndChangeCheck () )
@@ -93,40 +154,42 @@ public class PathEditor : Editor
 	void CircularSegmentInspector (PathSegment seg)
 	{
 		// start point
-		EditorGUI.BeginChangeCheck ();
-		Vector3 newPos = EditorGUILayout.Vector3Field ( "Start", builder.LocalToWorld ( seg.start.position ) );
-		if ( EditorGUI.EndChangeCheck () )
-		{
-			Undo.RecordObject ( builder, "Start1" );
-			seg.start.position = builder.WorldToLocal ( newPos );
-			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
-			seg.end.position = seg.Sample ( 1f );
-			EditorUtility.SetDirty ( builder );
-		}
+//		GUI.enabled = false;
+//		EditorGUI.BeginChangeCheck ();
+//		Vector3 newPos = EditorGUILayout.Vector3Field ( "Start", builder.LocalToWorld ( seg.start.position ) );
+//		if ( EditorGUI.EndChangeCheck () )
+//		{
+//			Undo.RecordObject ( builder, "Start1" );
+//			seg.start.position = builder.WorldToLocal ( newPos );
+//			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
+//			seg.end.position = seg.Sample ( 1f );
+//			EditorUtility.SetDirty ( builder );
+//		}
 
 		// center point
 		EditorGUI.BeginChangeCheck ();
-		newPos = EditorGUILayout.Vector3Field ( "Center", builder.LocalToWorld ( seg.middle.position ) );
+		Vector3 newPos = EditorGUILayout.Vector3Field ( "Center", builder.LocalToWorld ( seg.middle.position ) );
 		if ( EditorGUI.EndChangeCheck () )
 		{
 			Undo.RecordObject ( builder, "Middle1" );
 			seg.middle.position = builder.WorldToLocal ( newPos );
 			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
 			seg.end.position = seg.Sample ( 1f );
+			seg.start.position = seg.Sample ( 0 );
 			EditorUtility.SetDirty ( builder );
 		}
 
-		// end point
-//		EditorGUI.BeginChangeCheck ();
-		GUI.enabled = false;
-		newPos = EditorGUILayout.Vector3Field ( "End", builder.LocalToWorld ( seg.end.position ) );
-		GUI.enabled = true;
-//		if ( EditorGUI.EndChangeCheck () )
-//		{
-//			Undo.RecordObject ( builder, "End1" );
+		// euler axis
+		EditorGUI.BeginChangeCheck ();
+		Vector3 newAxis = EditorGUILayout.Vector3Field ( "Euler Axis", seg.axis.eulerAngles );
+//		newPos = EditorGUILayout.Vector3Field ( "Axis", builder.LocalToWorld ( seg.end.position ) );
+		if ( EditorGUI.EndChangeCheck () )
+		{
+			Undo.RecordObject ( builder, "Axis" );
+			seg.axis = Quaternion.Euler ( newAxis );
 //			seg.end.position = builder.WorldToLocal ( newPos );
-//			EditorUtility.SetDirty ( builder );
-//		}
+			EditorUtility.SetDirty ( builder );
+		}
 
 
 		// angle
@@ -137,22 +200,30 @@ public class PathEditor : Editor
 		{
 			Undo.RecordObject ( builder, "Angle1" );
 			seg.angle = angle;
-			seg.end.position = seg.Sample ( 1f );
 			EditorUtility.SetDirty ( builder );
 		}
 
 		// sub-segments
-		EditorGUI.BeginChangeCheck ();
-		int subs = EditorGUILayout.IntField ( "Sub-segments", seg.subSegments );
-		if ( EditorGUI.EndChangeCheck () )
-		{
-			Undo.RecordObject ( builder, "Sub1" );
-			seg.subSegments = subs;
-			EditorUtility.SetDirty ( builder );
-		}
+//		EditorGUI.BeginChangeCheck ();
+//		int subs = EditorGUILayout.IntField ( "Sub-segments", seg.subSegments );
+//		if ( EditorGUI.EndChangeCheck () )
+//		{
+//			Undo.RecordObject ( builder, "Sub1" );
+//			seg.subSegments = subs;
+//			EditorUtility.SetDirty ( builder );
+//		}
 
 		// radius
-		EditorGUILayout.LabelField ( "Radius", seg.radius.ToString ( "F2" ) );
+		EditorGUI.BeginChangeCheck ();
+		float radius = EditorGUILayout.FloatField ( "Radius", seg.radius );
+		if ( EditorGUI.EndChangeCheck () )
+		{
+			Undo.RecordObject ( builder, "Radius" );
+			if ( radius < 0 )
+				radius = -radius;
+			seg.radius = radius;
+			EditorUtility.SetDirty ( builder );
+		}
 
 		// arc angle (degrees)
 /*		EditorGUI.BeginChangeCheck ();
@@ -253,19 +324,24 @@ public class PathEditor : Editor
 
 	void DrawArc (PathSegment seg)
 	{
-		Vector3 start = builder.LocalToWorld ( seg.start.position );
-		Vector3 end = builder.LocalToWorld ( seg.end.position );
+		Vector3 start = builder.LocalToWorld ( seg.Sample ( 0f ) );
+		Vector3 end = builder.LocalToWorld ( seg.Sample ( 1f ) );
+//		Vector3 start = builder.LocalToWorld ( seg.start.position );
+//		Vector3 end = builder.LocalToWorld ( seg.end.position );
 		Vector3 center = builder.LocalToWorld ( seg.middle.position );
+		Vector3 newPos;
 
 		// draw the arc made up of segments
-		int segCount = seg.subSegments - 1;
-		Vector3 pos1 = builder.LocalToWorld ( seg.start.position );
+		int segCount = (int) seg.angle;// - 1;
+//		int segCount = seg.subSegments - 1;
+		Vector3 pos1 = start;
 		Vector3 pos2;
 		Handles.color = Color.white;
-		for (int i = 0; i < seg.subSegments; i++)
+		for ( int i = 0; i < segCount; i++ )
+//		for (int i = 0; i < seg.subSegments; i++)
 		{
-			float t = 1f * ( i + 1 ) / seg.subSegments;
-//			float t = 1f * i / segCount;
+//			float t = 1f * ( i + 1 ) / seg.subSegments;
+			float t = 1f * ( i + 1 ) / segCount;
 			pos2 = builder.LocalToWorld ( seg.Sample ( t ) );
 			Handles.DrawAAPolyLine ( 6, pos1, pos2 );
 
@@ -276,33 +352,37 @@ public class PathEditor : Editor
 //		float size = HandleUtility.GetHandleSize ( start ) * handleSize;
 		Handles.color = Color.yellow;
 		float dashSize = 8;
-//		Handles.drawaa
 		Handles.DrawDottedLine ( start, center, dashSize );
 		Handles.DrawDottedLine ( end, center, dashSize );
-		Handles.DrawDottedLine ( start, end, dashSize );
+//		Handles.DrawDottedLine ( start, end, dashSize );
 		// and direction line
-		Vector3 halfPoint = start + ( end - start ) * 0.5f;
-		float size = HandleUtility.GetHandleSize ( halfPoint ) * handleSize;
-		Handles.color = Color.red;
-		Handles.ArrowHandleCap ( -1, halfPoint, Quaternion.LookRotation ( ( end - start ).normalized ), size * 2, EventType.Repaint );
+//		Vector3 halfPoint = start + ( end - start ) * 0.5f;
+//		float size = HandleUtility.GetHandleSize ( halfPoint ) * handleSize;
+		float size;
+//		Handles.color = Color.red;
+//		Handles.ArrowHandleCap ( -1, halfPoint, Quaternion.LookRotation ( ( end - start ).normalized ), size * 2, EventType.Repaint );
 
 		// start point
-		Handles.color = Color.yellow;
 		size = HandleUtility.GetHandleSize ( start ) * handleSize;
-		EditorGUI.BeginChangeCheck ();
-		Vector3 newPos = Handles.FreeMoveHandle ( start, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
-		if ( EditorGUI.EndChangeCheck () )
-		{
-			Undo.RecordObject ( builder, "Start2" );
-			seg.start.position = builder.WorldToLocal ( newPos );
-			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
-			seg.end.position = seg.Sample ( 1f );
-			EditorUtility.SetDirty ( builder );
-		}
+		Handles.color = new Color ( 1f, 0.75f, 0.25f );
+		Handles.SphereHandleCap ( -1, start, Quaternion.identity, size, EventType.Repaint );
+//		Handles.color = Color.yellow;
+//		size = HandleUtility.GetHandleSize ( start ) * handleSize;
+//		EditorGUI.BeginChangeCheck ();
+//		Vector3 newPos = Handles.FreeMoveHandle ( start, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
+//		if ( EditorGUI.EndChangeCheck () )
+//		{
+//			Undo.RecordObject ( builder, "Start2" );
+//			seg.start.position = builder.WorldToLocal ( newPos );
+//			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
+//			seg.end.position = seg.Sample ( 1f );
+//			EditorUtility.SetDirty ( builder );
+//		}
 
 		// end point
 		Handles.color = new Color ( 1f, 0.6f, 0.1f );
 		Handles.SphereHandleCap ( -1, end, Quaternion.identity, size, EventType.Repaint );
+//		Handles.SphereHandleCap ( -1, end, Quaternion.identity, size, EventType.Repaint );
 //		size = HandleUtility.GetHandleSize ( end ) * handleSize;
 //		EditorGUI.BeginChangeCheck ();
 //		newPos = Handles.FreeMoveHandle ( end, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
@@ -313,6 +393,11 @@ public class PathEditor : Editor
 //			EditorUtility.SetDirty ( builder );
 //		}
 
+		// line from center to axis
+		Handles.color = Color.red;
+		Vector3 axisPoint = center + seg.axis * Vector3.up * seg.radius * 0.25f;
+		Handles.DrawDottedLine ( center, axisPoint, dashSize );
+
 		// center point
 		Handles.color = Color.green;
 		size = HandleUtility.GetHandleSize ( center ) * handleSize;
@@ -320,14 +405,39 @@ public class PathEditor : Editor
 		newPos = Handles.FreeMoveHandle ( center, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
 		if ( EditorGUI.EndChangeCheck () )
 		{
-			Undo.RecordObject ( builder, "End" );
+			Undo.RecordObject ( builder, "Middle" );
 			seg.middle.position = builder.WorldToLocal ( newPos );
 			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
-			seg.end.position = seg.Sample ( 1f );
+//			seg.end.position = seg.Sample ( 1f );
 			EditorUtility.SetDirty ( builder );
 		}
 
-		Handles.color = Color.blue;
-//		Handles.Disc ( Quaternion.LookRotation ( Vector3.up * 50 ), builder.LocalToWorld ( seg.middle.position ), Vector3.right, seg.radius, false, 0.5f );
+		// axis ring
+		Handles.color = Color.cyan;
+		size = HandleUtility.GetHandleSize ( center ) * handleSize;
+		EditorGUI.BeginChangeCheck ();
+		Quaternion q = Handles.FreeRotateHandle ( seg.axis, center, seg.radius * 0.25f );
+//		newPos = Handles.FreeMoveHandle ( end, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
+		if ( EditorGUI.EndChangeCheck () )
+		{
+			Undo.RecordObject ( builder, "Axis" );
+			seg.axis = q;
+//			seg.end.position = builder.WorldToLocal ( newPos );//.normalized * seg.radius );
+			EditorUtility.SetDirty ( builder );
+		}
+
+		// axis point
+		Handles.color = Color.red;
+		size = HandleUtility.GetHandleSize ( center ) * handleSize;
+		Handles.SphereHandleCap ( -1, axisPoint, Quaternion.identity, size, EventType.Repaint );
+//		EditorGUI.BeginChangeCheck ();
+//		newPos = Handles.FreeMoveHandle ( end, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
+//		if ( EditorGUI.EndChangeCheck () )
+//		{
+//			Undo.RecordObject ( builder, "Axis" );
+//			seg.axis = q;
+//			seg.end.position = builder.WorldToLocal ( newPos );//.normalized * seg.radius );
+//			EditorUtility.SetDirty ( builder );
+//		}
 	}
 }

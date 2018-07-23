@@ -10,6 +10,8 @@ public class PathBuilder : MonoBehaviour
 	[HideInInspector]
 	public Transform tr;
 
+	public Material lineMaterial;
+
 	void OnEnable ()
 	{
 		tr = transform;
@@ -20,8 +22,9 @@ public class PathBuilder : MonoBehaviour
 		PathSegment seg = new PathSegment ();
 		seg.type = type;
 		seg.start = new ControlPoint ();
-		seg.end = new ControlPoint ( Vector3.right * 2 );
 		seg.middle = new ControlPoint ( Vector3.right );
+		seg.end = new ControlPoint ();
+		seg.axis = Quaternion.LookRotation ( Vector3.forward, Vector3.up );
 		seg.radius = 1;
 		seg.angle = 90;
 		segments.Add ( seg );

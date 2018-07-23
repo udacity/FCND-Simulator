@@ -17,6 +17,7 @@ public class PathSegment
 	public ControlPoint start;
 	public ControlPoint middle;
 	public ControlPoint end;
+	public Quaternion axis;
 	public float angle;
 	public float radius;
 	public int subSegments = 20;
@@ -68,23 +69,30 @@ public class PathSegment
 
 	Vector3 SampleCircular (float t)
 	{
-		Vector3 toStart = ( start.position - middle.position ).normalized;
-		Vector3 toEnd = ( end.position - middle.position ).normalized;
-		Vector3 to180 = -toStart;
+		float radAngle = angle * t * Mathf.Deg2Rad;
+		Vector3 unitPoint = new Vector3 ( Mathf.Sin ( radAngle ), 0, Mathf.Cos ( radAngle ) );
+//		return middle.position + unitPoint * radius;
+		return middle.position + axis * unitPoint * radius;
+//		return middle.position + Quaternion.LookRotation ( ( start.position - middle.position ).normalized, ( end.position - middle.position ).normalized ) * unitPoint * radius;
 
-		if ( angle <= 180f )
-			return middle.position + Vector3.Slerp ( toStart, to180, t * angle / 180 ) * radius;
+
+//		Vector3 toStart = ( start.position - middle.position ).normalized;
+//		Vector3 toEnd = ( end.position - middle.position ).normalized;
+//		Vector3 to180 = -toStart;
+//
+//		if ( angle <= 180f )
+//			return middle.position + Vector3.Slerp ( toStart, to180, t * angle / 180 ) * radius;
 //			return middle.position + Vector3.Slerp ( toStart, toEnd, t ) * radius;
-
-		float newAngle = t * angle;
-
-		if ( newAngle <= 180f )
+//
+//		float newAngle = t * angle;
+//
+//		if ( newAngle <= 180f )
 //		if ( t <= 0.5f )
-			return middle.position + Vector3.Slerp ( toStart, to180, t * 2 * angle / 360 ) * radius;
-
-		float newNewAngle = 180f - newAngle;
-
-		return middle.position + Vector3.SlerpUnclamped ( toStart, to180, -t ) * radius;
+//			return middle.position + Vector3.Slerp ( toStart, to180, t * 2 * angle / 360 ) * radius;
+//
+//		float newNewAngle = 180f - newAngle;
+//
+//		return middle.position + Vector3.SlerpUnclamped ( toStart, to180, -t ) * radius;
 //		float remainingAngle = newAngle - 180f;
 //		return middle.position + Vector3.RotateTowards ( toStart, to180, remainingAngle * Mathf.Deg2Rad, 1 ) * radius;
 //		return middle.position + Vector3.RotateTowards ( toStart, to180,  * Mathf.Deg2Rad, 1 ) * radius; // + Vector3.Slerp ( toStart, to180, -0.25f ) * radius;
