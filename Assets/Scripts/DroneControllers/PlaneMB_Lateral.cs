@@ -48,7 +48,7 @@ namespace MovementBehaviors
             }
 
             //controller.attitudeTarget.x = controller.Airspeed();
-            throttle = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed()) + nominalThrottle;
+            throttle = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed());
             //controller.attitudeTarget.z = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed());
             
             controller.positionTarget.z = altCommand;

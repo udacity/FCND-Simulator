@@ -39,8 +39,8 @@ public class AirspeedHoldScenario : Scenario
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
-        Transform line = GameObject.Find("Line").GetComponent<Transform>();
-        line.localScale = new Vector3(0, 0, 0);
+        //Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        //line.localScale = new Vector3(0, 0, 0);
         drone.Status = 3;
         //        planeControl.SetDefaultLongitudinalGains();
         //        planeControl.SetDefaultLateralGains();

@@ -28,13 +28,18 @@ public abstract class Scenario : MonoBehaviour
     public float unityTimestep = 0.02f; // Physics timestep used when tuning gains within Unity
     public float pythonTimestep = 0.005f; // Physics timestep used when running Python control
 
-#if UNITY_EDITOR
-    [Tooltip ("An editor-only field. Drag the desired drone here to store its current position and orientation")]
+    Vector3 inertiaTensor;
+
 	public GameObject droneObject;
-    #endif
 
+    public void Start()
+    {
+        droneObject = GameObject.Find("Plane Drone");
+        inertiaTensor = droneObject.GetComponent<AircraftControl>().inertiaTensors;
+        Debug.Log("Inertia Tensor: " + inertiaTensor);
+    }
 
-	void OnEnable ()
+    void OnEnable ()
 	{
 		pathLines = gameObject.GetComponentsInChildren<LineRenderer> ( true );
 		if ( Application.isPlaying )
@@ -55,10 +60,16 @@ public abstract class Scenario : MonoBehaviour
 		// set default (fixed) values for scenario
 		planeControl.SetScenarioParameters ( tunableParameters );
 
+        if (droneObject == null)
+            droneObject = GameObject.Find("Plane Drone");
+        droneObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        droneObject.GetComponent<Rigidbody>().inertiaTensor = inertiaTensor;
+
         drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
         FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance );
         drone.SetGuided(false);
         drone.ArmDisarm(false);
+
 		pathLines.ForEach ( x => x.enabled = true );
         OnInit ();
 	}
@@ -66,7 +77,7 @@ public abstract class Scenario : MonoBehaviour
 	#if UNITY_EDITOR
 	void Update ()
 	{
-		if ( droneObject != null && !IsRunning )
+		if ( false && droneObject != null && !IsRunning )
 		{
 			if ( data == null )
 				data = new ScenarioData ();
@@ -92,6 +103,8 @@ public abstract class Scenario : MonoBehaviour
 	{
         
         drone.Frozen = false;
+        droneObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        Debug.Log("MOI: " + droneObject.GetComponent<Rigidbody>().inertiaTensor + " Constraints: " + droneObject.GetComponent<Rigidbody>().constraints);
         drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
         OnBegin();
         if (drone.MotorsArmed())
@@ -139,6 +152,12 @@ public abstract class Scenario : MonoBehaviour
         //planeControl.SetScenarioParameters ( tunableParameters );
         planeControl.SetScenarioParameters(allParameters);
 
+    }
+
+    public void ApplyLineColor(Color color)
+    {
+        if (pathLines != null)
+            pathLines.ForEach(x => x.material.color = color);
     }
 
 	protected virtual void OnInit () {}

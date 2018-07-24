@@ -22,8 +22,8 @@ public class YawHoldScenario : Scenario
         drone.SetGuided(true);
         drone.Status = 8;
         //drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
-        Transform line = GameObject.Find("Line").GetComponent<Transform>();
-        line.localScale = new Vector3(0, 0, 0);
+        //Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        //line.localScale = new Vector3(0, 0, 0);
     }
 
     protected override void OnBegin()

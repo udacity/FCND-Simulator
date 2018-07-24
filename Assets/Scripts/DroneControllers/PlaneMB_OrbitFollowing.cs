@@ -99,7 +99,7 @@ namespace MovementBehaviors
             }
             else
             {
-                throttle = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed()) + nominalThrottle;
+                throttle = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed());
                 float pitchCommand = controller.planeControl.AltitudeLoop(altCommand, -controller.PositionLocal().z);
                 controller.attitudeTarget.y = pitchCommand;
                 elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);

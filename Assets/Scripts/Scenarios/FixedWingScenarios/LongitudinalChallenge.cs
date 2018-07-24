@@ -13,8 +13,8 @@ public class LongitudinalChallenge : Scenario
     Vector2 targetGate;
 
     Transform gate;
-    Transform line;
-    Material lineMat;
+    //Transform line;
+    //Material lineMat;
     public Vector2 position2D;
 
 
@@ -41,9 +41,9 @@ public class LongitudinalChallenge : Scenario
     protected override void OnInit ()
 	{
         gate = GameObject.Find("Gate").GetComponent<Transform>();
-        line = GameObject.Find("Line").GetComponent<Transform>();
-        lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
-        lineMat.color = Color.red;
+        //line = GameObject.Find("Line").GetComponent<Transform>();
+        //lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
+        //lineMat.color = Color.red;
         
         base.OnInit ();
         drone.SetControlMode(4); //Stabilized Mode
@@ -59,7 +59,6 @@ public class LongitudinalChallenge : Scenario
     {
         base.OnBegin();
         drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), targetAirspeed);
-
         initTime = drone.FlightTime();
         success = false;
     }
@@ -76,6 +75,7 @@ public class LongitudinalChallenge : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
+        droneObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         position2D.x = Mathf.Sqrt(Mathf.Pow(drone.CoordsUnity().x - data.vehiclePosition.x, 2.0f) + Mathf.Pow(drone.CoordsUnity().z - data.vehiclePosition.z, 2.0f));
         position2D.y = drone.CoordsUnity().y - data.vehiclePosition.y;
         if (!drone.MotorsArmed())
@@ -119,11 +119,13 @@ public class LongitudinalChallenge : Scenario
                     "(threshold = " + vertThreshold + " meters)";
                 return true;
             }
-            lineMat.color = Color.red;
+            //lineMat.color = Color.red;
+            ApplyLineColor(Color.red);
         }
         else
         {
-            lineMat.color = Color.green;
+            //lineMat.color = Color.green;
+            ApplyLineColor(Color.green);
         }
 
 
@@ -157,18 +159,18 @@ public class LongitudinalChallenge : Scenario
         gate.localScale = new Vector3(4.0f, 1.0f, 4.0f);
         Vector3 linePosition = position;
         //linePosition.y = position.y;
-        line.position = linePosition;
-        Vector3 scale = line.localScale;
-        scale.x = 2000.0f;
-        line.localScale = new Vector3(2000.0f, 0.1f, 0.1f);
-        line.eulerAngles = new Vector3(0, 0, 0);
+        //line.position = linePosition;
+        //Vector3 scale = line.localScale;
+        //scale.x = 2000.0f;
+        //line.localScale = new Vector3(2000.0f, 0.1f, 0.1f);
+        //line.eulerAngles = new Vector3(0, 0, 0);
 
     }
 
     protected override void OnEnd()
     {
         drone.SetGuided(false);
-        line.localScale = new Vector3(0.0f, 0.0f, 0.0f);
+        //line.localScale = new Vector3(0.0f, 0.0f, 0.0f);
         gate.localScale = new Vector3(0.0f, 0.0f, 0.0f);
         base.OnEnd();        
     }

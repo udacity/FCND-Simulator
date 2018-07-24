@@ -23,14 +23,15 @@ public class StabilizeRollScenario : Scenario
         drone.SetGuided(true);
         drone.Status = 6;
         //drone.CommandAttitude(new Vector3(targetRoll, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
-        Transform line = GameObject.Find("Line").GetComponent<Transform>();
-        line.localScale = new Vector3(0, 0, 0);
+        //Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        //line.localScale = new Vector3(0, 0, 0);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
         
+
         currTime = drone.FlightTime();
         initTime = drone.FlightTime();
     }
@@ -43,7 +44,8 @@ public class StabilizeRollScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
-        if(!drone.MotorsArmed())
+        //droneObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        if (!drone.MotorsArmed())
             drone.CommandAttitude(new Vector3(targetRoll, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
 

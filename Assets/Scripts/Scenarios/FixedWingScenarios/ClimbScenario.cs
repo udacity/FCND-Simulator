@@ -26,8 +26,8 @@ public class ClimbScenario : Scenario
         drone.SetControlMode(5); //AscendDescend Mode
         drone.SetGuided(true);
         drone.Status = 4;
-        Transform line = GameObject.Find("Line").GetComponent<Transform>();
-        line.localScale = new Vector3(0, 0, 0);
+        //Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        //line.localScale = new Vector3(0, 0, 0);
         //        planeControl.SetDefaultLongitudinalGains();
         //        planeControl.SetDefaultLateralGains();
         //        planeControl.SetStudentLongitudinalGains();

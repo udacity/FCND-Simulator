@@ -72,7 +72,7 @@ namespace MovementBehaviors
             float aileron = controller.planeControl.RollLoop(rollCommand, controller.AttitudeEuler().x, controller.AngularRatesBody().x);
             float rudder = controller.planeControl.SideslipLoop(sideslipCommand, controller.Sideslip());
 
-            throttle = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed()) + nominalThrottle;
+            throttle = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed()) ;
             //controller.attitudeTarget.z = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed());
             controller.positionTarget.z = altCommand;
             float pitchCommand = controller.planeControl.AltitudeLoop(altCommand, -controller.PositionLocal().z);

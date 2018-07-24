@@ -6,8 +6,8 @@ using DroneInterface;
 
 public class AltHoldScenario : Scenario
 {
-    Transform line;
-    Material lineMat;
+    //Transform line;
+    //Material lineMat;
     public float currentAltitude = 0.0f;
     private float lastAltitudeTime = 0.0f;
     public float altitudeThreshold = 2.0f;
@@ -27,12 +27,12 @@ public class AltHoldScenario : Scenario
     protected override void OnInit ()
 	{
         base.OnInit ();
-        line = GameObject.Find("Line").GetComponent<Transform>();
-        lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
-        lineMat.color = Color.red;
-        line.position = new Vector3(data.vehiclePosition.x, targetAltitude, data.vehiclePosition.z);
-        line.localScale = new Vector3(0.1f, 0.1f, 2000.0f);
-        line.eulerAngles = new Vector3(0, 0, 0);
+        //line = GameObject.Find("Line").GetComponent<Transform>();
+        //lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
+        //lineMat.color = Color.red;
+        //line.position = new Vector3(data.vehiclePosition.x, targetAltitude, data.vehiclePosition.z);
+        //line.localScale = new Vector3(0.1f, 0.1f, 2000.0f);
+        //line.eulerAngles = new Vector3(0, 0, 0);
         drone.SetControlMode(4); //Stabilized Mode
         drone.SetGuided(true);
         drone.Status = 2;
@@ -55,6 +55,8 @@ public class AltHoldScenario : Scenario
 
 	protected override bool OnCheckFailure ()
 	{
+        droneObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+
         if (!drone.MotorsArmed()) 
             drone.CommandAttitude(new Vector3(0.0f, targetAltitude, 0.0f), targetAirspeed);
 
@@ -70,10 +72,12 @@ public class AltHoldScenario : Scenario
                 return true;
                 
             }
-            lineMat.color = Color.red;
+            //lineMat.color = Color.red;
+            ApplyLineColor(Color.red);
         }else
         {
-            lineMat.color = Color.green;
+            //lineMat.color = Color.green;
+            ApplyLineColor(Color.green);
         }
         UpdateVizParameters();
         return false;
@@ -81,7 +85,7 @@ public class AltHoldScenario : Scenario
 
     protected override void OnEnd()
     {
-        line.localScale = new Vector3(0f, 0f, 0f);
+        //line.localScale = new Vector3(0f, 0f, 0f);
         base.OnEnd();
         drone.SetGuided(false);
     }

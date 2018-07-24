@@ -19,8 +19,8 @@ public class LateralChallenge: Scenario
     public float targetRadius;
 
     Transform gate;
-    Transform line;
-    Material lineMat;
+    //Transform line;
+    //Material lineMat;
     public Vector2 position2D;
     Vector3 orbitCenter = new Vector3(0, 0, 0);
 
@@ -54,9 +54,9 @@ public class LateralChallenge: Scenario
         
         
         gate = GameObject.Find("Gate").GetComponent<Transform>();
-        line = GameObject.Find("Line").GetComponent<Transform>();
-        lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
-        lineMat.color = Color.red;
+        //line = GameObject.Find("Line").GetComponent<Transform>();
+        //lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
+        //lineMat.color = Color.red;
         //gate2 = GameObject.Find("Gate2").GetComponent<Transform>();
         //gate3 = GameObject.Find("Gate3").GetComponent<Transform>();
         //gate4 = GameObject.Find("Gate4").GetComponent<Transform>();
@@ -107,8 +107,8 @@ public class LateralChallenge: Scenario
         {
             if(!drone.MotorsArmed())
                 drone.CommandVector(startWaypoint, velocityVec);
-            line.localPosition = new Vector3((startPosition.x + gate1.x) / 2, data.vehiclePosition.y, (startPosition.y + gate1.y) / 2);
-            line.localScale = new Vector3(Mathf.Abs(startPosition.x - gate1.x) + 1f, 1f, Mathf.Abs(startPosition.y - gate1.y) + 1f);
+            //line.localPosition = new Vector3((startPosition.x + gate1.x) / 2, data.vehiclePosition.y, (startPosition.y + gate1.y) / 2);
+            //line.localScale = new Vector3(Mathf.Abs(startPosition.x - gate1.x) + 1f, 1f, Mathf.Abs(startPosition.y - gate1.y) + 1f);
             if (drone.CoordsUnity().z >= gate1.y)
             {
                 if (gateError > errorThreshold)
@@ -135,7 +135,7 @@ public class LateralChallenge: Scenario
             }
         } else if (gateNum == 2)
         {
-            line.localScale = new Vector3(0f,0f,0f);
+            //line.localScale = new Vector3(0f,0f,0f);
             if (drone.CoordsUnity().x <= gate2.x)
             {
                 if (gateError > errorThreshold)
@@ -186,8 +186,8 @@ public class LateralChallenge: Scenario
             }
         }else if (gateNum  == 4)
         {
-            line.localPosition = new Vector3((gate4.x + gate3.x) / 2, data.vehiclePosition.y, (gate4.y + gate3.y) / 2);
-            line.localScale = new Vector3(Mathf.Abs(gate4.x - gate3.x) + 1f, 1f, Mathf.Abs(gate4.y - gate3.y) + 1f);
+            //line.localPosition = new Vector3((gate4.x + gate3.x) / 2, data.vehiclePosition.y, (gate4.y + gate3.y) / 2);
+            //line.localScale = new Vector3(Mathf.Abs(gate4.x - gate3.x) + 1f, 1f, Mathf.Abs(gate4.y - gate3.y) + 1f);
             if (drone.CoordsUnity().z <= gate4.y)
             {
                 if (gateError > errorThreshold)
@@ -237,7 +237,7 @@ public class LateralChallenge: Scenario
     protected override void OnEnd()
     {
         gate.localScale = new Vector3(0f, 0f, 0f);
-        line.localScale = new Vector3(0f, 0f, 0f);
+        //line.localScale = new Vector3(0f, 0f, 0f);
         drone.SetGuided(false);
         base.OnEnd();
     }

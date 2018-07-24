@@ -17,8 +17,8 @@ public class LineFollowingScenario : Scenario
     public Vector3 startWaypoint;
     public Vector3 endWaypoint;
 
-    Transform line;
-    Material lineMat;
+    //Transform line;
+    //Material lineMat;
     
 
     protected override void OnInit ()
@@ -35,13 +35,13 @@ public class LineFollowingScenario : Scenario
         endWaypoint.z = startWaypoint.z;
         //drone.CommandVector(startWaypoint, 41.0f*(endWaypoint-startWaypoint)/((endWaypoint - startWaypoint).magnitude));
 
-        line = GameObject.Find("Line").GetComponent<Transform>();
+        //line = GameObject.Find("Line").GetComponent<Transform>();
 
-        lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
-        lineMat.color = Color.red;
-        line.position = new Vector3((startWaypoint.y + endWaypoint.y) / 2f, -(startWaypoint.z+endWaypoint.z)/2f, (startWaypoint.x+endWaypoint.x)/2f);
-        line.localScale = new Vector3(Mathf.Abs(startWaypoint.y - endWaypoint.y)+0.1f, Mathf.Abs(startWaypoint.z - endWaypoint.z) + 0.1f, Mathf.Abs(startWaypoint.x - endWaypoint.x) + 0.1f);
-        line.eulerAngles = new Vector3(0, 0, 0);
+        //lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
+        //lineMat.color = Color.red;
+        //line.position = new Vector3((startWaypoint.y + endWaypoint.y) / 2f, -(startWaypoint.z+endWaypoint.z)/2f, (startWaypoint.x+endWaypoint.x)/2f);
+        //line.localScale = new Vector3(Mathf.Abs(startWaypoint.y - endWaypoint.y)+0.1f, Mathf.Abs(startWaypoint.z - endWaypoint.z) + 0.1f, Mathf.Abs(startWaypoint.x - endWaypoint.x) + 0.1f);
+        //line.eulerAngles = new Vector3(0, 0, 0);
     }
 
     protected override void OnBegin()
@@ -70,7 +70,8 @@ public class LineFollowingScenario : Scenario
         currentXTrack = Mathf.Cos(targetCourse) * (drone.CoordsUnity().x - startWaypoint.y) + Mathf.Sin(-targetCourse) * (drone.CoordsUnity().z - startWaypoint.x);
         if (Mathf.Abs(currentXTrack) > xTrackThreshold)
         {
-            lineMat.color = Color.red;
+            //lineMat.color = Color.red;
+            ApplyLineColor(Color.red);
             if (currTime > data.runtime - timeInterval && currTime <= data.runtime)          
             
             {
@@ -81,7 +82,8 @@ public class LineFollowingScenario : Scenario
         }
         else
         {
-            lineMat.color = Color.green;
+            //lineMat.color = Color.green;
+            ApplyLineColor(Color.green);
         }
         UpdateVizParameters();
         return false;
@@ -89,7 +91,7 @@ public class LineFollowingScenario : Scenario
 
     protected override void OnEnd()
     {
-        line.localScale = new Vector3(0f, 0f, 0f);
+        //line.localScale = new Vector3(0f, 0f, 0f);
         drone.SetGuided(false);
         Debug.Log("Released control of the Drone");
         base.OnEnd();
