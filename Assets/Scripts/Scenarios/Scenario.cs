@@ -20,6 +20,9 @@ public abstract class Scenario : MonoBehaviour
 	public System.Action<float, int> onParameter1Update = delegate {};
 	public System.Action<float, int> onParameter2Update = delegate {};
 
+	[System.NonSerialized]
+	public LineRenderer[] pathLines;
+
     public IDrone drone;
     public PlaneControl planeControl;
     public float unityTimestep = 0.02f; // Physics timestep used when tuning gains within Unity
@@ -30,6 +33,13 @@ public abstract class Scenario : MonoBehaviour
 	public GameObject droneObject;
     #endif
 
+
+	void OnEnable ()
+	{
+		pathLines = gameObject.GetComponentsInChildren<LineRenderer> ( true );
+		if ( Application.isPlaying )
+			pathLines.ForEach ( x => x.enabled = false );
+	}
 
     public void Init ()
 	{
@@ -49,6 +59,7 @@ public abstract class Scenario : MonoBehaviour
         FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance );
         drone.SetGuided(false);
         drone.ArmDisarm(false);
+		pathLines.ForEach ( x => x.enabled = true );
         OnInit ();
 	}
 
@@ -108,6 +119,7 @@ public abstract class Scenario : MonoBehaviour
 
 	public void Cleanup ()
 	{
+		pathLines.ForEach ( x => x.enabled = false );
 		OnCleanup ();
 	}
 

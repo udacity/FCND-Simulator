@@ -39,4 +39,19 @@ public class PathBuilder : MonoBehaviour
 	{
 		return tr.InverseTransformPoint ( position );
 	}
+
+	public PathSegment[] TestPosition (Vector3 position, float radius = 0)
+	{
+		if ( segments == null || segments.Count == 0 )
+			return null;
+
+		Vector3 localPosition = WorldToLocal ( position );
+		List<PathSegment> list = new List<PathSegment> ();
+		for ( int i = 0; i < segments.Count; i++ )
+		{
+			if ( segments [ i ].TestPosition ( localPosition, radius ) )
+				list.Add ( segments [ i ] );
+		}
+		return list.ToArray ();
+	}
 }

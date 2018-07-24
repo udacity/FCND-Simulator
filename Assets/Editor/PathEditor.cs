@@ -11,6 +11,9 @@ public class PathEditor : Editor
 	bool isCtrlHeld;
 	float handleSize = 0.2f;
 
+	// used to test distance from path segments
+	Vector3 testPoint;
+
 	public override void OnInspectorGUI ()
 	{
 		builder = target as PathBuilder;
@@ -20,7 +23,17 @@ public class PathEditor : Editor
 		for ( int i = 0; i < count; i++ )
 		{
 			seg = builder.segments [ i ];
+			EditorGUILayout.BeginHorizontal ();
+			if ( GUILayout.Button ( "x", EditorStyles.miniButton, GUILayout.Width ( 18 ) ) )
+			{
+				Undo.RecordObject ( builder, "Delete seg" );
+				builder.segments.RemoveAt ( i );
+				EditorUtility.SetDirty ( builder );
+				return;
+			}
+			GUILayout.Space ( 5 );
 			EditorGUILayout.LabelField ( "Segment " + ( i + 1 ) );
+			EditorGUILayout.EndHorizontal ();
 			EditorGUI.indentLevel++;
 			EditorGUI.BeginChangeCheck ();
 			PathSegmentType newType = (PathSegmentType) EditorGUILayout.EnumPopup ( "Segment Type:", seg.type );
@@ -37,11 +50,11 @@ public class PathEditor : Editor
 				LinearSegmentInspector ( seg );
 				break;
 
-			case PathSegmentType.Quadratic:
-				break;
+//			case PathSegmentType.Quadratic:
+//				break;
 
-			case PathSegmentType.Cubic:
-				break;
+//			case PathSegmentType.Cubic:
+//				break;
 
 			case PathSegmentType.Circular:
 				CircularSegmentInspector ( seg );
@@ -79,7 +92,8 @@ public class PathEditor : Editor
 			int childCount = builder.tr.childCount;
 			List<GameObject> children = new List<GameObject> ();
 			foreach ( Transform c in builder.tr )
-				children.Add ( c.gameObject );
+				if ( c.name == "Segment" )
+					children.Add ( c.gameObject );
 			for ( int i = children.Count - 1; i >= 0; i-- )
 				DestroyImmediate ( children [ i ] );
 			
@@ -90,6 +104,8 @@ public class PathEditor : Editor
 				l = g.AddComponent<LineRenderer> ();
 				l.sharedMaterial = builder.lineMaterial;
 				l.widthMultiplier = 0.3f;
+				l.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+				l.receiveShadows = false;
 				seg = builder.segments [ i ];
 				if ( seg.type == PathSegmentType.Linear )
 				{
@@ -101,9 +117,10 @@ public class PathEditor : Editor
 					l.SetPositions ( positions );
 				} else
 				{
-					int posCount = (int) seg.angle + 1;
-					positions = new Vector3[posCount];
-					for ( int p = 0; p < posCount; p++ )
+//					int posCount = (int) seg.angle + 1;
+					int posCount = (int) seg.angle;
+					positions = new Vector3[posCount + 1];
+					for ( int p = 0; p <= posCount; p++ )
 					{
 						float tt = 1f * p / posCount;
 //						positions [ p ] = seg.Sample ( tt );
@@ -112,8 +129,9 @@ public class PathEditor : Editor
 //						GameObject gg = GameObject.CreatePrimitive ( PrimitiveType.Sphere );
 //						gg.transform.position = positions [ p ];
 					}
-					l.positionCount = posCount;
+					l.positionCount = posCount + 1;
 					l.SetPositions ( positions );
+//					Debug.Log ( "setting " + posCount + " positions " + positions.Length );
 				}
 			}
 		}
@@ -154,7 +172,10 @@ public class PathEditor : Editor
 	void CircularSegmentInspector (PathSegment seg)
 	{
 		// start point
-//		GUI.enabled = false;
+		GUI.enabled = false;
+		EditorGUILayout.Vector3Field ( "Start", builder.LocalToWorld ( seg.Sample ( 0f ) ) );
+		EditorGUILayout.Vector3Field ( "End", builder.LocalToWorld ( seg.Sample ( 1f ) ) );
+		GUI.enabled = true;
 //		EditorGUI.BeginChangeCheck ();
 //		Vector3 newPos = EditorGUILayout.Vector3Field ( "Start", builder.LocalToWorld ( seg.start.position ) );
 //		if ( EditorGUI.EndChangeCheck () )
@@ -173,7 +194,7 @@ public class PathEditor : Editor
 		{
 			Undo.RecordObject ( builder, "Middle1" );
 			seg.middle.position = builder.WorldToLocal ( newPos );
-			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
+//			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
 			seg.end.position = seg.Sample ( 1f );
 			seg.start.position = seg.Sample ( 0 );
 			EditorUtility.SetDirty ( builder );
@@ -255,6 +276,7 @@ public class PathEditor : Editor
 
 		int count = builder.segments.Count;
 		PathSegment seg;
+//		Vector3 worldTest = builder.LocalToWorld ( testPoint );
 
 		for ( int i = 0; i < count; i++ )
 		{
@@ -269,7 +291,22 @@ public class PathEditor : Editor
 				DrawArc ( seg );
 				break;
 			}
+
+			// if the test point is near this segment, log this!
+//			if ( seg.TestPosition ( worldTest, 4 ) )
+//				Debug.Log ( "seg " + i + "!" );
 		}
+
+		// draw a sphere where the test point is and allow to move it around and focus on it
+//		Handles.color = Color.black;
+//		float size = HandleUtility.GetHandleSize ( worldTest ) * 0.3f;
+//		Vector3 newWorld = Handles.DoPositionHandle ( worldTest, Quaternion.identity );
+//		if ( newWorld != worldTest )
+//		{
+//			testPoint = builder.WorldToLocal ( newWorld );
+//		}
+//		if ( Handles.Button ( newWorld, Quaternion.identity, size, size, Handles.SphereHandleCap ) )
+//			SceneView.lastActiveSceneView.LookAt ( newWorld );
 	}
 
 /*	void DrawSelectedPointInspector ()
@@ -326,72 +363,40 @@ public class PathEditor : Editor
 	{
 		Vector3 start = builder.LocalToWorld ( seg.Sample ( 0f ) );
 		Vector3 end = builder.LocalToWorld ( seg.Sample ( 1f ) );
-//		Vector3 start = builder.LocalToWorld ( seg.start.position );
-//		Vector3 end = builder.LocalToWorld ( seg.end.position );
 		Vector3 center = builder.LocalToWorld ( seg.middle.position );
 		Vector3 newPos;
 
 		// draw the arc made up of segments
 		int segCount = (int) seg.angle;// - 1;
-//		int segCount = seg.subSegments - 1;
 		Vector3 pos1 = start;
 		Vector3 pos2;
 		Handles.color = Color.white;
 		for ( int i = 0; i < segCount; i++ )
-//		for (int i = 0; i < seg.subSegments; i++)
 		{
-//			float t = 1f * ( i + 1 ) / seg.subSegments;
 			float t = 1f * ( i + 1 ) / segCount;
 			pos2 = builder.LocalToWorld ( seg.Sample ( t ) );
 			Handles.DrawAAPolyLine ( 6, pos1, pos2 );
-
 			pos1 = pos2;
 		}
 
 		// draw radius lines
-//		float size = HandleUtility.GetHandleSize ( start ) * handleSize;
 		Handles.color = Color.yellow;
 		float dashSize = 8;
 		Handles.DrawDottedLine ( start, center, dashSize );
 		Handles.DrawDottedLine ( end, center, dashSize );
 //		Handles.DrawDottedLine ( start, end, dashSize );
-		// and direction line
-//		Vector3 halfPoint = start + ( end - start ) * 0.5f;
-//		float size = HandleUtility.GetHandleSize ( halfPoint ) * handleSize;
+
 		float size;
-//		Handles.color = Color.red;
-//		Handles.ArrowHandleCap ( -1, halfPoint, Quaternion.LookRotation ( ( end - start ).normalized ), size * 2, EventType.Repaint );
 
 		// start point
 		size = HandleUtility.GetHandleSize ( start ) * handleSize;
 		Handles.color = new Color ( 1f, 0.75f, 0.25f );
 		Handles.SphereHandleCap ( -1, start, Quaternion.identity, size, EventType.Repaint );
-//		Handles.color = Color.yellow;
-//		size = HandleUtility.GetHandleSize ( start ) * handleSize;
-//		EditorGUI.BeginChangeCheck ();
-//		Vector3 newPos = Handles.FreeMoveHandle ( start, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
-//		if ( EditorGUI.EndChangeCheck () )
-//		{
-//			Undo.RecordObject ( builder, "Start2" );
-//			seg.start.position = builder.WorldToLocal ( newPos );
-//			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
-//			seg.end.position = seg.Sample ( 1f );
-//			EditorUtility.SetDirty ( builder );
-//		}
 
 		// end point
+		size = HandleUtility.GetHandleSize ( end ) * handleSize;
 		Handles.color = new Color ( 1f, 0.6f, 0.1f );
 		Handles.SphereHandleCap ( -1, end, Quaternion.identity, size, EventType.Repaint );
-//		Handles.SphereHandleCap ( -1, end, Quaternion.identity, size, EventType.Repaint );
-//		size = HandleUtility.GetHandleSize ( end ) * handleSize;
-//		EditorGUI.BeginChangeCheck ();
-//		newPos = Handles.FreeMoveHandle ( end, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
-//		if ( EditorGUI.EndChangeCheck () )
-//		{
-//			Undo.RecordObject ( builder, "End2" );
-//			seg.end.position = builder.WorldToLocal ( newPos );
-//			EditorUtility.SetDirty ( builder );
-//		}
 
 		// line from center to axis
 		Handles.color = Color.red;
@@ -407,8 +412,9 @@ public class PathEditor : Editor
 		{
 			Undo.RecordObject ( builder, "Middle" );
 			seg.middle.position = builder.WorldToLocal ( newPos );
-			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
-//			seg.end.position = seg.Sample ( 1f );
+//			seg.radius = ( seg.start.position - seg.middle.position ).magnitude;
+			seg.start.position = seg.Sample ( 0f );
+			seg.end.position = seg.Sample ( 1f );
 			EditorUtility.SetDirty ( builder );
 		}
 
@@ -417,27 +423,16 @@ public class PathEditor : Editor
 		size = HandleUtility.GetHandleSize ( center ) * handleSize;
 		EditorGUI.BeginChangeCheck ();
 		Quaternion q = Handles.FreeRotateHandle ( seg.axis, center, seg.radius * 0.25f );
-//		newPos = Handles.FreeMoveHandle ( end, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
 		if ( EditorGUI.EndChangeCheck () )
 		{
 			Undo.RecordObject ( builder, "Axis" );
 			seg.axis = q;
-//			seg.end.position = builder.WorldToLocal ( newPos );//.normalized * seg.radius );
 			EditorUtility.SetDirty ( builder );
 		}
 
 		// axis point
 		Handles.color = Color.red;
-		size = HandleUtility.GetHandleSize ( center ) * handleSize;
+		size = HandleUtility.GetHandleSize ( axisPoint ) * handleSize;
 		Handles.SphereHandleCap ( -1, axisPoint, Quaternion.identity, size, EventType.Repaint );
-//		EditorGUI.BeginChangeCheck ();
-//		newPos = Handles.FreeMoveHandle ( end, Quaternion.identity, size, Vector3.one * 0.5f, Handles.SphereHandleCap );
-//		if ( EditorGUI.EndChangeCheck () )
-//		{
-//			Undo.RecordObject ( builder, "Axis" );
-//			seg.axis = q;
-//			seg.end.position = builder.WorldToLocal ( newPos );//.normalized * seg.radius );
-//			EditorUtility.SetDirty ( builder );
-//		}
 	}
 }
