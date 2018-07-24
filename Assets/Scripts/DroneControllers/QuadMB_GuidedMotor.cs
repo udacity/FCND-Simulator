@@ -14,13 +14,9 @@ namespace MovementBehaviors
         public override void OnLateUpdate()
         {
             //var nav = controller.controller;
-            Vector3 totalMoment = new Vector3(controller.guidedCommand.x, controller.guidedCommand.y, controller.guidedCommand.w);
-            float totalThrust = controller.guidedCommand.z;
-            controller.CommandTorque(totalMoment);
-            controller.CommandThrust(totalThrust);
-
-
-
+            Vector3 totalMoment = new Vector3(controller.MomentThrustTarget.x, controller.MomentThrustTarget.y, controller.MomentThrustTarget.z);
+            float totalThrust = controller.MomentThrustTarget.z;
+            controller.CommandMoment(totalMoment, totalThrust);
         }
         
             

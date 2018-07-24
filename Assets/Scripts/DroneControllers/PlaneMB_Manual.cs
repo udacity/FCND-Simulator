@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DroneControllers;
 using MovementBehaviors;
+using DroneInterface;
 
 namespace MovementBehaviors
 {
@@ -13,8 +14,9 @@ namespace MovementBehaviors
         float elevatorTrim = 0.0f;
         float trimStep = 0.001f;
 
-        public override void OnSelect(PlaneAutopilot _controller)
+        public override void OnSelect(IDroneController _controller)
         {
+            Debug.Log("Controller: " + _controller.GetType());
             base.OnSelect(_controller);
             elevatorTrim = 0.0f;
         }
@@ -22,15 +24,18 @@ namespace MovementBehaviors
         public override void OnLateUpdate()
         {
             
-            if (!controller.guided)
+            
+            if (!controller.Guided())
             {
+                Debug.Log("On Late Update");
                 float elevator, aileron, rudder, throttle;
                 elevatorTrim = elevatorTrim + trimStep * Input.GetAxis("Trim");
                 elevator = -1.0f * Input.GetAxis("Vertical") + elevatorTrim;
                 aileron = Input.GetAxis("Horizontal");
                 rudder = Input.GetAxis("Yaw");
-                throttle = controller.momentThrustTarget.w + throttleStep * Input.GetAxis("Thrust");
+                throttle = controller.MomentThrustTarget.w + throttleStep * Input.GetAxis("Thrust");
                 controller.CommandControls(aileron, elevator, rudder, throttle);
+                
             }
 
             

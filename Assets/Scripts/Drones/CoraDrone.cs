@@ -9,13 +9,13 @@ namespace Drones
     /// <summary>
     /// Drone based off a Quadrotor.
     /// </summary>
-    class PlaneDrone : MonoBehaviour, IDrone
+    class CoraDrone : MonoBehaviour, IDrone
     {
 
 
-        public PlaneVehicle Vehicle;
-        public PlaneAutopilot Autopilot;
-        public PlaneSensors Sensors;
+        public CoraVehicle Vehicle;
+        public CoraAutopilot Autopilot;
+        public CoraSensors Sensors;
 
         public IControlLaw control { get { return Autopilot.control; } }
         public Vector3 AttitudeTarget { get { return Autopilot.AttitudeTarget; } set { Autopilot.AttitudeTarget = value; } } //roll, pitch, yaw target in radians
@@ -56,11 +56,12 @@ namespace Drones
 		}
 
 
+
         void Awake()
         {
-            Vehicle = GetComponent<PlaneVehicle>();
-            Autopilot = GetComponent<PlaneAutopilot>();
-            Sensors = GetComponent<PlaneSensors>();
+            Vehicle = GetComponent<CoraVehicle>();
+            Autopilot = GetComponent<CoraAutopilot>();
+            Sensors = GetComponent<CoraSensors>();
             Simulation.ActiveDrone = this;
         }
 
@@ -109,7 +110,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The vehicle NED linear velocity in m/s
+        /// The Vehicle NED linear velocity in m/s
         /// </summary>
         public Vector3 VelocityLocal()
         {
@@ -117,7 +118,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The linear velocity in the vehicle frame (front, right, down) in m/s
+        /// The linear velocity in the Vehicle frame (front, right, down) in m/s
         /// </summary>
         /// <returns></returns>
         public Vector3 VelocityBody()
@@ -134,7 +135,7 @@ namespace Drones
 		}
 
         /// <summary>
-        /// The vehicle NED linear acceleration in m/s^2
+        /// The Vehicle NED linear acceleration in m/s^2
         /// </summary>
         public Vector3 AccelerationLocal()
         {
@@ -142,7 +143,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The linear acceleration in the vehicle frame (front, right, down) in m/s^2
+        /// The linear acceleration in the Vehicle frame (front, right, down) in m/s^2
         /// </summary>
         public Vector3 AccelerationBody()
         {
@@ -150,7 +151,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The angular velocity around the vehicle frame axes (front, right, down) in rad/s
+        /// The angular velocity around the Vehicle frame axes (front, right, down) in rad/s
         /// </summary>
         /// <returns></returns>
         public Vector3 AngularRatesBody()
@@ -167,7 +168,7 @@ namespace Drones
 		}
 
         /// <summary>
-        /// The current body frame control moments being applied to the vehicle in kg*m^2/s^2
+        /// The current body frame control moments being applied to the Vehicle in kg*m^2/s^2
         /// </summary>
         public Vector3 MomentBody()
         {
@@ -175,7 +176,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The current body frame control forces being applied to the vehicle in kg*m/s^2
+        /// The current body frame control forces being applied to the Vehicle in kg*m/s^2
         /// </summary>
         /// <returns></returns>
         public Vector3 ForceBody()
@@ -193,7 +194,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// Arms/disarms the vehicle motors
+        /// Arms/disarms the Vehicle motors
         /// </summary>
         /// <param name="arm">true=arm, false=disarm</param>
         public void ArmDisarm(bool arm)
@@ -224,7 +225,7 @@ namespace Drones
         /// IDroneController Methods
 
         /// <summary>
-        /// Returns true if the vehicle is being controlled from outside the simulator
+        /// Returns true if the Vehicle is being controlled from outside the simulator
         /// </summary>
         public bool Guided()
         {
@@ -241,7 +242,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// Command the vehicle to hover at the current position and altitude
+        /// Command the Vehicle to hover at the current position and altitude
         /// </summary>
         public void CommandHover()
         {
@@ -249,7 +250,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// Command the vehicle to the altitude, the position/attitude target does nto change
+        /// Command the Vehicle to the altitude, the position/attitude target does nto change
         /// </summary>
         /// <param name="altitude">Altitude in m</param>
         public void CommandAltitude(float altitude)
@@ -258,7 +259,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// Command the vehicle position. If in Offboard, changes the vehicle control to PositionControl
+        /// Command the Vehicle position. If in Offboard, changes the Vehicle control to PositionControl
         /// </summary>
         /// <param name="localPosition">Target local NED position</param>
         public void CommandPosition(Vector3 localPosition)
@@ -267,16 +268,16 @@ namespace Drones
         }
 
         /// <summary>
-        /// If in PositionControl or VelocityControl mode, command the vehicle heading to the specified
+        /// If in PositionControl or VelocityControl mode, command the Vehicle heading to the specified
         /// </summary>
-        /// <param name="heading">Target vehicle heading in radians</param>
+        /// <param name="heading">Target Vehicle heading in radians</param>
         public void CommandHeading(float heading)
         {
             Autopilot.CommandHeading(heading);
         }
 
         /// <summary>
-        /// Command the vehicle local velocity. If in Offboard, changes the vehicle control VelocityControl
+        /// Command the Vehicle local velocity. If in Offboard, changes the Vehicle control VelocityControl
         /// </summary>
         /// <param name="localVelocity">Target local NED velocity in m/s</param>
         public void CommandVelocity(Vector3 localVelocity)
@@ -285,7 +286,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// Command the vehicle's attitude and thrust
+        /// Command the Vehicle's attitude and thrust
         /// </summary>
         /// <param name="attitude">Euler angles (roll, pitch, yaw) in radians (RH 3-2-1 from world to body)</param>
         /// <param name="thrust">The total commanded thrust from all motors</param>
@@ -295,7 +296,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// Command the vehicle's body rates and thrust
+        /// Command the Vehicle's body rates and thrust
         /// </summary>
         /// <param name="bodyrates">Body frame angular rates (p, q, r) in radians/s</param>
         /// <param name="thrust">The total commanded thrust from all motors</param>
@@ -306,7 +307,7 @@ namespace Drones
 
 
         /// <summary>
-        /// Command the vehicle's body moment and thrust
+        /// Command the Vehicle's body moment and thrust
         /// </summary>
         /// <param name="bodyMoment">Body frame moments in kg*m^2/s^2</param>
         /// <param name="thrust"></param>
@@ -316,7 +317,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// Command the vehicle's body moment and thrust
+        /// Command the Vehicle's body moment and thrust
         /// </summary>
         public void CommandControls(float controlX, float controlY, float controlZ, float controlW)
         {
@@ -325,7 +326,7 @@ namespace Drones
 
         /// <summary>
         /// Sets the value of the position target for visualization in m
-        /// Note: Does not command the vehicle
+        /// Note: Does not command the Vehicle
         /// </summary>
         public void LocalPositionTarget(Vector3 v)
         {
@@ -334,7 +335,7 @@ namespace Drones
 
         /// <summary>
         /// Sets the value of the velocity target for visualization in m
-        /// Note: Does not command the vehicle
+        /// Note: Does not command the Vehicle
         /// </summary>
         public void LocalVelocityTarget(Vector3 v)
         {
@@ -343,7 +344,7 @@ namespace Drones
 
         /// <summary>
         /// Sets the value of the acceleration target for visualization in m
-        /// Note: Does not command the vehicle
+        /// Note: Does not command the Vehicle
         /// </summary>
         public void LocalAccelerationTarget(Vector3 v)
         {
@@ -400,7 +401,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The vehicle's attitude estimated from the compass, IMU and gyro
+        /// The Vehicle's attitude estimated from the compass, IMU and gyro
         /// </summary>
         /// <returns></returns>
         public Vector3 AttitudeEstimate()
@@ -409,7 +410,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The vehicle latitude in degrees
+        /// The Vehicle latitude in degrees
         /// </summary>
         /// <returns></returns>
         public double GPSLatitude()
@@ -418,7 +419,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The vehicle longitude in degrees
+        /// The Vehicle longitude in degrees
         /// </summary>
         /// <returns></returns>
         public double GPSLongitude()
@@ -427,7 +428,7 @@ namespace Drones
         }
 
         /// <summary>
-        /// The vehicle altitude in m, relative to sea level (positive up)
+        /// The Vehicle altitude in m, relative to sea level (positive up)
         /// </summary>
         /// <returns></returns>
         public double GPSAltitude()

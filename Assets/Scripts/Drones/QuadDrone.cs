@@ -12,6 +12,26 @@ namespace Drones
     class QuadDrone : MonoBehaviour, IDrone
     {
 
+        public QuadVehicle Vehicle;
+        public QuadAutopilot Autopilot;
+        public QuadSensors Sensors;
+
+        public IControlLaw control { get { return Autopilot.control; } }
+        public Vector3 AttitudeTarget { get { return Autopilot.AttitudeTarget; } set { Autopilot.AttitudeTarget = value; } } //roll, pitch, yaw target in radians
+        public Vector3 PositionTarget { get { return Autopilot.PositionTarget; } set { Autopilot.PositionTarget = value; } }//north, east, down target in meters
+        public Vector3 BodyRateTarget { get { return Autopilot.BodyRateTarget; } set { Autopilot.BodyRateTarget = value; } } //p, q, r target in radians/second
+        public Vector3 VelocityTarget { get { return Autopilot.VelocityTarget; } set { Autopilot.VelocityTarget = value; } } //north, east, down, velocity targets in meters/second
+        public Vector3 AccelerationTarget { get { return Autopilot.AccelerationTarget; } set { Autopilot.AccelerationTarget = value; } } //north, east, down acceleration targets in meters/second^2
+        public Vector4 MomentThrustTarget { get { return Autopilot.MomentThrustTarget; } set { Autopilot.MomentThrustTarget = value; } }
+
+        public Vector3 ControlAttitude { get { return Autopilot.ControlAttitude; } }
+        public Vector3 ControlPosition { get { return Autopilot.ControlPosition; } }
+        public Vector3 ControlBodyRate { get { return Autopilot.ControlBodyRate; } }
+        public Vector3 ControlVelocity { get { return Autopilot.ControlVelocity; } }
+        public Vector3 ControlAcceleration { get { return Autopilot.ControlAcceleration; } }
+        public Vector3 ControlWindData { get { return Autopilot.ControlWindData; } } // Airspeed, AoA, sideslip
+        public float ControlMass { get { return Autopilot.ControlMass; } } 
+
         public int Status
         {
             get { return 0; }
@@ -20,23 +40,19 @@ namespace Drones
 
         public float FlightTime()
         {
-            return quadVehicle.FlightTime();
+            return Vehicle.FlightTime();
         }
 		public bool Frozen
 		{
-			get { return quadVehicle.Frozen; }
-			set { quadVehicle.Frozen = value; }
+			get { return Vehicle.Frozen; }
+			set { Vehicle.Frozen = value; }
 		}
-
-        public QuadVehicle quadVehicle;
-        public QuadAutopilot quadAutopilot;
-        public QuadSensors quadSensors;
 
         void Awake()
         {
-            quadVehicle = GetComponent<QuadVehicle>();
-            quadAutopilot = GetComponent<QuadAutopilot>();
-            quadSensors = GetComponent<QuadSensors>();
+            Vehicle = GetComponent<QuadVehicle>();
+            Autopilot = GetComponent<QuadAutopilot>();
+            Sensors = GetComponent<QuadSensors>();
             Simulation.ActiveDrone = this;
         }
 
@@ -44,7 +60,7 @@ namespace Drones
 
         public Vector3 CoordsUnity()
         {
-            return quadVehicle.CoordsUnity();
+            return Vehicle.CoordsUnity();
         }
 
         /// <summary>
@@ -52,7 +68,7 @@ namespace Drones
         /// </summary>
         public Vector3 CoordsLocal()
         {
-            return quadVehicle.CoordsLocal();
+            return Vehicle.CoordsLocal();
         }
 
         /// <summary>
@@ -61,7 +77,7 @@ namespace Drones
         /// <returns></returns>
         public Vector3 AttitudeEuler()
         {
-            return quadVehicle.AttitudeEuler();
+            return Vehicle.AttitudeEuler();
         }
 
         /// <summary>
@@ -70,7 +86,7 @@ namespace Drones
         /// <returns></returns>
         public Vector4 AttitudeQuaternion()
         {
-            return quadVehicle.AttitudeQuaternion();
+            return Vehicle.AttitudeQuaternion();
         }
 
         /// <summary>
@@ -78,7 +94,7 @@ namespace Drones
         /// </summary>
         public Vector3 VelocityLocal()
         {
-            return quadVehicle.VelocityLocal();
+            return Vehicle.VelocityLocal();
         }
 
         /// <summary>
@@ -87,7 +103,7 @@ namespace Drones
         /// <returns></returns>
         public Vector3 VelocityBody()
         {
-            return quadVehicle.VelocityBody();
+            return Vehicle.VelocityBody();
         }
 
 		/// <summary>
@@ -95,7 +111,7 @@ namespace Drones
 		/// </summary>
 		public Vector3 VelocityUnity()
 		{
-			return quadVehicle.VelocityUnity ();
+			return Vehicle.VelocityUnity ();
 		}
 
         /// <summary>
@@ -103,7 +119,7 @@ namespace Drones
         /// </summary>
         public Vector3 AccelerationLocal()
         {
-            return quadVehicle.AccelerationLocal();
+            return Vehicle.AccelerationLocal();
         }
 
         /// <summary>
@@ -111,7 +127,7 @@ namespace Drones
         /// </summary>
         public Vector3 AccelerationBody()
         {
-            return quadVehicle.AccelerationBody();
+            return Vehicle.AccelerationBody();
         }
 
         /// <summary>
@@ -120,7 +136,7 @@ namespace Drones
         /// <returns></returns>
         public Vector3 AngularRatesBody()
         {
-            return quadVehicle.AngularRatesBody();
+            return Vehicle.AngularRatesBody();
         }
 
 		/// <summary>
@@ -128,7 +144,7 @@ namespace Drones
 		/// </summary>
 		public Vector3 AngularRatesUnity()
 		{
-			return quadVehicle.AngularRatesUnity ();
+			return Vehicle.AngularRatesUnity ();
 		}
 
         /// <summary>
@@ -136,7 +152,7 @@ namespace Drones
         /// </summary>
         public Vector3 MomentBody()
         {
-            return quadVehicle.MomentBody();
+            return Vehicle.MomentBody();
         }
 
         /// <summary>
@@ -145,7 +161,7 @@ namespace Drones
         /// <returns></returns>
         public Vector3 ForceBody()
         {
-            return quadVehicle.ForceBody();
+            return Vehicle.ForceBody();
         }
 
         /// <summary>
@@ -154,7 +170,7 @@ namespace Drones
         /// <returns></returns>
         public bool MotorsArmed()
         {
-            return quadVehicle.MotorsArmed();
+            return Vehicle.MotorsArmed();
         }
 
         /// <summary>
@@ -163,7 +179,7 @@ namespace Drones
         /// <param name="arm">true=arm, false=disarm</param>
         public void ArmDisarm(bool arm)
         {
-            quadAutopilot.ArmDisarm(arm);
+            Autopilot.ArmDisarm(arm);
         }
 
         /// <summary>
@@ -171,7 +187,7 @@ namespace Drones
 		/// </summary>
 		public void Place(Vector3 location)
         {
-            quadVehicle.Place(location);
+            Vehicle.Place(location);
         }
 
         /// <summary>
@@ -182,7 +198,7 @@ namespace Drones
         /// <param name="euler">rotation in Unity (LH) frame</param>
         public void InitializeVehicle(Vector3 location, Vector3 velocity, Vector3 euler)
         {
-            quadVehicle.InitializeVehicle(location, velocity, euler);
+            Vehicle.InitializeVehicle(location, velocity, euler);
         }
 
 
@@ -193,7 +209,7 @@ namespace Drones
         /// </summary>
         public bool Guided()
         {
-            return quadAutopilot.Guided();
+            return Autopilot.Guided();
         }
 
         /// <summary>
@@ -202,7 +218,7 @@ namespace Drones
         /// <param name="offboard">true=enable offboard, false=disable offboard</param>
         public void SetGuided(bool offboard)
         {
-            quadAutopilot.SetGuided(offboard);
+            Autopilot.SetGuided(offboard);
         }
 
         /// <summary>
@@ -211,7 +227,7 @@ namespace Drones
         /// <param name="controlMode"></param>
         public void SetControlMode(int controlMode)
         {
-            quadAutopilot.SetControlMode(controlMode);
+            Autopilot.SetControlMode(controlMode);
         }
 
         /// <summary>
@@ -220,7 +236,7 @@ namespace Drones
         /// <returns></returns>
         public int ControlMode()
         {
-            return quadAutopilot.ControlMode();
+            return Autopilot.ControlMode();
         }
 
         /// <summary>
@@ -228,7 +244,7 @@ namespace Drones
         /// </summary>
         public void CommandHover()
         {
-            quadAutopilot.CommandHover();
+            Autopilot.CommandHover();
         }
 
         /// <summary>
@@ -237,7 +253,7 @@ namespace Drones
         /// <param name="altitude">Altitude in m</param>
         public void CommandAltitude(float altitude)
         {
-            quadAutopilot.CommandAltitude(altitude);
+            Autopilot.CommandAltitude(altitude);
         }
 
         /// <summary>
@@ -246,7 +262,7 @@ namespace Drones
         /// <param name="localPosition">Target local NED position</param>
         public void CommandPosition(Vector3 localPosition)
         {
-            quadAutopilot.CommandPosition(localPosition);
+            Autopilot.CommandPosition(localPosition);
         }
 
         /// <summary>
@@ -255,7 +271,7 @@ namespace Drones
         /// <param name="heading">Target vehicle heading in radians</param>
         public void CommandHeading(float heading)
         {
-            quadAutopilot.CommandHeading(heading);
+            Autopilot.CommandHeading(heading);
         }
 
         /// <summary>
@@ -264,7 +280,7 @@ namespace Drones
         /// <param name="localVelocity">Target local NED velocity in m/s</param>
         public void CommandVelocity(Vector3 localVelocity)
         {
-            quadAutopilot.CommandVelocity(localVelocity);
+            Autopilot.CommandVelocity(localVelocity);
         }
 
         /// <summary>
@@ -274,7 +290,7 @@ namespace Drones
         /// <param name="thrust">The total commanded thrust from all motors</param>
         public void CommandAttitude(Vector3 attitude, float thrust)
         {
-            quadAutopilot.CommandAttitude(attitude, thrust);
+            Autopilot.CommandAttitude(attitude, thrust);
         }
 
         /// <summary>
@@ -284,7 +300,7 @@ namespace Drones
         /// <param name="thrust">The total commanded thrust from all motors</param>
         public void CommandAttitudeRate(Vector3 bodyrates, float thrust)
         {
-            quadAutopilot.CommandAttitude(bodyrates, thrust);
+            Autopilot.CommandAttitude(bodyrates, thrust);
         }
 
         /// <summary>
@@ -294,7 +310,7 @@ namespace Drones
         /// <param name="thrust"></param>
         public void CommandMoment(Vector3 bodyMoment, float thrust)
         {
-            quadAutopilot.CommandMoment(bodyMoment, thrust);
+            Autopilot.CommandMoment(bodyMoment, thrust);
         }
 
         /// <summary>
@@ -321,7 +337,7 @@ namespace Drones
         /// </summary>
         public void LocalPositionTarget(Vector3 v)
         {
-            quadAutopilot.LocalPositionTarget(v);
+            Autopilot.LocalPositionTarget(v);
         }
 
         /// <summary>
@@ -330,7 +346,7 @@ namespace Drones
         /// </summary>
         public void LocalVelocityTarget(Vector3 v)
         {
-            quadAutopilot.LocalVelocityTarget(v);
+            Autopilot.LocalVelocityTarget(v);
         }
 
         /// <summary>
@@ -339,26 +355,9 @@ namespace Drones
         /// </summary>
         public void LocalAccelerationTarget(Vector3 v)
         {
-            quadAutopilot.LocalAccelerationTarget(v);
+            Autopilot.LocalAccelerationTarget(v);
         }
 
-        /// <summary>
-        /// Sets the value of the attitude target for visualization in m
-        /// Note: Does not command the vehicle
-        /// </summary>
-        public void AttitudeTarget(Vector3 v)
-        {
-            quadAutopilot.AttitudeTarget(v);
-        }
-
-        /// <summary>
-        /// Sets the value of the body rate target for visualization in m
-        /// Note: Does not command the vehicle
-        /// </summary>
-        public void BodyRateTarget(Vector3 v)
-        {
-            quadAutopilot.BodyRateTarget(v);
-        }
 
 
         /// IDroneSensors Methods
@@ -369,7 +368,7 @@ namespace Drones
         /// <returns></returns>
         public Vector3 GyroRates()
         {
-            return quadSensors.GyroRates();
+            return Sensors.GyroRates();
         }
 
         /// <summary>
@@ -377,7 +376,7 @@ namespace Drones
         /// </summary>
         public Vector3 IMUAcceleration()
         {
-            return quadSensors.IMUAcceleration();
+            return Sensors.IMUAcceleration();
         }
 
         /// <summary>
@@ -386,7 +385,7 @@ namespace Drones
         /// <returns></returns>
         public float CompassHeading()
         {
-            return quadSensors.CompassHeading();
+            return Sensors.CompassHeading();
         }
 
         /// <summary>
@@ -395,7 +394,7 @@ namespace Drones
         /// <returns></returns>
         public Vector3 CompassMagnetometer()
         {
-            return quadSensors.CompassMagnetometer();
+            return Sensors.CompassMagnetometer();
         }
 
         /// <summary>
@@ -404,7 +403,7 @@ namespace Drones
         /// <returns></returns>
         public float BarometerAltitude()
         {
-            return quadSensors.BarometerAltitude();
+            return Sensors.BarometerAltitude();
         }
 
         /// <summary>
@@ -413,7 +412,7 @@ namespace Drones
         /// <returns></returns>
         public Vector3 AttitudeEstimate()
         {
-            return quadSensors.AttitudeEstimate();
+            return Sensors.AttitudeEstimate();
         }
 
         /// <summary>
@@ -422,7 +421,7 @@ namespace Drones
         /// <returns></returns>
         public double GPSLatitude()
         {
-            return quadSensors.GPSLatitude();
+            return Sensors.GPSLatitude();
         }
 
         /// <summary>
@@ -431,7 +430,7 @@ namespace Drones
         /// <returns></returns>
         public double GPSLongitude()
         {
-            return quadSensors.GPSLongitude();
+            return Sensors.GPSLongitude();
         }
 
         /// <summary>
@@ -440,7 +439,7 @@ namespace Drones
         /// <returns></returns>
         public double GPSAltitude()
         {
-            return quadSensors.GPSAltitude();
+            return Sensors.GPSAltitude();
         }
 
         /// <summary>
@@ -449,7 +448,7 @@ namespace Drones
         /// <returns></returns>
         public double HomeLatitude()
         {
-            return quadSensors.HomeLatitude();
+            return Sensors.HomeLatitude();
         }
 
         /// <summary>
@@ -458,7 +457,7 @@ namespace Drones
         /// <returns></returns>
         public double HomeLongitude()
         {
-            return quadSensors.HomeLongitude();
+            return Sensors.HomeLongitude();
         }
 
         /// <summary>
@@ -467,7 +466,7 @@ namespace Drones
         /// <returns></returns>
         public double HomeAltitude()
         {
-            return quadSensors.HomeAltitude();
+            return Sensors.HomeAltitude();
         }
 
         /// <summary>
@@ -476,7 +475,7 @@ namespace Drones
         /// <returns></returns>
         public Vector3 LocalPosition()
         {
-            return quadSensors.LocalPosition();
+            return Sensors.LocalPosition();
         }
 
         /// <summary>
@@ -484,7 +483,7 @@ namespace Drones
         /// </summary>
         public Vector3 GPSVelocity()
         {
-            return quadSensors.GPSVelocity();
+            return Sensors.GPSVelocity();
         }
 
         /// <summary>
@@ -492,7 +491,7 @@ namespace Drones
         /// </summary>
         public void SetHomePosition()
         {
-            quadSensors.SetHomePosition();
+            Sensors.SetHomePosition();
         }
 
         /// <summary>
@@ -503,7 +502,7 @@ namespace Drones
         /// <param name="altitude">altitude in m, relative to seal level</param>
         public void SetHomePosition(double longitude, double latitude, double altitude)
         {
-            quadSensors.SetHomePosition(longitude, latitude, altitude);
+            Sensors.SetHomePosition(longitude, latitude, altitude);
         }
         /*
         public QuadController quadCtrl;

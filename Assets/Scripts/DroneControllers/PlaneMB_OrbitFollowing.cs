@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DroneControllers;
 using MovementBehaviors;
+using DroneInterface;
 
 namespace MovementBehaviors
 {
@@ -24,16 +25,17 @@ namespace MovementBehaviors
         float yawCommand;
         public float yawIncr = 1.0f * Mathf.PI / 180.0f;
 
-        public override void OnSelect(PlaneAutopilot _controller)
+        PlaneControl PlaneControl;
+
+        public override void OnSelect(IDroneController _controller)
         {
             base.OnSelect(_controller);
-            controller.planeControl.altInt = 0.0f;
-            controller.planeControl.speedInt = 0.0f;
-            controller.planeControl.sideslipInt = 0f;
-            controller.planeControl.yawInt = 0f;
-            yawCommand = controller.AttitudeEuler().z;
-            if (!_controller.planeVehicle.MotorsArmed())
-                throttle = controller.GetThrustTarget();
+
+            PlaneControl.altInt = 0.0f;
+            PlaneControl.speedInt = 0.0f;
+            PlaneControl.sideslipInt = 0f;
+            PlaneControl.yawInt = 0f;
+            yawCommand = controller.ControlAttitude.z;
 
         }
 
@@ -42,72 +44,56 @@ namespace MovementBehaviors
             float speedCommand;
             float sideslipCommand = 0.0f;
             Vector3 positionCommand;
-            if (controller.guided)
+            if (controller.Guided())
             {
-                //courseCommand = Mathf.Atan2(controller.velocityTarget.y, controller.velocityTarget.x);
-                speedCommand = controller.velocityTarget.magnitude;
-                altCommand = -controller.positionTarget.z;
+                speedCommand = controller.VelocityTarget.magnitude;
+                altCommand = -controller.PositionTarget.z;
                 maxRoll = 45.0f * Mathf.PI / 180.0f;
-                positionCommand = controller.positionTarget;
-                //elevator = controller.momentThrustTarget.y;
-                //throttle = controller.momentThrustTarget.w;
+                positionCommand = controller.PositionTarget;
             }
             else
             {
                 Debug.Log("Orbit Following Not Available as Manual Mode");
                 return;
             }
-            bool clockwise = controller.bodyRateTarget.z >= 0;
-            float yawCommand = controller.planeControl.OrbitLoop(controller.positionTarget, Mathf.Abs(controller.velocityTarget.x / controller.bodyRateTarget.z), controller.PositionLocal(), controller.AttitudeEuler().z,clockwise);
-            controller.attitudeTarget.z = yawCommand;
-            float roll_ff = Mathf.Atan(speedCommand * speedCommand / (9.81f * controller.velocityTarget.x / controller.bodyRateTarget.z));
-            float rollCommand = controller.planeControl.YawLoop(yawCommand, controller.AttitudeEuler().z, Time.fixedDeltaTime, roll_ff);
+            bool clockwise = controller.BodyRateTarget.z >= 0;
+            float yawCommand = PlaneControl.OrbitLoop(controller.PositionTarget, Mathf.Abs(controller.VelocityTarget.x / controller.BodyRateTarget.z), controller.ControlPosition, controller.ControlAttitude.z,clockwise);
+            Vector3 attitudeTarget = controller.AttitudeTarget;
+
+            attitudeTarget.z = yawCommand;
+            float roll_ff = Mathf.Atan(speedCommand * speedCommand / (9.81f * controller.VelocityTarget.x / controller.BodyRateTarget.z));
+            float rollCommand = PlaneControl.YawLoop(yawCommand, controller.ControlAttitude.z, Time.fixedDeltaTime, roll_ff);
 
             
-            /*
-            rollCommand = rollCommand + roll_ff;
-            if (Mathf.Abs(rollCommand) > maxRoll)
-                rollCommand = Mathf.Sign(rollCommand) * maxRoll;
-            */
-            //Debug.Log("Roll Cmd " + rollCommand);
-            float aileron = controller.planeControl.RollLoop(rollCommand, controller.AttitudeEuler().x, controller.AngularRatesBody().x);
-            float rudder = controller.planeControl.SideslipLoop(sideslipCommand, controller.Sideslip());
+            float aileron = PlaneControl.RollLoop(rollCommand, controller.ControlAttitude.x, controller.ControlBodyRate.x);
+            float rudder = PlaneControl.SideslipLoop(sideslipCommand, controller.ControlWindData.z);
 
-
-            //throttle = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed()) + nominalThrottle;
-            //controller.attitudeTarget.z = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed());
-            //controller.positionTarget.z = altCommand;
-            //float pitchCommand = controller.planeControl.AltitudeLoop(altCommand, -controller.PositionLocal().z);
-            //pitchCommand = Mathf.Clamp(pitchCommand, -20.0f * Mathf.PI / 180.0f, 20.0f * Mathf.PI / 180.0f);
-            ///controller.attitudeTarget.y = pitchCommand;
-            //float elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
             float elevator;
-            altSwitch = controller.planeControl.altitudeSwitch;
-            if ((-controller.PositionLocal().z - altCommand) > altSwitch)
+            altSwitch = PlaneControl.altitudeSwitch;
+            if ((-controller.ControlPosition.z - altCommand) > altSwitch)
             {
                 throttle = 0.1f;
-                float pitchCommand = controller.planeControl.AirspeedLoop2(speedCommand, controller.Airspeed());
-                controller.attitudeTarget.y = pitchCommand;
-                elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
+                float pitchCommand = PlaneControl.AirspeedLoop2(speedCommand, controller.ControlWindData.x);
+                attitudeTarget.y = pitchCommand;
+                elevator = PlaneControl.PitchLoop(pitchCommand, controller.ControlAttitude.y, controller.ControlBodyRate.y);
             }
-            else if ((-controller.PositionLocal().z - altCommand) < -altSwitch)
+            else if ((-controller.ControlPosition.z - altCommand) < -altSwitch)
             {
                 throttle = 1.0f;
-                float pitchCommand = controller.planeControl.AirspeedLoop2(speedCommand, controller.Airspeed());
-                controller.attitudeTarget.y = pitchCommand;
-                elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
+                float pitchCommand = PlaneControl.AirspeedLoop2(speedCommand, controller.ControlWindData.x);
+                attitudeTarget.y = pitchCommand;
+                elevator = PlaneControl.PitchLoop(pitchCommand, controller.ControlAttitude.y, controller.ControlBodyRate.y);
             }
             else
             {
-                throttle = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed()) + nominalThrottle;
-                float pitchCommand = controller.planeControl.AltitudeLoop(altCommand, -controller.PositionLocal().z);
-                controller.attitudeTarget.y = pitchCommand;
-                elevator = controller.planeControl.PitchLoop(pitchCommand, controller.AttitudeEuler().y, controller.AngularRatesBody().y);
+                throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x) + nominalThrottle;
+                float pitchCommand = PlaneControl.AltitudeLoop(altCommand, -controller.ControlPosition.z);
+                attitudeTarget.y = pitchCommand;
+                elevator = PlaneControl.PitchLoop(pitchCommand, controller.ControlAttitude.y, controller.ControlBodyRate.y);
             }
 
-
             controller.CommandControls(aileron, elevator, rudder, throttle);
-            //Debug.Log("Sideslip Command: " + sideslipCommand);
+            controller.AttitudeTarget = attitudeTarget;
             
             
         }

@@ -9,7 +9,7 @@ public class FixedWingChallenge: Scenario
 {
 
     //Vector2 gate1 = new Vector2(1700, 500);
-    Vector2 startPosition = new Vector2(1700, 500);
+    //Vector2 startPosition = new Vector2(1700, 500);
 
     /*
     Vector2 gate1 = new Vector2(1700, 1000);

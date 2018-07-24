@@ -5,16 +5,15 @@ using DroneSensors;
 using DroneInterface;
 using UdaciPlot;
 
-
 namespace DroneControllers
 {
 
-    public class PlaneAutopilot : MonoBehaviour, IDroneController
+    public class CoraAutopilot : MonoBehaviour, IDroneController
     {
-        public PlaneVehicle planeVehicle;
-        public PlaneSensors planeSensor;
-
+        public CoraVehicle vehicle;
+        public CoraSensors sensor;
         public PlaneControl planeControl;
+        public AttitudeControl attitudeControl;
         public IControlLaw control { get { return (IControlLaw)planeControl; } }
         public bool simpleMode = true;
         public bool guided = false;
@@ -23,8 +22,8 @@ namespace DroneControllers
         public Vector3 PositionTarget { get { return positionTarget; } set { positionTarget = value; } }//north, east, down target in meters
         public Vector3 BodyRateTarget { get { return bodyRateTarget; } set { bodyRateTarget = value; } } //p, q, r target in radians/second
         public Vector3 VelocityTarget { get { return velocityTarget; } set { velocityTarget = value; } } //north, east, down, velocity targets in meters/second
-        public Vector3 AccelerationTarget { get {return accelerationTarget; } set {accelerationTarget = value; } } //north, east, down acceleration targets in meters/second^2
-        public Vector4 MomentThrustTarget { get { return momentThrustTarget; } set {momentThrustTarget = value; } }
+        public Vector3 AccelerationTarget { get { return accelerationTarget; } set { accelerationTarget = value; } } //north, east, down acceleration targets in meters/second^2
+        public Vector4 MomentThrustTarget { get { return momentThrustTarget; } set { momentThrustTarget = value; } }
 
         public Vector3 ControlAttitude { get { return AttitudeEuler(); } }
         public Vector3 ControlPosition { get { return PositionLocal(); } }
@@ -34,14 +33,14 @@ namespace DroneControllers
         public Vector3 ControlWindData { get { return new Vector3(Airspeed(), 0f, Sideslip()); } } // Airspeed, AoA, Sideslip, AoA not implemented yet
         public float ControlMass { get { return 0f; } } //Not yet implemented
 
-        Vector3 attitudeTarget = Vector3.zero; //roll, pitch, yaw target in radians
-        Vector3 positionTarget = Vector3.zero; //north, east, down target in meters
-        Vector3 bodyRateTarget = Vector3.zero; //p, q, r target in radians/second
-        Vector3 velocityTarget = Vector3.zero; //north, east, down, velocity targets in meters/second
-        Vector3 accelerationTarget = Vector3.zero; //north, east, down acceleration targets in meters/second^2
-        Vector4 momentThrustTarget = Vector4.zero; //body x, y, z moment target (in Newton*meters), thrust target in Newtons
+        public Vector3 attitudeTarget = Vector3.zero; //roll, pitch, yaw target in radians
+        public Vector3 positionTarget = Vector3.zero; //north, east, down target in meters
+        public Vector3 bodyRateTarget = Vector3.zero; //p, q, r target in radians/second
+        public Vector3 velocityTarget = Vector3.zero; //north, east, down, velocity targets in meters/second
+        public Vector3 accelerationTarget = Vector3.zero; //north, east, down acceleration targets in meters/second^2
+        public Vector4 momentThrustTarget = Vector4.zero; //body x, y, z moment target (in Newton*meters), thrust target in Newtons
 
-        public PlaneMovementBehavior currentMovementBehavior;
+        public MovementBehaviorBase<IDroneController> currentMovementBehavior;
         public PlaneMovementBehavior mb_Manual;
         public PlaneMovementBehavior mb_Longitude;
         public PlaneMovementBehavior mb_Lateral;
@@ -50,7 +49,8 @@ namespace DroneControllers
         public PlaneMovementBehavior mb_YawHold;
         public PlaneMovementBehavior mb_LineFollowing;
         public PlaneMovementBehavior mb_OrbitFollowing;
-        int flightMode;
+        public QuadMovementBehavior mb_AttitudeControl;
+        public int flightMode;
 
         enum FLIGHT_MODE : int
         {
@@ -61,13 +61,15 @@ namespace DroneControllers
             ASCENDDESCEND = 5,
             YAWHOLD = 6,
             LINEFOLLOWING = 7,
-            ORBITFOLLOWING = 8
+            ORBITFOLLOWING = 8,
+            ATTITUDE = 9,
         }
         void Awake()
         {
             planeControl = new PlaneControl();
             flightMode = (int)FLIGHT_MODE.MANUAL;
-            SelectMovementBehavior();           
+            SelectMovementBehavior();
+            
             
         }
 
@@ -82,6 +84,11 @@ namespace DroneControllers
         {
             if (!guided)
             {
+                if (Input.GetKey("8"))
+                {
+                    flightMode = (int)FLIGHT_MODE.ATTITUDE;
+                    SelectMovementBehavior();
+                }
                 if (Input.GetKey("6"))
                 {
                     flightMode = (int)FLIGHT_MODE.YAWHOLD;
@@ -113,7 +120,7 @@ namespace DroneControllers
                     SelectMovementBehavior();
                 }
             }
-            if(!planeVehicle.IsFrozen())
+            if(!vehicle.IsFrozen())
                 currentMovementBehavior.OnLateUpdate();
             
 //			
@@ -124,6 +131,9 @@ namespace DroneControllers
         {
             switch (flightMode)
             {
+                case (int)FLIGHT_MODE.ATTITUDE:
+                    currentMovementBehavior = mb_AttitudeControl;
+                    break;
                 case (int)FLIGHT_MODE.ORBITFOLLOWING:
                     currentMovementBehavior = mb_OrbitFollowing;
                     break;
@@ -162,33 +172,33 @@ namespace DroneControllers
         public Vector3 AttitudeEuler()
         {
             if (simpleMode)
-                return planeVehicle.AttitudeEuler();
+                return vehicle.AttitudeEuler();
             else
-                return planeSensor.AttitudeEstimate();
+                return sensor.AttitudeEstimate();
         }
 
         public Vector3 AngularRatesBody()
         {
             if (simpleMode)
-                return planeVehicle.AngularRatesBody();
+                return vehicle.AngularRatesBody();
             else
-                return planeSensor.AngularRateEstimate();
+                return sensor.AngularRateEstimate();
         }
 
         public Vector3 VelocityLocal()
         {
             if (simpleMode)
-                return planeVehicle.VelocityLocal();
+                return vehicle.VelocityLocal();
             else
-                return planeSensor.VelocityEstimate();
+                return sensor.VelocityEstimate();
         }
 
         public Vector3 PositionLocal()
         {
             if (simpleMode)
-                return planeVehicle.CoordsLocal();
+                return vehicle.CoordsLocal();
             else
-                return planeSensor.PositionEstimate();
+                return sensor.PositionEstimate();
         }
 
         public float Airspeed()
@@ -199,22 +209,22 @@ namespace DroneControllers
         public float Sideslip()
         {
             if (simpleMode)
-                if (planeVehicle.VelocityBody().x > 0.1)
-                    return Mathf.Asin(planeVehicle.VelocityBody().y / planeVehicle.VelocityBody().magnitude);
+                if (vehicle.VelocityBody().x > 0.1)
+                    return Mathf.Asin(vehicle.VelocityBody().y / vehicle.VelocityBody().magnitude);
                 else
                     return 0.0f;
             else
-                return planeSensor.SideslipEstimate();
+                return sensor.SideslipEstimate();
         }
 
         public void CommandTorque(Vector3 torque)
         {
-
+            vehicle.CmdTorque(torque);
         }
 
         public void CommandThrust(float thrust)
         {
-
+            vehicle.CmdThrust(thrust);
         }
 
         // Helper functions used for plotting
@@ -255,16 +265,14 @@ namespace DroneControllers
 
         public void CommandControls(float aileron, float elevator, float rudder, float throttleRPM)
         {
-            Debug.Log("Commanding Controls: " + new Vector4(aileron, elevator, rudder, throttleRPM));
-            //if(planeVehicle.MotorsArmed())
             momentThrustTarget.w = throttleRPM;
             momentThrustTarget.x = aileron;
             momentThrustTarget.y = elevator;
             momentThrustTarget.z = rudder;
-            planeVehicle.CommandThrottle(throttleRPM);
-            planeVehicle.CommandElevator(elevator);
-            planeVehicle.CommandAileron(aileron);
-            planeVehicle.CommandRudder(rudder);
+            vehicle.CommandThrottle(throttleRPM);
+            vehicle.CommandElevator(elevator);
+            vehicle.CommandAileron(aileron);
+            vehicle.CommandRudder(rudder);
 
             //Debug.Log("Controls Command: " + new Vector4(aileron, elevator, rudder, throttleRPM));
         }
@@ -327,7 +335,7 @@ namespace DroneControllers
         {
             if (arm)
             {
-                planeSensor.SetHomePosition();
+                sensor.SetHomePosition();
 
                 /*
                 //Reset the controllers (dumps the integrators)
@@ -338,7 +346,7 @@ namespace DroneControllers
                 */
             }
 
-            planeVehicle.ArmDisarm(arm);
+            vehicle.ArmDisarm(arm);
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ public class FixedWing : MonoBehaviour
     {
         //Debug.Log("Starting Fixed Wing");
         //GameObject test = GameObject.Find("Plane Drone");
-        drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
+        drone = GameObject.Find("Plane Drone").GetComponent<IDrone>();
         //GameObject.Find("Quad Drone").GetComponent<QuadVehicle>().StateUpdate();
         //GameObject.Find("Quad Drone").GetComponent<QuadSensors>()
         drone.SetHomePosition();// drone.GPSLongitude(), drone.GPSLatitude(), drone.GPSAltitude());

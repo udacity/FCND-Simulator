@@ -1918,11 +1918,11 @@ GameObject:
   - component: {fileID: 155553755}
   - component: {fileID: 155553754}
   - component: {fileID: 155553753}
-  - component: {fileID: 155553752}
-  - component: {fileID: 155553751}
-  - component: {fileID: 155553750}
-  - component: {fileID: 155553749}
+  - component: {fileID: 155553762}
+  - component: {fileID: 155553760}
   - component: {fileID: 155553748}
+  - component: {fileID: 155553763}
+  - component: {fileID: 155553761}
   m_Layer: 0
   m_Name: Plane Drone
   m_TagString: Untagged
@@ -1941,143 +1941,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58005947f24951c4aaeedce9f0c99ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &155553749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 155553747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 326f616b2ef4e6b4c813f876e59d1ede, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  planeVehicle: {fileID: 155553751}
-  planeSensor: {fileID: 155553750}
-  planeControl:
-    Kp_speed: 0.2
-    Ki_speed: 0.1
-    speedInt: 0
-    minThrottle: 0
-    maxThrottle: 1
-    maxSpeedInt: 0.25
-    Kp_pitch: 20
-    Kp_q: 10
-    Kp_alt: 0.03
-    Ki_alt: 0.05
-    altInt: 0
-    minPitch: -0.5235988
-    maxPitch: 0.5235988
-    maxAltInt: 0.1
-    Kp_speed2: 0.1
-    Ki_speed2: 0.02
-    speedInt2: 0
-    minPitch2: -0.7853982
-    maxPitch2: 0.7853982
-    maxSpeedInt2: 50
-    altitudeSwitch: 25
-    Kp_climb: 0.1
-    Ki_climb: 0.1
-    climbInt: 0
-    maxClimbInt: 10
-    Kp_roll: 8
-    Kp_p: 5
-    Kp_sideslip: 0.1
-    Ki_sideslip: 0.1
-    sideslipInt: 0
-    maxSideslipInt: 0.1
-    Kp_yaw: 0
-    Ki_yaw: 0
-    maxRoll: 1.0471976
-    yawInt: 0
-    maxYawInt: 1
-    Kp_xTrack: 1
-    approachYaw: 1.5707964
-    Kp_orbit: 2.5
-  simpleMode: 1
-  guided: 0
-  attitudeTarget: {x: 0, y: 0, z: 0}
-  positionTarget: {x: 0, y: 0, z: 0}
-  bodyRateTarget: {x: 0, y: 0, z: 0}
-  velocityTarget: {x: 0, y: 0, z: 0}
-  accelerationTarget: {x: 0, y: 0, z: 0}
-  momentThrustTarget: {x: 0, y: 0, z: 0, w: 0}
-  currentMovementBehavior: {fileID: 0}
-  mb_Manual: {fileID: 11400000, guid: 2ce7f05ed2e6ea14888d2cd30a594203, type: 2}
-  mb_Longitude: {fileID: 11400000, guid: 8a96c038fa5d8f443912a20b21b7d2bf, type: 2}
-  mb_Lateral: {fileID: 11400000, guid: fc85cfde03c40e24fa9cec2922462472, type: 2}
-  mb_Stablized: {fileID: 11400000, guid: 3aa9ea0ec00f78b478e588f56d5dc351, type: 2}
-  mb_AscendDescend: {fileID: 11400000, guid: 5c6eb44eeaa7c864094a52cb857cdd7c, type: 2}
-  mb_YawHold: {fileID: 11400000, guid: 03ce8605b0f94d343ab49508c066db4f, type: 2}
-  mb_LineFollowing: {fileID: 11400000, guid: d7ed5fcfb5fc9cd448a063723684064f, type: 2}
-  mb_OrbitFollowing: {fileID: 11400000, guid: beeb56dc99c1bda45a04a2844edc92b3, type: 2}
---- !u!114 &155553750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 155553747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f29e9a3c64b2c0c4b83ba742e931b8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  imuRateHz: 500
-  imuNoiseSigma: {x: 0, y: 0, z: 0}
-  gyroRateHz: 500
-  gyroNoiseSigma: {x: 0, y: 0, z: 0}
-  compassRateHz: 1
-  compassNoiseSigma: {x: 0, y: 0, z: 0}
-  barometerRateHz: 1
-  barometerNoiseSigma: 0
-  gpsRateHz: 10
-  gpsPositionNoiseSigma: {x: 0, y: 0, z: 0}
-  gpsVelocityNoiseSigma: {x: 0, y: 0, z: 0}
-  estimateRateHz: 500
---- !u!114 &155553751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 155553747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5d9b59680835294d97c78d4c09542a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputsManager: {fileID: 155553755}
-  aircraftControl: {fileID: 0}
-  prop: {fileID: 30642891}
-  useGravity: 1
-  aileron: 0
-  elevator: 0
-  rudder: 0
-  throttleRPM: 0
-  throttleAlpha: 0.1
-  maxAileron: 30
-  minAileron: -30
-  maxRudder: 30
-  minRudder: -30
-  maxElevator: 30
-  minElevator: -30
-  elevatorTrim: 0
-  maxTrim: 30
-  minTrim: -30
-  maxThrottleRPM: 2500
---- !u!114 &155553752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 155553747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c35261333d9d5284da30b58ce67e9386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  planeVehicle: {fileID: 155553751}
-  planeAutopilot: {fileID: 155553749}
-  planeSensors: {fileID: 155553750}
 --- !u!114 &155553753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2118,8 +1981,8 @@ MonoBehaviour:
   - 30
   flapsSpeed: 1
   flapsIndex: 0
-  inputs: {fileID: 0}
-  aircraftControl: {fileID: 0}
+  inputs: {fileID: 155553755}
+  aircraftControl: {fileID: 155553756}
   flapangle: 0
 --- !u!114 &155553754
 MonoBehaviour:
@@ -2286,6 +2149,152 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &155553760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 155553747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa9918ba5e0f524fb12824ec37deca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imuRateHz: 500
+  imuNoiseSigma: {x: 0, y: 0, z: 0}
+  gyroRateHz: 500
+  gyroNoiseSigma: {x: 0, y: 0, z: 0}
+  compassRateHz: 500
+  compassNoiseSigma: {x: 0, y: 0, z: 0}
+  barometerRateHz: 500
+  barometerNoiseSigma: 0
+  gpsRateHz: 500
+  gpsPositionNoiseSigma: {x: 0, y: 0, z: 0}
+  gpsVelocityNoiseSigma: {x: 0, y: 0, z: 0}
+  estimateRateHz: 500
+--- !u!114 &155553761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 155553747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a41c3c2ba6ad00c41ac152e2c14ddaf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vehicle: {fileID: 155553762}
+  sensor: {fileID: 155553760}
+  planeControl:
+    Kp_speed: 0
+    Ki_speed: 0
+    speedInt: 0
+    minThrottle: 0
+    maxThrottle: 1
+    maxSpeedInt: 0.25
+    Kp_pitch: 8
+    Kp_q: 5
+    Kp_alt: 0
+    Ki_alt: 0
+    altInt: 0
+    minPitch: -0.5235988
+    maxPitch: 0.5235988
+    maxAltInt: 0.1
+    Kp_speed2: 0
+    Ki_speed2: 0.001
+    speedInt2: 0
+    minPitch2: -0.7853982
+    maxPitch2: 0.7853982
+    maxSpeedInt2: 50
+    altitudeSwitch: 25
+    Kp_climb: 0.1
+    Ki_climb: 0.1
+    climbInt: 0
+    maxClimbInt: 10
+    Kp_roll: 40
+    Kp_p: 1
+    Kp_sideslip: 1
+    Ki_sideslip: 1
+    sideslipInt: 0
+    maxSideslipInt: 10
+    Kp_yaw: 2
+    Ki_yaw: 0.01
+    maxRoll: 1.0471976
+    yawInt: 0
+    maxYawInt: 100
+    Kp_xTrack: 0.002
+    approachYaw: 1.5707964
+    Kp_orbit: 2.5
+  simpleMode: 1
+  guided: 0
+  attitudeTarget: {x: 0, y: 0, z: 0}
+  positionTarget: {x: 0, y: 0, z: 0}
+  bodyRateTarget: {x: 0, y: 0, z: 0}
+  velocityTarget: {x: 0, y: 0, z: 0}
+  accelerationTarget: {x: 0, y: 0, z: 0}
+  momentThrustTarget: {x: 0, y: 0, z: 0, w: 0}
+  mb_Manual: {fileID: 11400000, guid: 2ce7f05ed2e6ea14888d2cd30a594203, type: 2}
+  mb_Longitude: {fileID: 11400000, guid: 8a96c038fa5d8f443912a20b21b7d2bf, type: 2}
+  mb_Lateral: {fileID: 11400000, guid: fc85cfde03c40e24fa9cec2922462472, type: 2}
+  mb_Stablized: {fileID: 11400000, guid: 3aa9ea0ec00f78b478e588f56d5dc351, type: 2}
+  mb_AscendDescend: {fileID: 11400000, guid: 5c6eb44eeaa7c864094a52cb857cdd7c, type: 2}
+  mb_YawHold: {fileID: 11400000, guid: 03ce8605b0f94d343ab49508c066db4f, type: 2}
+  mb_LineFollowing: {fileID: 11400000, guid: d7ed5fcfb5fc9cd448a063723684064f, type: 2}
+  mb_OrbitFollowing: {fileID: 11400000, guid: beeb56dc99c1bda45a04a2844edc92b3, type: 2}
+  mb_AttitudeControl: {fileID: 11400000, guid: f9edf8f5b9348594184a08e8d7a1483c, type: 2}
+  flightMode: 0
+--- !u!114 &155553762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 155553747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4475ed5340d9a8f4685d41e0c9a37d14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputsManager: {fileID: 155553755}
+  aircraftControl: {fileID: 155553756}
+  prop: {fileID: 30642891}
+  useGravity: 1
+  aileron: 0
+  elevator: 0
+  rudder: 0
+  throttleRPM: 0
+  throttleAlpha: 0.1
+  maxAileron: 30
+  minAileron: -30
+  maxRudder: 30
+  minRudder: -30
+  maxElevator: 30
+  minElevator: -30
+  elevatorTrim: 0
+  maxTrim: 30
+  minTrim: -30
+  maxThrust: 20000
+  force: {x: 0, y: 0, z: 0}
+  thrustOut: 0
+  thrustNoise: 0
+  maxTorque: 30000
+  torque: {x: 0, y: 0, z: 0}
+  torqueNoise: 0
+  torqueOut: 0
+  maxThrottleRPM: 5000
+--- !u!114 &155553763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 155553747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27c1e455c0cebb04a9dc8aee6fea57cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vehicle: {fileID: 155553762}
+  Autopilot: {fileID: 155553761}
+  Sensors: {fileID: 155553760}
 --- !u!1 &159984454
 GameObject:
   m_ObjectHideFlags: 0
@@ -4713,7 +4722,6 @@ Transform:
   - {fileID: 18213521}
   - {fileID: 1604239758}
   - {fileID: 399709654}
-  - {fileID: 1010180436}
   - {fileID: 2081721246}
   - {fileID: 1207934857}
   m_Father: {fileID: 1206150029}
@@ -5782,12 +5790,6 @@ MonoBehaviour:
     Kp_orbit: 2.5
   simpleMode: 1
   guided: 0
-  attitudeTarget: {x: 0, y: 0, z: 0}
-  positionTarget: {x: 0, y: 0, z: 0}
-  bodyRateTarget: {x: 0, y: 0, z: 0}
-  velocityTarget: {x: 0, y: 0, z: 0}
-  accelerationTarget: {x: 0, y: 0, z: 0}
-  momentThrustTarget: {x: 0, y: 0, z: 0, w: 0}
   currentMovementBehavior: {fileID: 0}
   mb_Manual: {fileID: 0}
   mb_Longitude: {fileID: 0}
@@ -5861,9 +5863,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c35261333d9d5284da30b58ce67e9386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planeVehicle: {fileID: 442819862}
-  planeAutopilot: {fileID: 442819860}
-  planeSensors: {fileID: 442819861}
+  Vehicle: {fileID: 0}
+  Autopilot: {fileID: 0}
+  Sensors: {fileID: 0}
 --- !u!114 &442819864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6011,9 +6013,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52a417ae9546349918340902e6c65cbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quadVehicle: {fileID: 442819872}
-  quadAutopilot: {fileID: 442819869}
-  quadSensors: {fileID: 442819870}
+  Vehicle: {fileID: 0}
+  Autopilot: {fileID: 0}
+  Sensors: {fileID: 0}
 --- !u!114 &442819869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6033,7 +6035,6 @@ MonoBehaviour:
   simpleMode: 1
   attitudeControl: 1
   positionControl: 1
-  posctl_band: 0.1
   maxTimeBetweenControl: 0.1
   mb_Manual: {fileID: 11400000, guid: 2e0fe5cf335962840a85eec5df0ce319, type: 2}
   mb_ManualPosCtrl: {fileID: 11400000, guid: 661be0a91b63e964bb9cc2a77504c244, type: 2}
@@ -9395,13 +9396,13 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1010180435}
-  m_LocalRotation: {x: 0, y: 0, z: -0.060168773, w: 0.99818826}
-  m_LocalPosition: {x: 0, y: 1.2197387, z: -1.736}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.060168773, w: 0.99818826}
+  m_LocalPosition: {x: 0, y: 0.6797497, z: -2.641231}
+  m_LocalScale: {x: 1, y: 1, z: 1.2307692}
   m_Children:
   - {fileID: 322547100}
-  m_Father: {fileID: 318831594}
-  m_RootOrder: 24
+  m_Father: {fileID: 1198457389}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1010180437
 MeshRenderer:
@@ -10728,6 +10729,7 @@ Transform:
   m_Children:
   - {fileID: 1126156519}
   - {fileID: 1726968072}
+  - {fileID: 1010180436}
   m_Father: {fileID: 155553759}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10797,7 +10799,7 @@ Transform:
   m_LocalScale: {x: 1.0000005, y: 1, z: 1.0000005}
   m_Children: []
   m_Father: {fileID: 318831594}
-  m_RootOrder: 26
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1217502711
 GameObject:
@@ -17405,7 +17407,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 318831594}
-  m_RootOrder: 25
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &2089701028
 GameObject:

@@ -18,30 +18,27 @@ namespace MovementBehaviors
         {
 
             //var nav = controller.controller;
-            Vector3 attitude = controller.AttitudeEuler();// new Vector3(nav.GetRoll(), nav.GetPitch(), nav.GetYaw());
-            Vector3 angularVelocity = controller.AngularRatesBody();// new Vector3(nav.GetRollrate(), nav.GetPitchrate(), nav.GetYawrate());
-            Vector3 localVelocity = controller.VelocityLocal();// new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
-            Vector3 localPosition = controller.PositionLocal();// new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
+            Vector3 attitude = controller.ControlAttitude;// new Vector3(nav.GetRoll(), nav.GetPitch(), nav.GetYaw());
+            Vector3 angularVelocity = controller.ControlBodyRate;// new Vector3(nav.GetRollrate(), nav.GetPitchrate(), nav.GetYawrate());
+            Vector3 localVelocity = controller.ControlVelocity;// new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
+            Vector3 localPosition = controller.ControlPosition;// new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
 
             Vector3 attCmd = Vector3.zero;
-            attCmd.x = controller.guidedCommand.x;
-            attCmd.y = controller.guidedCommand.y;
+            attCmd.x = controller.AttitudeTarget.x;
+            attCmd.y = controller.AttitudeTarget.y;
 
-            float yawCmd = controller.guidedCommand.w;
+            float yawCmd = controller.AttitudeTarget.z;
             float yawOutput = attCtrl.YawRateLoop(yawCmd, angularVelocity.z);
             Vector2 targetRate = attCtrl.RollPitchLoop(new Vector2(attCmd.x,attCmd.y),attitude);
             Vector2 rollPitchMoment = attCtrl.RollPitchRateLoop(targetRate, angularVelocity); 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawOutput);
 
-            float downCmd = controller.guidedCommand.z;
-            float dt = 0.0f;
-            if (prevTime != 0.0f)
-                dt = controller.quadVehicle.FlightTime() - prevTime;
-            prevTime = controller.quadVehicle.FlightTime();
-            float altOutput = attCtrl.VerticalVelocityLoop(downCmd, attitude, -localVelocity.z,dt,-1.0f*Physics.gravity[1]*controller.rb.mass);            
+            float downCmd = controller.VelocityTarget.z;
+            float dt = Time.fixedDeltaTime;
+
+            float altOutput = attCtrl.VerticalVelocityLoop(downCmd, attitude, -localVelocity.z,dt,-1.0f*Physics.gravity[1]*controller.ControlMass);            
             
-            controller.CommandTorque(totalMoment);
-            controller.CommandThrust(altOutput);
+            controller.CommandMoment(totalMoment, altOutput);
 
         }
 

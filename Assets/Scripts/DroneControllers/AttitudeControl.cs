@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DroneInterface;
 
-public class AttitudeControl {
+public class AttitudeControl : IControlLaw {
 
 
     public float Kp_r = 0.04f;//20.0f;

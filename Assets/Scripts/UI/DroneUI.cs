@@ -133,7 +133,7 @@ public class DroneUI : MonoBehaviour
         {
             //windArrow.enabled = false;
             windArrow.enabled = true;
-            float angle = -((PlaneDrone)drone).AttitudeTarget().z*180f/Mathf.PI + 90;
+            float angle = -(drone).AttitudeTarget.z*180f/Mathf.PI + 90;
             windArrow.rectTransform.eulerAngles = Vector3.forward * angle;
             Vector2 size = windArrow.rectTransform.sizeDelta;
             size.x = size.y * 0.5f + size.y;

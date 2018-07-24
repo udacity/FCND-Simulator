@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DroneInterface;
 
-public class PositionControl
+public class PositionControl : IControlLaw
 {
     public float Kp_pos = 2.0f;
     public float Kp_pos2 = 0.2f;
@@ -90,4 +91,6 @@ public class PositionControl
         // float yawError = targetYaw - yaw;
         return Kp_yaw * yawError;
     }
+
+
 }

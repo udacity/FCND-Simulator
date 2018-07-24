@@ -34,7 +34,7 @@ public abstract class Scenario : MonoBehaviour
     public void Init ()
 	{
         drone = Simulation.ActiveDrone;
-        planeControl = GameObject.Find("Plane Drone").GetComponent<PlaneAutopilot>().planeControl;
+        planeControl = (PlaneControl)GameObject.Find("Plane Drone").GetComponent<IDroneController>().control;
         if (drone == null)
             Debug.Log("Null Active Drone");
 

@@ -22,7 +22,7 @@ namespace DroneControllers
         ///
         /// Default control Gains are no found in PositionControl.cs and AttitudeControl.cs
         ///
-        public float posctl_band = 0.1f;
+        
         private float lastControlTime = 0.0f;
         public float maxTimeBetweenControl = 0.1f;
         // Movement behaviors are enabled based on the active control mode.
@@ -41,13 +41,30 @@ namespace DroneControllers
         public QuadMovementBehavior mb_GuidedAttCtrl;
         public QuadMovementBehavior mb_GuidedMotors;
 
+        public IControlLaw control { get { return (IControlLaw)QuadControl; } }
+
+        public Vector3 AttitudeTarget { get { return attitudeTarget; } set { attitudeTarget = value; } } //roll, pitch, yaw target in radians
+        public Vector3 PositionTarget { get { return positionTarget; } set { positionTarget = value; } }//north, east, down target in meters
+        public Vector3 BodyRateTarget { get { return bodyRateTarget; } set { bodyRateTarget = value; } } //p, q, r target in radians/second
+        public Vector3 VelocityTarget { get { return velocityTarget; } set { velocityTarget = value; } } //north, east, down, velocity targets in meters/second
+        public Vector3 AccelerationTarget { get { return accelerationTarget; } set { accelerationTarget = value; } } //north, east, down acceleration targets in meters/second^2
+        public Vector4 MomentThrustTarget { get { return momentThrustTarget; } set { momentThrustTarget = value; } }
+
+        public Vector3 ControlAttitude { get { return AttitudeEuler(); } }
+        public Vector3 ControlPosition { get { return PositionLocal(); } }
+        public Vector3 ControlBodyRate { get { return AngularRatesBody(); } }
+        public Vector3 ControlVelocity { get { return VelocityLocal(); } }
+        public Vector3 ControlAcceleration { get { return Vector3.zero; } } // Not implemented yet
+        public Vector3 ControlWindData { get { return new Vector3(0f, 0f, 0f); } } // Airspeed, AoA, Sideslip, All not implemented yet
+        public float ControlMass { get { return rb.mass; } }
+
 
         public Vector3 attitudeTarget = Vector3.zero; //roll, pitch, yaw target in radians
         public Vector3 positionTarget = Vector3.zero; //north, east, down target in meters
         public Vector3 bodyRateTarget = Vector3.zero; //p, q, r target in radians/second
         public Vector3 velocityTarget = Vector3.zero; //north, east, down, velocity targets in meters/second
         public Vector3 accelerationTarget = Vector3.zero; //north, east, down acceleration targets in meters/second^2
-        public Vector4 momentThrustTarget = Vector4.zero; //body x, y, z moment target (in Newton*meters), thrust target in Newstons
+        public Vector4 momentThrustTarget = Vector4.zero; //body x, y, z moment target (in Newton*meters), thrust target in Newtons
 
         [System.NonSerialized]
         public Rigidbody rb;
@@ -68,8 +85,7 @@ namespace DroneControllers
         Vector3 lastVelocityErrorBody = Vector3.zero;
         public QuadMovementBehavior currentMovementBehavior;
 
-        public AttitudeControl attCtrl = new AttitudeControl();
-        public PositionControl posCtrl = new PositionControl();
+        QuadControl QuadControl = new QuadControl();
 
 
         void Awake()
@@ -309,8 +325,7 @@ namespace DroneControllers
             {
                 quadSensor.SetHomePosition();
                 //Reset the controllers (dumps the integrators)
-                attCtrl = new AttitudeControl();
-                posCtrl = new PositionControl();
+                QuadControl = new QuadControl();
                 posHoldLocal = PositionLocal();
                 posHoldLocal.z = 0.0f;
                 Debug.Log(posHoldLocal);
@@ -488,27 +503,7 @@ namespace DroneControllers
             accelerationTarget.z = v.z;
         }
 
-        /// <summary>
-        /// Sets the value of the attitude target for visualization in m
-        /// Note: Does not command the vehicle
-        /// </summary>
-        public void AttitudeTarget(Vector3 v)
-        {
-            attitudeTarget.x = v.x;
-            attitudeTarget.y = v.y;
-            attitudeTarget.z = v.z;
-        }
 
-        /// <summary>
-        /// Sets the value of the body rate target for visualization in m
-        /// Note: Does not command the vehicle
-        /// </summary>
-        public void BodyRateTarget(Vector3 v)
-        {
-            bodyRateTarget.x = v.x;
-            bodyRateTarget.y = v.y;
-            bodyRateTarget.z = v.z;
-        }
 
     }
 }

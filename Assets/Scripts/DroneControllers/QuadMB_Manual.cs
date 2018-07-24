@@ -20,8 +20,7 @@ namespace MovementBehaviors
             float yawMoment = Input.GetAxis("Yaw");
             float thrust = totalThrust * Input.GetAxis("Thrust");
             Vector3 totalMoment = new Vector3(rollMoment, pitchMoment, yawMoment);
-            controller.CommandTorque(totalMoment);
-            controller.CommandThrust(thrust);
+            controller.CommandMoment(totalMoment, thrust);
             
             
         }

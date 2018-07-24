@@ -56,35 +56,37 @@ namespace DroneControllers
         void Awake()
         {
             ctrl = GetComponent<PlaneAutopilot>();
+            if (ctrl != null)
+            {
+                paramKpRollrate = new SimParameter("Control:rollrate_gain_P", ctrl.planeControl.Kp_p, OnRollrateKpChanged);
+                paramKpPitchrate = new SimParameter("Control:pitchrate_gain_P", ctrl.planeControl.Kp_q, OnPitchrateKpChanged);
+                //paramKpYawrate = new SimParameter("Control:yawrate_gain_P", ctrl.planeControl.Kp_r, OnYawrateKpChanged);
 
-            paramKpRollrate = new SimParameter("Control:rollrate_gain_P", ctrl.planeControl.Kp_p,OnRollrateKpChanged);
-            paramKpPitchrate = new SimParameter("Control:pitchrate_gain_P", ctrl.planeControl.Kp_q, OnPitchrateKpChanged);
-            //paramKpYawrate = new SimParameter("Control:yawrate_gain_P", ctrl.planeControl.Kp_r, OnYawrateKpChanged);
+                paramKpRoll = new SimParameter("Control:roll_gain_P", ctrl.planeControl.Kp_roll, OnRollKpChanged);
+                paramKpPitch = new SimParameter("Control:pitch_gain_P", ctrl.planeControl.Kp_pitch, OnPitchKpChanged);
 
-            paramKpRoll = new SimParameter("Control:roll_gain_P", ctrl.planeControl.Kp_roll, OnRollKpChanged);
-            paramKpPitch = new SimParameter("Control:pitch_gain_P", ctrl.planeControl.Kp_pitch, OnPitchKpChanged);
+                paramKpSpeed = new SimParameter("Control:speed_gain_P", ctrl.planeControl.Kp_speed, OnSpeedKpChanged);
+                paramKiSpeed = new SimParameter("Control:speed_gain_I", ctrl.planeControl.Ki_speed, OnSpeedKiChanged);
 
-            paramKpSpeed = new SimParameter("Control:speed_gain_P", ctrl.planeControl.Kp_speed, OnSpeedKpChanged);
-            paramKiSpeed = new SimParameter("Control:speed_gain_I", ctrl.planeControl.Ki_speed, OnSpeedKiChanged);
+                //paramKpPos = new SimParameter("Control:position_gain_P", ctrl.planeControl.Kp_pos, OnPosKpChanged);
+                //paramKpPos2 = new SimParameter("Control:position_gain_P2", ctrl.planeControl.Kp_pos2, OnPosKp2Changed);
 
-            //paramKpPos = new SimParameter("Control:position_gain_P", ctrl.planeControl.Kp_pos, OnPosKpChanged);
-            //paramKpPos2 = new SimParameter("Control:position_gain_P2", ctrl.planeControl.Kp_pos2, OnPosKp2Changed);
+                paramKpAlt = new SimParameter("Control:altitude_gain_P", ctrl.planeControl.Kp_alt, OnAltKpChanged);
+                paramKiAlt = new SimParameter("Control:altitude_gain_I", ctrl.planeControl.Ki_alt, OnAltKiChanged);
 
-            paramKpAlt = new SimParameter("Control:altitude_gain_P", ctrl.planeControl.Kp_alt, OnAltKpChanged);
-            paramKiAlt = new SimParameter("Control:altitude_gain_I", ctrl.planeControl.Ki_alt, OnAltKiChanged);
+                //paramKpVel = new SimParameter("Control:velocity_gain_P", ctrl.planeControl.Kp_vel, OnVelKpChanged);
 
-            //paramKpVel = new SimParameter("Control:velocity_gain_P", ctrl.planeControl.Kp_vel, OnVelKpChanged);
+                //paramKpYaw = new SimParameter("Control:yaw_gain_P", ctrl.planeControl.Kp_yaw, OnYawKpChanged);
 
-            //paramKpYaw = new SimParameter("Control:yaw_gain_P", ctrl.planeControl.Kp_yaw, OnYawKpChanged);
+                //paramMaxTilt = new SimParameter("Control:Max Tilt (rad)", ctrl.planeControl.maxTilt, OnMaxTiltChanged);
+                //paramMaxAscentRate = new SimParameter("Control:Max Ascent Rate (m/s)", ctrl.planeControl.maxAscentRate, OnMaxAscentRateChanged);
+                //paramMaxDescentRate = new SimParameter("Control:Max Descent Rate (m/s)", ctrl.planeControl.maxDescentRate, OnMaxDescentRateChanged);
+                //paramPosHoldDeadband = new SimParameter("Control:Position Gain Radius (m)", ctrl.planeControl.posHoldDeadband, OnPosHoldDeadbandChanged);
+                //paramMaxSpeed = new SimParameter("Control:Max Speed (m/s)", ctrl.planeControl.maxSpeed, OnMaxSpeedChanged);
 
-            //paramMaxTilt = new SimParameter("Control:Max Tilt (rad)", ctrl.planeControl.maxTilt, OnMaxTiltChanged);
-            //paramMaxAscentRate = new SimParameter("Control:Max Ascent Rate (m/s)", ctrl.planeControl.maxAscentRate, OnMaxAscentRateChanged);
-            //paramMaxDescentRate = new SimParameter("Control:Max Descent Rate (m/s)", ctrl.planeControl.maxDescentRate, OnMaxDescentRateChanged);
-            //paramPosHoldDeadband = new SimParameter("Control:Position Gain Radius (m)", ctrl.planeControl.posHoldDeadband, OnPosHoldDeadbandChanged);
-            //paramMaxSpeed = new SimParameter("Control:Max Speed (m/s)", ctrl.planeControl.maxSpeed, OnMaxSpeedChanged);
-
-            paramKpSideslip = new SimParameter("Control:sideslip_gain_P", ctrl.planeControl.Kp_sideslip, OnSideslipKpChanged);
-            paramKiSideslip = new SimParameter("Control:sideslip_gain_I", ctrl.planeControl.Ki_sideslip, OnSideslipKiChanged);
+                paramKpSideslip = new SimParameter("Control:sideslip_gain_P", ctrl.planeControl.Kp_sideslip, OnSideslipKpChanged);
+                paramKiSideslip = new SimParameter("Control:sideslip_gain_I", ctrl.planeControl.Ki_sideslip, OnSideslipKiChanged);
+            }
         }
         
         

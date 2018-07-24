@@ -8,6 +8,24 @@ namespace DroneInterface
     /// </summary>
 	public interface IDroneController
     {
+        IControlLaw control { get; }
+        Vector3 AttitudeTarget { get; set; } //roll, pitch, yaw target in radians
+        Vector3 PositionTarget { get; set; } //north, east, down target in meters
+        Vector3 BodyRateTarget { get; set; } //p, q, r target in radians/second
+        Vector3 VelocityTarget { get; set; } //north, east, down, velocity targets in meters/second
+        Vector3 AccelerationTarget { get; set; } //north, east, down acceleration targets in meters/second^2
+        Vector4 MomentThrustTarget { get; set; }
+
+        // The values used by the controller
+        Vector3 ControlAttitude { get; }
+        Vector3 ControlPosition { get; }
+        Vector3 ControlBodyRate { get; }
+        Vector3 ControlVelocity { get; }
+        Vector3 ControlAcceleration { get; }
+        Vector3 ControlWindData { get; } // Airspeed, AoA, Sideslip
+        float ControlMass { get; }
+        
+
         /// <summary>
         /// Returns true if the vehicle is being controlled from outside the simulator
         /// </summary>
@@ -117,6 +135,7 @@ namespace DroneInterface
         /// </summary>
         void LocalAccelerationTarget(Vector3 v);
 
+        /*
         /// <summary>
         /// Sets the value of the attitude target for visualization in m
         /// Note: Does not command the vehicle
@@ -128,6 +147,6 @@ namespace DroneInterface
         /// Note: Does not command the vehicle
         /// </summary>
         void BodyRateTarget(Vector3 v);
-
+        */
     }
 }

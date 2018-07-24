@@ -12,44 +12,46 @@ namespace MovementBehaviors
     public class QuadMB_Guided : QuadMovementBehavior
     {
         float prevTime = 0.0f;
+        QuadControl QuadControl;
         public override void OnLateUpdate()
         {
 
-            Vector3 attitude = controller.AttitudeEuler();
-            Vector3 angularVelocity = controller.AngularRatesBody();
-            Vector3 localVelocity = controller.VelocityLocal();
-            Vector3 localPosition = controller.PositionLocal();
+            Vector3 attitude = controller.ControlAttitude;
+            Vector3 angularVelocity = controller.ControlBodyRate;
+            Vector3 localVelocity = controller.ControlVelocity;
+            Vector3 localPosition = controller.ControlPosition;
 
             Vector3 targetPosition;
-            AttitudeControl attCtrl = controller.attCtrl;
-            PositionControl posCtrl = controller.posCtrl;
+            QuadControl = (QuadControl)controller.control;
+
             // float yawCmd = controller.guidedCommand.w;
             /*
             targetPosition.x = controller.guidedCommand.x;
             targetPosition.y = controller.guidedCommand.y;
             targetPosition.z = controller.guidedCommand.z;
             */
-            targetPosition = controller.GetPositionTarget();
+            targetPosition = controller.PositionTarget;
             // Debug.Log(string.Format("local postiion {0}, target position {1}", localPosition, targetPosition));
 
-            float yawCmd = posCtrl.YawLoop(controller.attitudeTarget.z, attitude.z);
-            float yawMoment = attCtrl.YawRateLoop(yawCmd, angularVelocity.z);
-            Vector3 targetVelocity = posCtrl.PositionLoop(targetPosition, localPosition);
+            float yawCmd = QuadControl.YawLoop(controller.AttitudeTarget.z, attitude.z);
+            float yawMoment = QuadControl.YawRateLoop(yawCmd, angularVelocity.z);
+            Vector3 targetVelocity = QuadControl.PositionLoop(targetPosition, localPosition);
 
-            Vector2 targetRollPitch = posCtrl.VelocityLoop(targetVelocity, localVelocity, attitude.z);
+            Vector2 targetRollPitch = QuadControl.VelocityLoop(targetVelocity, localVelocity, attitude.z);
 
-            Vector2 targetRate = attCtrl.RollPitchLoop(targetRollPitch, attitude);
-            Vector2 rollPitchMoment = attCtrl.RollPitchRateLoop(targetRate, angularVelocity);
+            Vector2 targetRate = QuadControl.RollPitchLoop(targetRollPitch, attitude);
+            Vector2 rollPitchMoment = QuadControl.RollPitchRateLoop(targetRate, angularVelocity);
 
-            float dt = 0.0f;
+            float dt = Time.fixedDeltaTime;
+            /*
             if (prevTime != 0.0f)
                 dt = controller.quadVehicle.FlightTime()-prevTime;
             prevTime = controller.quadVehicle.FlightTime();
-            float thrust = controller.attCtrl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z,dt,-1.0f*controller.rb.mass*Physics.gravity[1]);
+            */
+            float thrust = QuadControl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z,dt,-1.0f*controller.ControlMass*Physics.gravity[1]);
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawMoment);
-            controller.CommandTorque(totalMoment);
-            controller.CommandThrust(thrust);
+            controller.CommandMoment(totalMoment,thrust);
         }
 
         

@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DroneInterface;
 
 [System.Serializable]
-public class PlaneControl {
+public class PlaneControl : IControlLaw {
 
 //    [Tunable(0.0f,-1.0f, 1.0f)] // 0.2f
     public float Kp_speed;

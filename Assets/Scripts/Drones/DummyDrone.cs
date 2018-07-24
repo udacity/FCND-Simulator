@@ -6,6 +6,23 @@ using DroneControllers;
 
 public class DummyDrone : MonoBehaviour, IDrone
 {
+    
+    public IControlLaw control { get { return null; } }
+    public Vector3 AttitudeTarget { get { return Vector3.zero; } set { } } //roll, pitch, yaw target in radians
+    public Vector3 PositionTarget { get { return Vector3.zero; } set {  } }//north, east, down target in meters
+    public Vector3 BodyRateTarget { get { return Vector3.zero; } set { } } //p, q, r target in radians/second
+    public Vector3 VelocityTarget { get { return Vector3.zero; } set { } } //north, east, down, velocity targets in meters/second
+    public Vector3 AccelerationTarget { get { return Vector3.zero; } set { } } //north, east, down acceleration targets in meters/second^2
+    public Vector4 MomentThrustTarget { get { return Vector4.zero; } set { } }
+
+    public Vector3 ControlAttitude { get { return Vector3.zero; } }
+    public Vector3 ControlPosition { get { return Vector3.zero; } }
+    public Vector3 ControlBodyRate { get { return Vector3.zero; } }
+    public Vector3 ControlVelocity { get { return Vector3.zero; } }
+    public Vector3 ControlAcceleration { get { return Vector3.zero; } }
+    public Vector3 ControlWindData { get { return Vector3.zero; } } // Airspeed, AoA, sideslip
+    public float ControlMass { get { return 0; } }
+
     public int Status
     {
         get { return 0; }
@@ -237,16 +254,6 @@ public class DummyDrone : MonoBehaviour, IDrone
     public void LocalAccelerationTarget(Vector3 acc)
     {
         //simpleQuadCtrl.accelerationTarget = acc;
-    }
-
-    public void AttitudeTarget(Vector3 att)
-    {
-        //simpleQuadCtrl.attitudeTarget = att;
-    }
-
-    public void BodyRateTarget(Vector3 br)
-    {
-        //simpleQuadCtrl.bodyRateTarget = br;
     }
 
     /// <summary>
