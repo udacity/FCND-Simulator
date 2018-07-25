@@ -42,8 +42,8 @@ public class FixedWingChallenge: Scenario
     public float targetRadius;
 
     Transform gate;
-    Transform line;
-    Material lineMat;
+    //Transform line;
+    //Material lineMat;
     public Vector2 position2D;
 
 
@@ -72,9 +72,9 @@ public class FixedWingChallenge: Scenario
     protected override void OnInit()
     {
         gate = GameObject.Find("Gate").GetComponent<Transform>();
-        line = GameObject.Find("Line").GetComponent<Transform>();
-        lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
-        lineMat.color = Color.red;
+        //line = GameObject.Find("Line").GetComponent<Transform>();
+        //lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
+        //lineMat.color = Color.red;
 
         base.OnInit();
         drone.SetControlMode(7);
@@ -217,24 +217,24 @@ public class FixedWingChallenge: Scenario
     {
         if (state == 1)
         {
-            line.position = new Vector3((currWaypoint.y + prevWaypoint.y) / 2, -prevWaypoint.z, (currWaypoint.x + prevWaypoint.x) / 2);
+            //line.position = new Vector3((currWaypoint.y + prevWaypoint.y) / 2, -prevWaypoint.z, (currWaypoint.x + prevWaypoint.x) / 2);
             float legLength = Mathf.Sqrt(Mathf.Pow(currWaypoint.x - prevWaypoint.x, 2) + Mathf.Pow(currWaypoint.y - prevWaypoint.y, 2));
-            line.localScale = new Vector3(1f, 1f, legLength);
+            //line.localScale = new Vector3(1f, 1f, legLength);
             float heading = Mathf.Atan2(currWaypoint.y - prevWaypoint.y, currWaypoint.x - prevWaypoint.x);
-            line.eulerAngles = new Vector3(0f, heading * 180f / Mathf.PI, -90);
-            Debug.Log("Rotation: " + line.rotation + " heading: " + heading);
+            //line.eulerAngles = new Vector3(0f, heading * 180f / Mathf.PI, -90);
+            //Debug.Log("Rotation: " + line.rotation + " heading: " + heading);
             gate.position = new Vector3(targetGate.y, -targetGate.z, targetGate.x);
             gate.localScale = new Vector3(5f, 5f, 5f);
             gate.eulerAngles = new Vector3(0f, heading * 180f / Mathf.PI, -90f);
         }
         else
         {
-            line.position = new Vector3((nextWaypoint.y + currWaypoint.y) / 2, -currWaypoint.z, (nextWaypoint.x + currWaypoint.x) / 2);
+            //line.position = new Vector3((nextWaypoint.y + currWaypoint.y) / 2, -currWaypoint.z, (nextWaypoint.x + currWaypoint.x) / 2);
             float legLength = Mathf.Sqrt(Mathf.Pow(nextWaypoint.x - currWaypoint.x, 2) + Mathf.Pow(nextWaypoint.y - currWaypoint.y, 2));
-            line.localScale = new Vector3(1f, 1f, legLength);
+            //line.localScale = new Vector3(1f, 1f, legLength);
             float heading = Mathf.Atan2(nextWaypoint.y - currWaypoint.y, nextWaypoint.x - currWaypoint.x);
-            line.eulerAngles = new Vector3(0f, heading * 180f / Mathf.PI, 0);
-            Debug.Log("Rotation: " + line.rotation + " heading: " + heading);
+            //line.eulerAngles = new Vector3(0f, heading * 180f / Mathf.PI, 0);
+            //Debug.Log("Rotation: " + line.rotation + " heading: " + heading);
             gate.position = new Vector3(targetGate.y, -targetGate.z, targetGate.x);
             gate.localScale = new Vector3(0f, 0f, 0f);
             gate.eulerAngles = new Vector3(0f, heading * 180f / Mathf.PI, -90f);
@@ -244,7 +244,7 @@ public class FixedWingChallenge: Scenario
     protected override void OnEnd()
     {
         gate.localScale = new Vector3(0f, 0f, 0f);
-        line.localScale = new Vector3(0f, 0f, 0f);
+        //line.localScale = new Vector3(0f, 0f, 0f);
         drone.SetGuided(false);
         base.OnEnd();
     }

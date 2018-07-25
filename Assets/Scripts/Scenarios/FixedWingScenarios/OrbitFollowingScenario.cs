@@ -18,8 +18,8 @@ public class OrbitFollowingScenario : Scenario
 
     public Vector3 orbitCenter;
 
-    Transform line;
-    Material lineMat;
+    //Transform line;
+    //Material lineMat;
     
 
     protected override void OnInit ()
@@ -36,8 +36,8 @@ public class OrbitFollowingScenario : Scenario
         orbitCenter.z = -data.vehiclePosition.y;
 
         //drone.CommandVector(orbitCenter, new Vector3(41.0f, 0.0f, 41.0f / targetRadius));
-        Transform line = GameObject.Find("Line").GetComponent<Transform>();
-        line.localScale = new Vector3(0, 0, 0);
+        //Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        //line.localScale = new Vector3(0, 0, 0);
 
 
         /*
@@ -81,6 +81,7 @@ public class OrbitFollowingScenario : Scenario
         if (Mathf.Abs(currentRadius-targetRadius) > radiusThreshold)
         {
             //lineMat.color = Color.red;
+            ApplyLineColor(Color.red);
             if (currTime > data.runtime - timeInterval && currTime <= data.runtime)          
             
             {
@@ -88,6 +89,10 @@ public class OrbitFollowingScenario : Scenario
                     "Crostrack Error = " + (targetRadius-currentRadius) + " m at t = " + currTime;
                 return true;
             }
+        }
+        else
+        {
+            ApplyLineColor(Color.green);
         }
 
         UpdateVizParameters();

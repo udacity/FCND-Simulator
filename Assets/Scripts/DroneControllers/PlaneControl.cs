@@ -18,6 +18,7 @@ public class PlaneControl : IControlLaw {
     public float minThrottle = 0.0f;
     public float maxThrottle = 1.0f;
     public float maxSpeedInt = 0.25f;
+    public float nominalThrottle = 0.66f;
 
 
 //    [Tunable(0.0f,-50.0f,50.0f)] //20.0f
@@ -128,7 +129,8 @@ public class PlaneControl : IControlLaw {
         else if (speedInt < -maxSpeedInt)
             speedInt = -maxSpeedInt;
         */
-        float outputUnsat = Kp_speed * airspeedError + Ki_speed * speedInt;
+        float outputUnsat = Kp_speed * airspeedError + Ki_speed * speedInt + nominalThrottle;
+        
         float output = Mathf.Clamp(outputUnsat, minThrottle, maxThrottle);
         if (Ki_speed != 0.0f)
             speedInt = speedInt + dt / Ki_speed * (output - outputUnsat);

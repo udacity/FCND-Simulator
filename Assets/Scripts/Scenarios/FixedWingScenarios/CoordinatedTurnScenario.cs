@@ -23,8 +23,8 @@ public class CoordinatedTurnScenario : Scenario
         drone.SetGuided(true);
         drone.Status = 7;
         //drone.CommandAttitude(new Vector3(targetRoll*Mathf.PI/180.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
-        Transform line = GameObject.Find("Line").GetComponent<Transform>();
-        line.localScale = new Vector3(0, 0, 0);
+        //Transform line = GameObject.Find("Line").GetComponent<Transform>();
+        //line.localScale = new Vector3(0, 0, 0);
     }
 
     protected override void OnBegin()
