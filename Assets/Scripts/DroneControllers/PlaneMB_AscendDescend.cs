@@ -54,7 +54,7 @@ namespace MovementBehaviors
             }
             float aileron = planeControl.RollLoop(rollCommand, controller.ControlAttitude.x, controller.ControlBodyRate.x);
             float rudder = planeControl.SideslipLoop(sideslipCommand, controller.ControlWindData.z);
-            float pitchCommand = planeControl.AirspeedLoop2(speedCommand, controller.ControlWindData.y);
+            float pitchCommand = planeControl.AirspeedLoop2(speedCommand, controller.ControlWindData.x);
 
             controller.VelocityTarget = new Vector3(speedCommand, controller.ControlWindData.x, controller.VelocityTarget.z);
             Vector3 attitudeTarget = controller.AttitudeTarget;

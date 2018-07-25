@@ -124,6 +124,7 @@ namespace DroneVehicles
 
             UIUpdate();
             StateUpdate();
+            TimeUpdate();
         }
 
         void UIUpdate()
@@ -221,58 +222,69 @@ namespace DroneVehicles
 
         public Vector3 CoordsUnity()
         {
+            StateUpdate();
             return positionUnity;
         }
 
         public Vector3 CoordsLocal()
         {
+            StateUpdate();
             return positionUnity.UnityToENUDirection().ENUToNED();
         }
 
 
         public Vector3 AttitudeEuler()
         {
+            StateUpdate();
             return Mathf.Deg2Rad * eulerAngles.UnityToNEDRotation();
         }
 
         public Vector4 AttitudeQuaternion()
         {
+            StateUpdate();
             return AttitudeEuler().ToRHQuaternion();
         }
 
         public Vector3 VelocityLocal()
         {
+            StateUpdate();
             return localVelocity.UnityToENUDirection().ENUToNED();
         }
 
         public Vector3 VelocityBody()
         {
+            StateUpdate();
             return bodyVelocity.UnityToENUDirection().ENUToNED();
         }
 
 		public Vector3 VelocityUnity()
 		{
-			return rb.velocity;
+            StateUpdate();
+            return rb.velocity;
 		}
 
         public Vector3 AccelerationBody()
         {
+            StateUpdate();
             return localAcceleration.UnityToENUDirection().ENUToNED();
         }
 
         public Vector3 AccelerationLocal()
         {
+            StateUpdate();
             return bodyAcceleration.UnityToENUDirection().ENUToNED();
         }
 
         public Vector3 AngularRatesBody()
         {
+            StateUpdate();
             return bodyAngularVelocity.UnityToNEDRotation();
         }
 
 		public Vector3 AngularRatesUnity ()
 		{
-			return rb.angularVelocity;
+            StateUpdate();
+            return rb.angularVelocity;
 		}
 
         // TODO: Implement this method
@@ -334,6 +346,11 @@ namespace DroneVehicles
             eulerAngles = ConstrainEuler(rb.rotation.eulerAngles);
 
             curSpeed = rb.velocity.magnitude;
+            
+        }
+
+        public void TimeUpdate()
+        {
             if (!Frozen)
             {
                 //Debug.Log("Fixed Delta Time = " + Time.fixedDeltaTime);
@@ -374,6 +391,7 @@ namespace DroneVehicles
         {
             rb.AddRelativeForce(force, ForceMode.Force);
             rb.AddRelativeTorque(torque, ForceMode.Force);
+            
         }
 
 

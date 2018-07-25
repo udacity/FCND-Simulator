@@ -16,10 +16,9 @@ namespace MovementBehaviors
         float throttleStep = 30.0f / 5000.0f;
         float elevatorTrim = 0.0f;
         float trimStep = 0.001f;
-        float altSwitch = 25f;
+        float altitudeSwitch = 25.0f;
 
         float nominalSpeed = 40.0f;//61.0f;
-        float nominalThrottle = 0.66f;//0.75f;
         float altCommand;
 
         float yawCommand;
@@ -31,6 +30,7 @@ namespace MovementBehaviors
         {
             base.OnSelect(_controller);
 
+            PlaneControl = (PlaneControl)controller.control;
             PlaneControl.altInt = 0.0f;
             PlaneControl.speedInt = 0.0f;
             PlaneControl.sideslipInt = 0f;
@@ -69,28 +69,29 @@ namespace MovementBehaviors
             float rudder = PlaneControl.SideslipLoop(sideslipCommand, controller.ControlWindData.z);
 
             float elevator;
-            altSwitch = PlaneControl.altitudeSwitch;
-            if ((-controller.ControlPosition.z - altCommand) > altSwitch)
+            altitudeSwitch = PlaneControl.altitudeSwitch;
+            float pitchCommand;
+            if ((-controller.ControlPosition.z - altCommand) > altitudeSwitch)
             {
                 throttle = 0.1f;
-                float pitchCommand = PlaneControl.AirspeedLoop2(speedCommand, controller.ControlWindData.x);
-                attitudeTarget.y = pitchCommand;
+                pitchCommand = PlaneControl.AirspeedLoop2(speedCommand, controller.ControlWindData.x);
                 elevator = PlaneControl.PitchLoop(pitchCommand, controller.ControlAttitude.y, controller.ControlBodyRate.y);
             }
-            else if ((-controller.ControlPosition.z - altCommand) < -altSwitch)
+            else if ((-controller.ControlPosition.z - altCommand) < -altitudeSwitch)
             {
                 throttle = 1.0f;
-                float pitchCommand = PlaneControl.AirspeedLoop2(speedCommand, controller.ControlWindData.x);
-                attitudeTarget.y = pitchCommand;
+                pitchCommand = PlaneControl.AirspeedLoop2(speedCommand, controller.ControlWindData.x);
                 elevator = PlaneControl.PitchLoop(pitchCommand, controller.ControlAttitude.y, controller.ControlBodyRate.y);
             }
             else
             {
-                throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x) + nominalThrottle;
-                float pitchCommand = PlaneControl.AltitudeLoop(altCommand, -controller.ControlPosition.z);
-                attitudeTarget.y = pitchCommand;
+                throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x);
+                pitchCommand = PlaneControl.AltitudeLoop(altCommand, -controller.ControlPosition.z);
                 elevator = PlaneControl.PitchLoop(pitchCommand, controller.ControlAttitude.y, controller.ControlBodyRate.y);
             }
+
+            attitudeTarget.y = pitchCommand;
+            controller.AttitudeTarget = attitudeTarget;
 
             controller.CommandControls(aileron, elevator, rudder, throttle);
             controller.AttitudeTarget = attitudeTarget;

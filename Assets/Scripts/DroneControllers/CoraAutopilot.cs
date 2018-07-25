@@ -68,8 +68,7 @@ namespace DroneControllers
         {
             planeControl = new PlaneControl();
             flightMode = (int)FLIGHT_MODE.MANUAL;
-            SelectMovementBehavior();
-            
+            SelectMovementBehavior();            
             
         }
 
@@ -84,7 +83,7 @@ namespace DroneControllers
         {
             if (!guided)
             {
-                if (Input.GetKey("8"))
+                if (Input.GetKey("9"))
                 {
                     flightMode = (int)FLIGHT_MODE.ATTITUDE;
                     SelectMovementBehavior();

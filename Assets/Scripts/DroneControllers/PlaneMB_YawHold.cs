@@ -18,7 +18,6 @@ namespace MovementBehaviors
         float trimStep = 0.001f;
 
         float nominalSpeed = 40.0f;//61.0f;
-        float nominalThrottle = 0.66f;//0.75f;
         float altCommand;
 
         float yawCommand;
@@ -75,7 +74,7 @@ namespace MovementBehaviors
             float aileron = PlaneControl.RollLoop(rollCommand, controller.ControlAttitude.x, controller.ControlBodyRate.x);
             float rudder = PlaneControl.SideslipLoop(sideslipCommand, controller.ControlWindData.z);
 
-            throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x) + nominalThrottle;
+            throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x);
 
             positionTarget.z = altCommand;
             float pitchCommand = PlaneControl.AltitudeLoop(altCommand, -controller.ControlPosition.z);

@@ -51,8 +51,8 @@ public class PlaneControl : IControlLaw {
 //    public float Ki_speed2_student;
 
     public float speedInt2 = 0.0f;
-    public float minPitch2 = -45f * Mathf.PI / 180f;
-    public float maxPitch2 = 45f * Mathf.PI / 180f;
+    public float minPitch2 = -90f * Mathf.PI / 180f;
+    public float maxPitch2 = 90f * Mathf.PI / 180f;
     public float maxSpeedInt2 = 10.0f;
 
     public float altitudeSwitch = 25.0f;
@@ -89,6 +89,7 @@ public class PlaneControl : IControlLaw {
 	// Use this for initialization
 	public PlaneControl() {
 
+        /*
         altInt = 0.0f;
         speedInt = 0.0f;
         sideslipInt = 0.0f;
@@ -112,7 +113,7 @@ public class PlaneControl : IControlLaw {
         Kp_xTrack = 0.002f;
 
         Kp_orbit = 2.5f;
-
+        */
 
     }
 
@@ -123,19 +124,14 @@ public class PlaneControl : IControlLaw {
         if (dt == 0.0)
             dt = Time.fixedDeltaTime;
         speedInt = speedInt + airspeedError * dt;
-
-        /*if (speedInt > maxSpeedInt)
-            speedInt = maxSpeedInt;
-        else if (speedInt < -maxSpeedInt)
-            speedInt = -maxSpeedInt;
-        */
+        Debug.Log("Kp_speed: " + Kp_speed);
         float outputUnsat = Kp_speed * airspeedError + Ki_speed * speedInt + nominalThrottle;
         
         float output = Mathf.Clamp(outputUnsat, minThrottle, maxThrottle);
         if (Ki_speed != 0.0f)
             speedInt = speedInt + dt / Ki_speed * (output - outputUnsat);
 
-
+        Debug.Log("Airspeed Error: " + airspeedError + " Output: " + output + " KP: " + Kp_speed);
         return output;
         
     }
@@ -145,7 +141,9 @@ public class PlaneControl : IControlLaw {
     /// </summary>
     public float PitchLoop(float targetPitch, float pitch, float pitchrate)
     {
+        
         float output = Kp_pitch * (targetPitch - pitch) - Kp_q * pitchrate;
+        //Debug.Log("Target Pitch: " + targetPitch + " Pitch: " + pitch + " Pitchrate: " + pitchrate + " Output: " + output);
         return output;
     }
 
@@ -291,10 +289,16 @@ public class PlaneControl : IControlLaw {
 	public void SetScenarioParameters (string[] names)
 	{
 		TunableParameter p = TunableManager.GetParameter ( "Kp_speed" );
-		if ( names.Contains ( "Kp_speed" ) )
-			Kp_speed = p.value;
-		else
-			Kp_speed = p.fixedValue;
+        if (names.Contains("Kp_speed"))
+        {
+            Kp_speed = p.value;
+            Debug.Log("Changes Kp_speed: " + Kp_speed);
+        }
+        else
+        {
+            Kp_speed = p.fixedValue;
+            Debug.Log("Changes Kp_speed: " + Kp_speed);
+        }
 
 		p = TunableManager.GetParameter ( "Ki_speed" );
 		if ( names.Contains ( "Ki_speed" ) )

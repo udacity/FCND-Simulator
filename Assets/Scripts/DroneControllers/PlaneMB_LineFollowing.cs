@@ -20,7 +20,6 @@ namespace MovementBehaviors
         float altitudeSwitch = 25.0f;
 
         float nominalSpeed = 40.0f;//61.0f;
-        float nominalThrottle = 0.66f;//0.75f;
         float altCommand;
 
         float yawCommand;
@@ -84,7 +83,7 @@ namespace MovementBehaviors
             }
             else
             {
-                throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x) + nominalThrottle;
+                throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x);
                 pitchCommand = PlaneControl.AltitudeLoop(altCommand, -controller.ControlPosition.z);
                 elevator = PlaneControl.PitchLoop(pitchCommand, controller.ControlAttitude.y, controller.ControlBodyRate.y);
             }

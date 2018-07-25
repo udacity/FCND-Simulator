@@ -13,7 +13,6 @@ namespace MovementBehaviors
         float throttleStep = 30.0f/5000.0f;
         float throttle = 0.0f;
         float nominalSpeed = 40.0f;//61.0f;
-        float nominalThrottle = 0.66f;//0.75f;
         float altCommand;
         PlaneControl PlaneControl;
 
@@ -28,7 +27,6 @@ namespace MovementBehaviors
                 throttle = controller.GetThrustTarget();
             */
             PlaneControl = (PlaneControl)controller.control;
-            nominalThrottle = 0.66f;
             nominalSpeed = 40.0f;
 
         }
@@ -53,7 +51,7 @@ namespace MovementBehaviors
             }
 
             //controller.attitudeTarget.x = controller.Airspeed();
-            throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x) + nominalThrottle;
+            throttle = PlaneControl.AirspeedLoop(speedCommand, controller.ControlWindData.x);
             //controller.attitudeTarget.z = controller.planeControl.AirspeedLoop(speedCommand, controller.Airspeed());
 
             Vector3 positionTarget = controller.PositionTarget;
