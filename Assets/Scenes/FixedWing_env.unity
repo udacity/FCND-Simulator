@@ -3267,7 +3267,7 @@ MonoBehaviour:
   - Ki_yaw
   userParameters:
   - Kp_roll
-  - Kp_q
+  - Kp_p
   - Kp_sideslip
   - Ki_sideslip
   vizParameters: 1
@@ -4569,7 +4569,7 @@ MonoBehaviour:
   - Kp_xTrack
   userParameters:
   - Kp_roll
-  - Kp_q
+  - Kp_p
   - Kp_sideslip
   - Ki_sideslip
   - Kp_yaw
@@ -7866,7 +7866,7 @@ MonoBehaviour:
   - Ki_sideslip
   userParameters:
   - Kp_roll
-  - Kp_q
+  - Kp_p
   vizParameters: 1
   vizParameter1:
     name: Sideslip
@@ -12186,7 +12186,7 @@ MonoBehaviour:
   tunableParameters: []
   userParameters:
   - Kp_rol
-  - Kp_q
+  - Kp_p
   - Kp_sideslip
   - Ki_sideslip
   - Kp_yaw
@@ -13743,7 +13743,7 @@ MonoBehaviour:
   - Kp_orbit
   userParameters:
   - Kp_roll
-  - Kp_q
+  - Kp_p
   - Kp_sideslip
   - Ki_sideslip
   - Kp_yaw
