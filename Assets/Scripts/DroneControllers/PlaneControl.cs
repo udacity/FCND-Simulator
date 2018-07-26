@@ -7,11 +7,11 @@ using DroneInterface;
 public class PlaneControl : IControlLaw {
 
 //    [Tunable(0.0f,-1.0f, 1.0f)] // 0.2f
-    public float Kp_speed;
+    public float Kp_speed = 0.5f;
 //    public float Kp_speed_student;
 
 //    [Tunable(0.0f,-1.0f, 1.0f)] // 0.1f
-    public float Ki_speed;
+    public float Ki_speed = 0.2f;
 //    public float Ki_speed_student;
 
     public float speedInt = 0.0f;
@@ -22,19 +22,19 @@ public class PlaneControl : IControlLaw {
 
 
 //    [Tunable(0.0f,-50.0f,50.0f)] //20.0f
-    public float Kp_pitch = 8.0f;
+    public float Kp_pitch = 5.0f;
 //    public float Kp_pitch_student;
 
 //    [Tunable(0.0f,-50.0f,50.0f)] //10.0f
-    public float Kp_q = 5.0f;
+    public float Kp_q = 1.0f;
 //    public float Kp_q_student;
 
 //    [Tunable(0.0f, -1.0f, 1.0f)] // 0.03f
-    public float Kp_alt;
+    public float Kp_alt = 0.03f;
 //    public float Kp_alt_student;
 
 //    [Tunable(0.0f, -1.0f, 1.0f)] // 0.05f
-    public float Ki_alt;
+    public float Ki_alt = 0.01f;
 //    public float Ki_alt_student;
 
     public float altInt = 0.0f;
@@ -43,11 +43,11 @@ public class PlaneControl : IControlLaw {
     public float maxAltInt = 0.1f;
 
 //    [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
-    public float Kp_speed2;
+    public float Kp_speed2 = 0.2f;
 //    public float Kp_speed2_student;
 
 //    [Tunable(0.0f, -1.0f, 1.0f)] // 0.2f
-    public float Ki_speed2 = 0.001f;
+    public float Ki_speed2 = 0.2f;
 //    public float Ki_speed2_student;
 
     public float speedInt2 = 0.0f;
@@ -63,24 +63,24 @@ public class PlaneControl : IControlLaw {
     public float climbInt = 0.0f;
     public float maxClimbInt = 1.0f;
 
-    public float Kp_roll = 8.0f;
-    public float Kp_p = 5.0f;
+    public float Kp_roll = 10.0f;
+    public float Kp_p = 1.0f;
 
-    public float Kp_sideslip = 0.1f;
-    public float Ki_sideslip = 0.1f;
+    public float Kp_sideslip = -1f;
+    public float Ki_sideslip = -1f;
     public float sideslipInt = 0.0f;
     public float maxSideslipInt = 10.0f;
 
-    public float Kp_yaw = 1.0f;
-    public float Ki_yaw = 0.1f;
+    public float Kp_yaw = 3.0f;
+    public float Ki_yaw = 0.2f;
     public float maxRoll = 60.0f * Mathf.PI / 180f;
     public float yawInt = 0.0f;
     public float maxYawInt = 1.0f;
 
-    public float Kp_xTrack = 1.0f;
+    public float Kp_xTrack = 0.0035f;
     public float approachYaw = Mathf.PI / 2.0f;
 
-    public float Kp_orbit = 1.0f;
+    public float Kp_orbit = 5.0f;
 
     private float hDotInt;
     private float maxHDotInt = 0.1f;

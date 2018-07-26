@@ -728,6 +728,7 @@ Transform:
   m_LocalPosition: {x: 0, y: -0.5, z: 3.7}
   m_LocalScale: {x: 0.22362, y: 0.22362, z: 0.22362}
   m_Children:
+  - {fileID: 1010180436}
   - {fileID: 606396013}
   - {fileID: 461884075}
   - {fileID: 318876688}
@@ -2222,6 +2223,90 @@ MonoBehaviour:
     Kp_xTrack: 0.002
     approachYaw: 1.5707964
     Kp_orbit: 2.5
+  quadControl:
+    Kp_r: 4
+    Kp_hdot: 2.5
+    Ki_hdot: 0.25
+    Kp_p: 1
+    Kp_roll: 5
+    Kp_q: 1
+    Kp_pitch: 5
+    maxTilt: 0.25
+    maxAscentRate: 5
+    maxDescentRate: 5
+    Kp_pos: 2
+    Kp_pos2: 0.2
+    Kp_alt: 10
+    posHoldDeadband: 2
+    maxSpeed: 10
+    Kp_vel: 0.2
+    Kp_yaw: 2500
+    posctl_band: 0.1
+  quadPlaneControl:
+    QuadControl:
+      Kp_r: 0.04
+      Kp_hdot: 2.5
+      Ki_hdot: 0.25
+      Kp_p: 0.1
+      Kp_roll: 8
+      Kp_q: 0.1
+      Kp_pitch: 8
+      maxTilt: 0.5
+      maxAscentRate: 5
+      maxDescentRate: 2
+      Kp_pos: 2
+      Kp_pos2: 0.2
+      Kp_alt: 10
+      posHoldDeadband: 0.5
+      maxSpeed: 10
+      Kp_vel: 0.2
+      Kp_yaw: 2.5
+      posctl_band: 0.1
+    PlaneControl:
+      Kp_speed: 0
+      Ki_speed: 0
+      speedInt: 0
+      minThrottle: 0
+      maxThrottle: 1
+      maxSpeedInt: 0.25
+      nominalThrottle: 0.66
+      Kp_pitch: 8
+      Kp_q: 5
+      Kp_alt: 0
+      Ki_alt: 0
+      altInt: 0
+      minPitch: -0.5235988
+      maxPitch: 0.5235988
+      maxAltInt: 0.1
+      Kp_speed2: 0
+      Ki_speed2: 0.001
+      speedInt2: 0
+      minPitch2: -1.5707964
+      maxPitch2: 1.5707964
+      maxSpeedInt2: 10
+      altitudeSwitch: 25
+      Kp_climb: 0.01
+      Ki_climb: 0.001
+      climbInt: 0
+      maxClimbInt: 1
+      Kp_roll: 8
+      Kp_p: 5
+      Kp_sideslip: 0.1
+      Ki_sideslip: 0.1
+      sideslipInt: 0
+      maxSideslipInt: 10
+      Kp_yaw: 1
+      Ki_yaw: 0.1
+      maxRoll: 1.0471976
+      yawInt: 0
+      maxYawInt: 1
+      Kp_xTrack: 1
+      approachYaw: 1.5707964
+      Kp_orbit: 1
+    toPlaneAirspeed: 30
+    toQuadAirspeed: 5
+    toPlaneThrottle: 1
+    toQuadThrottle: 0
   simpleMode: 1
   guided: 0
   attitudeTarget: {x: 0, y: 0, z: 0}
@@ -2238,7 +2323,12 @@ MonoBehaviour:
   mb_YawHold: {fileID: 11400000, guid: 03ce8605b0f94d343ab49508c066db4f, type: 2}
   mb_LineFollowing: {fileID: 11400000, guid: d7ed5fcfb5fc9cd448a063723684064f, type: 2}
   mb_OrbitFollowing: {fileID: 11400000, guid: beeb56dc99c1bda45a04a2844edc92b3, type: 2}
+  mb_TransitionToPlane: {fileID: 11400000, guid: 22e5612928698524b868121c7296f280,
+    type: 2}
+  mb_TransitionToQuad: {fileID: 11400000, guid: b1739c1482a80b44e879cef93c5c0fd3,
+    type: 2}
   mb_AttitudeControl: {fileID: 11400000, guid: f9edf8f5b9348594184a08e8d7a1483c, type: 2}
+  mb_PositionControl: {fileID: 11400000, guid: 661be0a91b63e964bb9cc2a77504c244, type: 2}
   flightMode: 0
 --- !u!114 &155553762
 MonoBehaviour:
@@ -4650,7 +4740,7 @@ Transform:
   m_LocalScale: {x: 5.1215177, y: 5.1215143, z: 5.121514}
   m_Children: []
   m_Father: {fileID: 30642892}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &318876689
 MeshRenderer:
@@ -4881,7 +4971,7 @@ Prefab:
     - target: {fileID: 114907463642095980, guid: ade1b5946748c45b39addbc73fc26e19,
         type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114200942506697378, guid: ade1b5946748c45b39addbc73fc26e19,
         type: 2}
@@ -5690,7 +5780,7 @@ Transform:
   m_LocalScale: {x: 7.628266, y: 7.628264, z: 0.00005549581}
   m_Children: []
   m_Father: {fileID: 30642892}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &468361675
 GameObject:
@@ -7242,7 +7332,7 @@ Transform:
   m_Children:
   - {fileID: 29029024}
   m_Father: {fileID: 30642892}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &612275986
 GameObject:
@@ -10401,12 +10491,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1010180435}
   m_LocalRotation: {x: -0, y: -0, z: -0.060168773, w: 0.99818826}
-  m_LocalPosition: {x: 0, y: 0.6797497, z: -2.641231}
-  m_LocalScale: {x: 1, y: 1, z: 1.2307692}
+  m_LocalPosition: {x: 0, y: 4.0235662, z: -20.150259}
+  m_LocalScale: {x: 4.4718733, y: 4.4718733, z: 4.4718723}
   m_Children:
   - {fileID: 322547100}
-  m_Father: {fileID: 1198457389}
-  m_RootOrder: 2
+  m_Father: {fileID: 30642892}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1010180437
 MeshRenderer:
@@ -12234,7 +12324,6 @@ Transform:
   m_Children:
   - {fileID: 1126156519}
   - {fileID: 1726968072}
-  - {fileID: 1010180436}
   m_Father: {fileID: 155553759}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

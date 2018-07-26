@@ -70,9 +70,10 @@ namespace MovementBehaviors
             bodyRateTarget.z = yawCmd;
             controller.BodyRateTarget = bodyRateTarget;
             Vector2 rollPitchMoment = QuadControl.RollPitchRateLoop(targetRate, angularVelocity);
+
             float dt = Time.fixedDeltaTime;
 
-            float thrust = QuadControl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z, dt, -1.0f * controller.ControlMass* Physics.gravity[1]);
+            float thrust = QuadControl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z, dt, 0.5f);
             
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawMoment);

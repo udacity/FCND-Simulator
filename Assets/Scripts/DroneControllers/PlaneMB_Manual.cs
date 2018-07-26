@@ -27,7 +27,6 @@ namespace MovementBehaviors
             
             if (!controller.Guided())
             {
-                Debug.Log("On Late Update");
                 float elevator, aileron, rudder, throttle;
                 elevatorTrim = elevatorTrim + trimStep * Input.GetAxis("Trim");
                 elevator = -1.0f * Input.GetAxis("Vertical") + elevatorTrim;

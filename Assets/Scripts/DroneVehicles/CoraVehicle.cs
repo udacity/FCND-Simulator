@@ -69,6 +69,9 @@ namespace DroneVehicles
         public float thrustNoise = 0.0f;
 
         public float maxTorque = 30000f;
+        float maxPitchMoment = 7500f;
+        float maxRollMoment = 2800f;
+        float maxYawMoment = 2000f;
         public Vector3 torque;
         public float torqueNoise = 0.0f;
         public float torqueOut;
@@ -360,23 +363,52 @@ namespace DroneVehicles
 
         public void CmdThrust(float thrust)
         {
-            if (thrust > maxThrust)
+            if (thrust > 1)
             {
                 thrust = maxThrust;
+            } else if (thrust <= 0)
+            {
+                thrust = 0f;
             }
+            else
+            {
+                thrust = thrust * maxThrust;
+            }
+
             force.y = Mathf.Max(thrust + thrustNoise * 2.0f * (Random.value - 1.0f), 0.0f);
             if (force.y < 0.0f)
             {
                 force.y = 0.0f;
             }
             thrustOut = force.y;
+
+            if (rb == null)
+                rb = GetComponent<Rigidbody>();
+            
+            if (thrustOut > 0)
+                rb.drag = 0.1f;
+            else
+                rb.drag = 0.015f;
+            
         }
 
         public void CmdTorque(Vector3 t)
         {
-            torque.x = -t.y;
-            torque.y = t.z;
-            torque.z = -t.x;
+            if (Mathf.Abs(t.y) > 1)
+                torque.x = -maxPitchMoment* Mathf.Sign(t.y);
+            else
+                torque.x = -maxPitchMoment*t.y;
+
+            if (Mathf.Abs(t.z) > 1)
+                torque.y = maxYawMoment * Mathf.Sign(t.z);
+            else
+                torque.y = maxYawMoment * t.z;
+
+            if (Mathf.Abs(t.x) > 1)
+                torque.z = -maxRollMoment * Mathf.Sign(t.x);
+            else
+                torque.z = -maxRollMoment * t.x;
+
             torque = torque + torqueNoise * Random.insideUnitSphere;
             if (torque.magnitude > maxTorque)
             {

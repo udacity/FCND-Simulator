@@ -26,6 +26,7 @@ namespace MovementBehaviors
             base.OnSelect(_controller);
             PlaneControl = (PlaneControl)controller.control;
 
+            altCommand = -controller.ControlPosition.z;
             PlaneControl.altInt = 0.0f;
             PlaneControl.speedInt = 0.0f;
             PlaneControl.sideslipInt = 0f;

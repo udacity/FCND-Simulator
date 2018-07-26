@@ -13,10 +13,14 @@ namespace DroneControllers
         public CoraVehicle vehicle;
         public CoraSensors sensor;
         public PlaneControl planeControl;
-        public AttitudeControl attitudeControl;
-        public IControlLaw control { get { return (IControlLaw)planeControl; } }
+        public QuadControl quadControl;
+        public QuadPlaneControl quadPlaneControl;
+        public IControlLaw currentControl;
+        public IControlLaw control { get { return currentControl; } }
         public bool simpleMode = true;
         public bool guided = false;
+
+        bool inTransition;
 
         public Vector3 AttitudeTarget { get { return attitudeTarget; } set { attitudeTarget = value; } } //roll, pitch, yaw target in radians
         public Vector3 PositionTarget { get { return positionTarget; } set { positionTarget = value; } }//north, east, down target in meters
@@ -31,7 +35,7 @@ namespace DroneControllers
         public Vector3 ControlVelocity { get { return VelocityLocal(); } }
         public Vector3 ControlAcceleration { get { return Vector3.zero; } } // Not implemented yet
         public Vector3 ControlWindData { get { return new Vector3(Airspeed(), 0f, Sideslip()); } } // Airspeed, AoA, Sideslip, AoA not implemented yet
-        public float ControlMass { get { return 0f; } } //Not yet implemented
+        public float ControlMass { get { return 780; } } //Not yet implemented
 
         public Vector3 attitudeTarget = Vector3.zero; //roll, pitch, yaw target in radians
         public Vector3 positionTarget = Vector3.zero; //north, east, down target in meters
@@ -49,7 +53,10 @@ namespace DroneControllers
         public PlaneMovementBehavior mb_YawHold;
         public PlaneMovementBehavior mb_LineFollowing;
         public PlaneMovementBehavior mb_OrbitFollowing;
+        public PlaneMovementBehavior mb_TransitionToPlane;
+        public QuadMovementBehavior mb_TransitionToQuad;
         public QuadMovementBehavior mb_AttitudeControl;
+        public QuadMovementBehavior mb_PositionControl;
         public int flightMode;
 
         enum FLIGHT_MODE : int
@@ -63,10 +70,16 @@ namespace DroneControllers
             LINEFOLLOWING = 7,
             ORBITFOLLOWING = 8,
             ATTITUDE = 9,
+            POSITION = 10,
+            TOPLANE = 11,
+            TOQUAD = 12,
         }
         void Awake()
         {
-            planeControl = new PlaneControl();
+            //planeControl = new PlaneControl();
+            quadPlaneControl.QuadControl = quadControl;
+            quadPlaneControl.PlaneControl = planeControl;
+            //quadControl = new QuadControl();
             flightMode = (int)FLIGHT_MODE.MANUAL;
             SelectMovementBehavior();            
             
@@ -83,6 +96,28 @@ namespace DroneControllers
         {
             if (!guided)
             {
+                if (Input.GetKey("t"))
+                {
+                    if (flightMode < (int)FLIGHT_MODE.ATTITUDE)
+                    {
+                        Debug.Log("Transition to Quad");
+                        flightMode = (int)FLIGHT_MODE.TOQUAD;
+                        SelectMovementBehavior();
+                    }
+                    else if (flightMode < (int)FLIGHT_MODE.TOPLANE)
+                    {
+                        Debug.Log("Transition to Plane");
+                        flightMode = (int)FLIGHT_MODE.TOPLANE;
+                        SelectMovementBehavior();
+                    }
+                    
+                }
+
+                if(Input.GetKey("0"))
+                {
+                    flightMode = (int)FLIGHT_MODE.POSITION;
+                    SelectMovementBehavior();
+                }
                 if (Input.GetKey("9"))
                 {
                     flightMode = (int)FLIGHT_MODE.ATTITUDE;
@@ -119,10 +154,23 @@ namespace DroneControllers
                     SelectMovementBehavior();
                 }
             }
-            if(!vehicle.IsFrozen())
+
+            if (flightMode == (int)FLIGHT_MODE.TOPLANE)
+            {
+                if (ControlWindData.x > quadPlaneControl.toPlaneAirspeed){
+                    flightMode = (int)FLIGHT_MODE.STABILIZED;
+                    SelectMovementBehavior();
+                }
+            }else if(flightMode == (int)FLIGHT_MODE.TOQUAD)
+            {
+                if(ControlWindData.x < quadPlaneControl.toQuadAirspeed){
+                    flightMode = (int)FLIGHT_MODE.POSITION;
+                    SelectMovementBehavior();
+                }
+            }
+            if (!vehicle.IsFrozen())
                 currentMovementBehavior.OnLateUpdate();
-            
-//			
+
         }
 
         // Use this when any control variables change
@@ -130,34 +178,67 @@ namespace DroneControllers
         {
             switch (flightMode)
             {
+                case (int)FLIGHT_MODE.TOQUAD:
+                    currentControl = quadPlaneControl;
+                    currentMovementBehavior = mb_TransitionToQuad;
+                    break;
+                case (int)FLIGHT_MODE.TOPLANE:
+                    currentControl = quadPlaneControl;
+                    currentMovementBehavior = mb_TransitionToPlane;
+                    break;
+                case (int)FLIGHT_MODE.POSITION:
+                    currentControl = quadControl;
+                    PositionTarget = ControlPosition;
+                    CommandControls(0, 0, 0, 0);
+                    currentMovementBehavior = mb_PositionControl;
+                    break;
                 case (int)FLIGHT_MODE.ATTITUDE:
+                    currentControl = quadControl;
+                    CommandControls(0, 0, 0, 0);
                     currentMovementBehavior = mb_AttitudeControl;
                     break;
                 case (int)FLIGHT_MODE.ORBITFOLLOWING:
+                    currentControl = planeControl;
+                    CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_OrbitFollowing;
                     break;
                 case (int)FLIGHT_MODE.LINEFOLLOWING:
+                    currentControl = planeControl;
+                    CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_LineFollowing;
                     break;
                 case (int)FLIGHT_MODE.YAWHOLD:
+                    currentControl = planeControl;
+                    CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_YawHold;
                     break;
                 case (int)FLIGHT_MODE.ASCENDDESCEND:
+                    currentControl = planeControl;
+                    CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_AscendDescend;
                     break;
                 case (int)FLIGHT_MODE.STABILIZED:
+                    currentControl = planeControl;
+                    CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_Stablized;
                     break;
                 case (int)FLIGHT_MODE.LATERAL:
+                    currentControl = planeControl;
+                    CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_Lateral;
                     break;
                 case (int)FLIGHT_MODE.LONGITUDE:
+                    currentControl = planeControl;
+                    CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_Longitude;
                     break;
                 case (int)FLIGHT_MODE.MANUAL:
+                    currentControl = planeControl;
+                    CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_Manual;
                     break;
                 default:
+                    currentControl = planeControl;
                     currentMovementBehavior = mb_Manual;
                     break;
             }
@@ -515,19 +596,9 @@ namespace DroneControllers
         /// <param name="thrust"></param>
         public void CommandMoment(Vector3 bodyMoment, float thrust)
         {
-            if (!guided)
-                return;
-
-            /*
-            positionControl = false;
-            attitudeControl = false;
-
-            guidedCommand.x = momentThrustTarget.x = bodyMoment.x;
-            guidedCommand.y = momentThrustTarget.y = bodyMoment.y;
-            guidedCommand.w = momentThrustTarget.z = bodyMoment.z;
-            guidedCommand.z = momentThrustTarget.w = thrust;
-            lastControlTime = drone.flightTime();
-            */
+            MomentThrustTarget = new Vector4(bodyMoment.x, bodyMoment.y, bodyMoment.z, thrust);
+            vehicle.CmdThrust(thrust);
+            vehicle.CmdTorque(bodyMoment);
         }
 
         /// <summary>

@@ -38,7 +38,7 @@ namespace MovementBehaviors
             Vector2 targetRate = QuadControl.RollPitchLoop(new Vector2(attCmd.x,attCmd.y),attitude);
             Vector2 rollPitchMoment = QuadControl.RollPitchRateLoop(targetRate, angularVelocity);
             float dt = Time.fixedDeltaTime;
-            float altOutput = QuadControl.VerticalVelocityLoop(altCmd, attitude, -localVelocity.z,dt,-1.0f*controller.ControlMass*Physics.gravity[1]);
+            float altOutput = QuadControl.VerticalVelocityLoop(altCmd, attitude, -localVelocity.z,dt,0.5f);
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawOutput);
             controller.CommandMoment(totalMoment, altOutput);
