@@ -58,42 +58,48 @@ public class SimpleProp : MonoBehaviour {
 
 	void FixedUpdate () {
 
-        //if (engineAttached == null)
-        //	return;
-        if (!useCustomForcePoint)
-        {
-            customTransform = transform;
-            forcePoint = transform;
-        }
+		//if (engineAttached == null)
+		//	return;
+		if ( !useCustomForcePoint )
+		{
+			customTransform = transform;
+			forcePoint = transform;
+		}
 
-        //thrustDir = engineAttached.thrustDir;
+		//thrustDir = engineAttached.thrustDir;
 
-        //thrustDir = Mathf.Clamp (thrustDir, -1f, 1f);
+		//thrustDir = Mathf.Clamp (thrustDir, -1f, 1f);
 
-        //inputForce = engineAttached.outputForce;
+		//inputForce = engineAttached.outputForce;
 
-        //rpm = engineAttached.rpm / reductionGear;
+		//rpm = engineAttached.rpm / reductionGear;
 
-        customTransform.Rotate (0f,0f,rpm /60f);
+//        customTransform.Rotate (0f,0f,rpm /60f);
 
 		//frictionForce = frictionCurve.Evaluate (rpm / 1000f) * friction;
 
-		outputForce = (0.5f * rpm * propArea * outputCurve.Evaluate (rpm / 1000f) * densityCoef) * thrustDir;
+		outputForce = ( 0.5f * rpm * propArea * outputCurve.Evaluate ( rpm / 1000f ) * densityCoef ) * thrustDir;
 
 		//engineAttached.addedFriction = frictionForce;
 
-		if (targetBody != null)
-			targetBody.AddForceAtPosition (customTransform.TransformDirection (Vector3.forward) * outputForce, forcePoint.position);
+		if ( targetBody != null )
+			targetBody.AddForceAtPosition ( customTransform.TransformDirection ( Vector3.forward ) * outputForce, forcePoint.position );
 
+	}
+
+	void LateUpdate ()
+	{
 		if (rpm > rpmBlur) {
 			propBlur.enabled = true;
             float blurRate = -0.5f + (rpm - rpmBlur) / (maxRpm - rpmBlur);
-            propBlur.transform.Rotate(0f, 0f, blurRate);
-			propBlades.gameObject.SetActive (false);
-		}
-		if (rpm < rpmBlur) {
+			propBlur.transform.Rotate ( 0f, 0f, blurRate );
+			if ( propBlades.gameObject.activeSelf )
+				propBlades.gameObject.SetActive ( false );
+		} else {
+			customTransform.Rotate ( 0f, rpm * 60 * Time.deltaTime, 0 );
 			propBlur.enabled = false;
-			propBlades.gameObject.SetActive (true);
+			if ( !propBlades.gameObject.activeSelf )
+				propBlades.gameObject.SetActive ( true );
 		}
 	}
 
