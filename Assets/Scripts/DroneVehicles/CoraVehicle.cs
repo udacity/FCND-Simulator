@@ -25,6 +25,7 @@ namespace DroneVehicles
         public AircraftControl aircraftControl;
 
         public SimpleProp prop;
+		public MoreRotors rotors;
         Vector3 positionUnity;
         Vector3 eulerAngles;
         Vector3 localVelocity;
@@ -123,6 +124,7 @@ namespace DroneVehicles
             inputsManager.SetRudder(rudder);
             inputsManager.SetElevator(elevator);
             prop.SetRPM(throttleRPM);
+			rotors.SetRPM ( throttleRPM );
             ApplyForceTorque();
 
             UIUpdate();

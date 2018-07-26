@@ -52,6 +52,9 @@ public class FixedWingUI : MonoBehaviour
 	public UIBarValue rudder;
 	public UIBarValue aileron;
 
+	// control mode text
+	public TMP_Text controlModeText;
+
 	// other variables
 	public ScenarioManager scenarioManager;
 
@@ -85,6 +88,7 @@ public class FixedWingUI : MonoBehaviour
 		drone = Simulation.ActiveDrone;
 		networkController = NetworkController.instance;
 		networkController.AddConnectionEvent ( new System.Action<ConnectionState> ( OnConnectionStateChanged ) );
+		SetControlModeText ( 2 );
 	}
 
 	void Update ()
@@ -342,5 +346,23 @@ public class FixedWingUI : MonoBehaviour
 	void OnVizParameter2Update (float value, int decimals = 1)
 	{
 		parameter2.UpdateValue ( value, decimals );
+	}
+
+	/// <summary>
+	/// Sets the label for control mode:
+	/// 0=vtol, 1=hybrid, 2=fixedwing
+	/// </summary>
+	public void SetControlModeText (int mode)
+	{
+		if ( controlModeText != null )
+		{
+			if ( mode == 0 )
+				controlModeText.text = "VTOL";
+			else
+			if ( mode == 1 )
+				controlModeText.text = "HYBRID";
+			else
+				controlModeText.text = "FIXED-WING";
+		}
 	}
 }
