@@ -96,7 +96,7 @@ public class SimpleProp : MonoBehaviour {
 			if ( propBlades.gameObject.activeSelf )
 				propBlades.gameObject.SetActive ( false );
 		} else {
-			customTransform.Rotate ( 0f, rpm * 60 * Time.deltaTime, 0 );
+			customTransform.Rotate ( 0f, rpm * 6 * Time.deltaTime, 0 );
 			propBlur.enabled = false;
 			if ( !propBlades.gameObject.activeSelf )
 				propBlades.gameObject.SetActive ( true );

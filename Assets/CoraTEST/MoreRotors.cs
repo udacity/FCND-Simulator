@@ -57,7 +57,7 @@ public class MoreRotors : MonoBehaviour
 		if ( rpm > blurRPM )
 			frameRPM = -0.5f + ( rpm - blurRPM ) / ( maxRPM - blurRPM );
 		else
-			frameRPM = rpm * 60f * Time.deltaTime;
+			frameRPM = rpm * 6f * Time.deltaTime;
 		Rotate ( frameRPM, 0 );
 	}
 
