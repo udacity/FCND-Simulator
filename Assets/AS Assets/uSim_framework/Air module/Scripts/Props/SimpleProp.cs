@@ -33,7 +33,9 @@ public class SimpleProp : MonoBehaviour {
 
 	//visuals
 	public Transform propBlades;
+    public Vector3 bladeForward;
 	public MeshRenderer propBlur;
+    public Vector3 blurForward;
 
 	//force apply
 	public Rigidbody targetBody;
@@ -89,18 +91,20 @@ public class SimpleProp : MonoBehaviour {
 
 	void LateUpdate ()
 	{
+        
 		if (rpm > rpmBlur) {
 			propBlur.enabled = true;
             float blurRate = -0.5f + (rpm - rpmBlur) / (maxRpm - rpmBlur);
-			propBlur.transform.Rotate ( 0f, 0f, blurRate );
-			if ( propBlades.gameObject.activeSelf )
+            propBlur.transform.Rotate(blurRate*blurForward);
+            if ( propBlades.gameObject.activeSelf )
 				propBlades.gameObject.SetActive ( false );
 		} else {
-			customTransform.Rotate ( 0f, rpm * 6 * Time.deltaTime, 0 );
+			propBlades.transform.Rotate ( rpm * 6 * Time.deltaTime*bladeForward);
 			propBlur.enabled = false;
 			if ( !propBlades.gameObject.activeSelf )
 				propBlades.gameObject.SetActive ( true );
 		}
+        
 	}
 
     public void SetRPM(float r)

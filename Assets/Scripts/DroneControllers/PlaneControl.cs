@@ -124,14 +124,14 @@ public class PlaneControl : IControlLaw {
         if (dt == 0.0)
             dt = Time.fixedDeltaTime;
         speedInt = speedInt + airspeedError * dt;
-        Debug.Log("Kp_speed: " + Kp_speed);
+        //Debug.Log("Kp_speed: " + Kp_speed);
         float outputUnsat = Kp_speed * airspeedError + Ki_speed * speedInt + nominalThrottle;
         
         float output = Mathf.Clamp(outputUnsat, minThrottle, maxThrottle);
         if (Ki_speed != 0.0f)
             speedInt = speedInt + dt / Ki_speed * (output - outputUnsat);
 
-        Debug.Log("Airspeed Error: " + airspeedError + " Output: " + output + " KP: " + Kp_speed);
+        //Debug.Log("Airspeed Error: " + airspeedError + " Output: " + output + " KP: " + Kp_speed);
         return output;
         
     }

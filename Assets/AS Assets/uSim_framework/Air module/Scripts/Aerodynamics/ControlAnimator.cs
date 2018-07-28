@@ -8,6 +8,7 @@ public class ControlAnimator : MonoBehaviour {
 		
 		public Transform obj;
 		public float maxDeflection;
+        public Transform customVisualization;
 		
 	}
 
@@ -47,12 +48,27 @@ public class ControlAnimator : MonoBehaviour {
 				Vector3 eulers = rightaileron.obj.localEulerAngles;
 				eulers.x = Mathf.Lerp ( 0f , rightaileron.maxDeflection , Mathf.Abs(inputs.aileron));
 				rightaileron.obj.localEulerAngles = eulers;
-			}
+                if (rightaileron.customVisualization != null)
+                {
+                    Transform customVisualization = rightaileron.customVisualization;
+                    eulers.y = customVisualization.localEulerAngles.y;
+                    eulers.z = customVisualization.localEulerAngles.z;
+                    customVisualization.localEulerAngles = eulers;
+                }
+            }
 			if (inputs.aileron <= 0){
 				Vector3 eulers = rightaileron.obj.localEulerAngles;
 				eulers.x = Mathf.Lerp ( 0f , -rightaileron.maxDeflection , Mathf.Abs(inputs.aileron));
 				rightaileron.obj.localEulerAngles = eulers;
-			}
+                if (rightaileron.customVisualization != null)
+                {
+                    Transform customVisualization = rightaileron.customVisualization;
+                    eulers.y = customVisualization.localEulerAngles.y;
+                    eulers.z = customVisualization.localEulerAngles.z;
+                    customVisualization.localEulerAngles = eulers;
+                }
+            }
+
 		}
 		foreach( ControlSurface leftaileron in leftAilerons){
 			
@@ -60,12 +76,26 @@ public class ControlAnimator : MonoBehaviour {
 				Vector3 eulers = leftaileron.obj.localEulerAngles;
 				eulers.x = Mathf.Lerp ( 0f , -leftaileron.maxDeflection , Mathf.Abs(inputs.aileron));
 				leftaileron.obj.localEulerAngles = eulers;
-			}
+                if (leftaileron.customVisualization != null)
+                {
+                    Transform customVisualization = leftaileron.customVisualization;
+                    eulers.y = customVisualization.localEulerAngles.y;
+                    eulers.z = customVisualization.localEulerAngles.z;
+                    customVisualization.localEulerAngles = eulers;
+                }
+            }
 			if (inputs.aileron <= 0){
 				Vector3 eulers = leftaileron.obj.localEulerAngles;
 				eulers.x = Mathf.Lerp ( 0f , leftaileron.maxDeflection , Mathf.Abs(inputs.aileron));
 				leftaileron.obj.localEulerAngles = eulers;
-			}
+                if (leftaileron.customVisualization != null)
+                {
+                    Transform customVisualization = leftaileron.customVisualization;
+                    eulers.y = customVisualization.localEulerAngles.y;
+                    eulers.z = customVisualization.localEulerAngles.z;
+                    customVisualization.localEulerAngles = eulers;
+                }
+            }
 
 		}	
 
@@ -89,19 +119,33 @@ public class ControlAnimator : MonoBehaviour {
 				Vector3 eulers = elevator.obj.localEulerAngles;
 			eulers.x = Mathf.Lerp ( -elevator.maxDeflection , elevator.maxDeflection ,0.5f + inputs.elevator + inputs.trimauto + inputs.trim);
 				elevator.obj.localEulerAngles = eulers;
+            if (elevator.customVisualization != null)
+            {
+                Transform customVisualization = elevator.customVisualization;
+                eulers.y = customVisualization.localEulerAngles.y;
+                eulers.z = customVisualization.localEulerAngles.z;
+                customVisualization.localEulerAngles = eulers;
+            }
 
-			
-		}
+
+        }
 		
 		foreach ( ControlSurface rudder in rudders){
 					
 			Vector3 eulers = rudder.obj.localEulerAngles;
 			eulers.y = Mathf.Lerp ( rudder.maxDeflection , -rudder.maxDeflection , 0.5f + inputs.rudder);
 			rudder.obj.localEulerAngles = eulers;
-			
-			
-			
-		}
+            if (rudder.customVisualization != null)
+            {
+                Transform customVisualization = rudder.customVisualization;
+                eulers.y = customVisualization.localEulerAngles.y;
+                eulers.z = customVisualization.localEulerAngles.z;
+                customVisualization.localEulerAngles = eulers;
+            }
+
+
+
+        }
 		
 		foreach (ControlSurface slat in slats){
 

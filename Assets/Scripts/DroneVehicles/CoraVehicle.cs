@@ -124,7 +124,7 @@ namespace DroneVehicles
             inputsManager.SetRudder(rudder);
             inputsManager.SetElevator(elevator);
             prop.SetRPM(throttleRPM);
-			rotors.SetRPM ( throttleRPM );
+			rotors.SetRPM ( thrustOut );
             ApplyForceTorque();
 
             UIUpdate();
