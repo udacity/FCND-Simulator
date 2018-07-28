@@ -1390,8 +1390,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 137456828}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 13.58, z: 0}
-  m_LocalScale: {x: 4, y: 2, z: 4}
+  m_LocalPosition: {x: 0, y: 11.32, z: 0}
+  m_LocalScale: {x: 25, y: 2, z: 25}
   m_Children: []
   m_Father: {fileID: 1032748912}
   m_RootOrder: 0
@@ -1636,7 +1636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inertiaTensors: {x: 1825, y: 2660, z: 1285}
-  speed: 41
+  speed: 0
   ias: 0
   verticalSpeed: 0
   cog: {fileID: 100201676}
@@ -1708,7 +1708,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 155553747}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1500, y: 450, z: 0}
+  m_LocalPosition: {x: 1863, y: 75, z: 379}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1670984985}
@@ -1761,17 +1761,17 @@ MonoBehaviour:
   vehicle: {fileID: 155553762}
   sensor: {fileID: 155553760}
   planeControl:
-    Kp_speed: 0
-    Ki_speed: 0
+    Kp_speed: 0.02
+    Ki_speed: 0.02
     speedInt: 0
     minThrottle: 0
     maxThrottle: 1
     maxSpeedInt: 0.25
     nominalThrottle: 0.66
-    Kp_pitch: 8
-    Kp_q: 5
-    Kp_alt: 0
-    Ki_alt: 0
+    Kp_pitch: 5
+    Kp_q: 1
+    Kp_alt: 0.03
+    Ki_alt: 0.01
     altInt: 0
     minPitch: -0.5235988
     maxPitch: 0.5235988
@@ -1822,7 +1822,7 @@ MonoBehaviour:
     posctl_band: 0.1
   quadPlaneControl:
     QuadControl:
-      Kp_r: 0.04
+      Kp_r: 4
       Kp_hdot: 2.5
       Ki_hdot: 0.25
       Kp_p: 0.1
@@ -1841,17 +1841,17 @@ MonoBehaviour:
       Kp_yaw: 2.5
       posctl_band: 0.1
     PlaneControl:
-      Kp_speed: 0
-      Ki_speed: 0
+      Kp_speed: 0.02
+      Ki_speed: 0.02
       speedInt: 0
       minThrottle: 0
       maxThrottle: 1
       maxSpeedInt: 0.25
       nominalThrottle: 0.66
-      Kp_pitch: 8
-      Kp_q: 5
-      Kp_alt: 0
-      Ki_alt: 0
+      Kp_pitch: 5
+      Kp_q: 1
+      Kp_alt: 0.03
+      Ki_alt: 0.01
       altInt: 0
       minPitch: -0.5235988
       maxPitch: 0.5235988
