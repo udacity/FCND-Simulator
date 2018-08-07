@@ -23,9 +23,14 @@ public class QuadPlaneControl : IControlLaw {
     {
         QuadControl = quadControl;
         PlaneControl = planeControl;
-
     }
 
-    
+    public void SetScenarioParameters(string[] names)
+    {
+        QuadControl.SetScenarioParameters(names);
+        PlaneControl.SetScenarioParameters(names);
+    }
+
+
 
 }

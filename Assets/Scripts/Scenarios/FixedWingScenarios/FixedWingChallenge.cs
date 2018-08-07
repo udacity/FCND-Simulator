@@ -127,7 +127,6 @@ public class FixedWingChallenge: Scenario
         if (state == 1)
         {
 
-            Debug.Log("Straight Line Segment");
             flag = 1;
             Vector2 r = new Vector2(prevWaypoint.x, prevWaypoint.y);
             Vector2 q = q0;
@@ -175,7 +174,6 @@ public class FixedWingChallenge: Scenario
 
         if (state == 2)
         {
-            Debug.Log("Orbit Segment");
             flag = 2;
             Vector2 c = new Vector2(currWaypoint.x, currWaypoint.y) - (radius / Mathf.Sin(angle / 2)) * ((q0 - q1).normalized);
             float rho = radius;
@@ -199,7 +197,6 @@ public class FixedWingChallenge: Scenario
                 
                 Vector3 orbitCenter = new Vector3(c.x, c.y, prevWaypoint.z);
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, lambda*41.0f / radius);
-                Debug.Log("Orbit Center: " + orbitCenter);
                 if (!drone.MotorsArmed())
                 {
                     drone.SetControlMode(8);

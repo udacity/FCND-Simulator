@@ -6,37 +6,42 @@ using DroneInterface;
 [System.Serializable]
 public class QuadControl : IControlLaw {
 
-    public float Kp_r = 0.04f;//20.0f;
+    public float Kp_r;//20.0f;
 
-    public float Kp_hdot = 2.5f;//5.0f;
-    public float Ki_hdot = 0.25f;//0.5f;
+    public float Kp_hdot;//5.0f;
+    public float Ki_hdot;//0.5f;
 
-    public float Kp_p = 0.1f;//10.0f;
-    public float Kp_roll = 8.0f;//6.5f;
+    public float Kp_p;//10.0f;
+    public float Kp_roll;//6.5f;
 
-    public float Kp_q = 0.1f;//10.0f;
-    public float Kp_pitch = 8.0f;//6.5f;
+    public float Kp_q;//10.0f;
+    public float Kp_pitch;//6.5f;
 
-    public float maxTilt = 0.5f;
-    public float maxAscentRate = 5.0f;
-    public float maxDescentRate = 2.0f;
+    public float maxTilt;
+    public float maxAscentRate;
+    public float maxDescentRate;
 
     private float hDotInt;
     private float maxHDotInt = 0.1f;
 
-    public float Kp_pos = 2.0f;
-    public float Kp_pos2 = 0.2f;
-    public float Kp_alt = 10.0f;
-    public float posHoldDeadband = 0.5f;
-    public float maxSpeed = 10.0f;
-    public float Kp_vel = 0.2f;
-    public float Kp_yaw = 2.50f;
+    public float Kp_pos;
+    public float Kp_pos2;
+    public float Kp_alt;
+    public float posHoldDeadband;
+    public float maxSpeed;
+    public float Kp_vel;
+    public float Kp_yaw;
 
-    public float posctl_band = 0.1f;
+    public float posctl_band;
 
     public QuadControl()
     {
         hDotInt = 0.0f;
+    }
+
+    public void SetScenarioParameters(string[] names)
+    {
+
     }
 
     /// <summary>
@@ -63,6 +68,21 @@ public class QuadControl : IControlLaw {
 
         velocityCmd.z = Kp_alt * positionError.z;
         return velocityCmd;
+    }
+
+    public Vector3 PositionVelocityLoop(Vector3 targetPosition, Vector3 targetVelocity, Vector3 localPosition, Vector3 localVelocity, float yaw)
+    {
+        Vector3 positionError = targetPosition - localPosition;
+        Vector3 velocityError = targetVelocity - localVelocity;
+
+        Vector3 output;
+
+        output.y = -((Kp_pos * positionError.x + Kp_vel * velocityError.x)*Mathf.Cos(yaw) + (Kp_pos * positionError.y + Kp_vel * velocityError.y)*Mathf.Sin(yaw));
+        output.x = -(Kp_pos * positionError.x + Kp_vel * velocityError.x) * Mathf.Sin(yaw) + (Kp_pos * positionError.y + Kp_vel * velocityError.y) * Mathf.Cos(yaw);
+
+        output.z = Kp_alt * positionError.z + Kp_hdot*velocityError.z;
+
+        return output;
     }
 
     /// <summary>

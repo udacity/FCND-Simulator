@@ -18,6 +18,11 @@ public class PositionControl : IControlLaw
 
     }
 
+    public void SetScenarioParameters(string[] names)
+    {
+
+    }
+
     /// <summary>
     /// Closes a loop on the position error.
     /// </summary>

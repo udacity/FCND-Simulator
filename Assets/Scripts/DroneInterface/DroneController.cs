@@ -111,6 +111,12 @@ namespace DroneInterface
         void CommandControls(float controlX, float controlY, float controlZ, float controlW);
 
         /// <summary>
+        /// Command the vehicle control inputs directly
+        /// </summary>
+        /// <param name="controls">an array of control inputs defined between -1 and 1</param>
+        void CommandControls(float[] controls);
+
+        /// <summary>
         /// Command a vehicle along a vector defined the position and velocity vectors
         /// </summary>
         /// <param name="localPosition">reference local position NED in m</param>

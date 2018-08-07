@@ -24,7 +24,7 @@ public abstract class Scenario : MonoBehaviour
 	public LineRenderer[] pathLines;
 
     public IDrone drone;
-    public PlaneControl planeControl;
+    public IControlLaw planeControl;
     public float unityTimestep = 0.02f; // Physics timestep used when tuning gains within Unity
     public float pythonTimestep = 0.005f; // Physics timestep used when running Python control
 
@@ -36,7 +36,6 @@ public abstract class Scenario : MonoBehaviour
     {
         droneObject = GameObject.Find("Plane Drone");
         inertiaTensor = droneObject.GetComponent<AircraftControl>().inertiaTensors;
-        Debug.Log("Inertia Tensor: " + inertiaTensor);
     }
 
     void OnEnable ()
@@ -49,16 +48,14 @@ public abstract class Scenario : MonoBehaviour
     public void Init ()
 	{
         drone = Simulation.ActiveDrone;
-        planeControl = (PlaneControl)GameObject.Find("Plane Drone").GetComponent<IDroneController>().control;
+        
+        
         if (drone == null)
             Debug.Log("Null Active Drone");
 
         Debug.Log ( "Initializing scenario: " + data.title );
 		IsRunning = false;
-//		tuningParameters.ForEach ( x => x.Reset () );
-
-		// set default (fixed) values for scenario
-		planeControl.SetScenarioParameters ( tunableParameters );
+//		tuningParameters.ForEach ( x => x.Reset () );		
 
         if (droneObject == null)
             droneObject = GameObject.Find("Plane Drone");
@@ -66,13 +63,17 @@ public abstract class Scenario : MonoBehaviour
         droneObject.GetComponent<Rigidbody>().inertiaTensor = inertiaTensor;
 
         drone.InitializeVehicle(data.vehiclePosition, data.vehicleVelocity, data.vehicleEulerAngles);
-        FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance );
+        FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance, data.cameraAngle );
         drone.SetGuided(false);
         drone.ArmDisarm(false);
 
 		pathLines.ForEach ( x => x.enabled = true );
-        OnInit ();
-	}
+        OnInit();
+        planeControl = GameObject.Find("Plane Drone").GetComponent<IDroneController>().control;
+        // set default (fixed) values for scenario
+        planeControl.SetScenarioParameters(tunableParameters);
+
+    }
 
 	#if UNITY_EDITOR
 	void Update ()

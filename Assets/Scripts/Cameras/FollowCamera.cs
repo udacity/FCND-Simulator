@@ -14,6 +14,7 @@ public class FollowCamera : MonoBehaviour
     public float height = 4;
     public float zoomSpeed = 4;
     public float rotateSpeed = 2;
+    public float followAngle = 0;
 
     public Vector2[] zoomLevels;
 	public int initialZoomLevel;
@@ -59,7 +60,7 @@ public class FollowCamera : MonoBehaviour
     void LateUpdate()
     {
 
-		if ( !Simulation.UIIsOpen && lookMode == CameraLookMode.Follow )
+		if ( !Simulation.UIIsOpen && (lookMode == CameraLookMode.Follow  || lookMode == CameraLookMode.Angle))
 		{
 			if ( isInTransition )
 			{
@@ -153,26 +154,35 @@ public class FollowCamera : MonoBehaviour
 
 		switch ( lookMode )
 		{
-		case CameraLookMode.Left:
-			transform.position = targetTransform.position - targetTransform.right * followDistance;
-			transform.rotation = Quaternion.LookRotation ( targetTransform.right, Vector3.up );
-			break;
+		    case CameraLookMode.Left:
+			    transform.position = targetTransform.position - targetTransform.right * followDistance;
+			    transform.rotation = Quaternion.LookRotation ( targetTransform.right, Vector3.up );
+			    break;
 
-		case CameraLookMode.Right:
-			transform.position = targetTransform.position + targetTransform.right * followDistance;
-			transform.rotation = Quaternion.LookRotation ( -targetTransform.right, Vector3.up );
-			break;
+		    case CameraLookMode.Right:
+			    transform.position = targetTransform.position + targetTransform.right * followDistance;
+			    transform.rotation = Quaternion.LookRotation ( -targetTransform.right, Vector3.up );
+			    break;
 
-		case CameraLookMode.Top:
-			transform.position = targetTransform.position + Vector3.up * followDistance;
-			transform.rotation = Quaternion.LookRotation ( Vector3.down, Vector3.ProjectOnPlane ( targetTransform.forward, Vector3.up ) );
-			break;
+		    case CameraLookMode.Top:
+			    transform.position = targetTransform.position + Vector3.up * followDistance;
+			    transform.rotation = Quaternion.LookRotation ( Vector3.down, Vector3.ProjectOnPlane ( targetTransform.forward, Vector3.up ) );
+			    break;
 
-		case CameraLookMode.Follow:
-                transform.position = targetTransform.position - transform.forward * followDistance;
+		    case CameraLookMode.Follow:
                 transform.rotation = Quaternion.LookRotation(targetTransform.forward, Vector3.up);
+                transform.position = targetTransform.position - transform.forward * followDistance;
+                break;
 
-			break;
+            case CameraLookMode.Angle:
+                Vector3 flatForward = targetTransform.forward;
+                flatForward.y = 0f;
+                flatForward.Normalize();
+                transform.position = targetTransform.position - followDistance * flatForward * Mathf.Cos(followAngle) + followDistance*Vector3.up * Mathf.Sin(followAngle);
+                Vector3 lookVector = targetTransform.position - transform.position;
+                transform.rotation = Quaternion.LookRotation(lookVector, Vector3.up);
+                break;
+
 		}
 
 /*        if (sideCam)
@@ -199,9 +209,10 @@ public class FollowCamera : MonoBehaviour
 		transform.eulerAngles = euler;
 	}
 
-	public void SetLookMode (CameraLookMode mode, float distance)
+	public void SetLookMode (CameraLookMode mode, float distance, float angle = 0)
 	{
 		lookMode = mode;
 		followDistance = distance;
+        followAngle = angle;
 	}
 }

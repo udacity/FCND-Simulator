@@ -4,6 +4,7 @@ using DroneVehicles;
 using DroneSensors;
 using DroneInterface;
 using UdaciPlot;
+using System;
 
 namespace DroneControllers
 {
@@ -501,6 +502,11 @@ namespace DroneControllers
             accelerationTarget.x = v.x;
             accelerationTarget.y = v.y;
             accelerationTarget.z = v.z;
+        }
+
+        public void CommandControls(float[] controls)
+        {
+
         }
 
 

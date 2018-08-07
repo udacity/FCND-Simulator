@@ -3,6 +3,7 @@ using DroneControllers;
 using DroneVehicles;
 using DroneSensors;
 using UnityEngine;
+using System;
 
 namespace Drones
 {
@@ -321,6 +322,12 @@ namespace Drones
         public void CommandControls(float controlX, float controlY, float controlZ, float controlW)
         {
             Autopilot.CommandControls(controlX, controlY, controlZ, controlW);
+        }
+
+        public void CommandControls(float[] controls)
+        {
+            Autopilot.CommandControls(controls);
+
         }
 
         /// <summary>

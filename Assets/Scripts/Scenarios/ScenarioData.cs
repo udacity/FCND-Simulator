@@ -15,6 +15,7 @@ public class ScenarioData
 	public Vector3 vehicleVelocity;
 	public CameraLookMode cameraLookMode;
 	public float cameraDistance;
+    public float cameraAngle;
 	public string title;
 	[Multiline]
 	public string description;

@@ -227,68 +227,68 @@ namespace DroneVehicles
 
         public Vector3 CoordsUnity()
         {
-            StateUpdate();
+            //StateUpdate();
             return positionUnity;
         }
 
         public Vector3 CoordsLocal()
         {
-            StateUpdate();
+            //StateUpdate();
             return positionUnity.UnityToENUDirection().ENUToNED();
         }
 
 
         public Vector3 AttitudeEuler()
         {
-            StateUpdate();
+            //StateUpdate();
             return Mathf.Deg2Rad * eulerAngles.UnityToNEDRotation();
         }
 
         public Vector4 AttitudeQuaternion()
         {
-            StateUpdate();
+            //StateUpdate();
             return AttitudeEuler().ToRHQuaternion();
         }
 
         public Vector3 VelocityLocal()
         {
-            StateUpdate();
+            //StateUpdate();
             return localVelocity.UnityToENUDirection().ENUToNED();
         }
 
         public Vector3 VelocityBody()
         {
-            StateUpdate();
+            //StateUpdate();
             return bodyVelocity.UnityToENUDirection().ENUToNED();
         }
 
 		public Vector3 VelocityUnity()
 		{
-            StateUpdate();
+            //StateUpdate();
             return rb.velocity;
 		}
 
         public Vector3 AccelerationBody()
         {
-            StateUpdate();
+            //StateUpdate();
             return localAcceleration.UnityToENUDirection().ENUToNED();
         }
 
         public Vector3 AccelerationLocal()
         {
-            StateUpdate();
+            //StateUpdate();
             return bodyAcceleration.UnityToENUDirection().ENUToNED();
         }
 
         public Vector3 AngularRatesBody()
         {
-            StateUpdate();
+            //StateUpdate();
             return bodyAngularVelocity.UnityToNEDRotation();
         }
 
 		public Vector3 AngularRatesUnity ()
 		{
-            StateUpdate();
+            //StateUpdate();
             return rb.angularVelocity;
 		}
 

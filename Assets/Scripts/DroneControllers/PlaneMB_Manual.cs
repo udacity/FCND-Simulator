@@ -22,9 +22,7 @@ namespace MovementBehaviors
         }
 
         public override void OnLateUpdate()
-        {
-            
-            
+        {            
             if (!controller.Guided())
             {
                 float elevator, aileron, rudder, throttle;
@@ -35,11 +33,7 @@ namespace MovementBehaviors
                 throttle = controller.MomentThrustTarget.w + throttleStep * Input.GetAxis("Thrust");
                 controller.CommandControls(aileron, elevator, rudder, throttle);
                 
-            }
-
-            
-            
-            
+            }            
         }
     }
 }

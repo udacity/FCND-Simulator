@@ -74,7 +74,7 @@ namespace Messaging
             }
             else if (GameObject.Find("Plane Drone") != null)
             {
-                drone = GameObject.Find("Plane Drone").GetComponent<PlaneDrone>();
+                drone = GameObject.Find("Plane Drone").GetComponent<IDrone>();
                 droneType = (uint)DRONE_TYPE.PLANE;
             }
             // setup event listeners
@@ -263,9 +263,9 @@ namespace Messaging
         /// <summary>
         public List<byte[]> Heartbeat()
         {
-            var guided = drone.Guided();
-            var armed = drone.MotorsArmed();
-
+            bool guided = drone.Guided();            
+            bool armed = drone.MotorsArmed();
+            
             // build the base mode
             byte base_mode = (byte)MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
             if (armed)
@@ -280,7 +280,7 @@ namespace Messaging
                 custom_mode = ((byte)MAIN_MODE.CUSTOM_MAIN_MODE_OFFBOARD << 16);
             }
 
-
+            
             var msg = new Msg_heartbeat
             {
                 type = 1,
@@ -295,6 +295,7 @@ namespace Messaging
             var serializedPacket = mav.SendV2(msg);
             var msgs = new List<byte[]>();
             msgs.Add(serializedPacket);
+            
             return msgs;
         }
 
@@ -487,6 +488,9 @@ namespace Messaging
                 case "MavLink.Msg_set_attitude_target":
                     MsgSetAttitudeTarget((Msg_set_attitude_target)packet.Message);
                     break;
+                case "MavLink.Msg_set_actuator_control_target":
+                    MsgSetActuatorControlTarget((Msg_set_actuator_control_target) packet.Message);
+                    break;
                 case "MavLink.Msg_position_target_local_ned":
                     MsgLocalPositionTarget((Msg_position_target_local_ned)packet.Message);
                     break;
@@ -576,6 +580,12 @@ namespace Messaging
                 }
                         
             }
+        }
+
+        void MsgSetActuatorControlTarget(Msg_set_actuator_control_target msg)
+        {
+            Debug.Log("Received: " + msg.ToString() + " Group: " + msg.group_mlx + " Control: " + msg.controls.ArrayToString());
+            drone.CommandControls(msg.controls);
         }
 
         /// <summary>

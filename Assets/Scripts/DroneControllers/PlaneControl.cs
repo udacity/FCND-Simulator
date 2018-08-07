@@ -38,7 +38,7 @@ public class PlaneControl : IControlLaw {
 //    public float Ki_alt_student;
 
     public float altInt = 0.0f;
-    public float minPitch = -30f * Mathf.PI / 180f;
+    public float minPitch = -10f * Mathf.PI / 180f;
     public float maxPitch = 30f * Mathf.PI / 180f;
     public float maxAltInt = 0.1f;
 
@@ -51,7 +51,7 @@ public class PlaneControl : IControlLaw {
 //    public float Ki_speed2_student;
 
     public float speedInt2 = 0.0f;
-    public float minPitch2 = -90f * Mathf.PI / 180f;
+    public float minPitch2 = -10f * Mathf.PI / 180f;
     public float maxPitch2 = 90f * Mathf.PI / 180f;
     public float maxSpeedInt2 = 10.0f;
 

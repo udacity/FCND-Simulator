@@ -27,8 +27,13 @@ public class AttitudeControl : IControlLaw {
     private float maxHDotInt = 0.1f;
 
 
-	// Use this for initialization
-	public AttitudeControl () {
+    public void SetScenarioParameters(string[] names)
+    {
+
+    }
+
+    // Use this for initialization
+    public AttitudeControl () {
         hDotInt = 0.0f;
     }
 	

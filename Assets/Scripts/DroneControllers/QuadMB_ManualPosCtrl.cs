@@ -10,12 +10,11 @@ namespace MovementBehaviors
     public class QuadMB_ManualPosCtrl : QuadMovementBehavior
     {
         float prevTime = 0.0f;
+        float maxSpeed = 10f;
+        float stoppingTime = 0.0f;
         public override void OnLateUpdate()
         {
 
-
-            //var QuadControl = controller.QuadControl;
-            //var QuadControl = controller.QuadControl;
             QuadControl QuadControl = (QuadControl)controller.control;
 
             Vector3 attitude = controller.ControlAttitude;// new Vector3(nav.GetRoll(), nav.GetPitch(), nav.GetYaw());
@@ -23,40 +22,46 @@ namespace MovementBehaviors
             Vector3 localVelocity = controller.ControlVelocity;// new Vector3(nav.GetNorthVelocity(), nav.GetEastVelocity(), nav.GetDownVelocity());
             Vector3 localPosition = controller.ControlPosition;// new Vector3(nav.GetLocalNorth(), nav.GetLocalEast(), nav.GetLocalDown());
 
-            float cosYaw = Mathf.Cos(attitude.z);
-            float sinYaw = Mathf.Sin(attitude.z);
-
-
-            Vector3 deltaPosition = new Vector3(0.0f, 0.0f, 0.0f);
-            Vector3 posCmd = new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), -Input.GetAxis("Thrust"));
-            float yawCmd = Input.GetAxis("Yaw");
-
-            float posCmdNorm = Mathf.Sqrt(posCmd.x * posCmd.x + posCmd.y * posCmd.y);
-            float maxDistance = Mathf.Min(10.0f * Mathf.Sqrt(localVelocity.x * localVelocity.x + localVelocity.y * localVelocity.y) + 2.0f, 5.0f);
-            Vector3 posHoldLocal = controller.PositionTarget;
-            if (posCmdNorm > QuadControl.posctl_band)
+            Vector3 velocityCmd;
+            float yawCmd;
+            Vector3 targetPosition;
+            if (!controller.Guided())
             {
-                deltaPosition.x = posCmd.x / posCmdNorm * maxDistance;
-                deltaPosition.y = posCmd.y / posCmdNorm * maxDistance;
-                posHoldLocal.x = localPosition.x + deltaPosition.x * cosYaw - deltaPosition.y * sinYaw;
-                posHoldLocal.y = localPosition.y + deltaPosition.x * sinYaw + deltaPosition.y * cosYaw;
+                velocityCmd = maxSpeed * (new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), -Input.GetAxis("Thrust"))).normalized;
+                yawCmd = Input.GetAxis("Yaw");
+
+                targetPosition = localPosition + localVelocity*stoppingTime;
+
+                if (velocityCmd.x == 0 && velocityCmd.y == 0)
+                {
+                    targetPosition.x = controller.PositionTarget.x;
+                    targetPosition.y = controller.PositionTarget.y;
+                }
+
+                if (velocityCmd.z == 0)
+                {
+                    targetPosition.z = controller.PositionTarget.z;
+                }
+            }
+            else
+            {
+                velocityCmd = controller.VelocityTarget;
+                targetPosition = controller.PositionTarget;
+                yawCmd = controller.AttitudeTarget.z;
+
             }
 
-            float maxDeltaAltitude = 5.0f;
-            if (Mathf.Abs(posCmd.z) > QuadControl.posctl_band)
-            {
-                deltaPosition.z = posCmd.z * maxDeltaAltitude;
-                posHoldLocal.z = localPosition.z + deltaPosition.z;
-            }
+            Vector3 targetVelocity;
+            targetVelocity.x = velocityCmd.x * Mathf.Cos(attitude.z) - velocityCmd.y * Mathf.Sin(attitude.z);
+            targetVelocity.y = velocityCmd.x * Mathf.Sin(attitude.z) + velocityCmd.y * Mathf.Cos(attitude.z);
+            targetVelocity.z = velocityCmd.z;
+            Vector3 outerLoop = QuadControl.PositionVelocityLoop(targetPosition, targetVelocity, localPosition, localVelocity, attitude.z);
 
-            controller.PositionTarget = posHoldLocal;
-
-
-            float yawMoment = QuadControl.YawRateLoop(yawCmd, angularVelocity.z);
-            Vector3 targetVelocity = QuadControl.PositionLoop(controller.PositionTarget, localPosition);
             controller.VelocityTarget = targetVelocity;
+            controller.PositionTarget = targetPosition;
 
-            Vector2 targetRollPitch = QuadControl.VelocityLoop(targetVelocity, localVelocity, attitude.z);
+            Vector2 targetRollPitch = new Vector2(outerLoop.x, outerLoop.y);
+
             Vector3 attitudeTarget = controller.AttitudeTarget;
             attitudeTarget.x = targetRollPitch.x;
             attitudeTarget.y = targetRollPitch.y;
@@ -65,19 +70,21 @@ namespace MovementBehaviors
 
             Vector2 targetRate = QuadControl.RollPitchLoop(targetRollPitch, attitude);
             Vector3 bodyRateTarget = controller.BodyRateTarget;
+            
             bodyRateTarget.x = targetRate.x;
             bodyRateTarget.y = targetRate.y;
             bodyRateTarget.z = yawCmd;
             controller.BodyRateTarget = bodyRateTarget;
             Vector2 rollPitchMoment = QuadControl.RollPitchRateLoop(targetRate, angularVelocity);
+            float yawMoment = QuadControl.YawRateLoop(yawCmd, angularVelocity.z);
 
             float dt = Time.fixedDeltaTime;
 
-            float thrust = QuadControl.VerticalVelocityLoop(-targetVelocity.z, attitude, -localVelocity.z, dt, 0.5f);
-            
+            float thrust = QuadControl.VerticalVelocityLoop(-(outerLoop.z+velocityCmd.z), attitude, -localVelocity.z, dt, 0.5f);
 
             Vector3 totalMoment = new Vector3(rollPitchMoment.x, rollPitchMoment.y, yawMoment);
             controller.CommandMoment(totalMoment, thrust);
+
         }
 
     }

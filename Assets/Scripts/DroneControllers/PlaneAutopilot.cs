@@ -4,7 +4,7 @@ using DroneVehicles;
 using DroneSensors;
 using DroneInterface;
 using UdaciPlot;
-
+using System;
 
 namespace DroneControllers
 {
@@ -569,6 +569,11 @@ namespace DroneControllers
         public Vector3 LocalAccelerationTarget()
         {
             return accelerationTarget;
+        }
+
+        public void CommandControls(float[] controls)
+        {
+
         }
 
 

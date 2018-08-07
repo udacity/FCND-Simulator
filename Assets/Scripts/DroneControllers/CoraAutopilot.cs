@@ -4,6 +4,7 @@ using DroneVehicles;
 using DroneSensors;
 using DroneInterface;
 using UdaciPlot;
+using System;
 
 namespace DroneControllers
 {
@@ -28,6 +29,7 @@ namespace DroneControllers
         public Vector3 VelocityTarget { get { return velocityTarget; } set { velocityTarget = value; } } //north, east, down, velocity targets in meters/second
         public Vector3 AccelerationTarget { get { return accelerationTarget; } set { accelerationTarget = value; } } //north, east, down acceleration targets in meters/second^2
         public Vector4 MomentThrustTarget { get { return momentThrustTarget; } set { momentThrustTarget = value; } }
+        public Vector3 ControlTarget { get { return controlTarget; } set { controlTarget = value; } }
 
         public Vector3 ControlAttitude { get { return AttitudeEuler(); } }
         public Vector3 ControlPosition { get { return PositionLocal(); } }
@@ -43,6 +45,7 @@ namespace DroneControllers
         public Vector3 velocityTarget = Vector3.zero; //north, east, down, velocity targets in meters/second
         public Vector3 accelerationTarget = Vector3.zero; //north, east, down acceleration targets in meters/second^2
         public Vector4 momentThrustTarget = Vector4.zero; //body x, y, z moment target (in Newton*meters), thrust target in Newtons
+        public Vector4 controlTarget = Vector4.zero;
 
         public MovementBehaviorBase<IDroneController> currentMovementBehavior;
         public PlaneMovementBehavior mb_Manual;
@@ -57,6 +60,7 @@ namespace DroneControllers
         public QuadMovementBehavior mb_TransitionToQuad;
         public QuadMovementBehavior mb_AttitudeControl;
         public QuadMovementBehavior mb_PositionControl;
+        public PlaneMovementBehavior mb_HybridQuadPlane;
         public int flightMode;
 
         enum FLIGHT_MODE : int
@@ -73,6 +77,7 @@ namespace DroneControllers
             POSITION = 10,
             TOPLANE = 11,
             TOQUAD = 12,
+            HYBRID = 13,
         }
         void Awake()
         {
@@ -115,7 +120,7 @@ namespace DroneControllers
 
                 if(Input.GetKey("0"))
                 {
-                    flightMode = (int)FLIGHT_MODE.POSITION;
+                    flightMode = (int)FLIGHT_MODE.HYBRID;
                     SelectMovementBehavior();
                 }
                 if (Input.GetKey("9"))
@@ -178,6 +183,11 @@ namespace DroneControllers
         {
             switch (flightMode)
             {
+                case (int)FLIGHT_MODE.HYBRID:
+                    currentControl = quadPlaneControl;
+                    currentMovementBehavior = mb_HybridQuadPlane;
+                    Simulation.FixedWingUI.SetControlModeText(1);
+                    break;
                 case (int)FLIGHT_MODE.TOQUAD:
                     currentControl = quadPlaneControl;
                     currentMovementBehavior = mb_TransitionToQuad;
@@ -296,7 +306,7 @@ namespace DroneControllers
 
         public float Airspeed()
         {
-            return VelocityLocal().magnitude;
+            return vehicle.VelocityBody().x;
         }
 
         public float Sideslip()
@@ -358,10 +368,10 @@ namespace DroneControllers
 
         public void CommandControls(float aileron, float elevator, float rudder, float throttleRPM)
         {
-            momentThrustTarget.w = throttleRPM;
-            momentThrustTarget.x = aileron;
-            momentThrustTarget.y = elevator;
-            momentThrustTarget.z = rudder;
+            controlTarget.w = throttleRPM;
+            controlTarget.x = aileron;
+            controlTarget.y = elevator;
+            controlTarget.z = rudder;
             vehicle.CommandThrottle(throttleRPM);
             vehicle.CommandElevator(elevator);
             vehicle.CommandAileron(aileron);
@@ -660,6 +670,15 @@ namespace DroneControllers
         public Vector3 LocalAccelerationTarget()
         {
             return accelerationTarget;
+        }
+
+        public void CommandControls(float[] controls)
+        {
+            if(flightMode == (int)FLIGHT_MODE.MANUAL)
+            {
+                CommandControls(controls[0], controls[1], controls[2], controls[3]);
+                CommandMoment(new Vector3(controls[4], controls[5], controls[6]), controls[7]);
+            }
         }
 
 

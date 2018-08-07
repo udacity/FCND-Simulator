@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DroneInterface;
 using DroneControllers;
+using System;
 
 public class DummyDrone : MonoBehaviour, IDrone
 {
@@ -612,6 +613,11 @@ public class DummyDrone : MonoBehaviour, IDrone
     }
 
     public void SetHomePosition()
+    {
+
+    }
+
+    public void CommandControls(float[] controls)
     {
 
     }

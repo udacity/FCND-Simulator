@@ -5,6 +5,6 @@ namespace DroneInterface
     /// </summary>
 	public interface IControlLaw
     {
-       
+        void SetScenarioParameters(string[] names);
     }
 }

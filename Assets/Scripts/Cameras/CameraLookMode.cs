@@ -7,5 +7,6 @@ public enum CameraLookMode
 	Left,
 	Right,
 	Top,
-	Follow
+	Follow,
+    Angle
 }
