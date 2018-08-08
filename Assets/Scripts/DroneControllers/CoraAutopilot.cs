@@ -47,6 +47,7 @@ namespace DroneControllers
         public Vector4 momentThrustTarget = Vector4.zero; //body x, y, z moment target (in Newton*meters), thrust target in Newtons
         public Vector4 controlTarget = Vector4.zero;
 
+
         public MovementBehaviorBase<IDroneController> currentMovementBehavior;
         public PlaneMovementBehavior mb_Manual;
         public PlaneMovementBehavior mb_Longitude;
@@ -186,83 +187,97 @@ namespace DroneControllers
                 case (int)FLIGHT_MODE.HYBRID:
                     currentControl = quadPlaneControl;
                     currentMovementBehavior = mb_HybridQuadPlane;
-                    Simulation.FixedWingUI.SetControlModeText(1);
+                    if(Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(1);
                     break;
                 case (int)FLIGHT_MODE.TOQUAD:
                     currentControl = quadPlaneControl;
                     currentMovementBehavior = mb_TransitionToQuad;
-                    Simulation.FixedWingUI.SetControlModeText(1);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(1);
                     break;
                 case (int)FLIGHT_MODE.TOPLANE:
                     currentControl = quadPlaneControl;
                     currentMovementBehavior = mb_TransitionToPlane;
-                    Simulation.FixedWingUI.SetControlModeText(1);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(1);
                     break;
                 case (int)FLIGHT_MODE.POSITION:
                     currentControl = quadControl;
                     PositionTarget = ControlPosition;
                     CommandControls(0, 0, 0, 0);
                     currentMovementBehavior = mb_PositionControl;
-                    Simulation.FixedWingUI.SetControlModeText(0);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(0);
                     break;
                 case (int)FLIGHT_MODE.ATTITUDE:
                     currentControl = quadControl;
                     CommandControls(0, 0, 0, 0);
                     currentMovementBehavior = mb_AttitudeControl;
-                    Simulation.FixedWingUI.SetControlModeText(0);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(0);
                     break;
                 case (int)FLIGHT_MODE.ORBITFOLLOWING:
                     currentControl = planeControl;
                     CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_OrbitFollowing;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
                 case (int)FLIGHT_MODE.LINEFOLLOWING:
                     currentControl = planeControl;
                     CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_LineFollowing;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
                 case (int)FLIGHT_MODE.YAWHOLD:
                     currentControl = planeControl;
                     CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_YawHold;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
                 case (int)FLIGHT_MODE.ASCENDDESCEND:
                     currentControl = planeControl;
                     CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_AscendDescend;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
                 case (int)FLIGHT_MODE.STABILIZED:
                     currentControl = planeControl;
                     CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_Stablized;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
                 case (int)FLIGHT_MODE.LATERAL:
                     currentControl = planeControl;
                     CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_Lateral;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
                 case (int)FLIGHT_MODE.LONGITUDE:
                     currentControl = planeControl;
                     CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_Longitude;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
                 case (int)FLIGHT_MODE.MANUAL:
                     currentControl = planeControl;
                     CommandMoment(Vector3.zero, 0);
                     currentMovementBehavior = mb_Manual;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
                 default:
                     currentControl = planeControl;
                     currentMovementBehavior = mb_Manual;
-                    Simulation.FixedWingUI.SetControlModeText(2);
+                    if (Simulation.FixedWingUI != null)
+                        Simulation.FixedWingUI.SetControlModeText(2);
                     break;
             }
             //currentMovementBehavior = mb_Manual;
