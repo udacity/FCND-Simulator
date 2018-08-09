@@ -584,7 +584,7 @@ namespace Messaging
 
         void MsgSetActuatorControlTarget(Msg_set_actuator_control_target msg)
         {
-            Debug.Log("Received: " + msg.ToString() + " Group: " + msg.group_mlx + " Control: " + msg.controls.ArrayToString());
+            //Debug.Log("Received: " + msg.ToString() + " Group: " + msg.group_mlx + " Control: " + msg.controls.ArrayToString());
             drone.CommandControls(msg.controls);
         }
 

@@ -74,6 +74,7 @@ public class FixedWingUI : MonoBehaviour
 		runtimeObject.SetActive ( false );
 
 		Simulation.FixedWingUI = this;
+        Debug.Log("Fixed Wing UI Set");
 		Simulation.DroneUI = GetComponent<DroneUI> ();
 	}
 
