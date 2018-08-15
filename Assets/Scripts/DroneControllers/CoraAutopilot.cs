@@ -29,7 +29,8 @@ namespace DroneControllers
         public Vector3 VelocityTarget { get { return velocityTarget; } set { velocityTarget = value; } } //north, east, down, velocity targets in meters/second
         public Vector3 AccelerationTarget { get { return accelerationTarget; } set { accelerationTarget = value; } } //north, east, down acceleration targets in meters/second^2
         public Vector4 MomentThrustTarget { get { return momentThrustTarget; } set { momentThrustTarget = value; } }
-        public Vector3 ControlTarget { get { return controlTarget; } set { controlTarget = value; } }
+        public Vector4 ControlTarget { get { return controlTarget; } set { controlTarget = value; } }
+
 
         public Vector3 ControlAttitude { get { return AttitudeEuler(); } }
         public Vector3 ControlPosition { get { return PositionLocal(); } }
@@ -314,14 +315,17 @@ namespace DroneControllers
         public Vector3 PositionLocal()
         {
             if (simpleMode)
-                return vehicle.CoordsLocal();
+                return vehicle.CoordsLocal() + sensor.LocalOffset();
             else
                 return sensor.PositionEstimate();
         }
 
         public float Airspeed()
         {
-            return vehicle.VelocityBody().x;
+            if (vehicle.VelocityBody().x > 0)
+                return Mathf.Abs(vehicle.VelocityBody().x);
+            else
+                return 0f;
         }
 
         public float Sideslip()
@@ -381,20 +385,7 @@ namespace DroneControllers
             return momentThrustTarget.w;
         }
 
-        public void CommandControls(float aileron, float elevator, float rudder, float throttleRPM)
-        {
-            controlTarget.w = throttleRPM;
-            controlTarget.x = aileron;
-            controlTarget.y = elevator;
-            controlTarget.z = rudder;
-            vehicle.CommandThrottle(throttleRPM);
-            vehicle.CommandElevator(elevator);
-            vehicle.CommandAileron(aileron);
-            vehicle.CommandRudder(rudder);
-
-            //Debug.Log("Controls Command: " + new Vector4(aileron, elevator, rudder, throttleRPM));
-        }
-
+        
         //Functions requried as part of the IDroneController Interface
         /// <summary>
         /// Returns true if the vehicle is being controlled from outside the simulator
@@ -420,7 +411,7 @@ namespace DroneControllers
             guided = guided_in;
 
 
-            SelectMovementBehavior();
+            //SelectMovementBehavior();
         }
 
         /// <summary>
@@ -455,13 +446,8 @@ namespace DroneControllers
             {
                 sensor.SetHomePosition();
 
-                /*
-                //Reset the controllers (dumps the integrators)
-                attCtrl = new AttitudeControl();
-                posCtrl = new PositionControl();
-                posHoldLocal = PositionLocal();
-                posHoldLocal.z = 0.0f;
-                */
+                CommandControls(0, 0, 0, 0);
+                CommandMoment(new Vector3(0, 0, 0), 0);
             }
 
             vehicle.ArmDisarm(arm);
@@ -501,17 +487,9 @@ namespace DroneControllers
         {
             if (!guided)
                 return;
+            positionTarget = localPosition;
+            velocityTarget = Vector3.zero;
 
-            /*
-            positionControl = true;
-            attitudeControl = false;
-
-            guidedCommand.x = positionTarget.x = localPosition.x;
-            guidedCommand.y = positionTarget.y = localPosition.y;
-            guidedCommand.z = positionTarget.z = localPosition.z;
-
-            guidedCommand.w = attitudeTarget.z = AttitudeEuler().z;
-            */
         }
 
         /// <summary>
@@ -548,10 +526,8 @@ namespace DroneControllers
         {
             if (!guided)
                 return;
-            /*
-            guidedCommand.w = heading;
-            attitudeTarget.z = guidedCommand.w;
-            */
+            attitudeTarget.z = heading;
+            Debug.Log("Attitude Target Set: " + attitudeTarget.z);
         }
 
         /// <summary>
@@ -612,6 +588,12 @@ namespace DroneControllers
                     velocityTarget.x = thrust;
                     positionTarget.z = attitude.y;
                     break;
+                case (int)FLIGHT_MODE.ATTITUDE:
+                    attitudeTarget.x = attitude.x;
+                    attitudeTarget.y = attitude.y;
+                    bodyRateTarget.z = attitude.z;
+                    velocityTarget.z = thrust;
+                    break;
 
             }
             //Debug.Log(attitude + " " + thrust);
@@ -637,6 +619,20 @@ namespace DroneControllers
             MomentThrustTarget = new Vector4(bodyMoment.x, bodyMoment.y, bodyMoment.z, thrust);
             vehicle.CmdThrust(thrust);
             vehicle.CmdTorque(bodyMoment);
+            if (flightMode == (int)FLIGHT_MODE.MANUAL && (Simulation.FixedWingUI != null))
+            {
+                if (bodyMoment.magnitude > 0 || thrust > 0)
+                {
+                    if (controlTarget.magnitude > 0)
+                        Simulation.FixedWingUI.SetControlModeText(1);
+                    else
+                        Simulation.FixedWingUI.SetControlModeText(0);
+                }
+                else
+                {
+                    Simulation.FixedWingUI.SetControlModeText(2);
+                }
+            }
         }
 
         /// <summary>
@@ -694,6 +690,20 @@ namespace DroneControllers
                 CommandControls(controls[0], controls[1], controls[2], controls[3]);
                 CommandMoment(new Vector3(controls[4], controls[5], controls[6]), controls[7]);
             }
+        }
+
+        public void CommandControls(float aileron, float elevator, float rudder, float throttleRPM)
+        {
+            controlTarget.w = throttleRPM;
+            controlTarget.x = aileron;
+            controlTarget.y = elevator;
+            controlTarget.z = rudder;
+            vehicle.CommandThrottle(throttleRPM);
+            vehicle.CommandElevator(elevator);
+            vehicle.CommandAileron(aileron);
+            vehicle.CommandRudder(rudder);
+
+            //Debug.Log("Controls Command: " + new Vector4(aileron, elevator, rudder, throttleRPM));
         }
 
 

@@ -15,6 +15,7 @@ public class DummyDrone : MonoBehaviour, IDrone
     public Vector3 VelocityTarget { get { return Vector3.zero; } set { } } //north, east, down, velocity targets in meters/second
     public Vector3 AccelerationTarget { get { return Vector3.zero; } set { } } //north, east, down acceleration targets in meters/second^2
     public Vector4 MomentThrustTarget { get { return Vector4.zero; } set { } }
+    public Vector4 ControlTarget { get { return Vector4.zero; } set { } }
 
     public Vector3 ControlAttitude { get { return Vector3.zero; } }
     public Vector3 ControlPosition { get { return Vector3.zero; } }

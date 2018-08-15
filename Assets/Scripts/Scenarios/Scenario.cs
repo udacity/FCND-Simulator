@@ -48,8 +48,8 @@ public abstract class Scenario : MonoBehaviour
     public void Init ()
 	{
         drone = Simulation.ActiveDrone;
-        
-        
+        GameObject.Find("Gate").GetComponent<Transform>().localScale = new Vector3(0.0f, 0.0f, 0.0f);
+
         if (drone == null)
             Debug.Log("Null Active Drone");
 
@@ -66,6 +66,8 @@ public abstract class Scenario : MonoBehaviour
         FollowCamera.activeCamera.SetLookMode ( data.cameraLookMode, data.cameraDistance, data.cameraAngle );
         drone.SetGuided(false);
         drone.ArmDisarm(false);
+        drone.CommandControls(0,0,0,0);
+        drone.CommandMoment(new Vector3(0, 0, 0), 0);
 
 		pathLines.ForEach ( x => x.enabled = true );
         OnInit();

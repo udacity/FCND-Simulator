@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DroneControllers;
 using MovementBehaviors;
+using DroneInterface;
 
 namespace MovementBehaviors
 {
@@ -12,8 +13,20 @@ namespace MovementBehaviors
         float prevTime = 0.0f;
         float maxSpeed = 10f;
         float stoppingTime = 0.0f;
+
+        [SerializeField]
+        float yawStep = 5.0f*Mathf.PI/180f;
+
+        public override void OnSelect(IDroneController _controller)
+        {
+            base.OnSelect(_controller);
+            controller.AttitudeTarget = controller.ControlAttitude;
+            //controller.PositionTarget = controller.ControlPosition;
+        }
+
         public override void OnLateUpdate()
         {
+            yawStep = 5f * Mathf.PI / 180f;
 
             QuadControl QuadControl = (QuadControl)controller.control;
 
@@ -28,7 +41,14 @@ namespace MovementBehaviors
             if (!controller.Guided())
             {
                 velocityCmd = maxSpeed * (new Vector3(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), -Input.GetAxis("Thrust"))).normalized;
-                yawCmd = Input.GetAxis("Yaw");
+                float yawInput = Input.GetAxis("Yaw");
+                if (Mathf.Abs(yawInput) > 0)
+                {
+                    yawCmd = attitude.z + yawStep * yawInput;
+                    Debug.Log("Yaw Cmd2: " + yawCmd + " attitude.z: " + attitude.z + " yawStep: " + yawStep + " yawInput: " + yawInput);
+                }
+                else
+                    yawCmd = controller.AttitudeTarget.z;
 
                 targetPosition = localPosition + localVelocity*stoppingTime;
 
@@ -47,7 +67,7 @@ namespace MovementBehaviors
             {
                 velocityCmd = controller.VelocityTarget;
                 targetPosition = controller.PositionTarget;
-                yawCmd = controller.AttitudeTarget.z;
+                yawCmd = controller.AttitudeTarget.z;//controller.BodyRateTarget.z;
 
             }
 
@@ -59,24 +79,29 @@ namespace MovementBehaviors
 
             controller.VelocityTarget = targetVelocity;
             controller.PositionTarget = targetPosition;
-
+            
             Vector2 targetRollPitch = new Vector2(outerLoop.x, outerLoop.y);
 
             Vector3 attitudeTarget = controller.AttitudeTarget;
             attitudeTarget.x = targetRollPitch.x;
             attitudeTarget.y = targetRollPitch.y;
+            attitudeTarget.z = yawCmd;
             controller.AttitudeTarget = attitudeTarget;
 
 
             Vector2 targetRate = QuadControl.RollPitchLoop(targetRollPitch, attitude);
+
+            float yawRateCmd = QuadControl.YawLoop(yawCmd, attitude.z);
+
             Vector3 bodyRateTarget = controller.BodyRateTarget;
-            
             bodyRateTarget.x = targetRate.x;
             bodyRateTarget.y = targetRate.y;
-            bodyRateTarget.z = yawCmd;
+            bodyRateTarget.z = yawRateCmd;
             controller.BodyRateTarget = bodyRateTarget;
+
             Vector2 rollPitchMoment = QuadControl.RollPitchRateLoop(targetRate, angularVelocity);
-            float yawMoment = QuadControl.YawRateLoop(yawCmd, angularVelocity.z);
+            
+            float yawMoment = QuadControl.YawRateLoop(yawRateCmd, angularVelocity.z);
 
             float dt = Time.fixedDeltaTime;
 

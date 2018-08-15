@@ -34,6 +34,7 @@ public class FixedWingChallenge: Scenario
     Vector3 prevWaypoint;
     Vector3 currWaypoint;
     Vector3 nextWaypoint;
+    Vector3 localOffset;
     public Vector3 targetGate;
     Vector3 targetPlane;
     float state;
@@ -86,7 +87,7 @@ public class FixedWingChallenge: Scenario
         nextWaypoint = waypoint3;
 
         //drone.CommandVector(prevWaypoint, 41*(currWaypoint-prevWaypoint).normalized);
-        drone.SetHomePosition();
+        
 
         gateNum = 1;
         state = 1;
@@ -97,7 +98,8 @@ public class FixedWingChallenge: Scenario
     protected override void OnBegin()
     {
         base.OnBegin();
-
+        drone.SetHomePosition();
+        localOffset = new Vector3(drone.CoordsLocal().x, drone.CoordsLocal().y,0);
 
         initTime = drone.FlightTime();
         success = false;
@@ -167,7 +169,7 @@ public class FixedWingChallenge: Scenario
                 if (!drone.MotorsArmed())
                 {
                     drone.SetControlMode(7);
-                    drone.CommandVector(prevWaypoint, 41 * (currWaypoint - prevWaypoint).normalized);
+                    drone.CommandVector(prevWaypoint-localOffset, 41 * (currWaypoint - prevWaypoint).normalized);
                 }
             }
         }
@@ -200,7 +202,7 @@ public class FixedWingChallenge: Scenario
                 if (!drone.MotorsArmed())
                 {
                     drone.SetControlMode(8);
-                    drone.CommandVector(orbitCenter, velocityVec);
+                    drone.CommandVector(orbitCenter-localOffset, velocityVec);
                 }
             }
         }

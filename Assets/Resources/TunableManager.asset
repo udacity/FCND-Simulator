@@ -25,7 +25,7 @@ MonoBehaviour:
   - name: Kp_pitch
     minValue: -50
     maxValue: 50
-    fixedValue: 5
+    fixedValue: 3
     resolution: 2
   - name: Kp_q
     minValue: -50

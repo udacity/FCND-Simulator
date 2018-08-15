@@ -8,11 +8,19 @@ public class SandboxScenario : Scenario
 	{
 		base.OnInit ();
         drone.SetControlMode(1);
-        drone.SetGuided(false);
-        drone.CommandControls(0.0f, 0.0f, 0.0f, 0.67f);
+        drone.SetGuided(true);
+        drone.CommandControls(0.0f, 0.0f, 0.0f, 0.67f);       
+        
 	}
 
-	protected override bool OnCheckSuccess ()
+    protected override void OnBegin()
+    {
+        base.OnBegin();
+        //drone.SetGuided(false);
+        //drone.CommandControls(0.0f, 0.0f, 0.0f, 0.67f);
+    }
+
+    protected override bool OnCheckSuccess ()
 	{
 		return base.OnCheckSuccess ();
 	}

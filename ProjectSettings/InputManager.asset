@@ -537,8 +537,8 @@ InputManager:
     m_Name: Roll Moment
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 4
-    positiveButton: 6
+    negativeButton: '[4]'
+    positiveButton: '[6]'
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1
@@ -553,8 +553,8 @@ InputManager:
     m_Name: Pitch Moment
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 8
-    positiveButton: 2
+    negativeButton: '[8]'
+    positiveButton: '[2]'
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1
@@ -569,8 +569,8 @@ InputManager:
     m_Name: Yaw Moment
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 7
-    positiveButton: 9
+    negativeButton: '[7]'
+    positiveButton: '[9]'
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1
@@ -585,8 +585,8 @@ InputManager:
     m_Name: Thrust Force
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 1
-    positiveButton: 3
+    negativeButton: '[1]'
+    positiveButton: '[3]'
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1

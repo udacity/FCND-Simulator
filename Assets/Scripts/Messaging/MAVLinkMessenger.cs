@@ -547,7 +547,21 @@ namespace Messaging
                     drone.CommandAttitude(attitudeEuler, thrust);
                 else if (droneType == (uint)DRONE_TYPE.PLANE)
                 {
-                    drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), thrust);
+                    switch(drone.ControlMode())
+                    {
+                        case 5:
+                            drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), thrust);
+                            break;
+                        case 6:
+                            drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), thrust);
+                            break;
+                        case 9:
+                            attitudeEuler.z = msg.body_yaw_rate;
+                            drone.CommandAttitude(attitudeEuler, thrust);
+                            break;
+                    }
+                    
+                    
                     
                 }
             }
@@ -576,6 +590,7 @@ namespace Messaging
                         case 4:
                             drone.CommandAttitude(new Vector3(msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate), msg.thrust);
                             break;
+
                     }
                 }
                         
@@ -665,7 +680,7 @@ namespace Messaging
         {
             var mask = (UInt16)msg.type_mask;
 
-            drone.CommandHeading(msg.yaw);
+            
 
             // TAKEOFF
             if ((mask & (UInt16)SET_POSITION_MASK.IS_TAKEOFF) > 0)
@@ -703,6 +718,7 @@ namespace Messaging
                     //drone.SetVelocity(msg.vx, msg.vy, msg.vz, msg.yaw);
                 }
             }
+            drone.CommandHeading(msg.yaw);
         }
 
         /// <summary>

@@ -52,6 +52,11 @@ public class FixedWingUI : MonoBehaviour
 	public UIBarValue rudder;
 	public UIBarValue aileron;
 
+    public UIBarValue thrust;
+    public UIBarValue roll;
+    public UIBarValue pitch;
+    public UIBarValue yaw;
+
 	// control mode text
 	public TMP_Text controlModeText;
 

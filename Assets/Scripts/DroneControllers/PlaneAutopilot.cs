@@ -25,6 +25,8 @@ namespace DroneControllers
         public Vector3 VelocityTarget { get { return velocityTarget; } set { velocityTarget = value; } } //north, east, down, velocity targets in meters/second
         public Vector3 AccelerationTarget { get {return accelerationTarget; } set {accelerationTarget = value; } } //north, east, down acceleration targets in meters/second^2
         public Vector4 MomentThrustTarget { get { return momentThrustTarget; } set {momentThrustTarget = value; } }
+        public Vector4 ControlTarget { get { return controlTarget; } set { controlTarget = value; } }
+        public Vector4 controlTarget = Vector4.zero;
 
         public Vector3 ControlAttitude { get { return AttitudeEuler(); } }
         public Vector3 ControlPosition { get { return PositionLocal(); } }

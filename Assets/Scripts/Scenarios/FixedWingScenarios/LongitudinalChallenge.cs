@@ -157,7 +157,7 @@ public class LongitudinalChallenge : Scenario
         if(positionDiff > 0.0f)
             gate.position = position;
         gate.localScale = new Vector3(4.0f, 1.0f, 4.0f);
-        Vector3 linePosition = position;
+        //Vector3 linePosition = position;
         //linePosition.y = position.y;
         //line.position = linePosition;
         //Vector3 scale = line.localScale;

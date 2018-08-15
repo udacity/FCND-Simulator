@@ -26,7 +26,7 @@ public class DroneUI : MonoBehaviour
 	public GameObject plotOverlay;
 
     public bool localizeWind;
-
+    public bool globalPosition;
     private IDrone drone;
     ButtonStateWatcher armWatcher;
     ButtonStateWatcher guideWatcher;
@@ -93,11 +93,20 @@ public class DroneUI : MonoBehaviour
 			return;
 
         // Updates UI drone position
-        var lat = drone.GPSLatitude();
-        var lon = drone.GPSLongitude();
-        var alt = drone.GPSAltitude();
-        var airspeed = drone.VelocityLocal().magnitude;
-        gpsText.text = string.Format("Latitude = {0:0.000000}\nLongitude = {1:0.000000}\nAltitude = {2:0.000} (meters)\nAirspeed = {3:0.0} (meters/sec)", lat, lon, alt, airspeed);
+        if (globalPosition)
+        {
+            var lat = drone.GPSLatitude();
+            var lon = drone.GPSLongitude();
+            var alt = drone.GPSAltitude();
+            var airspeed = drone.VelocityLocal().magnitude;
+            gpsText.text = string.Format("Latitude = {0:0.000000}\nLongitude = {1:0.000000}\nAltitude = {2:0.000} (meters)\nAirspeed = {3:0.0} (meters/sec)", lat, lon, alt, airspeed);
+        }
+        else
+        {
+            Vector3 localPosition = drone.LocalPosition();
+            var airspeed = drone.ControlWindData.x;
+            gpsText.text = string.Format("North = {0:0.0}\nEast = {1:0.0}\nDown = {2:0.00} (meters)\nAirspeed = {3:0.0} (meters/sec)", localPosition.x, localPosition.y, localPosition.z, airspeed);
+        }
         // _gpsText.color = new Color(255, 255, 255, 0);
 
         // Updates UI compass drone heading

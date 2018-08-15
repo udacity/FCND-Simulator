@@ -16,6 +16,7 @@ public class LineFollowingScenario : Scenario
     public float targetCourse;
     public Vector3 startWaypoint;
     public Vector3 endWaypoint;
+    Vector3 localOffset;
 
     //Transform line;
     //Material lineMat;
@@ -47,7 +48,8 @@ public class LineFollowingScenario : Scenario
     protected override void OnBegin()
     {
         base.OnBegin();
-        
+        drone.SetHomePosition();
+        localOffset = new Vector3(drone.CoordsLocal().x, drone.CoordsLocal().y, 0);
         currTime = drone.FlightTime();
         initTime = drone.FlightTime();
     }
@@ -61,7 +63,7 @@ public class LineFollowingScenario : Scenario
 	protected override bool OnCheckFailure ()
 	{
         if(!drone.MotorsArmed())
-            drone.CommandVector(startWaypoint, 41.0f * (endWaypoint - startWaypoint) / ((endWaypoint - startWaypoint).magnitude));
+            drone.CommandVector(startWaypoint-localOffset, 41.0f * (endWaypoint - startWaypoint) / ((endWaypoint - startWaypoint).magnitude));
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
 
 

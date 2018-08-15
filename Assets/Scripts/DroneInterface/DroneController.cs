@@ -15,6 +15,7 @@ namespace DroneInterface
         Vector3 VelocityTarget { get; set; } //north, east, down, velocity targets in meters/second
         Vector3 AccelerationTarget { get; set; } //north, east, down acceleration targets in meters/second^2
         Vector4 MomentThrustTarget { get; set; }
+        Vector4 ControlTarget { get; set; }
 
         // The values used by the controller
         Vector3 ControlAttitude { get; }

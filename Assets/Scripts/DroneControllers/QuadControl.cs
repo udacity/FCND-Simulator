@@ -7,6 +7,7 @@ using DroneInterface;
 public class QuadControl : IControlLaw {
 
     public float Kp_r;//20.0f;
+    public float maxYawRate = 0.1f; //radians/sec
 
     public float Kp_hdot;//5.0f;
     public float Ki_hdot;//0.5f;
@@ -138,6 +139,8 @@ public class QuadControl : IControlLaw {
     /// </summary>
     public float YawRateLoop(float targetYawrate, float yawrate)
     {
+        if (Mathf.Abs(targetYawrate) > maxYawRate)
+            targetYawrate = Mathf.Sign(targetYawrate) * maxYawRate;
         float yawMoment = Kp_r * (targetYawrate - yawrate);
         return yawMoment;
     }

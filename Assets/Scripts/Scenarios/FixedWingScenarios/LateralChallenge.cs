@@ -11,9 +11,10 @@ public class LateralChallenge: Scenario
     //Vector2 gate1 = new Vector2(1700, 500);
     Vector2 startPosition = new Vector2(1700, 500);
     Vector2 gate1 = new Vector2(1700, 1000);
-    Vector3 gate2 = new Vector2(1300, 1400);
-    Vector3 gate3 = new Vector2(1000, 1100);
+    Vector2 gate2 = new Vector2(1300, 1400);
+    Vector2 gate3 = new Vector2(1000, 1100);
     Vector2 gate4 = new Vector2(1000, 100);
+    Vector2 localOffset;
     Vector2 targetGate;
     public int gateNum;
     public float targetRadius;
@@ -51,8 +52,15 @@ public class LateralChallenge: Scenario
 
     protected override void OnInit()
     {
-        
-        
+        localOffset = new Vector2(data.vehiclePosition.x, data.vehiclePosition.z);
+        /*
+        startPosition = new Vector2(0, 0);
+
+        gate1 = new Vector2(0,500);
+        gate2 = new Vector2(-400,900);
+        gate3 = new Vector2(-700,600);
+        gate4 = new Vector2(-700, -400);
+        */
         gate = GameObject.Find("Gate").GetComponent<Transform>();
         //line = GameObject.Find("Line").GetComponent<Transform>();
         //lineMat = GameObject.Find("Line").GetComponent<MeshRenderer>().material;
@@ -65,24 +73,26 @@ public class LateralChallenge: Scenario
         drone.SetControlMode(7); //Stabilized Mode
         drone.SetGuided(true);
         drone.Status = 11;
-        startWaypoint = new Vector3(startPosition.y, startPosition.x, -data.vehiclePosition.y);
-        Vector3 goalWaypoint = new Vector3(gate1.y, gate1.x, -data.vehiclePosition.y);
+        startWaypoint = new Vector3(startPosition.y-localOffset.y, startPosition.x-localOffset.x, -data.vehiclePosition.y);
+        Vector3 goalWaypoint = new Vector3(gate1.y-localOffset.y, gate1.x-localOffset.x, -data.vehiclePosition.y);
         velocityVec = goalWaypoint - startWaypoint;
         velocityVec = 41.0f * velocityVec.normalized;
         //drone.CommandVector(startWaypoint, velocityVec);
-        drone.SetHomePosition();
+        
         targetGate = gate1;
         gateNum = 1;
         UpdateGatePosition();
+        Debug.Log("Start Waypoint: " + startWaypoint + " velocityVec: " + velocityVec);
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
+        drone.SetHomePosition();
         //drone.CommandAttitude(new Vector3(0.0f, data.vehiclePosition.y, 0.0f), data.vehicleVelocity.magnitude);
         //Set the gains appropriate for the scenario
-//        planeControl.SetDefaultLongitudinalGains();
-//        planeControl.SetStudentLateralGains();
+        //        planeControl.SetDefaultLongitudinalGains();
+        //        planeControl.SetStudentLateralGains();
 
         initTime = drone.FlightTime();
         success = false;
@@ -120,7 +130,7 @@ public class LateralChallenge: Scenario
                 }
 
                 
-                orbitCenter = new Vector3(1000f, 1300f, -data.vehiclePosition.y);
+                orbitCenter = new Vector3(1000f-localOffset.y, 1300f-localOffset.x, -data.vehiclePosition.y);
                 targetRadius = 400f;
                 
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
@@ -146,7 +156,7 @@ public class LateralChallenge: Scenario
                     return true;
                 }
                 
-                orbitCenter = new Vector3(1100f, 1300f, -data.vehiclePosition.y);
+                orbitCenter = new Vector3(1100f-localOffset.y, 1300f-localOffset.x, -data.vehiclePosition.y);
                 targetRadius = 300f;
 
                 Vector3 velocityVec = new Vector3(41.0f, 0.0f, -41.0f / targetRadius);
@@ -172,8 +182,8 @@ public class LateralChallenge: Scenario
                     return true;
                 }
                 
-                Vector3 startWaypoint = new Vector3(gate3.y, gate3.x, -data.vehiclePosition.y);
-                Vector3 endWaypoint = new Vector3(gate4.y, gate4.x, -data.vehiclePosition.y);
+                Vector3 startWaypoint = new Vector3(gate3.y-localOffset.y, gate3.x-localOffset.x, -data.vehiclePosition.y);
+                Vector3 endWaypoint = new Vector3(gate4.y-localOffset.y, gate4.x-localOffset.x, -data.vehiclePosition.y);
                 Vector3 velocityVec = 41f * (endWaypoint - startWaypoint).normalized;
                 if (!drone.MotorsArmed())
                 {

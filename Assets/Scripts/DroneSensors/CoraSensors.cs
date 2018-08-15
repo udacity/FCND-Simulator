@@ -45,6 +45,7 @@ namespace DroneSensors
         Vector3 gpsVelocity;
         public Vector3 gpsPositionNoiseSigma = new Vector3(1.0f, 1.0f, 3.0f);
         public Vector3 gpsVelocityNoiseSigma = new Vector3(0.1f, 0.1f, 0.3f);
+        Vector3 localOffset;
 
         public float estimateRateHz = 500;
         float timeSinceEstimateS;
@@ -285,6 +286,11 @@ namespace DroneSensors
             return gpsVelocity;
         }
 
+        public Vector3 LocalOffset()
+        {
+            return localOffset;
+        }
+
         public void SetHomePosition()
         {
             UpdateGps();
@@ -292,6 +298,7 @@ namespace DroneSensors
             homeLatitude = gpsLatitude;
             homeAltitude = 0.0;
             localPosition = FlightUtils.Conversions.GlobalToLocalCoords(gpsLongitude, gpsLatitude, gpsAltitude, homeLongitude, homeLatitude);
+            localOffset = localPosition-drone.CoordsLocal();
         }
 
         public void SetHomePosition(double longitude, double latitude, double altitude)
@@ -300,6 +307,7 @@ namespace DroneSensors
             homeLatitude = latitude;
             homeAltitude = altitude;
             localPosition = FlightUtils.Conversions.GlobalToLocalCoords(gpsLongitude, gpsLatitude, gpsAltitude, homeLongitude, homeLatitude);
+            localOffset = localPosition-drone.CoordsLocal();
         }
 
     }

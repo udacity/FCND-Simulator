@@ -17,6 +17,7 @@ public class OrbitFollowingScenario : Scenario
     public float radiusThreshold = 3f;
 
     public Vector3 orbitCenter;
+    Vector3 localOffset;
 
     //Transform line;
     //Material lineMat;
@@ -53,7 +54,9 @@ public class OrbitFollowingScenario : Scenario
     protected override void OnBegin()
     {
         base.OnBegin();
-        
+
+        drone.SetHomePosition();
+        localOffset = new Vector3(drone.CoordsLocal().x, drone.CoordsLocal().y, 0);
         currTime = drone.FlightTime();
         initTime = drone.FlightTime();
     }
@@ -67,7 +70,7 @@ public class OrbitFollowingScenario : Scenario
 	protected override bool OnCheckFailure ()
 	{
         if(!drone.MotorsArmed())
-            drone.CommandVector(orbitCenter, new Vector3(41.0f, 0.0f, 41.0f / targetRadius));
+            drone.CommandVector(orbitCenter-localOffset, new Vector3(41.0f, 0.0f, 41.0f / targetRadius));
 
         //drone.CommandAttitude(new Vector3(0.0f, 450.0f, 0.0f), targetAirspeed);
 

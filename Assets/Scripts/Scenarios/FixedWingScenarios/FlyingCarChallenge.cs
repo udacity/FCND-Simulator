@@ -4,10 +4,11 @@ using UnityEngine;
 using Drones;
 using DroneInterface;
 using DroneControllers;
+using DroneVehicles;
 
 public class FlyingCarChallenge: Scenario
 {
-
+    CoraVehicle vehicle; 
 
 
     protected override void OnInit()
@@ -16,15 +17,22 @@ public class FlyingCarChallenge: Scenario
         drone.SetControlMode(10);
         drone.SetGuided(true);
         drone.Status = 13;
-        drone.SetHomePosition();
+
         base.OnInit();
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
+        vehicle = GameObject.Find("Plane Drone").GetComponent<CoraVehicle>();
+        drone.SetHomePosition();
+        vehicle.energy = 1.0f;
+        Vector3 takeoffPosition = Vector3.zero;
+        takeoffPosition.z = drone.CoordsLocal().z + 15f;
+        drone.CommandPosition(takeoffPosition);
 
     }
+
 
     protected override bool OnCheckSuccess()
     {
@@ -33,6 +41,7 @@ public class FlyingCarChallenge: Scenario
 
     protected override bool OnCheckFailure()
     {
+        UpdateVizParameters();
 
         return false;
     }
@@ -53,6 +62,7 @@ public class FlyingCarChallenge: Scenario
 
     void UpdateVizParameters()
     {
+        onParameter1Update(vehicle.energy, 3);
         //onParameter1Update(xTrackError, 1);
         //onParameter2Update(-vertError, 1);
         //float noise = Mathf.PerlinNoise(Time.time * 0.5f, 0) * 0.5f - 0.25f;

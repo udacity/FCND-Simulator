@@ -24,6 +24,7 @@ namespace Drones
         public Vector3 VelocityTarget { get { return Autopilot.VelocityTarget; } set { Autopilot.VelocityTarget = value; } } //north, east, down, velocity targets in meters/second
         public Vector3 AccelerationTarget { get { return Autopilot.AccelerationTarget; } set { Autopilot.AccelerationTarget = value; } } //north, east, down acceleration targets in meters/second^2
         public Vector4 MomentThrustTarget { get { return Autopilot.MomentThrustTarget; } set { Autopilot.MomentThrustTarget = value; } }
+        public Vector4 ControlTarget { get { return Autopilot.ControlTarget; } set { Autopilot.ControlTarget = value; } }
 
         public Vector3 ControlAttitude { get { return Autopilot.ControlAttitude; } }
         public Vector3 ControlPosition { get { return Autopilot.ControlPosition; } }

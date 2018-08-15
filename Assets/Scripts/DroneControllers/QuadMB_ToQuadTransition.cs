@@ -44,14 +44,15 @@ namespace MovementBehaviors
 
 
             throttle = QuadPlaneControl.toQuadThrottle;
-            aileron = 0f;
-            elevator = 0f;
+            elevator = PlaneControl.PitchLoop(pitchCommand, controller.ControlAttitude.y, controller.ControlBodyRate.y);//0f;
+            aileron = PlaneControl.RollLoop(rollCommand, controller.ControlAttitude.x, controller.ControlBodyRate.x);//0f;
             rudder = 0;
 
             float yawOutput = QuadControl.YawRateLoop(yawRateCommand, controller.ControlBodyRate.z);
             Vector3 targetVelocity = QuadControl.PositionLoop(new Vector3(0f,0f,-altCommand), controller.ControlPosition);
             Vector2 targetRate = QuadControl.RollPitchLoop(new Vector2(pitchCommand, rollCommand), controller.ControlAttitude);
-            Vector2 rollPitchMoment = QuadControl.RollPitchRateLoop(targetRate, controller.ControlBodyRate);
+            Vector2 rollPitchMoment = Vector2.zero;// QuadControl.RollPitchRateLoop(targetRate, controller.ControlBodyRate);
+
             float dt = Time.fixedDeltaTime;
             thrust = QuadControl.VerticalVelocityLoop(-targetVelocity.z, controller.ControlAttitude, -controller.ControlVelocity.z, dt, 0.5f);
 

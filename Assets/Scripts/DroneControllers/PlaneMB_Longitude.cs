@@ -41,9 +41,10 @@ namespace MovementBehaviors
                 rollCommand = maxRoll*Input.GetAxis("Horizontal");
                 sideslipCommand = maxSideslip * Input.GetAxis("Yaw");
                 elevator = -1.0f * Input.GetAxis("Vertical") + elevatorTrim;
-                throttle = throttle = controller.MomentThrustTarget.w + throttleStep * Input.GetAxis("Thrust");
+                throttle = controller.ControlTarget.w + throttleStep * Input.GetAxis("Thrust");
                 
             }
+            throttle = Mathf.Clamp01(throttle);
 
             float aileron = PlaneControl.RollLoop(rollCommand, controller.ControlAttitude.x, controller.ControlBodyRate.x);
             float rudder = PlaneControl.SideslipLoop(sideslipCommand, controller.ControlWindData.z);
