@@ -220,7 +220,7 @@ public class LateralChallenge: Scenario
 
         if(gateNum == 2 || gateNum == 3)
         {
-            float radius = (new Vector2(orbitCenter.x - drone.CoordsLocal().x, orbitCenter.y - drone.CoordsLocal().y)).magnitude;
+            float radius = (new Vector2(orbitCenter.x - drone.CoordsLocal().x + localOffset.y, orbitCenter.y - drone.CoordsLocal().y+localOffset.x)).magnitude;
             Debug.Log("Radius: " + radius + " Target Radius: " + targetRadius + " Orbit Center: " + orbitCenter);
             xTrackError = targetRadius - radius;
         }
